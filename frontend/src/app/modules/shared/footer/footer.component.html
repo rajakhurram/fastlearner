@@ -1,0 +1,242 @@
+<div class="footer">
+  <div nz-row class="justify-alignment">
+    <div
+      class="first-section"
+      nz-col
+      nzXs="22"
+      nzSm="20"
+      nzXl="8"
+      nzLg="10"
+      nzMd="16"
+    >
+      <div class="logo">
+        <img
+          (click)="routeToLandingPage()"
+          class="logo-img"
+          src="../../../../assets/icons/FL_White logo.svg"
+          alt="Logo"
+          loading="lazy"
+        />
+      </div>
+      <div class="para">
+        <p>
+          Fuel your love for learning with Fast Learner! Explore a world of
+          knowledge at your fingertips. Our evolving and growing library
+          promotes top-quality courses, valuable resources, exclusive features,
+          and interactive tools created to encourage people who want to learn
+          from all ages and backgrounds. Unlock your true potential on our AI
+          learning platform, and make your future better.
+        </p>
+      </div>
+      <div class="social-media-icons">
+        <img
+          alt="X"
+          (click)="routeToTwitter()"
+          class="align"
+          height="30px"
+          width="35px"
+          src="../../../../assets/icons/Xicon.svg"
+          loading="lazy"
+        />
+        <img
+          alt="Facebook"
+          (click)="routeToFacebook()"
+          class="align"
+          loading="lazy"
+          height="30px"
+          width="35px"
+          src="../../../../assets/icons/facebook.svg"
+        />
+        <img
+          alt="LinkedIn"
+          (click)="routeToLinkedIn()"
+          class="align"
+          loading="lazy"
+          height="30px"
+          width="35px"
+          src="../../../../assets/icons/linkedin.svg"
+        />
+        <!-- <img
+          class="align"
+          height="30px"
+          width="35px"
+          src="../../../../assets/icons/youtube.svg"
+        /> -->
+        <img
+          alt="Instagram"
+          (click)="routeToInstagram()"
+          class="align"
+          loading="lazy"
+          height="30px"
+          width="35px"
+          src="../../../../assets/icons/Instagram.svg"
+        />
+      </div>
+    </div>
+    <div class="second-section" nz-col nzXs="12" nzMd="6">
+      <div class="about-section">
+        <ul class="about-list">
+          <li class="footer-about-list-heading"><span>About</span></li>
+          <li id="about-us" class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'about-us' }"
+              class="footerlink"
+              data-content="About us"
+              (click)="[routeToAboutUs()]"
+            ></span>
+          </li>
+          <li id="privacy-policy" class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'privacy-policy' }"
+              class="footerlink"
+              data-content="Privacy Policy"
+              (click)="[routeToPrivacyPolicy()]"
+            ></span>
+          </li>
+          <li id="terms-and-conditions" class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'terms-and-conditions' }"
+              class="footerlink"
+              data-content="Terms & Conditions"
+              (click)="[routeToTermsandConditions()]"
+            ></span>
+          </li>
+          <li id="contact-us" class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'contact-us' }"
+              class="footerlink"
+              data-content="Contact Us"
+              (click)="routeToContactUs()"
+            ></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div nz-col nzXs="16" nzMd="4" nzLg="6">
+      <div class="quick-link-section">
+        <ul class="about-list">
+          <li class="footer-about-list-heading"><span>Quick Links</span></li>
+          <li class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'courses' }"
+              class="footerlink"
+              data-content="Courses"
+              (click)="routeToCoursesList(viewAllMap.CATEGORY)"
+            ></span>
+          </li>
+          <!-- <li class="footer-about-list" [ngClass]="{'active': activeLink === 'categories'}">
+            <a (click)="routeToLandingPage()" routerLink="/">Categories</a>
+          </li> -->
+          <li class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'become-instructor' }"
+              class="footerlink"
+              data-content="Become an Instructor"
+              (click)="routeToInstructorWelcomePage()"
+            ></span>
+          </li>
+          <li id="blogs" class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'blogs' }"
+              class="footerlink"
+              data-content="Blogs"
+              (click)="[routeToBlogs()]"
+            ></span>
+          </li>
+          <li id="blogs" class="footer-about-list">
+            <span
+              [ngClass]="{ active: activeLink === 'press' }"
+              class="footerlink"
+              data-content="Press Release"
+              (click)="[routeToPressRelease()]"
+            ></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="lower-footer">
+    <div class="row justify-alignment-reverse" nz-row>
+      <div nz-col class="ant-col-offset" nzXs="22" nzLg="12" nzXl="6">
+        <div class="copy-right-section">
+          <p class="copy-right"></p>
+          <p class="copy-right">
+            ©Copyright {{ currentYear }} <br />
+            Fast Learner. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+      <div nz-col nzSpan="1">
+        <nz-divider class="divider" nzType="vertical"></nz-divider>
+      </div>
+      <div nz-col class="ant-col-offset" nzXs="22" nzLg="12" nzXl="6">
+        <div class="query-section">
+          <div class="image-section">
+            <img
+              height="30px"
+              width="30px"
+              src="../../../../assets/icons/headphone.svg"
+              alt="Help"
+              loading="lazy"
+            />
+          </div>
+          <div class="info-section">
+            <p>Have a question? Call us 24/7</p>
+            <p style="font-family: 'Poppins-bold'">+1 (510) 935-3636</p>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="1">
+        <nz-divider class="divider" nzType="vertical"></nz-divider>
+      </div>
+      <div style="display: contents">
+        <div class="email-section">
+          <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+            <input
+              type="text"
+              class="custom-placeholder"
+              nz-input
+              placeholder="Enter email address"
+              [(ngModel)]="subscribeEmail"
+              (input)="validateEmail($event)"
+              autocomplete="off"
+            />
+          </nz-input-group>
+          <div
+            *ngIf="!emailValid && subscribeEmail?.length > 0"
+            class="error-message"
+            style="color: white"
+          >
+            Please enter a valid email address.
+          </div>
+          <div
+            *ngIf="emptyEmail && !subscribeEmail"
+            class="error-message"
+            style="color: white"
+          >
+            Please enter an email address.
+          </div>
+          <ng-template #suffixButton>
+            <button
+              class="subscribe-btn"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzSearch
+              (click)="subscribeNewsLetter()"
+            >
+              Subscribe &nbsp;
+              <img
+                height="20px"
+                width="20px"
+                src="../../../../assets/icons/send.svg"
+                alt="Send"
+                loading="lazy"
+              />
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

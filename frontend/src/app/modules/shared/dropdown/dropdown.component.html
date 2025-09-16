@@ -1,0 +1,26 @@
+<div nz-col nzLg="24" nzMd="24" nzSm="24" nzXs="24">
+  <label class="label-color">
+    {{ label }} <span *ngIf="required" class="mandatory">*</span>
+  </label>
+
+  <nz-select
+    [name]="name"
+    [nzSize]="'large'"
+    [nzPlaceHolder]="placeholder"
+    [(ngModel)]="selectedValue"
+    (ngModelChange)="onValueChange($event)"
+    (nzBlur)="onBlur()"
+  >
+    <nz-option
+      *ngFor="let option of options"
+      [nzLabel]="option[labelKey]"
+      [nzValue]="option[valueKey]"
+    >
+    </nz-option>
+  </nz-select>
+
+  <!-- Validation Message -->
+  <div *ngIf="isTouched && required && !selectedValue" style="color: red">
+    {{ label }} is required.
+  </div>
+</div>

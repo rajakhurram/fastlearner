@@ -1,0 +1,222 @@
+<nz-card
+  id="index"
+  class="card cursor-pointer"
+  [ngStyle]="{
+    'box-shadow':
+      buttonTheme === 'dark'
+        ? 'none'
+        : '0px 4px 10px 8px rgba(188, 213, 255, 0.5)'
+  }"
+  [nzCover]="coverTemplate5"
+  (click)="routeToCourseDetails(course?.courseUrl)"
+>
+  <nz-card-meta
+    [nzTitle]="titleTemplate"
+    [nzDescription]="descriptionTemplate"
+  ></nz-card-meta>
+  <ng-template #titleTemplate>
+    <div class="tags-rating">
+      <div style="display: flex; align-items: center">
+        <nz-tag class="tag-color" [nzColor]="'#EEEEFF'">{{
+          course?.categoryName
+        }}</nz-tag>
+      </div>
+      <div>
+        <small class="rate-text-color">{{ course?.review?.toFixed(1) }} </small>
+        <nz-rate
+          [nzCharacter]="starTemplate"
+          [ngModel]="course?.review"
+          nzDisabled
+          nzAllowHalf
+        ></nz-rate>
+        <ng-template #starTemplate>
+          <span
+            style="font-size: small"
+            nzTheme="fill"
+            nz-icon
+            nzType="star"
+          ></span>
+        </ng-template>
+        <small class="rate-text-color"
+          >({{ course?.noOfReviewers ?? course?.totalReviewers }})</small
+        >
+      </div>
+    </div>
+    <div class="course-creator">
+      <div
+        class="course-creator-premium"
+        (click)="routeToInsructorProfile($event, course?.userProfileUrl)"
+      >
+        <div class="course-creator-premium-box">
+          <nz-avatar
+            [nzSize]="20"
+            nzIcon="user"
+            [nzSrc]="course?.instructorImage ?? course?.profilePicture"
+            nzAlt="Profile"
+          >
+            <img
+              [src]="course?.instructorImage ?? course?.profilePicture"
+              loading="lazy"
+              alt="Profile"
+          /></nz-avatar>
+          <p class="instructor-name-premium">
+            {{ course?.creatorName ?? course?.instructorName }}
+          </p>
+        </div>
+        <div style="align-items: center" class="duration-container">
+          <nz-avatar
+            *ngIf="course?.contentType === courseContentType.COURSE.toUpperCase()"
+            style="margin-top: 2px"
+            [nzSize]="18"
+            nzIcon="user"
+            nzAlt="Time"
+            nzSrc="./../../assets/icons/timer.svg"
+          ></nz-avatar>
+          <p
+            style="margin-bottom: 0px !important ; margin-top: 2px"
+            class="timer-premium"
+          >
+          {{ course?.contentType === courseContentType.COURSE.toUpperCase() ? course?.courseDuration : course?.testTotalQuestion + ' Questions' }}
+        </p>
+        </div>
+      </div>
+    </div>
+    <div nz-tooltip="{{ course.title }}" nz-row>
+      <div class="name-icon-container" nz-col nzSpan="24">
+        <h4 class="course-title-text">
+          {{ course?.title }}
+        </h4>
+        <img
+          *ngIf="course?.courseType === courseType.PREMIUM"
+          src="../../../../assets/icons/premium.svg"
+          width="15"
+          height="15"
+        />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #descriptionTemplate>
+    <div *ngIf="!fromMyCourse" class="description">
+      <p
+        class="course-description break-word"
+        [innerHTML]="course?.courseDescription ?? course?.description"
+      ></p>
+    </div>
+    <div *ngIf="fromMyCourse" nz-row>
+      <div nz-col nzSpan="24">
+        <nz-progress
+          [nzPercent]="course?.courseProgress"
+          [nzShowInfo]="false"
+          nzStatus="active"
+          [nzStrokeColor]="'#00BA00'"
+          [nzStrokeWidth]="6"
+        ></nz-progress>
+      </div>
+      <div class="completion">
+        <!-- <p>{{ myCourse?.courseProgress?.toFixed(0) }}</p> -->
+        <p *ngIf="course?.courseProgress === 0">Not Started</p>
+        <p *ngIf="course?.courseProgress === 100">Completed</p>
+        <p *ngIf="course?.courseProgress > 0 && course?.courseProgress < 100">
+          {{ course?.courseProgress?.toFixed(0) }}% Completed
+        </p>
+      </div>
+    </div>
+    <div class="course-creator">
+      <div
+        [ngStyle]="{
+          'align-items': course?.courseType === courseType.PREMIUM ? '' : ''
+        }"
+        class="level-duration-container"
+      >
+        <div class="user-info">
+          <img
+            style="align-self: flex-start"
+            [ngStyle]="{
+              'padding-top': course.level === 'All Levels' ? '1px' : '4px'
+            }"
+            [src]="
+              course.level === 'Expert'
+                ? '../../../../assets/icons/expert-level.svg'
+                : course.level === 'Intermediate'
+                ? '../../../../assets/icons/Intermediate.svg'
+                : course.level === 'Beginner'
+                ? '../../../../assets/icons/Beginner.svg'
+                : '../../../../assets/icons/All-Level.svg'
+            "
+          />
+          <p
+            [ngStyle]="{
+              color:
+                course?.courseType === courseType.PREMIUM
+                  ? '#292929'
+                  : '#212189'
+            }"
+            class="level-text"
+          >
+            {{ course?.level }}
+          </p>
+        </div>
+        <div
+          *ngIf="
+            course?.courseType === courseType.PREMIUM &&
+            !course?.isAlreadyBought &&
+            isLoggedIn
+          "
+          class="duration-container"
+        >
+          <p class="price">${{ course?.price }}</p>
+        </div>
+        <div
+          *ngIf="course?.courseType === courseType.PREMIUM && !isLoggedIn"
+          class="duration-container"
+        >
+          <p class="price">${{ course?.price }}</p>
+        </div>
+        <div
+          *ngIf="course?.isAlreadyBought && isLoggedIn"
+          class="duration-container"
+        >
+          <p class="start-learning">
+            Start Learning
+
+            <img
+              class="view-all-img"
+              height="15px"
+              width="15px"
+              alt="Arrow"
+              src="../../../../assets/icons/arrow-dark.svg"
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #coverTemplate5>
+    <div class="free-label" *ngIf="course?.courseType === courseType.FREE">
+      <nz-tag class="tag-color" [nzColor]="'#EEEEFF'">Free</nz-tag>
+    </div>
+    <div *ngIf="course?.courseType === courseType.PREMIUM" class="free-label">
+      <nz-tag class="tag-premium-color" [nzColor]="'#FC9C00'">Premium</nz-tag>
+    </div>
+    <img
+      class="image-height"
+      alt="Course Preview"
+      loading="lazy"
+      [src]="
+        course?.courseThumbnailUrl
+          ? course?.courseThumbnailUrl
+          : course?.thumbnail
+          ? course?.thumbnail
+          : '../../../assets/icons/html-course.svg'
+      "
+    />
+    <span
+      *ngIf="fromFavouriteCourse"
+      (click)="favouriteCourse(course.courseId)"
+      class="heart-icon cursor"
+      nz-icon
+      nzType="heart"
+      [nzTheme]="'fill'"
+    ></span>
+  </ng-template>
+</nz-card>

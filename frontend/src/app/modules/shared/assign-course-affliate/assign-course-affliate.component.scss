@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  // padding: 20px 20px 20px 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.justify-div {
+  display: flex;
+  flex-direction: column;
+  width: -webkit-fill-available;
+  border-radius: 10px;
+}
+
+.width-full {
+  width: -webkit-fill-available;
+}
+
+:host ::ng-deep .ant-input-group,
+.ant-select {
+  width: 90%;
+}
+
+.label-class {
+  color: #292929;
+  font-size: 12px;
+  font-family: "Poppins-regular";
+}
+
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .button-container {
+    margin: 20px auto;
+  }
+
+  ::ng-deep .ant-input-group,
+  .ant-select {
+    width: 100%;
+  }
+}
+
+:host ::ng-deep .ant-select-selection-item {
+  width: 50px;
+}
+
+.affiliate-email {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  color: #9a9a9a; /* Text color */
+  text-align: center;
+  line-height: 20px; /* Center text vertically */
+  font-size: 12px; /* Font size */
+}
+
+

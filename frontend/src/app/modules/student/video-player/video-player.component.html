@@ -1,0 +1,85 @@
+<vg-player
+  *ngIf="!youtubePlayer"
+  [vgMedia]="$any(media)"
+  (onPlayerReady)="[onPlayerReady($event), (vgPlayerApi = $event)]"
+>
+  <vg-overlay-play></vg-overlay-play>
+  <vg-buffering></vg-buffering>
+  <vg-scrub-bar class="custom-scrub-bar">
+    <vg-scrub-bar-current-time [vgSlider]="true"></vg-scrub-bar-current-time>
+    <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+  </vg-scrub-bar>
+  <vg-controls [vgAutohide]="true">
+    <vg-play-pause
+      class="time-pause"
+      [nz-tooltip]="
+        !isTooltipVisible ? null : isVideoPlaying ? 'Pause (k)' : 'Play (k)'
+      "
+    ></vg-play-pause>
+
+    <vg-time-display
+      class="time-display"
+      vgProperty="current"
+      vgFormat="mm:ss"
+    ></vg-time-display>
+    <span class="separator">/</span>
+    <vg-time-display
+      class="time-display"
+      vgProperty="total"
+      vgFormat="mm:ss"
+    ></vg-time-display>
+    <vg-scrub-bar
+      class="time-space"
+      style="pointer-events: none; z-index: 50"
+    ></vg-scrub-bar>
+    <!-- <vg-time-display
+      class="time-display"
+      vgProperty="left"
+      vgFormat="mm:ss"
+    ></vg-time-display> -->
+
+    <vg-track-selector
+      *ngIf="currentSelectedTopic?.vttContent" 
+      (change)="onTrackChange($event)"
+    ></vg-track-selector>
+    <vg-playback-button
+      [nz-tooltip]="!isTooltipVisible ? null : 'Playback speed'"
+      [playbackValues]="['0.5', '1.0', '1.5', '2.0']"
+    ></vg-playback-button>
+    <vg-mute [nz-tooltip]="!isTooltipVisible ? null : 'Mute (m)'"></vg-mute>
+    <vg-volume [nz-tooltip]="!isTooltipVisible ? null : 'Volume'"></vg-volume>
+    <vg-fullscreen
+      [nz-tooltip]="!isTooltipVisible ? null : 'Fullscreen (f)'"
+    ></vg-fullscreen>
+  </vg-controls>
+  <video
+    [autoplay]="false"
+    [vgMedia]="$any(media)"
+    #media
+    id="singleVideo"
+    preload="auto"
+    [src]="videoUrl"
+    type="video/mp4"
+    [poster]="videoUrl"
+  >
+    <track
+      *ngIf="currentSelectedTopic?.vttContent && !fromCourseInformation"
+      class="subtitles"
+      kind="subtitles"
+      label="English"
+      [src]="subtitleUrl"
+      srclang="en"
+      default
+    />
+  </video>
+</vg-player>
+
+<div class="video-container" *ngIf="youtubePlayer">
+  <youtube-player
+    #player
+    (stateChange)="onStateChange($event)"
+    [videoId]="videoId"
+    [width]="getViewSize().width"
+    [height]="getViewSize().height"
+  ></youtube-player>
+</div>

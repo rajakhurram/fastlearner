@@ -1,0 +1,364 @@
+<div class="container">
+  <div class="grader-results">
+    <div class="grader-results-header display-flex mb-1">
+      <h3>AI Grader</h3>
+
+      <nz-card *ngIf="showUpgradePlan" class="grader-card ml-auto">
+        <div class="grader-info">
+          <div class="progress-section">
+            <div class="label">Papers Graded</div>
+            <div class="progress-bar">
+              <span class="plan">Free</span>
+              <div style="width: 200px">
+                <nz-progress
+                  [nzPercent]="(gradedPapers / allowedPapers) * 100"
+                  [nzStrokeColor]="'#212189'"
+                  [nzShowInfo]="false"
+                ></nz-progress>
+              </div>
+
+              <div class="count">{{ gradedPapers }} / {{ allowedPapers }}</div>
+            </div>
+          </div>
+          <app-button (buttonCallBack)="openSubscriptionPlan()">
+            <img
+              src="./../../../assets/icons/Upgrade.svg"
+              alt="Upgrade"
+              width="20"
+              height="20"
+              style="
+                margin-right: 8px;
+                vertical-align: middle;
+                margin-bottom: 4px;
+              "
+            />
+            Upgrade
+          </app-button>
+        </div>
+      </nz-card>
+    </div>
+
+    <nz-card class="card mb-1">
+      <div class="class-top-bar">
+        <i
+          nz-icon
+          nzType="arrow-left"
+          class="mr-1 cursor-pointer display-flex align-items-center"
+          style="color: #212189"
+          (click)="routeToGraderUploader()"
+        ></i>
+
+        <div class="info">
+          <div class="class-name" *ngIf="selectedClass">
+            <span>Class</span>
+            <span class="color-blue font-bold">{{ selectedClass.name }}</span>
+          </div>
+
+          <div class="class-assignment" *ngIf="selectedAssignment">
+            <span>Assessment</span>
+            <span class="color-blue font-bold">{{
+              selectedAssignment.title
+            }}</span>
+          </div>
+        </div>
+        <div class="ml-auto assignment-btn">
+          <app-button
+            [config]="assessmentButtonConfig"
+            [buttonText]="'Start a new assessment'"
+            [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
+            (buttonCallBack)="routeToGraderUploader()"
+          >
+          </app-button>
+        </div>
+      </div>
+      <hr
+        class="quiz-seperator ml-1 mr-1"
+        style="border: none; border-top: 1px solid #f0f0f0"
+      />
+
+      <div class="top-bar">
+        <div class="controls">
+          <div class="display-flex search-assign" style="gap: 30px">
+            <div class="w-50 app-filter-search">
+              <app-search-filter
+                [config]="searchFilter"
+                (searchCallBack)="searchCallBack($event)"
+                (clearCallBack)="clearSearch()"
+              >
+              </app-search-filter>
+            </div>
+            <!-- <div class="class-search">
+              <nz-input-group
+                class="input-search"
+                [nzSuffix]="suffixIconSearch"
+                nzSize="large"
+              >
+                <ng-template #suffixIconSearch>
+                  <span
+                    style="color: #212189"
+                    nz-icon
+                    nzType="search"
+                    (click)="getCourseListOfInstructorBySearch()"
+                  ></span>
+                </ng-template>
+                <input
+                  type="text"
+                  nz-input
+                  placeholder="Search"
+                  name="title"
+                  (keydown)="getCourseListOfInstructorBySearch()"
+                  (keyup.enter)="getCourseListOfInstructorBySearch()"
+                  [(ngModel)]="payLoad.searchInput"
+                />
+              </nz-input-group>
+            </div> -->
+
+            <div class="filter">
+              <select [(ngModel)]="selectedSort" (change)="onSortChange()">
+                <option disabled value="">Sort by</option>
+                <option value="0">Ascending</option>
+                <option value="1">Descending</option>
+                <option value="2">A to Z</option>
+              </select>
+            </div>
+          </div>
+          <div class="button">
+            <div class="export">
+              <button
+                nz-tooltip="{{
+                  !isAllGraded ? 'You need to approve a submission first' : ''
+                }}"
+                class="create-course-btn-1"
+                nz-button
+                nzType="default"
+                (click)="exportAiResults()"
+                [disabled]="!isAllGraded"
+              >
+                Export Results
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+    <nz-card class="card">
+      <div class="my-course-table">
+        <nz-table
+          #basicTable
+          [nzData]="aiResultResponse"
+          [nzShowPagination]="false"
+          [nzPageSize]="10"
+          [nzScroll]="{ x: '1000px' }"
+        >
+          <thead>
+            <tr>
+              <th>Students name</th>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Submitted on</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of basicTable.data; let i = index">
+              <td class="w-20">
+                <span nz-tooltip="{{ data.studentName }}">{{
+                  data.studentName ? data?.studentName : "-"
+                }}</span>
+                <!-- <span
+                  *ngIf="data.valuesLoader"
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    height: 20px;
+                  "
+                >
+                  <i
+                    nz-icon
+                    nzType="loading"
+                    nzTheme="outline"
+                    [style.fontSize.px]="18"
+                    class="spin-icon"
+                  ></i>
+                </span> -->
+              </td>
+
+              <td>
+                <span>{{
+                  data?.studentRollNumber ? data?.studentRollNumber : "-"
+                }}</span>
+                <!-- <span
+                  *ngIf="data.valuesLoader"
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    height: 20px;
+                  "
+                >
+                  <i
+                    nz-icon
+                    nzType="loading"
+                    nzTheme="outline"
+                    [style.fontSize.px]="18"
+                    class="spin-icon"
+                  ></i>
+                </span> -->
+              </td>
+              <td>
+                <span *ngIf="!data.isEditingEmail">
+                  <ng-container *ngIf="data.studentEmail; else addEmail">
+                    {{ data.studentEmail }}
+                    <i
+                      nz-icon
+                      nzType="edit"
+                      class="ml-2 text-blue-500 cursor-pointer"
+                      (click)="enableEdit(data)"
+                    ></i>
+                  </ng-container>
+
+                  <!-- Template shown when no email is set -->
+                  <ng-template #addEmail>
+                    <a
+                      class="text-blue-500 cursor-pointer"
+                      (click)="enableEdit(data)"
+                      style="text-decoration: underline"
+                    >
+                      Add Email
+                    </a>
+                  </ng-template>
+                </span>
+
+                <!-- Input for editing -->
+                <input
+                  *ngIf="data.isEditingEmail"
+                  #emailEdit
+                  nz-input
+                  [(ngModel)]="data.studentEmail"
+                  (keydown.enter)="saveEmail($event, data)"
+                  (blur)="cancelEdit(data)"
+                  autofocus
+                />
+              </td>
+
+              <td>
+                {{ data.creationDate | date : "dd MMM yyyy" }}
+              </td>
+
+              <td>
+                <span *ngIf="!data?.valuesLoader">
+                  {{
+                    data?.grade
+                      ? data.grade % 1 === 0
+                        ? data.grade
+                        : data.grade.toFixed(1)
+                      : "-"
+                  }}
+                </span>
+
+                <span
+                  *ngIf="data.valuesLoader"
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    height: 20px;
+                  "
+                >
+                  <i
+                    nz-icon
+                    nzType="loading"
+                    nzTheme="outline"
+                    [style.fontSize.px]="18"
+                    class="spin-icon"
+                  ></i>
+                </span>
+              </td>
+
+              <td class="cursor-pointer" (click)="resultView(data, i + 1)">
+                <div class="display-flex">
+                  <div class="display-block" *ngIf="data.valuesLoader">
+                    <span
+                      style="
+                        display: inline-flex;
+                        align-items: center;
+                        height: 20px;
+                      "
+                    >
+                      <i
+                        nz-icon
+                        nzType="loading"
+                        nzTheme="outline"
+                        [style.fontSize.px]="18"
+                        class="spin-icon"
+                      ></i>
+                    </span>
+                  </div>
+                  <div>
+                    <nz-tag
+                      [ngClass]="getStatusClass(data?.resultStatus)"
+                      class="custom-status-tag"
+                    >
+                      {{ getStatusLabel(data?.resultStatus) }}
+                      <span
+                        *ngIf="data?.resultStatus == 'ERROR'"
+                        nz-icon
+                        nzType="reload"
+                        nzTheme="outline"
+                      >
+                      </span>
+                    </nz-tag>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <div class="action-buttons">
+                  <button
+                    [disabled]="data?.resultStatus != 'APPROVED'"
+                    nz-button
+                    nzType="link"
+                    class="action-share border-radius"
+                    (click)="openClassModal(data)"
+                  >
+                    <span
+                      class="action-icon font-16"
+                      nz-icon
+                      nzType="share-alt"
+                      nzTheme="outline"
+                    ></span>
+                  </button>
+                  <button
+                    [disabled]="data?.resultStatus === 'INPROCESS'"
+                    [ngClass]="{
+                      'cursor-pointer': data?.resultStatus !== 'INPROCESS',
+                      'cursor-no-drop': data?.resultStatus === 'INPROCESS'
+                    }"
+                    class="action-delete border-radius"
+                    (click)="deleteResult(data)"
+                  >
+                    <span
+                      class="action-icon font-16"
+                      nz-icon
+                      nzType="delete"
+                      nzTheme="fill"
+                    ></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        <nz-pagination
+          style="float: right"
+          class="display-inline-block mt-2"
+          [nzPageIndex]="payLoad.pageNo + 1"
+          [nzTotal]="totalElements"
+          [nzPageSize]="payLoad.pageSize"
+          (nzPageIndexChange)="onPageChange($event)"
+        >
+        </nz-pagination>
+      </div>
+    </nz-card>
+  </div>
+</div>

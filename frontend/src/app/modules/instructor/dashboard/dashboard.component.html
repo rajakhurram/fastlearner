@@ -1,0 +1,331 @@
+<div class="container">
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <div class="heading">
+        <h3>Instructor's Dashboard</h3>
+      </div>
+      <div class="display-flex">
+        <div style="margin-top: 10%">
+          <label style="padding-right: 15px; padding-top: 5px">Sort by</label>
+          <nz-select
+            [(ngModel)]="dashboardStatsParam"
+            (ngModelChange)="getDashboardStatistics()"
+            nzSize="large"
+            nzShowSearch
+            nzAllowClear="false"
+            nzPlaceHolder="Select"
+            class="sort-by"
+            style="min-width: 160px !important"
+          >
+            <nz-option nzLabel="This month" nzValue="monthly"></nz-option>
+            <nz-option
+              nzLabel="Last month"
+              nzValue="previous_month"
+            ></nz-option>
+            <nz-option nzLabel="This year" nzValue="yearly"></nz-option>
+            <nz-option nzLabel="Last Year" nzValue="previous_year"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-stats">
+      <div class="justify-row" nz-row [nzGutter]="8">
+        <div
+          class="justify-row-margin"
+          nz-col
+          nzXs="24"
+          nzMd="10"
+          nzLg="6"
+          nzXl="6"
+        >
+          <nz-card class="card">
+            <p>Total Revenue</p>
+            <h4>
+              ${{
+                dashboard?.revenue
+                  ? dashboard?.revenue.toFixed(2)
+                  : ("0" | number : "1.0" : "en-US")
+              }}
+            </h4>
+            <img
+              class="graph-image"
+              src="../../../../assets/icons/Total_Revenue.svg"
+            />
+          </nz-card>
+        </div>
+        <div
+          class="justify-row-margin"
+          nz-col
+          nzXs="24"
+          nzMd="10"
+          nzLg="6"
+          nzXl="6"
+        >
+          <nz-card class="card">
+            <p>Total Students</p>
+            <h4>
+              {{
+                dashboard?.totalStudents
+                  ? dashboard?.totalStudents?.totalValue
+                  : "0"
+              }}
+            </h4>
+            <img
+              class="graph-image"
+              src="../../../../assets/icons/Total_Students.svg"
+            />
+          </nz-card>
+        </div>
+        <div
+          class="justify-row-margin"
+          nz-col
+          nzXs="24"
+          nzMd="10"
+          nzLg="6"
+          nzXl="6"
+        >
+          <nz-card class="card">
+            <p>Total Profile Visits</p>
+            <h4>
+              {{
+                dashboard?.totalProfileVisits
+                  ? dashboard?.totalProfileVisits.totalValue
+                  : "0"
+              }}
+            </h4>
+            <img
+              class="graph-image"
+              src="../../../../assets/icons/Total_Profile_Visits.svg"
+            />
+          </nz-card>
+        </div>
+        <div
+          class="justify-row-margin"
+          nz-col
+          nzXs="24"
+          nzMd="10"
+          nzLg="6"
+          nzXl="6"
+        >
+          <nz-card class="card">
+            <p>Student course completions</p>
+            <h4>
+              {{
+                dashboard?.totalParticipants
+                  ? dashboard?.totalParticipants
+                  : "0"
+              }}
+            </h4>
+            <img
+              class="graph-image"
+              src="../../../../assets/icons/Student_course_completions.svg"
+            />
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div class="course-creation">
+      <nz-card class="main-card">
+        <div class="jump">
+          <h3>Jump Into Course Creation</h3>
+          <button
+            class="create-course-btn-1"
+            nz-button
+            nzType="default"
+            (click)="routeToCreateCourse()"
+          >
+            Create Course
+          </button>
+        </div>
+      </nz-card>
+    </div>
+    <div class="my-course">
+      <nz-card class="main-card">
+        <div class="my-course-header">
+          <div class="my-course-heading">
+            <h3>My Courses</h3>
+          </div>
+          <div class="filter-wrapper">
+            <nz-select
+              class="search-select"
+              [(ngModel)]="payLoad.sort"
+              (ngModelChange)="orderMyCourses()"
+              nzSize="large"
+              nzAllowClear="false"
+              nzPlaceHolder="Select"
+            >
+              <nz-option nzLabel="Newest" nzValue="1"></nz-option>
+              <nz-option nzLabel="Oldest" nzValue="0"></nz-option>
+            </nz-select>
+            <nz-input-group
+              class="input-search ml-4"
+              [nzSuffix]="suffixIconSearch"
+              nzSize="large"
+            >
+              <input
+                type="text"
+                nz-input
+                placeholder="Search my courses"
+                name="title"
+                (keydown)="getCourseListOfInstructorBySearch()"
+                (keyup.enter)="getCourseListOfInstructorBySearch()"
+                [(ngModel)]="payLoad.searchInput"
+              />
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+              <span
+                style="color: #212189"
+                nz-icon
+                nzType="search"
+                (click)="getCourseListOfInstructorBySearch()"
+              ></span>
+            </ng-template>
+          </div>
+        </div>
+        <div class="my-course-table">
+          <nz-table
+            #basicTable
+            [nzData]="myCourseList"
+            [nzShowPagination]="false"
+          >
+            <thead>
+              <tr>
+                <th>Thumbnail</th>
+                <th>Course Title</th>
+                <th>Duration</th>
+                <th>Student</th>
+                <th>Last Updated</th>
+                <th>Publish</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of basicTable.data">
+                <td>
+                  <img
+                    height="60px"
+                    width="100px"
+                    [src]="
+                      data?.thumbnail
+                        ? data?.thumbnail
+                        : '../../../../assets/icons/image-skeleton.svg'
+                    "
+                  />
+                </td>
+                <td class="w-20" nz-tooltip="{{ data.title }}">
+                  <span
+                    class="clickable-title"
+                    (click)="routeToCoursePage(data)"
+                    [class.cursor-pointer]="
+                      canEditPremiumCourse || data?.courseType != 'PREMIUM'
+                    "
+                    [class.text-muted]="
+                      !canEditPremiumCourse && data?.courseType == 'PREMIUM'
+                    "
+                  >
+                    {{
+                      data?.title?.length > 55
+                        ? data?.title?.substring(0, 55) + "..."
+                        : data?.title
+                    }}
+                  </span>
+                  <nz-progress
+                    [nzPercent]="data.courseProgress"
+                    nzSize="small"
+                    nzStatus="exception"
+                    [nzShowInfo]="false"
+                  ></nz-progress>
+                </td>
+
+                <td>{{ data?.duration }}</td>
+                <td>{{ data?.totalStudents }}</td>
+                <td>
+                  {{
+                    data?.lastUpdated
+                      ? (data?.lastUpdated | date : "mediumDate")
+                      : "-"
+                  }}
+                </td>
+
+                <td>
+                  <nz-switch
+                    nz-tooltip="{{
+                      data?.courseStatus == 'DRAFT'
+                        ? 'Please complete the course'
+                        : ''
+                    }}"
+                    (ngModelChange)="coursePublish(data?.id, $event)"
+                    [(ngModel)]="data.coursePublish"
+                    [class.disable-switch]="data?.courseStatus == 'DRAFT'"
+                    [nzDisabled]="
+                      data?.courseStatus == 'DRAFT' ||
+                      (data?.courseType == 'PREMIUM' && data?.coursePublish)
+                    "
+                  ></nz-switch>
+                </td>
+
+                <td>{{ data?.courseType }}</td>
+
+                <td>{{ data?.courseStatus | titlecase }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      [class.cursor-pointer]="
+                        canEditPremiumCourse || data?.courseType != 'PREMIUM'
+                      "
+                      class="action-edit border-radius"
+                      [disabled]="
+                        !canEditPremiumCourse && data?.courseType == 'PREMIUM'
+                      "
+                      (click)="routeToCoursePage(data)"
+                    >
+                      <span
+                        class="action-icon font-16"
+                        nz-icon
+                        nzType="edit"
+                        nzTheme="outline"
+                      ></span>
+                    </button>
+                    <button
+                      nz-tooltip="{{
+                        data?.courseStatus === 'PUBLISHED'
+                          ? data?.contentType === 'TEST'
+                            ? 'Please unpublish the test first'
+                            : 'Please unpublish the course first'
+                          : ''
+                      }}"
+                      (click)="deleteCourse(data?.id, CourseStatus.DELETE)"
+                      class="action-delete border-radius cursor-pointer"
+                      [disabled]="
+                        data?.courseStatus == 'PUBLISHED' ||
+                        data?.courseType == 'PREMIUM'
+                      "
+                    >
+                      <span
+                        class="action-icon font-16"
+                        nz-icon
+                        nzType="delete"
+                        nzTheme="fill"
+                      ></span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <nz-pagination
+            style="float: right"
+            class="display-inline-block mt-2"
+            [nzPageIndex]="payLoad.pageNo + 1"
+            [nzTotal]="totalElements"
+            [nzPageSize]="10"
+            (nzPageIndexChange)="onPageChange($event)"
+          >
+          </nz-pagination>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>

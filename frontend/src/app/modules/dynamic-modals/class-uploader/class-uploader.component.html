@@ -1,0 +1,46 @@
+<div *ngIf="!success">
+  <div class="modal-header">
+    <p class="student-subinfo">
+      Email <span class="highlight">{{ studentEmail ? studentEmail : '-' }}</span>
+    </p>
+    <p class="student-subinfo">
+      Score <span class="highlight">{{ studentScore ? studentScore?.toFixed(1) : '-'  }}/100</span>
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- <div class="form-group">
+    <label class="form-label">Email</label>
+    <input
+      type="email"
+      placeholder="Enter Student's email address"
+      class="form-input"
+      [(ngModel)]="studentEmail"
+    />
+  </div> -->
+
+  <div class="modal-footer">
+    <button class="cancel-btn" (click)="onCancel()">Cancel</button>
+    <button
+      class="send-btn"
+      [disabled]="!isEmailValid(studentEmail)"
+      [ngClass]="{ 'disabled-btn': !isEmailValid(studentEmail) }"
+      (click)="onSend()"
+    >
+      Send
+    </button>
+  </div>
+</div>
+
+<!-- Success message -->
+<nz-result
+  *ngIf="success"
+  nzStatus="success"
+  nzTitle="Result has been sent"
+  [nzExtra]="successButton"
+></nz-result>
+
+<ng-template #successButton>
+  <button nz-button nzType="primary" (click)="onCancel()">Done</button>
+</ng-template>

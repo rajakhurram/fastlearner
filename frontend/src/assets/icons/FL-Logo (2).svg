@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="159" height="82.077" viewBox="0 0 159 82.077">
+  <defs>
+    <linearGradient id="linear-gradient" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f44852"/>
+      <stop offset="0.021" stop-color="#e63a46"/>
+      <stop offset="0.059" stop-color="#d52a38"/>
+      <stop offset="0.105" stop-color="#c91e2e"/>
+      <stop offset="0.17" stop-color="#c21728"/>
+      <stop offset="0.347" stop-color="#c11627"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f44852"/>
+      <stop offset="0.09" stop-color="#e23643"/>
+      <stop offset="0.22" stop-color="#cf2433"/>
+      <stop offset="0.355" stop-color="#c4192a"/>
+      <stop offset="0.502" stop-color="#c11627"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="-0.339" y1="-1.288" x2="0.658" y2="-1.288" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#262261"/>
+      <stop offset="1" stop-color="#212189"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f44852"/>
+      <stop offset="0.775" stop-color="#c11627"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_65227" data-name="Group 65227" transform="translate(41.374 -2.161)">
+    <g id="Group_65226" data-name="Group 65226" transform="translate(0 2.161)">
+      <path id="Path_106455" data-name="Path 106455" d="M272.009,1554.259l2.424,2.307-.515,2.014-2.3-1.522-.016,1.68-.559.145a13.153,13.153,0,0,0,.157-3.485C270.974,1554.063,272.009,1554.259,272.009,1554.259Z" transform="translate(-267.164 -1526.805)" fill="url(#linear-gradient)"/>
+      <path id="Path_106456" data-name="Path 106456" d="M270.4,1530.664a5.54,5.54,0,0,0-3.175,6.3c.054.248.218.884.279,1.137a16.188,16.188,0,0,0,1.323,2.863l-.845-1.347c-1.758-2.9-2.21-6.631.265-9.31a6.733,6.733,0,0,1,1.367-1.212l.786,1.568Z" transform="translate(-264.901 -1514.202)" fill="#161e5d"/>
+      <ellipse id="Ellipse_1089" data-name="Ellipse 1089" cx="1.536" cy="1.562" rx="1.536" ry="1.562" transform="translate(2.312 25.493) rotate(-1.774)" fill="url(#linear-gradient-2)"/>
+      <path id="Path_106457" data-name="Path 106457" d="M338.52,1518.774,298.84,1535.8l-35.572-21.958,37.66-14.595Z" transform="translate(-263.269 -1499.244)" fill="url(#linear-gradient-3)"/>
+      <path id="Path_106458" data-name="Path 106458" d="M335.427,1519.658l-30.5,12.649L283.5,1520.5l-7.4-4.245,30.864-11.932Z" transform="translate(-269.698 -1501.789)" fill="url(#linear-gradient-4)"/>
+      <g id="Group_65225" data-name="Group 65225" transform="translate(16.307 6.404)">
+        <path id="Path_106459" data-name="Path 106459" d="M313.023,1521.286l-12.017,4.866-5.053-2.922,12-4.732Z" transform="translate(-295.953 -1515.295)" fill="#fff"/>
+        <path id="Path_106460" data-name="Path 106460" d="M330.288,1512.079l-6.118,2.413,13.778,7.516-5.5,2.329,5.414,3.021,11.592-5.053-5.336-2.838.032-.014Z" transform="translate(-310.091 -1512.079)" fill="#fff"/>
+        <path id="Path_106461" data-name="Path 106461" d="M321.609,1525.956l-12.02,4.911.9.519-.009,0,11.469,6.633,6.458-2.815-7.148-4.024,5.589-2.347Z" transform="translate(-302.786 -1519.032)" fill="#fff"/>
+      </g>
+      <ellipse id="Ellipse_1090" data-name="Ellipse 1090" cx="1.645" cy="1.147" rx="1.645" ry="1.147" transform="translate(50.817 25.696) rotate(-18.439)" fill="#fff"/>
+      <path id="Path_106462" data-name="Path 106462" d="M336.166,1548.979l-1.092,5.75s-15.278,3.206-22.564,10.83c0,0-8.437-9.9-20.022-13.337l-1.711-6.6L312.4,1558.8Z" transform="translate(-277.052 -1522.482)" fill="url(#linear-gradient-4)"/>
+    </g>
+    <text id="FastLearner" transform="translate(-41.374 74.238)" fill="#212189" font-size="28" font-family="Poppins-BoldItalic, Poppins" font-weight="700" font-style="italic" letter-spacing="0.01em"><tspan x="0" y="0">Fast</tspan><tspan y="0" font-family="Poppins-LightItalic, Poppins" font-weight="300" letter-spacing="-0.05em">Learner</tspan></text>
+  </g>
+</svg>

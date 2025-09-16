@@ -1,0 +1,75 @@
+<div class="grader-results-header display-flex" id="top">
+  <!-- Left: Title -->
+  <h3 class="grader-title">AI Grader</h3>
+
+  <nz-card *ngIf="showUpgradePlan" class="grader-card">
+    <div class="grader-info">
+      <div class="progress-section">
+        <div class="label">Papers Graded</div>
+        <div class="progress-bar">
+          <span class="plan">Free</span>
+          <div style="width: 200px">
+            <nz-progress
+              [nzPercent]="(gradedPapers / allowedPapers) * 100"
+              [nzStrokeColor]="'#212189'"
+              [nzShowInfo]="false"
+            ></nz-progress>
+          </div>
+
+          <div class="count">{{ gradedPapers }} / {{ allowedPapers }}</div>
+        </div>
+      </div>
+      <app-button (buttonCallBack)="openSubscriptionPlan()">
+        <img
+          src="./../../../assets/icons/Upgrade.svg"
+          alt="Upgrade"
+          width="20"
+          height="20"
+          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px;"
+        />
+        Upgrade
+      </app-button>
+    </div>
+  </nz-card>
+</div>
+
+<div class="container">
+  <nz-card [ngStyle]="{}" class="card">
+    <div nz-row>
+      <div class="top-heading">
+        <h3 class="">Assessment</h3>
+      </div>
+
+      <div class="custom-ml-auto">
+        <app-button
+          [config]="assessmentButtonConfig"
+          [buttonText]="'Start a new assessment'"
+          [disabled]="gradedPapers>=allowedPapers && showUpgradePlan"
+          (buttonCallBack)="routeToGraderUploader()"
+        >
+        </app-button>
+      </div>
+    </div>
+
+    <!-- <hr class="line-color mt-2" /> -->
+
+    <div nz-row class="border-top mt-1">
+      <div nz-col nzSpan="20" class="mt-1">
+        <app-class-assessment-dropdown
+          class="w-100"
+          (selectedClassCallBackEmit)="selectedClassCallBack($event)"
+          (selectedAssessmentCallBackEmit)="selectedAssessmentCallBack($event)"
+        ></app-class-assessment-dropdown>
+      </div>
+    </div>
+
+    <div style="width: 100%" class="mt-2">
+      <app-table
+        (action)="handleTableAction($event)"
+        [tableConfig]="tableConfig"
+        (editValueAction)="editValue($event)"
+        (pageChange)="onAssessmentPageChange($event)"
+      ></app-table>
+    </div>
+  </nz-card>
+</div>

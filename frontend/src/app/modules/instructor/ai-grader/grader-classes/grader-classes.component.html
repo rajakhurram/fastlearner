@@ -1,0 +1,180 @@
+<div class="grader-results-header display-flex" id="top">
+  <!-- Left: Title -->
+  <h3 class="grader-title">AI Grader</h3>
+
+  <nz-card *ngIf="showUpgradePlan" class="grader-card">
+    <div class="grader-info">
+      <div class="progress-section">
+        <div class="label">Papers Graded</div>
+        <div class="progress-bar">
+          <span class="plan">Free</span>
+          <div style="width: 200px">
+            <nz-progress
+              [nzPercent]="(gradedPapers / allowedPapers) * 100"
+              [nzStrokeColor]="'#212189'"
+              [nzShowInfo]="false"
+            ></nz-progress>
+          </div>
+
+          <div class="count">{{ gradedPapers }} / {{ allowedPapers }}</div>
+        </div>
+      </div>
+      <app-button (buttonCallBack)="openSubscriptionPlan()">
+        <img
+          src="./../../../assets/icons/Upgrade.svg"
+          alt="Upgrade"
+          width="20"
+          height="20"
+          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px;"
+        />
+        Upgrade
+      </app-button>
+    </div>
+  </nz-card>
+</div>
+
+<div class="container">
+  <nz-card [ngStyle]="{}" class="card">
+    <div nz-row>
+      <div class="top-heading">
+        <h3 class="">Classes</h3>
+      </div>
+
+      <div class="ml-auto">
+        <app-button
+          [config]="assessmentButtonConfig"
+          [buttonText]="'Start a new assessment'"
+          [disabled]="gradedPapers>=allowedPapers && showUpgradePlan"
+          (buttonCallBack)="routeToGraderUploader()"
+        >
+        </app-button>
+      </div>
+    </div>
+
+    <!-- <hr class="line-color mt-2" /> -->
+
+    <div nz-row class="border-top mt-1">
+      <div nz-col nzSpan="20" class="mt-1">
+        <app-class-assessment-dropdown
+          class="w-100"
+          (selectedClassCallBackEmit)="selectedClassCallBack($event)"
+          (selectedAssessmentCallBackEmit)="selectedAssessmentCallBack($event)"
+        ></app-class-assessment-dropdown>
+      </div>
+
+      <!-- <div
+        nz-col
+        nzSpan="4"
+        class="display-flex justify-content-center align-items-center mt-1"
+      >
+        <span class="expand-all cursor-pointer" (click)="expandAll()"
+          >Expand all
+        </span>
+      </div> -->
+    </div>
+
+    <div nz-row class="mt-2">
+      <nz-collapse class="w-100" id="top" *ngIf="classes.length">
+        <ng-container *ngFor="let class of classes; let i = index">
+          <nz-collapse-panel
+            (nzActiveChange)="onPanelClick(class, true)"
+            [nzActive]="class?.panelOpen"
+            [nzShowArrow]="false"
+            [nzHeader]="headerTemplate"
+          >
+            <app-table
+              #tableRef
+              (action)="handleTableAction($event, class)"
+              (editValueAction)="editValue($event)"
+              (pageChange)="onAssessmentPageChange(class, $event)"
+              [tableConfig]="tableConfig"
+            ></app-table>
+          </nz-collapse-panel>
+
+          <ng-template #expandIcon>
+            <div class="switch-container">
+              <img src="../../../../../assets/icons/Ellipse 1258.svg" />
+            </div>
+          </ng-template>
+          <ng-template #headerTemplate>
+            <div class="display-block">
+              <p class="m-0 font-16">Class</p>
+              <p
+                *ngIf="!class?.editMode"
+                class="color-blue font-bold m-0 font-16"
+              >
+                {{ class?.name }}
+              </p>
+              <input
+                (click)="$event.stopPropagation()"
+                *ngIf="class?.editMode"
+                #classEdit
+                nz-input
+                nzSize="large"
+                [(ngModel)]="class.editingValue"
+                (keydown.enter)="editClassValue(class)"
+                (blur)="cancelClassEdit(class)"
+              />
+            </div>
+
+            <div class="display-flex action-items-gap ml-auto">
+              <button
+                class="action-edit border-radius cursor-pointer"
+                (click)="
+                  onAction(class, actions.EDIT); $event.stopPropagation()
+                "
+              >
+                <span
+                  class="action-icon font-16"
+                  nz-icon
+                  nzType="edit"
+                  nzTheme="outline"
+                ></span>
+              </button>
+
+              <button
+                (click)="
+                  onAction(class, actions.DELETE); $event.stopPropagation()
+                "
+                class="action-delete border-radius cursor-pointer"
+              >
+                <span
+                  class="action-icon font-16"
+                  nz-icon
+                  nzType="delete"
+                  nzTheme="fill"
+                ></span>
+              </button>
+            </div>
+            <div class="display-block ml-1">
+              <img
+                *ngIf="class?.panelOpen"
+                class="arrow-svg"
+                src="../../../../../assets/icons/prem-expanded.svg"
+              />
+              <img
+                *ngIf="!class?.panelOpen"
+                class="arrow-svg"
+                src="../../../../../assets/icons/Group 66462.svg"
+              />
+            </div>
+          </ng-template>
+        </ng-container>
+      </nz-collapse>
+
+      <div class="w-100 display-flex justify-content-end mt-1">
+        <nz-pagination
+          *ngIf="classes?.length"
+          [nzPageIndex]="classPayload.pageNo + 1"
+          [nzTotal]="classPayload.totalElements || 0"
+          [nzPageSize]="classPayload.pageSize || 10"
+          (nzPageIndexChange)="onClassPageChange($event)"
+        >
+        </nz-pagination>
+        <div class="display-flex justify-content-center w-100" *ngIf="!classes?.length">
+          <nz-empty [nzNotFoundContent]="'No Class Found'"></nz-empty>
+        </div>
+      </div>
+    </div>
+  </nz-card>
+</div>

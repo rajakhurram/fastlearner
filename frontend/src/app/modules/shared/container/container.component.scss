@@ -1,0 +1,21 @@
+.centet-align-container {
+  width: 100%;
+  max-width: 1920px;
+  margin: auto;
+  position: relative;
+}
+
+.custom-container-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@media screen and (max-width: 450px) {
+  .custom-container-content-center {
+    flex-direction: column;
+  }
+  .centet-align-container{
+    align-self: center;
+  }
+}

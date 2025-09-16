@@ -1,0 +1,64 @@
+.payment-heading h3 {
+    font-weight: 600;
+    margin-bottom: 0px;
+}
+
+.payment-heading span {
+    color: #212189;
+}
+
+.card h3 {
+    font-weight: 600;
+}
+
+.card {
+    box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+    border-radius: 5px;
+    margin-top: 30px;
+}
+
+.payment-header {
+    border: 1px solid;
+    border-color: #cdcdcd !important;
+    padding: 20px;
+}
+
+.stripe-btn {
+    border-color: #fe4a55 !important;
+    background-color: #fe4a55 !important;
+    color: white !important;
+    height: 40px !important;
+}
+
+.payment-header .ml-auto > div {
+    margin-right: 20px;
+}
+
+.fields {
+    font-weight: bold;
+}
+
+.text-color {
+    color: #929292;
+}
+
+.payment-details-container {
+    border: 1px solid;
+    border-color: #cdcdcd !important;
+}
+
+.transaction-history-head {
+    font-size: large; 
+    font-weight: bold;
+}
+
+.th-style {
+    background-color: white;
+    color: #212189 !important;
+    font-size: 16px; 
+    font-weight: bold;
+}
+
+.tr-style {
+    border-bottom: 2px solid #e6e6e6 !important;
+}

@@ -1,0 +1,95 @@
+pipeline {
+	agent any
+
+    stages {
+        stage('Build') {
+                steps {
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        stage('Deploy') {
+            steps {
+                withCredentials([
+                    // Google bucket file upload
+                    file(credentialsId: 'GCP_SERVICE_ACCOUNT', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
+                    // DB
+                    usernamePassword(credentialsId: 'DB_CREDENTIALS', usernameVariable: 'DB_USERNAME', passwordVariable: 'DB_PASSWORD'),
+                    // RabbitMQ
+                    usernamePassword(credentialsId: 'RABBIT_MQ_CRED', usernameVariable: 'RABBITMQ_USERNAME', passwordVariable: 'RABBITMQ_PASSWORD'),
+                    // Mail
+                    usernamePassword(credentialsId: 'AG_MAIL_CRED', usernameVariable: 'MAIL_USERNAME', passwordVariable: 'MAIL_PASSWORD'),
+                    // Elastic Search
+                    usernamePassword(credentialsId: 'ELASTIC_SEARCH_CRED', usernameVariable: 'ES_USERNAME', passwordVariable: 'ES_PASSWORD'),
+                    // Secret Keys
+                    string(credentialsId: 'OPENAI_API_KEY', variable: 'OPENAI_API_KEY'),
+                    string(credentialsId: 'JWT_SECRET', variable: 'JWT_SECRET'),
+                    string(credentialsId: 'JWT_EXPIRATION', variable: 'JWT_EXPIRATION'),
+                    string(credentialsId: 'JWT_REFRESH_EXPIRATION', variable: 'JWT_REFRESH_EXPIRATION'),
+                    string(credentialsId: 'JWT_ENCRYPTION_KEY', variable: 'JWT_ENCRYPTION_KEY'),
+                    string(credentialsId: 'OTP_EXPIRY', variable: 'OTP_EXPIRY'),
+                    string(credentialsId: 'USER_SESSION_EXPIRY', variable: 'USER_SESSION_EXPIRY'),
+                    string(credentialsId: 'TRANSCRIPT_AUTH_KEY', variable: 'TRANSCRIPT_AUTH_KEY'),
+                    string(credentialsId: 'GCP_PROJECT_ID', variable: 'GCP_PROJECT_ID'),
+                    string(credentialsId: 'GCP_BUCKET_URL', variable: 'GCP_BUCKET_URL'),
+                    string(credentialsId: 'GCP_BUCKET_NAME', variable: 'GCP_BUCKET_NAME'),
+                    string(credentialsId: 'GOOGLE_CLIENT_ID', variable: 'GOOGLE_CLIENT_ID'),
+                    string(credentialsId: 'ANDROID_GOOGLE_CLIENT_ID', variable: 'ANDROID_GOOGLE_CLIENT_ID'),
+                    string(credentialsId: 'IOS_GOOGLE_CLIENT_ID', variable: 'IOS_GOOGLE_CLIENT_ID'),
+                    string(credentialsId: 'YOUTUBE_API_KEY', variable: 'YOUTUBE_API_KEY'),
+                    string(credentialsId: 'STRIPE_SECRET_KEY', variable: 'STRIPE_SECRET_KEY'),
+                    string(credentialsId: 'PAYMENT_API_KEY', variable: 'PAYMENT_API_KEY')
+                ]) {
+
+                    sh 'pm2 stop fastlearner || true'
+
+                    // Export all environment variables so PM2 picks them up
+                    sh '''
+                        # Copy the secret file to a permanent location
+                        sudo cp "${GOOGLE_APPLICATION_CREDENTIALS}" "${WORKSPACE}/gcp-key.json"
+
+                        echo "🔑 Setting GOOGLE_APPLICATION_CREDENTIALS env..."
+                        export GOOGLE_APPLICATION_CREDENTIALS="${WORKSPACE}/gcp-key.json"
+                        export DB_USERNAME="${DB_USERNAME}"
+                        export DB_PASSWORD="${DB_PASSWORD}"
+                        export RABBITMQ_USERNAME="${RABBITMQ_USERNAME}"
+                        export RABBITMQ_PASSWORD="${RABBITMQ_PASSWORD}"
+                        export MAIL_USERNAME="${MAIL_USERNAME}"
+                        export MAIL_PASSWORD="${MAIL_PASSWORD}"
+                        export OPENAI_API_KEY="${OPENAI_API_KEY}"
+                        export JWT_SECRET="${JWT_SECRET}"
+                        export JWT_EXPIRATION="${JWT_EXPIRATION}"
+                        export JWT_REFRESH_EXPIRATION="${JWT_REFRESH_EXPIRATION}"
+                        export JWT_ENCRYPTION_KEY="${JWT_ENCRYPTION_KEY}"
+                        export OTP_EXPIRY="${OTP_EXPIRY}"
+                        export USER_SESSION_EXPIRY="${USER_SESSION_EXPIRY}"
+                        export TRANSCRIPT_AUTH_KEY="${TRANSCRIPT_AUTH_KEY}"
+                        export ES_USERNAME="${ES_USERNAME}"
+                        export ES_PASSWORD="${ES_PASSWORD}"
+                        export GCP_PROJECT_ID="${GCP_PROJECT_ID}"
+                        export GCP_BUCKET_URL="${GCP_BUCKET_URL}"
+                        export GCP_BUCKET_NAME="${GCP_BUCKET_NAME}"
+                        export GOOGLE_CLIENT_ID="${GOOGLE_CLIENT_ID}"
+                        export ANDROID_GOOGLE_CLIENT_ID="${ANDROID_GOOGLE_CLIENT_ID}"
+                        export IOS_GOOGLE_CLIENT_ID="${IOS_GOOGLE_CLIENT_ID}"
+                        export YOUTUBE_API_KEY="${YOUTUBE_API_KEY}"
+                        export STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY}"
+                        export PAYMENT_API_KEY="${PAYMENT_API_KEY}"
+
+                        # Start PM2 with ecosystem file
+                        echo "📦 Deploying application with PM2..."
+                        pm2 start ecosystem.config.js --update-env
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+            success {
+                echo "✅ Deployment successful!"
+            }
+            failure {
+                echo "❌ Deployment failed!"
+            }
+        }
+}

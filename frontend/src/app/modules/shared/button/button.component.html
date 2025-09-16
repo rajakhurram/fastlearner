@@ -1,0 +1,29 @@
+<button
+  nz-button
+  [nzType]="config.type"
+  [nzSize]="config.size"
+  [ngStyle]="{
+    'background-color': config.backgroundColor,
+    color: config.color,
+    'border-color': config.borderColor,
+    'border-radius': config.borderRadius,
+    border: config.border,
+    outline: config.outline,
+    height: config.height,
+    'padding-top': config.paddingTop,
+    'padding-right': config.paddingRight,
+    'padding-bottom': config.paddingBottom,
+    'padding-left': config.paddingLeft,
+    'font-size': config.fontSize,
+    '--hover-bg-color': config.hoverConfig?.backgroundColor || '',
+    '--hover-color': config.hoverConfig?.color || '',
+    'font-weight': config.fontWeight,
+  }"
+  [ngClass]="{ 'hover-enabled': config.hoverConfig }"
+  (click)="callBackFn($event)"
+  [disabled]="disabled"
+>
+  <span *ngIf="config.iconType" nz-icon [nzType]="config.iconType"></span>
+  {{ buttonText }}
+  <ng-content></ng-content>
+</button>

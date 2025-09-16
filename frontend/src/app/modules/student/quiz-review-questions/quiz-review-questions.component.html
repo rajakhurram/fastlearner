@@ -1,0 +1,181 @@
+<div class="back-results">
+  <a (click)="backToPrevousState()" class="back-link">
+    < Back to result overview
+  </a>
+</div>
+<div class="quiz-results-header-container">
+  <div class="quiz-results-container">
+    <h2 class="quiz-title">{{ currentSelectedTopic?.quizTitle }}</h2>
+
+    <p class="quiz-subtitle">Result</p>
+    <hr />
+
+    <div class="quiz-stats">
+      <div class="item-heading">
+        <div class="stat-item">
+          <p><strong>Total Questions</strong></p>
+          <p>{{ quizData?.totalQuestion }}</p>
+        </div>
+        <div class="stat-item">
+          <p><strong>Attempted Questions</strong></p>
+          <p>{{quizData?.totalAttemptQuestion}} out of  {{ quizData?.totalQuestion }}</p>
+        </div>
+      </div>
+      <!-- Filter Buttons -->
+      <div class="quiz-filters">
+        <button
+          nz-button
+          class="filter-btn"
+          [ngClass]="{ 'active': selectedFilter === 'all' }"
+          (click)="filterResults('all')"
+        >
+          All
+        </button>
+        <button
+          nz-button
+          class="filter-btn"
+          [ngClass]="{ 'active': selectedFilter === 'correct' }"
+          (click)="filterResults('correct')"
+        >
+          {{ quizData?.totalCorrectAnswer }} Correct
+        </button>
+        <button
+          nz-button
+          class="filter-btn"
+          [ngClass]="{ 'active': selectedFilter === 'incorrect' }"
+          (click)="filterResults('incorrect')"
+        >
+          {{ quizData?.totalQuestion - quizData?.totalCorrectAnswer }} Incorrect
+        </button>
+      </div>
+
+      <!-- Retake Quiz Button -->
+      <button class="retake-btn" nz-button (click)="retakeQuiz()">
+        Retake Quiz
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-review-container">
+  <div *ngIf="filteredQuestions?.length > 0; else noData" class="question-scroller">
+    <div *ngFor="let question of filteredQuestions; let i = index" class="question-card mr-1">
+      <h3 class="question-head font-16">
+        Question {{ i + 1 }}:
+        <span [class.correct-text]="question?.correct" [class.incorrect-text]="!question?.correct">
+          {{ question?.correct ? "Correct" : "Incorrect" }}
+        </span>
+      </h3>
+  
+      <h3 class="question-text font-16" style="color: black">
+        {{ question.questionText }}
+      </h3>
+
+      <ng-container *ngFor="let option of question?.answerResponseList">
+        <div
+          class="answer-text border-radius mb-1"
+          [class.display-flex]="!option?.selected && !option?.corrected"
+          [class.align-items-center]="!option?.selected && !option?.corrected"
+          [ngClass]="{
+            correct:
+              (option?.selected && option?.corrected) ||
+              (!option?.selected && option?.corrected),
+            incorrect: option?.selected && !option?.corrected
+          }"
+        >
+          <p
+            class="margin-0 font-bold font-16"
+            [ngClass]="{
+              'correct-text':
+                (option?.selected && option?.corrected) ||
+                (!option?.selected && option?.corrected),
+              'incorrect-text': option?.selected && !option?.corrected
+            }"
+          >
+            {{
+              option?.selected && option?.corrected
+                ? correctAnswerSelectedText
+                : option?.selected && !option?.corrected
+                ? incorrectAnswerSelectedText
+                : !option?.selected && option?.corrected
+                ? nonSelectedCorrecAnswer
+                : null
+            }}
+          </p>
+
+          <div class="display-flex">
+            <ng-container
+              *ngIf="
+                question?.questionType == questionType.SINGLE_CHOICE ||
+                question?.questionType == questionType?.TRUE_FALSE
+              "
+            >
+              <span
+                *ngIf="option?.selected && !option?.corrected"
+                class="font-14"
+                style="margin-top: 7px;"
+                nz-icon
+                nzType="close-circle"
+                nzTheme="fill"
+              ></span>
+              <span
+                *ngIf="option?.selected && option?.corrected"
+                class="font-14"
+                style="margin-top: 7px;"
+                nz-icon
+                nzType="check-circle"
+                nzTheme="fill"
+              ></span>
+              <span
+                *ngIf="(!option?.selected && !option?.corrected) || (!option?.selected && option?.corrected)"
+                class="normal-circle"
+              >
+              </span>
+            </ng-container>
+
+            <ng-container
+              *ngIf="question?.questionType == questionType?.MULTIPLE_CHOICE"
+            >
+              <span
+                *ngIf="option?.selected && !option?.corrected"
+                class="font-14"
+                style="margin-top: 7px;"
+                nz-icon
+                nzType="close-square"
+                nzTheme="fill"
+              ></span>
+              <span
+                *ngIf="option?.selected && option?.corrected"
+                class="font-14"
+                style="margin-top: 7px;"
+                nz-icon
+                nzType="check-square"
+                nzTheme="fill"
+              ></span>
+              <span
+                *ngIf="(!option?.selected && !option?.corrected) || (!option?.selected && option?.corrected)"
+                class="normal-square"
+                style="margin-top: 7px;"
+              >
+              </span>
+            </ng-container>
+
+            <p class="margin-0 pl-4">
+              {{ option.answerText }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngIf="question.explanation" class="explanation border-radius">
+        <strong class="font-14" style="color: black">Explanation</strong> <br />{{
+          question?.explanation
+        }}
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p>No questions available.</p>
+  </ng-template>
+</div>

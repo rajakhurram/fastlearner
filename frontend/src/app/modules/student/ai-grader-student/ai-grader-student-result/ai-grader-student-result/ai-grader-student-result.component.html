@@ -1,0 +1,87 @@
+<div
+  class="top-heading display-flex"
+  style="padding-left: 50px; margin-top: 25px"
+  id="top"
+>
+  <h3>AI Grader Results</h3>
+</div>
+
+<div class="container">
+  <nz-card class="card">
+    <div class="assessment">
+      <div class="header mb-1">
+        <div style="display: flex; ">
+          <button
+            nz-button
+            nzType="default"
+            class="back-btn"
+            (click)="goBack()"
+          >
+            <img
+              class="arrow-svg"
+              src="../../../../../assets/icons/back-arrow.svg"
+            />
+          </button>
+        </div>
+        <div class="text-align-start">
+          <span> Assessment </span>
+          <span> {{ result?.assessmentName }} </span>
+        </div>
+        <div class="text-align-start">
+          <span> Class </span>
+          <span> {{ result?.className }} </span>
+        </div>
+        <div class="text-align-start">
+          <span> Teacher </span>
+          <span> {{ resultViewData?.teacherName }} </span>
+        </div>
+        <div class="text-align-start">
+          <span> Date graded </span>
+          <span> {{ resultViewData?.dateGraded }} </span>
+        </div>
+      </div>
+      <div class="menu">
+        <app-pdf-viewer [src]="result?.fileUrl"> </app-pdf-viewer>
+      </div>
+      <div class="content">
+        <div class="score-header border-radius">
+          <span class="color-blue font-bold font-15">Score summary</span>
+        </div>
+        <div class="score-bar mt-2">
+          <div class="prog-bar">
+            <nz-progress
+              [nzPercent]="result?.grade"
+              nzType="circle"
+              [nzWidth]="80"
+              [nzStrokeWidth]="10"
+              nzStrokeColor="#212189"
+            ></nz-progress>
+            <div style="margin-top: 8px">
+              <strong class="color-blue font-bold"
+                >{{ result?.grade }}/{{ result?.score }}</strong
+              >
+              <p style="color: green">
+                <i nz-icon nzType="check-circle" nzTheme="fill"></i>
+                Passed
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="score display-flex">
+          <p>Score breakdown</p>
+          <p>Score</p>
+        </div>
+        <div class="score-list">
+          <div class="scroll-container" (scroll)="onScroll($event)">
+            <div class="score-row mt-1" *ngFor="let q of questions">
+              <div class="question">question {{ q.questionNumber }}</div>
+              <div class="score-value color-blue font-bold">
+                {{ q.score }}/10
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-card>
+</div>

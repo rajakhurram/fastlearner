@@ -1,0 +1,164 @@
+<div class="container">
+  <div class="top-heading">
+    <h3>
+      <a
+        (click)="affiliatePreviusRoute()"
+        class="back-arrow"
+        title="Go Back"
+        style="color: black"
+      >
+        &lt;
+      </a>
+      Affiliates
+    </h3>
+  </div>
+  <div>
+    <nz-card class="card">
+      <div class="affliate-container">
+        <div class="affliate-container__details">
+          <div class="affliate-container__details__heading-container">
+            <h4 class="affliate-container__details__heading-container__heading">
+              Affiliate details
+            </h4>
+            <div
+              class="affliate-container__details__heading-container__action-buttons"
+            >
+              <button
+                class="action-edit border-radius cursor-pointer"
+                [disabled]="affiliateDetail?.isSelf"
+                (click)="!affiliateDetail?.isSelf && editAffliateDetails()"
+              >
+                <img
+                  class="action-icon"
+                  src="../../../../../assets/icons/edit-text.svg"
+                />
+              </button>
+              <button
+                [disabled]="affiliateDetail?.isSelf"
+                class="action-delete border-radius cursor-pointer"
+                (click)="!affiliateDetail?.isSelf && deleteAffliate()"
+              >
+                <span
+                  class="action-icon font-16"
+                  nz-icon
+                  nzType="delete"
+                  nzTheme="fill"
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div class="affliate-container__details__fields">
+            <div class="affliate-container__details__fields__container">
+              <p class="affliate-container__details__fields__container__label">
+                Name
+              </p>
+              <p class="affliate-container__details__fields__container__value">
+                {{ affiliateDetail?.name }}
+              </p>
+            </div>
+            <div class="affliate-container__details__fields__container">
+              <p class="affliate-container__details__fields__container__label">
+                Nickname
+              </p>
+              <p class="affliate-container__details__fields__container__value">
+                {{ affiliateDetail?.nickName }}
+              </p>
+            </div>
+            <div class="affliate-container__details__fields__container">
+              <p class="affliate-container__details__fields__container__label">
+                Email
+              </p>
+              <p class="affliate-container__details__fields__container__value">
+                {{ affiliateDetail?.email }}
+              </p>
+            </div>
+            <div class="affliate-container__details__fields__container">
+              <p class="affliate-container__details__fields__container__label">
+                Stripe ID
+              </p>
+              <div class="justify">
+                <p
+                  [ngStyle]="{
+                    color:
+                      affiliateDetail?.onboardStatus ==
+                      affliateStripeStatus.ACTIVATED
+                        ? 'green'
+                        : ' red'
+                  }"
+                  class="affliate-container__details__fields__container__value-stripe"
+                >
+                  {{
+                    affiliateDetail?.onboardStatus ==
+                    affliateStripeStatus.ACTIVATED
+                      ? "Connected"
+                      : "Not Connected"
+                  }}
+                </p>
+                <p
+                  (click)="
+                    !affiliateDetail?.isSelf &&
+                      resendLink(affiliateDetail?.email)
+                  "
+                  *ngIf="
+                    affiliateDetail?.onboardStatus !=
+                    affliateStripeStatus.ACTIVATED
+                  "
+                  [class.disabled]="affiliateDetail?.isSelf"
+                  class="link"
+                >
+                  Resend link
+                </p>
+              </div>
+            </div>
+            <div class="affliate-container__details__fields__container">
+              <p class="affliate-container__details__fields__container__label">
+                Onboarded Students
+              </p>
+              <p class="affliate-container__details__fields__container__value">
+                {{ affiliateDetail?.totalOnboardedStudent }}
+              </p>
+            </div>
+            <div class="affliate-container__details__fields__container">
+              <p class="affliate-container__details__fields__container__label">
+                Total Earned Rewards
+              </p>
+              <p class="affliate-container__details__fields__container__value">
+                ${{ affiliateDetail?.totalRevenue?.toFixed(2) }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="affliate-container__courses-container">
+          <h3 class="affliate-container__courses-container__heading">
+            Add Course
+          </h3>
+          <div class="affliate-container__courses-container__filter">
+            <app-assign-course-affliate
+              [coursesList]="coursesSelection"
+              [selectPlaceholder]="'Select Course'"
+              [courseSearch]="true"
+              (addCourseAffiliateEmitter)="onAddCourse($event)"
+            ></app-assign-course-affliate>
+            
+            <div *ngIf="affiliateLimitExceedMessage" class="error-message">
+              <span style="color: red;" [innerHTML]="affiliateLimitExceedMessage"></span>
+            </div>            
+
+          </div>
+          <div class="mt-3">
+            <h3 class="affliate-container__courses-container__heading">
+              Affiliated Courses
+            </h3>
+            <div>
+              <app-table
+                (action)="handleTableAction($event)"
+                [tableConfig]="tableConfig"
+                (pageChange)="onPageChange($event)"
+              ></app-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

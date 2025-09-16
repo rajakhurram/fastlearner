@@ -1,0 +1,695 @@
+<form [formGroup]="formGroup">
+  <div nz-row [nzGutter]="16" class="mt-3">
+    <div
+      nz-col
+      [nzLg]="formGroup.get('courseType').value == courseType.PREMIUM ? 12 : 24"
+      [nzMd]="formGroup.get('courseType').value == courseType.PREMIUM ? 12 : 24"
+      [nzSm]="formGroup.get('courseType').value == courseType.PREMIUM ? 12 : 24"
+      nzXs="24"
+    >
+      <label class="label-color"
+        >Type <span class="mandatory">*</span>
+        <img
+  style="margin-left: 10px"
+  [nzTooltipTitle]="
+    'Earn revenue based on course views in the subscription model, or earn 90% on each purchase from premium ' +
+    (selectedContentType === courseContentType.COURSE
+      ? 'course.'
+      : 'test. ')
+  "
+  nzTooltipPlacement="rightTop"
+  [nzTooltipTrigger]="'hover'"
+  nz-tooltip
+  src="../../../../../assets/icons/info-icon.svg"
+/>
+
+      </label>
+      <nz-select
+        style="margin-top: 5px"
+        [nzSize]="'large'"
+        [nzPlaceHolder]="
+          selectedContentType == courseContentType.COURSE
+            ? 'Select course type'
+            : 'Select test type'
+        "
+        formControlName="courseType"
+        [nzDisabled]="formGroup.get('courseProgress').value === '100'"
+      >
+        <nz-option
+          *ngFor="let type of filteredCourseTypes"
+          [nzLabel]="type.name"
+          [nzValue]="type.value"
+          nzCustomContent
+          [nzDisabled]="
+            type.value === courseType.PREMIUM && !isAvailablePremium
+          "
+        >
+          <span>
+            {{ type.name }}
+          </span>
+          <span
+            *ngIf="type.value === courseType.PREMIUM && !isAvailablePremium"
+            (click)="openSubscriptionPlan()"
+            style="font-size: 16px !important; color: black"
+            class="cursor-pointer ml-2"
+            nz-icon
+            nzType="lock"
+            nzTheme="fill"
+          ></span>
+        </nz-option>
+      </nz-select>
+    </div>
+    <div
+      *ngIf="formGroup.get('courseType').value == courseType.PREMIUM"
+      nz-col
+      nzLg="12"
+      nzMd="12"
+      nzSm="12"
+      nzXs="24"
+    >
+      <label class="label-color">Price <span class="mandatory">*</span></label>
+      <nz-input-group style="margin-top: 5px" [nzPrefix]="staticValue">
+        <input
+          nz-input
+          placeholder="Enter Price"
+          nzSize="large"
+          formControlName="price"
+          type="number"
+          min="0"
+          (input)="onInput($event)"
+        />
+      </nz-input-group>
+      <ng-template #staticValue>
+        <span>$</span>
+      </ng-template>
+      <div
+        *ngIf="
+          formGroup.get('price').invalid &&
+          (formGroup.get('price').dirty || formGroup.get('price').touched)
+        "
+      >
+        <!-- Error for price greater than zero -->
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('price').errors['priceGreaterThanZero']"
+        >
+          Price must be greater than 0.
+        </div>
+
+        <!-- Error for max price (if applicable) -->
+        <div style="color: red" *ngIf="formGroup.get('price').errors['max']">
+          Price cannot exceed $1000.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="16" class="mt-2">
+    <div nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <label class="label-color">Title <span class="mandatory">*</span></label>
+      <input
+        nz-input
+        placeholder="Insert your title"
+        nzSize="large"
+        formControlName="courseTitle"
+        (input)="courseTitleExist()"
+        (keydown)="preventEmoji($event)"
+        (paste)="preventEmojiOnPaste($event)"
+      />
+      <div
+        *ngIf="
+          formGroup.get('courseTitle').invalid &&
+          formGroup.get('courseTitle').dirty
+        "
+      >
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('courseTitle').errors?.['minLength']"
+        >
+          Title must be at least
+          {{
+            formGroup.get("courseTitle").errors?.['minLength'].requiredLength
+          }}
+          characters long.
+        </div>
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('courseTitle').errors?.['maxLength']"
+        >
+          Title cannot be greater than
+          {{
+            formGroup.get("courseTitle").errors?.['maxLength'].requiredLength
+          }}
+          characters long.
+        </div>
+      </div>
+      <div *ngIf="formGroup.get('titleExist').value == true" style="color: red">
+        Course Title already exist.
+      </div>
+    </div>
+
+    <div nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <label class="label-color">Level <span class="mandatory">*</span></label>
+      <nz-select
+        [nzSize]="'large'"
+        nzPlaceHolder="Select level"
+        formControlName="courseLevel"
+      >
+        <nz-option
+          *ngFor="let level of listOfLevel"
+          [nzLabel]="level.name"
+          [nzValue]="level"
+        ></nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="16" class="mt-2">
+    <div nz-col nzLg="24" nzMd="24" nzSm="24" nzXs="24">
+      <label class="label-color">Url <span class="mandatory">*</span></label>
+      <nz-input-group [nzPrefix]="staticValue" [nzSuffix]="copyValue">
+        <input
+          id="url-input"
+          style="color: #99c3ff"
+          nz-input
+          [placeholder]="
+            selectedContentType == courseContentType.COURSE
+              ? 'Insert your course URL'
+              : 'Insert your test URL'
+          "
+          nzSize="large"
+          formControlName="courseUrl"
+          (input)="courseUrlExist()"
+          (keypress)="preventSpecialCharUrl($event)"
+          (paste)="preventSpecialCharUrlOnPaste($event)"
+        />
+      </nz-input-group>
+      <ng-template #copyValue>
+        <span
+          (click)="copyUrl()"
+          class="cursor-pointer"
+          nz-icon
+          nzType="copy"
+          nzTheme="twotone"
+          nz-tooltip
+          [nzTooltipTitle]="copyTooltipText"
+          [nzTooltipVisible]="urlTooltip"
+        ></span>
+      </ng-template>
+      <ng-template #staticValue>
+        <span>{{ applicationCourseDetailsUrl }}</span>
+      </ng-template>
+
+      <div
+        *ngIf="
+          formGroup.get('courseUrl').invalid && formGroup.get('courseUrl').dirty
+        "
+      >
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('courseUrl').errors?.['minlength']"
+        >
+          URL must be at least
+          {{
+          formGroup.get('courseUrl').errors?.['minlength'].requiredLength
+          }}
+          characters long.
+        </div>
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('courseUrl').errors?.['maxlength']"
+        >
+          URL cannot be greater than
+          {{
+          formGroup.get('courseUrl').errors?.['maxlength'].requiredLength
+          }}
+          characters long.
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          formGroup.get('courseUrl').invalid && formGroup.get('courseUrl').dirty
+        "
+      ></div>
+      <div *ngIf="formGroup.get('urlExist').value == true" style="color: red">
+        Not Available.
+      </div>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="16" class="mt-2">
+    <div nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <label class="label-color"
+        >Headline <span class="mandatory">*</span></label
+      >
+      <input
+        nz-input
+        [placeholder]="
+          selectedContentType == courseContentType.COURSE
+            ? 'About the course'
+            : 'About the test'
+        "
+        nzSize="large"
+        formControlName="courseHeadline"
+        (keydown)="preventEmoji($event)"
+        (paste)="preventEmojiOnPaste($event)"
+      />
+      <div
+        *ngIf="
+          formGroup.get('courseHeadline').invalid &&
+          formGroup.get('courseHeadline').dirty
+        "
+      >
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('courseHeadline').errors['maxlength']"
+        >
+          Headline cannot be greater than 300 characters long.
+        </div>
+      </div>
+    </div>
+
+    <div nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <label class="label-color"
+        >Category <span class="mandatory">*</span></label
+      >
+      <nz-select
+        [nzSize]="'large'"
+        nzPlaceHolder="Select category"
+        formControlName="courseCategory"
+      >
+        <nz-option
+          *ngFor="let category of categoryList"
+          [nzLabel]="category.name"
+          [nzValue]="category"
+        ></nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <div nz-row class="mt-2">
+    <div nz-col nzSpan="24">
+      <label class="label-color"
+        >Description <span class="mandatory">*</span></label
+      >
+      <angular-editor
+        formControlName="description"
+        [config]="editorConfig"
+        [placeholder]="
+          selectedContentType == courseContentType.COURSE
+            ? 'Insert your course description'
+            : 'Insert your test description'
+        "
+        (keydown)="preventEmoji($event)"
+        (paste)="preventEmojiOnPaste($event)"
+      ></angular-editor>
+      <div
+        *ngIf="
+          formGroup.get('description').invalid &&
+          formGroup.get('description').dirty
+        "
+      >
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('description').errors['maxlength']"
+        >
+          Description cannot be greater than 3000 characters long.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-2">
+    <label class="label-color">Hashtags <span class="mandatory">*</span></label>
+    <div nz-row style="border: 1px solid #00000026; border-radius: 3px">
+      <div nz-col nzSpan="24" for>
+        <nz-tag
+          class="tag tags-margin"
+          *ngFor="let tagCtrl of courseTagArray.controls; let i = index"
+          [nzMode]="'closeable'"
+          (nzOnClose)="removeCourseTag(i)"
+        >
+          <ng-container *ngIf="tagCtrl.get('active').value"
+            >#{{ tagCtrl.get("name").value }}</ng-container
+          >
+        </nz-tag>
+        <nz-tag
+          *ngIf="!inputVisible"
+          class="editable-tag tag ml-1 mb-1 mt-1"
+          nzNoAnimation
+          (click)="showInput()"
+        >
+          <span nz-icon nzType="plus"></span>
+          New Tag
+        </nz-tag>
+        <input
+          #inputElement
+          nz-input
+          nzSize="small"
+          *ngIf="inputVisible"
+          type="text"
+          formControlName="tags"
+          class="ml-1 mb-1 mt-1"
+          style="width: 208px; height: 40px; border-radius: 50px; border: none"
+          maxlength="50"
+          (blur)="handleInputConfirm()"
+          (keydown.enter)="handleInputConfirm()"
+          (keydown)="preventEmoji($event)"
+          (paste)="preventEmojiOnPaste($event)"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div nz-row class="mt-1">
+    <div nz-col nzSpan="24">
+      <label class="label-color"
+        >Prerequisite <span class="mandatory">*</span></label
+      >
+      <textarea
+        class="text-area-class"
+        formControlName="prerequisite"
+        [nzAutosize]="{ minRows: 1, maxRows: 6 }"
+        nz-input
+        placeholder="Eg. You must have a basic knowledge of programming"
+        (keydown)="preventEmoji($event)"
+        (paste)="preventEmojiOnPaste($event)"
+      ></textarea>
+      <div
+        *ngIf="
+          formGroup.get('prerequisite').invalid &&
+          formGroup.get('prerequisite').dirty
+        "
+      >
+        <div
+          style="color: red"
+          *ngIf="formGroup.get('prerequisite').errors['maxlength']"
+        >
+          Prerequisite cannot be greater than 500 characters long.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div nz-row class="mt-2 justify-row">
+    <div class="w-100">
+      <label class="label-color"
+        >What will students learn? <span class="mandatory">*</span></label
+      >
+    </div>
+
+    <ng-container
+      formArrayName="courseSummaries"
+      *ngFor="let courseSummary of courseSummaryArray.controls; let i = index"
+    >
+      <div
+        [class.mt-1]="i != 0"
+        nz-col
+        class="text-class"
+        nzXs="24"
+        nzSm="24"
+        nzMd="24"
+        nzLg="24"
+        [formGroupName]="i"
+      >
+        <textarea
+          class="text-area-class"
+          (ngModelChange)="manageCourseSummaryArrayLength()"
+          formControlName="courseSummaryInfo"
+          [nzAutosize]="{ minRows: 1, maxRows: 6 }"
+          nz-input
+          placeholder="What will students learn in your course?"
+          (keydown)="preventEmoji($event)"
+          (paste)="preventEmojiOnPaste($event)"
+        ></textarea>
+        <div
+          [ngStyle]="{ display: i != 0 ? 'flex' : 'none' }"
+          [class.mt-1]="i != 0"
+          nz-col
+          nzSpan="3"
+          class="content-center"
+        >
+          <span class="dlt-topic-container" *ngIf="i != 0">
+            <img
+              class="dlt-icon cursor-pointer"
+              (click)="removeSummary(i)"
+              src="../../../../../assets/icons/delete-icon.svg"
+            />
+          </span>
+        </div>
+        <button
+          *ngIf="i == 0"
+          class="addMoreBtn"
+          nz-button
+          nzType="primary"
+          nzGhost
+          (click)="addCourseSummary()"
+        >
+          <span nz-icon nzType="plus" nzTheme="outline"></span> Add more
+        </button>
+      </div>
+      <div
+        *ngIf="
+          courseSummaryArray.controls[i].get('courseSummaryInfo').invalid &&
+          courseSummaryArray.controls[i].get('courseSummaryInfo').dirty
+        "
+      >
+        <div
+          style="color: red"
+          *ngIf="
+            courseSummaryArray.controls[i]
+              .get('courseSummaryInfo')
+              .hasError('maxlength')
+          "
+        >
+          Summary cannot be greater than 500 characters long.
+        </div>
+      </div>
+    </ng-container>
+    <!-- <button
+      class="addMoreBtn"
+      nz-button
+      nzType="primary"
+      nzGhost
+      (click)="addCourseSummary()"
+    >
+      <span nz-icon nzType="plus" nzTheme="outline"></span> Add more
+    </button> -->
+  </div>
+
+  <div nz-row [nzGutter]="16" class="mt-3">
+    <!-- <div nz-col nzLg="12" nzMd="12" nzSm="12"  nzXs="24">
+      <label class="label-color"
+        >Preview Video <span class="mandatory">*</span></label
+      >
+      <div class="uploader" style="display: flex; align-items: stretch">
+        <span class="file-name">{{ formGroup.get("previewName").value }}</span>
+        <span class="file-upload-span">
+          <input
+            id="video-upload"
+            type="file"
+            style="display: none"
+            accept="video/mp4, video/webm"
+            (change)="showVideo($event)"
+          />
+          <label for="video-upload" class="custom-file-upload">
+            <span class="upload-button">{{ videoFileBtn }}</span>
+          </label>
+        </span>
+      </div>
+    </div> -->
+
+    <!-- 
+    <div nz-col nzSpan="24">
+      <div class="youtube">
+      <label class="label-color">Youtube Link </label></div>
+      <input class="youtube-insert"
+        nz-input
+        placeholder="Insert youtube link"
+        nzSize="large"
+        formControlName="youtubeUrl"
+      />
+      <button
+          nz-button
+          class="youtube-upload-button border-radius border-radius h-100"
+          (click)="youtubeVideoUrlUpload()"
+        >
+          <span nz-icon nzType="upload"></span>
+          {{ videoFileBtn }}
+          
+        </button>
+    </div> -->
+
+    <div nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <label
+        *ngIf="selectedContentType == courseContentType.COURSE"
+        class="font-color-black-ins font-14"
+        >Preview Video <span class="mandatory">*</span></label
+      >
+      <label
+        *ngIf="selectedContentType == courseContentType.TEST"
+        class="font-color-black-ins font-14"
+        >Promotional Video (optional)</label
+      >
+      <div
+        class="uploader border-radius"
+        style="display: flex; align-items: stretch"
+      >
+        <!-- <span
+          class="file-name"
+          nz-tooltip
+          [nzTooltipTitle]="formGroup.get('previewName').value"
+          nzTooltipPlacement="top"
+          >{{
+            formGroup.get("previewName").value?.length > 30
+              ? formGroup.get("previewName").value?.substring(0, 30) + "..."
+              : formGroup.get("previewName").value
+          }}</span
+        > -->
+        <input
+          type="text"
+          class="video-file-name w-100"
+          nz-tooltip
+          placeholder="Upload a video or Youtube Url"
+          [nzTooltipTitle]="formGroup.get('previewName').value"
+          nzTooltipPlacement="top"
+          formControlName="previewName"
+          (ngModelChange)="youtubeInputChange()"
+          (keydown)="preventEmoji($event)"
+          (paste)="preventEmojiOnPaste($event)"
+        />
+
+        <span class="file-upload-span">
+          <nz-upload
+            *ngIf="!isYoutubeLinkPresent"
+            class="upload-button-nz"
+            [nzCustomRequest]="customRequestVideo"
+            [nzMultiple]="false"
+            [nzShowUploadList]="false"
+          >
+            <button
+              nz-button
+              class="upload-button border-radius border-radius h-100"
+            >
+              <span nz-icon nzType="upload"></span>
+              {{ videoFileBtn }}
+            </button>
+          </nz-upload>
+
+          <button
+            *ngIf="isYoutubeLinkPresent"
+            (click)="addYoutubeUrl()"
+            nz-button
+            class="upload-button border-radius border-radius h-100"
+          >
+            <span nz-icon nzType="upload"></span>
+            {{ videoFileBtn }}
+          </button>
+        </span>
+      </div>
+
+      <div class="bar mt-3" *ngIf="videoProgressBar"></div>
+    </div>
+
+    <div nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <label class="font-color-black-ins font-14 margin-class-res"
+        >Thumbnail <span class="mandatory">*</span></label
+      >
+      <div
+        class="uploader border-radius margin-class-res"
+        style="display: flex; align-items: stretch"
+      >
+        <span
+          class="file-name"
+          nz-tooltip
+          [nzTooltipTitle]="formGroup.get('thumbnailName').value"
+          nzTooltipPlacement="top"
+          >{{
+            formGroup.get("thumbnailName").value?.length > 30
+              ? formGroup.get("thumbnailName").value?.substring(0, 30) + "..."
+              : formGroup.get("thumbnailName").value
+          }}</span
+        >
+
+        <span class="file-upload-span">
+          <button
+            nz-button
+            class="upload-button border-radius border-radius h-100"
+            (click)="openImageUploaderModal()"
+          >
+            <span nz-icon nzType="upload"></span>
+            {{ imageFileBtn }}
+          </button>
+        </span>
+      </div>
+
+      <div class="bar mt-3" *ngIf="imageProgressBar"></div>
+    </div>
+  </div>
+
+  <div nz-row class="mt-3" [nzGutter]="16">
+    <div class="margin-bottom" nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <img
+        class="preview"
+        *ngIf="!showPreview"
+        [src]="videoSrc"
+        alt="Preview"
+      />
+      <app-video-player
+        #videoPlayerElement
+        class="preview"
+        *ngIf="showPreview"
+        [currentSelectedTopic]="currentSelectedTopic"
+        [autoPlayValue]="false"
+        [fromCourseInformation]="true"
+        [isTooltipVisible]="isTooltipVisible"
+        [customSize]="true"
+      ></app-video-player>
+    </div>
+
+    <div margin-bottom nz-col nzLg="12" nzMd="12" nzSm="12" nzXs="24">
+      <img
+        class="thumbnail"
+        [src]="imageSrc"
+        *ngIf="!showThumbnail"
+        alt="Thumbnail"
+      />
+      <img
+        class="thumbnail"
+        [src]="formGroup.get('thumbnailPath').value"
+        *ngIf="showThumbnail"
+      />
+    </div>
+  </div>
+
+  <div nz-row class="mt-3" style="justify-content: center">
+    <div nz-col>
+      <button
+        [class.continue-btn-disable1]="
+          courseSummaryArrayLength == 0 ||
+          courseTagArray.controls.length == 0 ||
+          formGroup.get('titleExist').value ||
+          formGroup.get('urlExist').value
+        "
+        [class.continue-btn-disable]="
+          !formGroup.valid ||
+          formGroup.get('titleExist').value ||
+          formGroup.get('urlExist').value
+        "
+        [disabled]="
+          !formGroup.valid ||
+          formGroup.get('titleExist').value ||
+          formGroup.get('urlExist').value
+        "
+        class="continueBtn"
+        nz-button
+        nzType="primary"
+        nzGhost
+        (click)="steps(1)"
+        style="padding-left: 72px; padding-right: 73px"
+      >
+        Continue
+      </button>
+    </div>
+  </div>
+</form>

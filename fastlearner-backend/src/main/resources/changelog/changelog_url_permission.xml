@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro
+        http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="0113202519254232-1" author="saif">
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/create"/>
+            <column name="method" value="POST"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/fetch"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/delete"/>
+            <column name="method" value="DELETE"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/update"/>
+            <column name="method" value="PUT"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/detail"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/stripe-resend-link"/>
+            <column name="method" value="POST"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate/stripe-redirect-link"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate-course/"/>
+            <column name="method" value="POST"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate-course/"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate-course/"/>
+            <column name="method" value="DELETE"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/affiliate-course/by-course"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/instructor-affiliate/premium-courses-with-reward"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/premium-students/"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="url_permission">
+            <column name="id" valueComputed="nextval('url_permission_id_seq')"/>
+            <column name="url" value="/premium-students/export/premium-students"/>
+            <column name="method" value="GET"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+    </changeSet>
+    <!--<changeSet id="0116202519254233-3" author="saif">
+        <sql>
+            INSERT INTO subscription_url_permission (id, subscription_id, url_permission_id, status)
+            SELECT
+            nextval('subscription_url_permission_id_seq') AS id,
+            s.id AS subscription_id,
+            up.id AS url_permission_id,
+            'ACTIVE' AS status
+            FROM subscription s
+            CROSS JOIN url_permission up
+            WHERE s.id NOT IN(1, 2, 3);
+        </sql>
+    </changeSet>-->
+
+
+
+</databaseChangeLog>

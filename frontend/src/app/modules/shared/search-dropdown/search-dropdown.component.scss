@@ -1,0 +1,13 @@
+:host ::ng-deep .ant-select  {
+  width: 100% !important;
+}
+
+
+:host ::ng-deep .ant-select-dropdown {
+  border: 1px solid #d9d9d9;
+}
+
+::ng-deep .ant-select-item {
+  height: 40px !important;
+}
+

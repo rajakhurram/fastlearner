@@ -1,0 +1,46 @@
+.backBtn {
+  border-color: #fe4a55 !important;
+  color: #fe4a55 !important;
+  height: 45px !important;
+  font-weight: bolder;
+}
+
+.continueBtn {
+  border-color: #fe4a55 !important;
+  background-color: #fe4a55 !important;
+  color: white !important;
+  height: 45px !important;
+  font-weight: bolder;
+  margin-right: 25px;
+}
+
+.message {
+  text-align: center;
+  margin-top: 20px;
+  width: 55%;
+  margin-bottom: 40px;
+  font-size: 20px;
+  font-family: "Poppins-medium";
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.justify-content {
+  justify-content: center;
+}
+
+/* styles.css or component.css */
+// .center-content {
+//   text-align: center;
+// }
+
+@media screen and (max-width: 991px) {
+  .custom-buttons {
+    flex-direction: column !important;
+    gap: 10px;
+  }
+}

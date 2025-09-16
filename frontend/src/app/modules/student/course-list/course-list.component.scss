@@ -1,0 +1,339 @@
+.favorite-courses {
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.favorite-course-header {
+  margin-left: 1%;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  width: 90%;
+  margin: auto;
+}
+
+.favorite-course-header h3 {
+  color: #fe4a55;
+  font-weight: 900;
+}
+
+.main-cards {
+  // margin-left: 3%;
+}
+
+.main-cards-row {
+  margin-top: 40px;
+}
+
+.hover-card-container:hover .hover-card {
+  display: block;
+}
+
+.margin-class {
+  margin-left: 50%;
+}
+
+.size {
+  font-size: 10px;
+}
+
+.view-details .view-details-link a {
+  color: #0052f5;
+  font-size: 10px;
+}
+
+.view-details .view-details-link a:hover {
+  color: #fe4a55;
+}
+
+.show-more-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.show-more-button {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  border-radius: 4px;
+  color: #fe4a55;
+  height: 50px;
+}
+
+.show-more-button:hover {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+  height: 50px;
+}
+
+:host ::ng-deep .ant-rate-star:not(:last-child) {
+  margin: 0;
+}
+
+.heart-icon {
+  font-size: 28px;
+  color: red !important;
+  position: absolute;
+  left: 40%;
+  top: 1%;
+}
+
+.course-tags {
+  display: flex;
+  justify-content: space-between;
+}
+
+.instructor-div {
+  display: flex;
+  align-items: center;
+}
+nz-select {
+  width: 87%;
+}
+
+.center {
+  margin: auto;
+}
+
+:host ::ng-deep .ant-input-affix-wrapper {
+  border: 1px solid #212189;
+}
+
+:host
+  ::ng-deep
+  .ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border: 1px solid #212189;
+}
+
+:host ::ng-deep .ant-select-arrow {
+  color: #212189;
+}
+
+:host ::ng-deep .ant-card-actions {
+  display: flex;
+  align-items: center;
+}
+
+.ellipsis-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-btn {
+  padding: 5px;
+  border: 1px solid #212189;
+  color: #212189;
+  background-color: white;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.filter-dropdown-menu-ul {
+  border: 1px solid #212189;
+  width: 40%;
+  margin-top: 6%;
+}
+
+.filter-dropdown-categories {
+  padding: 5px 15px;
+  background-color: white !important;
+}
+
+.space-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-rating {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-filter-btn {
+  border-color: #fe4a55 !important;
+  background-color: #fe4a55 !important;
+  color: white !important;
+}
+
+.filter-icon {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.selected-options {
+  background-color: #dedeee !important;
+}
+
+.clear-all {
+  color: red;
+  text-decoration: underline;
+}
+
+// :host ::ng-deep .ant-dropdown {
+//   top: 0 !important;
+//     left: 0 !important;
+//     /* position: fixed; */
+//     width: 32% !important;
+//     margin-top: 6% !important;
+//     margin-bottom: 6px !important;
+//     margin-left: 0% !important;
+// }
+
+@media screen and (max-width: 879px) {
+  .main-cards-row {
+    display: flex;
+    justify-content: center;
+  }
+
+  .show-more-button {
+    width: fit-content !important;
+  }
+
+  .input-search {
+    width: fit-content !important;
+    margin-left: 0px !important;
+  }
+}
+@media screen and (max-width: 1600px) {
+  .course-card {
+    width: 25em !important;
+  }
+}
+@media screen and (max-width: 1500px) {
+  .course-card {
+    width: 325px !important;
+  }
+}
+@media screen and (max-width: 1190px) {
+  .main-cards-row {
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 1222px) {
+  .course-card {
+    width: 21em !important;
+  }
+  .instructor-div {
+    width: auto !important;
+  }
+}
+@media screen and (max-width: 770px) {
+  .course-card {
+    width: 290px !important;
+  }
+  .main-cards {
+    margin-left: 0px;
+  }
+  .instructor-div {
+    width: min-content !important;
+  }
+  .instructor-name {
+    width: 75%;
+  }
+  .card {
+    width: 95%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .course-card {
+    width: 320px !important;
+  }
+
+  .instructor-div {
+    width: auto !important;
+  }
+}
+@media screen and (max-width: 300px) {
+  .course-card {
+    width: 14em !important;
+  }
+}
+@media screen and (max-width: 400px) {
+  .course-card {
+    width: 18em !important;
+  }
+
+  :host ::ng-deep .ant-select-selection-item {
+    white-space: break-spaces !important;
+  }
+
+  :host ::ng-deep nz-select {
+    width: 75%;
+  }
+}
+@media screen and (max-width: 576px) {
+  .margin-class {
+    margin-left: 30% !important;
+  }
+}
+@media screen and (max-width: 575px) {
+  .margin-class {
+    margin-left: 0% !important;
+    margin-top: 5% !important;
+  }
+
+  .favorite-course-header {
+    margin-left: 4%;
+  }
+
+  .main-cards {
+    margin-left: 2% !important;
+  }
+}
+
+.input-search {
+  margin-left: auto
+}
+
+.search {
+  margin-left: auto;
+}
+
+.search-courses {
+  width: 50%;
+  margin-left: auto;
+}
+
+@media screen and (max-width: 575px) {
+  .row-direction {
+    flex-direction: column-reverse;
+  }
+  .margin-offset {
+    margin-left: 0% !important;
+  }
+  .search {
+    align-self: flex-start;
+    margin-bottom: 4%;
+    margin-top: 4%;
+  }
+  nz-select {
+    width: fit-content !important;
+  }
+  
+}
+
+@media screen and (max-width: 879px) {
+ 
+  .input-search {
+    width: fit-content !important;
+    margin-left: 0px !important;
+  }
+}
+
+@media screen and (max-width: 1026px) {
+  .search-courses{
+    width: 85% !important;
+  }
+}

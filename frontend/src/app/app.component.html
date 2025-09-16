@@ -1,0 +1,10 @@
+<ng-container *ngIf="!flLogin">
+  <app-navbar *ngIf="showNavbar"></app-navbar>
+  <div id="main-content" #mainContent>
+    <ngx-ui-loader threshold="5000"></ngx-ui-loader>
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer *ngIf="showFooter"></app-footer>
+</ng-container>
+
+<app-fastlearner-login *ngIf="flLogin"></app-fastlearner-login>

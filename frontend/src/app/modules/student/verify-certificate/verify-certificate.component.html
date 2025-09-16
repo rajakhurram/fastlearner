@@ -1,0 +1,147 @@
+<!-- <div *ngIf="isVerified === null">Verifying...</div> -->
+
+<nz-spin *ngIf="showSpin" style="margin-top: 3%" [nzSize]="'large'"></nz-spin>
+
+<div *ngIf="isVerified && !showSpin" class="verified">
+  <div class="certificate">
+    <img class="cert-img" [src]="certificateImageUrl" alt="Certificate" />
+  </div>
+
+  <div  class="right-side">
+    <nz-card class="card-side">
+      <div class="certificate-recipient">
+        <div style="display: flex; align-items: flex-start" class="heading">
+          <h4 class="heading-weight">This Certificate is verified</h4>
+          <img src="../../../../assets/icons/checked.svg" alt="Check" />
+        </div>
+        <p class="normal-text">
+          This certificate serves as an official document confirming the
+          authenticity of the information provided. The details contained herein
+          have been verified and validated by our organization
+        </p>
+
+        <p style="margin-top: 20px" class="opacity-text-heading">Disclaimer</p>
+        <p class="opacity-text">
+          This certificate is issued based on the information provided and
+          verified at the time of issuance. Our organization holds no
+          responsibility for any changes or discrepancies that may occur after
+          the issuance of this certificate.
+        </p>
+        <p style="margin-top: 20px" class="opacity-text-heading">
+          Privacy Policy
+        </p>
+        <p class="opacity-text">
+          The information provided in this certificate is intended solely for
+          the use of the certificate holder and the authorized third-party.
+          Unauthorized use or distribution of this certificate is strictly
+          prohibited.
+        </p>
+      </div>
+    </nz-card>
+  </div>
+</div>
+
+<div *ngIf="!isVerified && !showSpin">
+  <div class="about-us">
+    <img
+      src="../../../../assets/icons/404.svg"
+      alt="404 Not Found"
+      class="center-svg"
+    />
+    <p class="not-found-text">Page Not Found</p>
+    <p class="not-found-description">
+      Unfortunately, the requested URL cannot be found. <br />
+      However, we’ve got a lot for you below to get back into action.
+    </p>
+
+    <button class="home-page-btn" nz-button nzType="primary">
+      <a href="http://localhost:4200/">Go To Home Page </a>
+    </button>
+
+    <div>
+      <div class="about-us-heading">
+        <h2>
+          Join FastLearner to Experience <br />
+          a New Era of Learning Excellence
+        </h2>
+      </div>
+      <div class="about-us-text">
+        <small
+          >Embrace innovation with FastLearner's transformable approach,
+          propelling you towards knowledge mastery and </small
+        ><br />
+        <small>personal growth</small>
+      </div>
+    </div>
+
+    <!-- explore-section start -->
+    <div nz-row class="explore-section">
+      <div nz-col class="fast-learner-explore">
+        <nz-card class="fast-learner-explore-card">
+          <div class="fast-learner-explore-card-display">
+            <div
+              class="fast-learner-explore-card-content"
+              style="margin-top: 20px"
+            >
+              <div class="explore-card-text">
+                <h5>Fuel the Learning Heads</h5>
+              </div>
+              <div class="explore-card-heading">
+                Become an Instructor and <br />
+                Share Your Expertise
+              </div>
+              <div class="explore-card-button">
+                <button
+                  class="explore-btn"
+                  nz-button
+                  nzType="primary"
+                  (click)="routeToInstructorWelcomePage()"
+                >
+                  Become an instructor
+                </button>
+              </div>
+            </div>
+            <div class="fast-learner-explore-card-img">
+              <img
+                class="explore-card-img"
+                alt="Explore"
+                src="../../../assets/images/explore-image.png"
+              />
+            </div>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col class="fast-learner-explore">
+        <nz-card class="fast-learner-explore-card">
+          <div class="fast-learner-explore-card-display">
+            <div
+              class="fast-learner-explore-card-content"
+              style="padding-top: 20px"
+            >
+              <div class="explore-card-text">
+                <h5>Discover your Interest</h5>
+              </div>
+              <div class="explore-card-heading">
+                Sign In as a Student & Be a Part
+                <br />
+                of Our Expert Community
+              </div>
+              <div class="explore-card-button">
+                <button class="explore-btn" nz-button nzType="primary">
+                  <a>Browse courses</a>
+                </button>
+              </div>
+            </div>
+            <div class="fast-learner-explore-card-img">
+              <img
+                class="explore-card-img-second"
+                src="../../../assets/images/explore-2.png"
+                alt="Explore"
+              />
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+</div>

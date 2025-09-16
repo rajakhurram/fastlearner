@@ -1,0 +1,496 @@
+<div class="container">
+  <div class="landing-page">
+    <!-- Banner container Start -->
+    <div
+      class="banner banner-container"
+      id="banner_container"
+      #banner_container
+    >
+      <app-container>
+        <div
+          class="justify-alignment resp-margin"
+          style="justify-content: center"
+          nz-row
+        >
+          <div class="text-align-responsive landing-banner">
+            <div class="landing-page-banner">
+              <div class="landing-page-heading">
+                <h1>
+                  Welcome to the <br />
+                  Future of AI Based Learning!
+                </h1>
+                <h3>
+                  Human-Centric - Machine Accelerated
+                  <br />
+                  Quick Learning
+                </h3>
+              </div>
+              <div class="landing-page-text">
+                <small class="label-text"
+                  >Stay engaged, stay ahead—become a fast learner by mastering
+                  concepts with human expertise on our innovative AI based
+                  learning platform designed for quick learning and efficient
+                  skill development.
+                </small>
+              </div>
+              <div class="landing-page-button-container">
+                <app-button
+                  [buttonText]="'Start Now'"
+                  (buttonCallBack)="handleStartNowClick()"
+                ><img class="view-all-img" height="25px" width="25px" alt="Arrow" src="./../../../assets/icons/Start-Now.svg" style="margin-left: 1px; display: inline-block;" />
+              </app-button>
+              </div>
+            </div>
+          </div>
+          <div nz-col>
+            <div class="banner-image hero-image">
+              <app-banner-animation></app-banner-animation>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="premium-courses" id="premium_courses" #premium_courses>
+      <app-container>
+        <app-view-all-button
+          [theme]="'dark'"
+          *ngIf="premiumCourses?.length"
+          [isFromPremium]="true"
+          (viewAllButtonClickEmitter)="routeToCourseList(viewAllMap.PREMIUM)"
+        ></app-view-all-button>
+        <div
+          style="justify-content: center; display: flex"
+          class="justify-alignment"
+        >
+          <div class="width-container">
+            <div class="free-courses-section">
+              <div class="adventure-padding">
+                <div class="free-courses-heading">
+                  <h2>Premium Courses from Leading Experts</h2>
+                </div>
+                <div class="free-courses-text">
+                  <small class="text-width"
+                    >Learn the secrets of
+                    <a
+                      class="link-white"
+                      (click)="
+                        routeToLink(
+                          'https://blog.fastlearner.ai/beyond-talent-how-to-become-a-fast-learner/'
+                        )
+                      "
+                      >how to be a fast learner
+                    </a>
+                    with our top courses designed to enhance your fast learning
+                    skills and quick learning ability with assistance from
+                    Generative AI. Learn from top professors, teachers, and
+                    industry leaders from prestigious universities like
+                    Stanford, UCLA, UC Berkeley, and the University of Colorado
+                    Boulder, and start learning quickly with expert training.
+                  </small>
+                </div>
+              </div>
+              <app-card-slider
+                [courses]="premiumCourses"
+                [isLoggedIn]="isLoggedIn"
+                [courseButtonName]="courseButtonName"
+                [heartFilled]="heartFilled"
+                [heartUnFilled]="heartUnFilled"
+                [buttonTheme]="'dark'"
+                [cardsToShow]="cardsToShow"
+                [applyMargin]="true"
+                [isPremium]="true"
+                [count]="totalPremiumCoursesElements"
+                (leftClickEmitter)="getPremiumCourses(directionEnum.LEFT)"
+                (rightClickEmitter)="getPremiumCourses(directionEnum.RIGHT)"
+              ></app-card-slider>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="about-us" id="about_us" #about_us>
+      <app-container>
+        <p
+          (click)="routeToCourseList(viewAllMap.TRENDING)"
+          *ngIf="trendingCourses.length"
+          class="view-all-para"
+        >
+          View All
+          <img
+            class="view-all-img"
+            height="15px"
+            width="15px"
+            alt="Arrow"
+            src="./../../../assets/icons/arrow-dark.svg"
+          />
+        </p>
+        <div
+          style="justify-content: center; display: flex"
+          class="justify-alignment"
+        >
+          <div class="width-container">
+            <div class="about-us-section">
+              <div class="adventure-padding">
+                <div class="about-us-heading">
+                  <h2>Discover Top Trending Courses</h2>
+                </div>
+                <div class="about-us-text">
+                  <small class="text-width"
+                    >Our top trending courses are the go-to choice for learners
+                    who value innovative knowledge and practical skills. These
+                    courses offer a fast track to success and help you build
+                    fast learner skills. Join a community of curious minds on
+                    our AI learning platform, where fast learning meets
+                    real-world relevance.
+                  </small>
+                </div>
+              </div>
+              <app-card-slider
+                [courses]="trendingCourses"
+                [isLoggedIn]="isLoggedIn"
+                [courseButtonName]="courseButtonName"
+                [heartFilled]="heartFilled"
+                [heartUnFilled]="heartUnFilled"
+                [buttonTheme]="'light'"
+                [cardsToShow]="cardsToShow"
+                [count]="totalTrendingCoursesElements"
+                [applyMargin]="true"
+                (leftClickEmitter)="getTrendingCourses(directionEnum.LEFT)"
+                (rightClickEmitter)="getTrendingCourses(directionEnum.RIGHT)"
+              ></app-card-slider>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="free-courses" id="free_courses" #free_courses>
+      <app-container>
+        <app-view-all-button
+          [theme]="'dark'"
+          *ngIf="freeCourses?.length"
+          (viewAllButtonClickEmitter)="routeToCourseList(viewAllMap.FREE)"
+        ></app-view-all-button>
+        <div nz-row style="justify-content: center" class="justify-alignment">
+          <div class="width-container">
+            <div class="free-courses-section">
+              <div class="adventure-padding">
+                <div class="free-courses-heading">
+                  <h2>Free Courses with AI-Enabled Learning</h2>
+                </div>
+                <div class="free-courses-text">
+                  <small class="text-width"
+                    >Explore our free courses equipped with AI-Enabled learning
+                    to give you an edge in skill development. With exclusive AI
+                    features, these courses offer a personalized path for
+                    becoming a fast learner. Join today and see how you can set
+                    a fast learner example by mastering new skills without any
+                    cost.
+                  </small>
+                </div>
+              </div>
+              <app-card-slider
+                [courses]="freeCourses"
+                [isLoggedIn]="isLoggedIn"
+                [courseButtonName]="courseButtonName"
+                [heartFilled]="heartFilled"
+                [heartUnFilled]="heartUnFilled"
+                [showButton]="true"
+                [applyMargin]="true"
+                [buttonTheme]="'dark'"
+                [count]="totalFreeCoursesElements"
+                [cardsToShow]="cardsToShow"
+                [showButtonWhenLoggedIn]="!isLoggedIn"
+                (leftClickEmitter)="getFreeCourses(directionEnum.LEFT)"
+                (rightClickEmitter)="getFreeCourses(directionEnum.RIGHT)"
+              ></app-card-slider>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="about-us bg-light" id="about_us_bg_light" #about_us_bg_light>
+      <app-container>
+        <div nz-row style="justify-content: center" class="justify-alignment">
+          <div nz-col class="">
+            <div class="about-us-section">
+              <div class="adventure-padding">
+                <div class="about-us-heading">
+                  <h2>
+                    Start Your Learning Journey Today to
+                    <br />
+                    Become the Top 1% Experts of Tomorrow
+                  </h2>
+                </div>
+                <div class="about-us-text">
+                  <small class="text-width"
+                    >At FastLearner, we provide training that helps you go from
+                    novice to pro so you can harness your future with fast
+                    learning methods. You are just four steps away from growth
+                    and excellence.
+                  </small>
+                </div>
+              </div>
+              <div
+                class="about-us-cards"
+                style="display: flex; justify-content: center"
+              >
+                <div class="detail-cards" nz-row [nzGutter]="16">
+                  <app-static-card
+                    [showButtonWhenLoggedIn]="!isLoggedIn"
+                    [staticCards]="isLoggedIn ? loggedInStatic : staticCards"
+                  ></app-static-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <!-- About us section ends -->
+
+    <!-- Courses card section starts -->
+    <div
+      id="courses-section"
+      class="course-card-section"
+      id="courses_section"
+      #courses_section
+    >
+      <app-container>
+        <p
+          (click)="routeToCourseList(viewAllMap.CATEGORY)"
+          *ngIf="courseList?.length"
+          class="view-all-p"
+        >
+          View All
+          <img
+            class="view-all-img"
+            height="15px"
+            width="15px"
+            alt="Arrow"
+            src="./../../../assets/icons/arrow-dark.svg"
+          />
+        </p>
+        <div class="course-card-title">
+          <h2>Explore Our Vast Course Library</h2>
+
+          <div class="course-card-text fit-width">
+            <small class="text-width"
+              >Learn from top online video courses to help you develop fast
+              learner skills. With regular new additions, FastLearner offers a
+              comprehensive AI learning platform for continuous skill
+              development. Discover endless possibilities and start learning
+              quickly in your chosen field.
+            </small>
+          </div>
+        </div>
+        <div class="categories-div">
+          <div class="scroll-container">
+            <button class="nav-button left" (click)="scrollLeft()">
+              &#10094;
+            </button>
+            <div class="scroller">
+              <div class="scroller-content" #scrollerContent>
+                <li
+                  class="menu-tabs-items all-list"
+                  (click)="onSelectCategory(null)"
+                >
+                  <span
+                    class="all-tag"
+                    [class.selected]="selectedCategory === null"
+                    >All</span
+                  >
+                </li>
+                <span
+                  class="category menu-tabs-items"
+                  *ngFor="let category of categoryList"
+                >
+                  <li (click)="onSelectCategory(category?.id)">
+                    <span
+                      [class.selected]="selectedCategory === category?.id"
+                      >{{ category?.name }}</span
+                    >
+                  </li></span
+                >
+              </div>
+            </div>
+            <button class="nav-button right" (click)="scrollRight()">
+              &#10095;
+            </button>
+          </div>
+        </div>
+
+        <div style="justify-content: center; display: flex">
+          <div class="width-container">
+            <app-card-slider
+              [courses]="courseList"
+              [isLoggedIn]="isLoggedIn"
+              [courseButtonName]="courseButtonName"
+              [heartFilled]="heartFilled"
+              [heartUnFilled]="heartUnFilled"
+              [buttonTheme]="'light'"
+              [cardsToShow]="cardsToShow"
+              [count]="5"
+              [applyMargin]="true"
+            ></app-card-slider>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div
+      class="about-us empowering"
+      id="about_us_empowering"
+      #about_us_empowering
+    >
+      <app-container>
+        <div class="about-us-card-content content-styling">
+          <div class="about-us-heading">
+            <h2>Meet Our Expert Instructors</h2>
+          </div>
+          <div class="about-us-text fit-width width-res">
+            <small class="text-width"
+              >At FastLearner, we take pride in our diverse team of instructors
+              who bring real-world experience and academic excellence to the
+              classroom. Our educators are dedicated to promoting a quick
+              learning environment where you can develop your fast learner
+              skills and achieve your goals. You can also
+              <a
+                (click)="
+                  routeToLink('https://fastlearner.ai/become-instructor')
+                "
+                class="link"
+                >become an instructor</a
+              >
+              on this platform and join a thriving community of educators
+              transforming education. Gain insights from leading professors and
+              industry experts from prestigious universities like Stanford,
+              UCLA, and UC Berkeley, ensuring you receive top-notch training
+              customized to your needs.
+            </small>
+          </div>
+        </div>
+        <div style="margin-top: 20px; justify-content: center" nz-row>
+          <app-static-card
+            [staticCards]="instructorCards"
+            [showButton]="true"
+            [showButtonWhenLoggedIn]="true"
+            [instructorView]="true"
+          ></app-static-card>
+        </div>
+      </app-container>
+    </div>
+    <div class="new-courses" id="new_courses" #new_courses>
+      <app-container>
+        <div class="new-courses-content">
+          <app-view-all-button
+            *ngIf="newCourses?.length"
+            [theme]="'dark'"
+            [applyRight]="true"
+            (viewAllButtonClickEmitter)="routeToCourseList(viewAllMap.NEW)"
+          ></app-view-all-button>
+          <div class="free-courses-heading">
+            <h2>
+              Become a Quick Learner with
+              <br />
+              Our Latest Courses
+            </h2>
+          </div>
+          <div class="free-courses-text">
+            <small class="text-width"
+              >Stay ahead with our new courses to boost your fast learner skills
+              and promote skill development. Each course enables you to learn
+              quickly and adapt to the evolving demands of your field. Explore
+              innovative topics on our dynamic
+              <a
+                (click)="routeToLink('https://fastlearner.ai/')"
+                class="link-white"
+                >AI enabled learning platform</a
+              >
+              and take the first step toward mastering essential skills for
+              tomorrow!
+            </small>
+          </div>
+
+          <div style="justify-content: center" nz-row>
+            <app-card-slider
+              [courses]="newCourses"
+              [isLoggedIn]="isLoggedIn"
+              [courseButtonName]="courseButtonName"
+              [heartFilled]="heartFilled"
+              [heartUnFilled]="heartUnFilled"
+              [buttonTheme]="'dark'"
+              [moveButtonRight]="true"
+              [count]="totalNewCoursesElements"
+              [cardsToShow]="cardsToShow > 1 ? cardsToShow - 1 : cardsToShow"
+              (leftClickEmitter)="getNewCourses(directionEnum.LEFT)"
+              (rightClickEmitter)="getNewCourses(directionEnum.RIGHT)"
+            ></app-card-slider>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="student-pick" id="student_pick" #student_pick>
+      <app-container [className]="'custom-container-content-center'">
+        <div class="justify-alignment newsletter-class">
+          <div
+            class="text-align-responsive"
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <div class="student-pick-content">
+              <div class="text-align">
+                <small class="label-red">
+                  Ready to Transform Your Learning Experience?
+                </small>
+                <h2 class="news-heading">
+                  Subscribe to FastLearner and join our vibrant learning
+                  community.
+                </h2>
+              </div>
+              <div>
+                <app-button
+                  [buttonText]="'Start Now'"
+                  (buttonCallBack)="handleStartNowClick()"
+                >
+            </app-button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="banner-image-news">
+              <img
+                class="banner-image-news-image"
+                src="../../../../assets/images/banner-interest.png"
+                alt="Banner"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="faq-container" id="faq_container" #faq_container>
+      <app-container [className]="'custom-container-content-center'">
+        <div class="faq-heading">
+          <h2>
+            Frequently <br />
+            Asked Questions
+          </h2>
+        </div>
+        <div class="faq-container-inner">
+          <div class="acc-item" *ngFor="let faq of items">
+            <div class="title" (click)="expand(faq, $event)">
+              <div class="title-class">{{ faq.title }}</div>
+              <div class="icon" *ngIf="!faq.isExpanded">+</div>
+              <div class="icon" *ngIf="faq.isExpanded">-</div>
+            </div>
+
+            <div class="acc-description p-3">
+              <p>{{ faq.description }}</p>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+  </div>
+</div>

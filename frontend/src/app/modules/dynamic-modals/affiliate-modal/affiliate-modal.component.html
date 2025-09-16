@@ -1,0 +1,243 @@
+<div nz-row class="display-flex justify-content-center">
+  <h4 class="color-blue font-bold text-align-center font-20">
+    {{
+      mode == affiliateMode.EDIT
+        ? "Edit Affiliate"
+        : mode == affiliateMode.ADD
+        ? "Add Affiliate"
+        : addedAffiliate && !fromResendLink
+        ? "Affliate Added"
+        : ""
+    }}
+  </h4>
+</div>
+
+<div *ngIf="!addedAffiliate">
+  <form
+    autocomplete="off"
+    [formGroup]="affiliateForm"
+    class="signup-form"
+    (keyup.enter)="submitForm()"
+    (ngSubmit)="submitForm()"
+  >
+    <nz-form-item>
+      <nz-form-control>
+        <div nz-row>
+          <label class="w-100">Email<span class="mandatory">*</span></label>
+          <input
+            nz-input
+            placeholder="Enter email"
+            nzSize="large"
+            formControlName="email"
+            class="input"
+            (input)="validateEmail($event)"
+          />
+        </div>
+        <div
+          *ngIf="
+            affiliateForm.get('email').invalid &&
+            affiliateForm.get('email').dirty
+          "
+        >
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('email').errors['required']"
+          >
+            Email is required.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('email').errors['email']"
+          >
+            Email is invalid.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('email').errors['invalidEmail']"
+          >
+            Email is invalid.
+          </div>
+        </div></nz-form-control
+      ></nz-form-item
+    >
+    <nz-form-item>
+      <nz-form-control>
+        <div nz-row class="">
+          <label class="w-100">Name<span class="mandatory">*</span></label>
+          <input
+            nz-input
+            placeholder="Enter name"
+            nzSize="large"
+            formControlName="name"
+            class="input"
+          />
+        </div>
+        <div
+          *ngIf="
+            affiliateForm.get('name').invalid && affiliateForm.get('name').dirty
+          "
+        >
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('name').errors['required']"
+          >
+            Name is required.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('name').errors['maxlength']"
+          >
+            Name cannot be greater than 50 characters long.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('name').errors?.['pattern']"
+          >
+            Name can only contain letters and spaces.
+          </div>
+        </div></nz-form-control
+      ></nz-form-item
+    >
+    <nz-form-item>
+      <nz-form-control>
+        <div nz-row class="">
+          <label class="w-100">Nickname<span class="mandatory">*</span></label>
+          <input
+            nz-input
+            placeholder="Enter nickname"
+            nzSize="large"
+            formControlName="nickName"
+            class="input"
+          />
+        </div>
+        <div
+          *ngIf="
+            affiliateForm.get('nickName').invalid &&
+            affiliateForm.get('nickName').dirty
+          "
+        >
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('nickName').errors['required']"
+          >
+            Nick Name is required.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('nickName').errors['maxlength']"
+          >
+            Nick Name cannot be greater than 50 characters long.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('nickName').errors?.['pattern']"
+          >
+            Nick Name pattern should be valid.
+          </div>
+        </div></nz-form-control
+      ></nz-form-item
+    >
+    <nz-form-item>
+      <nz-form-control>
+        <div *ngIf="mode !== affiliateMode.EDIT">
+        <div nz-row class="">
+          <label class="w-100"
+            >Default Rewards<span class="mandatory">*</span></label
+          >
+          <!-- <input
+            nz-input
+            placeholder="Enter reward in %"
+            nzSize="large"
+            class="input"
+            formControlName="defaultReward"
+            type="number"
+            min="1"
+            max="90"
+            (input)="rewardValidation($event)"
+            
+          /> -->
+          <input
+  nz-input
+  placeholder="Enter reward in %"
+  nzSize="large"
+  class="input"
+  formControlName="defaultReward"
+  type="text"
+  (input)="rewardValidation($event)"
+/>
+        </div>
+      </div>
+        <div
+          *ngIf="
+            affiliateForm.get('defaultReward').invalid &&
+            affiliateForm.get('defaultReward').dirty
+          "
+        >
+          <div
+            style="color: red"
+            *ngIf="affiliateForm.get('defaultReward').errors['required']"
+          >
+            Default reward is required.
+          </div>
+        </div></nz-form-control
+      ></nz-form-item
+    >
+
+    <div nz-row class="action-items justify-content-center mt-4">
+      <div class="">
+        <app-button
+          [config]="buttonCancelConfig"
+          [buttonText]="'Cancel'"
+          (buttonCallBack)="cancel($event)"
+        >
+        </app-button>
+      </div>
+
+      <div class="">
+        <app-button
+          [config]="buttonAddConfig"
+          [buttonText]="mode == affiliateMode.ADD ? 'Add' : 'Update'"
+        >
+        </app-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="addedAffiliate">
+  <section class="animated_check_circle">
+    <svg viewBox="0 0 130.2 130.2">
+      <circle
+        class="path circle"
+        fill="none"
+        stroke="#73AF55"
+        stroke-width="6"
+        stroke-miterlimit="10"
+        cx="65.1"
+        cy="65.1"
+        r="62.1"
+      />
+      <polyline
+        class="path check"
+        fill="none"
+        stroke="#73AF55"
+        stroke-width="6"
+        stroke-linecap="round"
+        stroke-miterlimit="10"
+        points="100.2,40.2 51.5,88.8 29.8,67.5"
+      />
+    </svg>
+  </section>
+
+  <div class="message-container mt-2">
+    <h4 class="stripe-message">
+      Email has been sent to your affiliate for Stripe connection.
+    </h4>
+    <app-button
+      [buttonText]="'OK'"
+      [config]="buttonAddConfig"
+      (buttonCallBack)="closeModal(true)"
+    >
+    </app-button>
+  </div>
+</div>

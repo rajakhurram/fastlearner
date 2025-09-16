@@ -1,0 +1,151 @@
+<div class="premium-students-container" id="top">
+  <!-- Title -->
+  <h2>Premium Students</h2>
+  <div class="sub-main">
+    <div nz-row justify="space-between" class="upper-row">
+      <div class="w-50">
+        <app-search-filter
+          [config]="searchFilter"
+          (searchCallBack)="searchCallBack($event)"
+          (clearCallBack)="clearSearch()"
+        >
+        </app-search-filter>
+      </div>
+
+      <!-- <div class="search-bar" style="flex: 1; margin-right: 10px">
+        <nz-input-group
+          class="input-group-container"
+          nzSearch
+          nzSize="large"
+          [nzAddOnAfter]="suffixIconSearch"
+        >
+          <input
+            class="search-input-container"
+            placeholder="Search by Student or course title"
+            [(ngModel)]="searchKeyword"
+            (keydown.enter)="searchByKeyword()"
+            #searchInput
+          />
+        </nz-input-group>
+
+        <ng-template #suffixIconSearch>
+          <span
+            class="cross-search-icon cursor-pointer"
+            (click)="clearSearch()"
+            nz-icon
+            nzType="close"
+          ></span>
+          <span
+            class="search-icon cursor-pointer"
+            (click)="searchByKeyword()"
+            nz-icon
+            nzType="search"
+          ></span>
+        </ng-template>
+      </div> -->
+
+      <!-- Date Range Picker -->
+      <div class="date-range-picker ml-auto">
+        <input
+          type="text"
+          id="rangeCalendarTimeRight"
+          class="form-control"
+          style="
+            box-shadow: none;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            border-radius: 5px;
+            padding: 6px;
+            background-color: #ececec;
+            border: none;
+            outline: none;
+          "
+          readonly
+          ngxDaterangepickerBootstrap
+          placeholder="Select a date range"
+          [(ngModel)]="selectedRangeCalendarTimeRight"
+          startKey="start"
+          endKey="end"
+          [drops]="dropsDown"
+          [opens]="opensLeft"
+          [locale]="{ format: 'DD.MM.YYYY' }"
+          [maxDate]="maxDate"
+          [autoApply]="false"
+          [ranges]="ranges"
+          [timePicker]="false"
+          [timePickerSeconds]="false"
+          [timePicker24Hour]="true"
+          [showCustomRangeLabel]="true"
+          [showCancel]="true"
+          [linkedCalendars]="true"
+          [showDropdowns]="true"
+          [showClearButton]="true"
+          [lockStartDate]="false"
+          [alwaysShowCalendars]="false"
+          [showRangeLabelOnInput]="true"
+          [formlyCustomField]="false"
+          [keepCalendarOpeningWithRange]="true"
+          [isTooltipDate]="isTooltipDate"
+          [isCustomDate]="isCustomDate"
+          (datesUpdated)="datesUpdatedRange($event)"
+          (change)="onChanges($event)"
+          (rangeClicked)="onRangeChanges($event)"
+          (clearClicked)="resetDateRange()"
+        />
+      </div>
+    </div>
+    <div class="export-button">
+      <button
+        nz-button
+        class="ant-btn signup-form-button"
+        nzType="primary"
+        [disabled]="!students || students.length === 0"
+        (click)="exportData()"
+      >
+        <img
+          src="../../../../assets/icons/excel.svg"
+          alt="Excel Icon"
+          class="excel-icon"
+        />
+        Export
+      </button>
+    </div>
+    <!-- Table -->
+    <div>
+      <nz-table #basicTable [nzShowPagination]="false" [nzData]="students">
+        <thead>
+          <tr>
+            <th>Purchase Date</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Course Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of students">
+            <td>{{ data.purchaseDate | date : "short" }}</td>
+            <td>{{ data.studentName }}</td>
+            <td>{{ data.studentEmail }}</td>
+            <td nz-tooltip="{{ data.courseTitle }}">
+              {{
+                data.courseTitle?.length > 55
+                  ? data.courseTitle.substring(0, 55) + "..."
+                  : data.courseTitle
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <nz-pagination
+        style="float: right"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="payLoad.pageNo + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="10"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </div>
+</div>

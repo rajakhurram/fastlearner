@@ -1,0 +1,1171 @@
+.container {
+  background-color: #ffffff;
+}
+
+.course-content-header {
+  background-color: #212189;
+  padding: 15px 20px;
+
+  .header-row {
+    justify-content: space-between;
+    flex-flow: row;
+  }
+
+  .inner-content {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+}
+
+.rating-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #25183a;
+  line-height: 8px;
+}
+
+.star-container {
+  display: flex;
+  padding-top: 8px;
+}
+
+.course-title h4 {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+:host ::ng-deep .ant-progress-text {
+  text-align: center !important;
+}
+
+.course-title p {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0;
+}
+
+.course-completion {
+  line-height: 1;
+  width: 16rem;
+
+  .text-row {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.course-completion small {
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.course-completion h4 {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.divider {
+  margin: 0px 20px;
+  height: 4rem;
+  border-left: 1px solid #9c9c9c;
+  visibility: visible;
+}
+
+.progress {
+  display: flex;
+}
+
+.course-hover-default-btn {
+  border: white 1px solid;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 40px;
+  color: white;
+  background-color: #212189;
+  margin: 0px 10px;
+  width: 40px;
+  padding: 0;
+}
+
+.side-nav-button {
+  background-color: white;
+  border-color: #212189;
+  color: #212189;
+  height: 35px;
+  width: 35px;
+}
+
+#user-profile-menu {
+  position: relative;
+  top: 18px !important;
+  left: 0px !important;
+}
+
+.blue-divider {
+  background-color: #262261;
+  margin-top: -4px;
+}
+
+.user-profile {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  align-items: center;
+}
+
+.side-nav-button1 {
+  background-color: #262261;
+  border-color: #212189;
+  color: white;
+  height: 50px;
+  width: 50px;
+  margin-top: 10px;
+}
+.side-nav-button-review {
+  background-color: #262261;
+  border-color: #212189;
+  color: white;
+  height: 32px;
+  width: 32px;
+}
+.side-nav-button-ques {
+  background-color: #262261;
+  border-color: #212189;
+  color: white;
+  height: 32px;
+  width: 32px;
+  margin-top: 10px;
+}
+
+.user-profile-text {
+  margin: 10px;
+}
+
+.user-profile-text p {
+  font-size: 10px;
+  margin: 0;
+  color: black;
+}
+
+.menu-actions {
+  align-items: center;
+  display: flex;
+}
+
+.actions {
+  display: flex;
+
+  div {
+    margin: 0px 10px;
+    height: 2.25rem;
+    width: 2.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      margin: auto;
+    }
+  }
+
+  div:hover {
+    background-color: #f5f8ff;
+    border-radius: 50%;
+  }
+}
+
+.card-header {
+  padding: 15px 10px 4px 10px;
+}
+
+:host ::ng-deep .ant-card-body {
+  padding: 0px !important;
+  overflow: hidden;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  width: 100%;
+  margin: auto;
+  overflow-y: auto;
+}
+
+.course-main-content {
+  padding-top: 2%;
+  padding-bottom: 2%;
+  width: 95%;
+  margin: auto;
+}
+
+.inner-header {
+  padding-top: 5px;
+}
+
+.chat-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 12%;
+}
+
+.chat-button {
+  width: 15%;
+  display: block;
+  margin-bottom: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+}
+
+.chat-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.question-button {
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+}
+
+.question-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.rating-button {
+  margin-bottom: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+}
+
+.rating-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.section-topic p {
+  color: black;
+}
+
+.section-topic h3 {
+  font-weight: 900;
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.rating-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rate-section span {
+  color: black;
+}
+
+.rate-section {
+  text-align: right;
+  width: 35%;
+}
+
+.star-contaner {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.section-container {
+  padding: 10px;
+  background-color: #f5f8ff;
+  width: 80%;
+  word-break: break-word;
+}
+
+.alternate-section-container {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  margin-top: 5px;
+  word-break: break-all;
+}
+
+.alternate-section-container p {
+  color: #212189;
+}
+
+#more-menu {
+  position: relative;
+  top: 18px !important;
+  left: -45px !important;
+}
+
+.blue-divider {
+  background-color: #262261;
+  margin-top: -4px;
+}
+
+.section-container p {
+  color: #212189;
+  font-weight: 600;
+}
+
+.collapse {
+  background-color: #f5f8ff;
+}
+
+.arrow-icon {
+}
+
+.arrow-icon-top {
+  margin-top: 9px;
+  margin-right: 10px;
+}
+
+:host
+  ::ng-deep
+  .ant-collapse
+  > .ant-collapse-item
+  > .ant-collapse-header
+  .ant-collapse-extra {
+  width: min-content;
+  margin-right: 20px;
+  align-self: center;
+}
+
+.alternate-arrow-icon {
+  margin-top: 8px;
+  margin-right: 10px;
+}
+
+.topic-name {
+  display: flex;
+  padding-top: 10px;
+  padding-left: 10px;
+  color: #292929;
+}
+
+.topic-type {
+  margin-left: 35px;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.topic-header {
+  width: 100%;
+}
+
+.topic-header:hover {
+  background-color: #edf6ff;
+  cursor: pointer;
+}
+
+.alternate-topic-header {
+  width: 100%;
+  background-color: #ffebec;
+}
+
+.alternate-topic-header:hover {
+  background-color: #fbd6d8;
+  cursor: pointer;
+}
+
+.alternate-topic-selected {
+  background-color: #ffebec;
+  cursor: pointer;
+}
+
+:host ::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  padding: 0 !important;
+}
+
+.chat {
+  background-color: #ffffff;
+}
+
+.chat-scroll {
+  height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px;
+}
+
+.image-text-container {
+  text-align: center;
+  margin-top: 15px;
+  color: #292929;
+
+  &__text {
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.chat-header h3 {
+  padding-left: 15px;
+  padding-top: 10px;
+  font-weight: 600;
+}
+
+.box {
+  background-color: #f5f8ff;
+  height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: darkslategray lightgray;
+}
+
+.inner-questions {
+  display: flex;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.inner-questions:hover,
+.inner-questions.selected {
+  background-color: #edf6ff;
+}
+
+/* Add a separate class for the selected state */
+.selected {
+  background-color: #edf6ff;
+}
+
+.notes-header h3 {
+  font-weight: 600;
+}
+.qa-header h3 {
+  font-weight: 600;
+}
+.review-header h3 {
+  font-weight: 600;
+  margin-bottom: -2px;
+}
+
+.inner-chat-header {
+  padding: 12px;
+}
+
+.tag-border {
+  border-radius: 10px;
+  min-width: 50px;
+  max-width: 80px;
+  text-align: center;
+}
+
+.align-heading {
+  padding: 12px;
+}
+
+.user-icon {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 25px;
+}
+
+.row {
+  padding-bottom: 3%;
+  padding-top: 3%;
+}
+
+.button-row {
+  padding-top: 2%;
+  padding-bottom: 10%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.question-topic {
+  color: #212189;
+  cursor: pointer;
+  word-break: break-all;
+}
+
+.question {
+  background-color: #f5f8ff;
+  padding: 13px 10px 1px 10px;
+
+  border-radius: 10px;
+  color: #212189;
+}
+
+.reply {
+  background-color: #f5f8ff;
+  padding: 13px 10px 1px 10px;
+
+  border-radius: 10px;
+  color: black;
+}
+
+.expand-screen {
+  display: flex;
+  justify-content: end;
+}
+
+.expand-icon {
+  font-size: 30px;
+  color: #212189;
+  margin-top: 15px;
+  margin-left: 110px;
+}
+
+.text-area {
+  width: 100%;
+  resize: none;
+
+}
+
+.note-list {
+  padding-top: 3%;
+  overflow-y: auto;
+}
+
+.note-field {
+  border-radius: 5px;
+}
+
+.note-input-group {
+  background-color: #f5f8ff;
+  border-radius: 5px;
+}
+
+.note-input {
+  color: black;
+}
+
+.add-note-button-box {
+  display: flex;
+  justify-content: end;
+  margin: 0px 10px;
+}
+
+.note-text {
+  background-color: #f5f8ff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.notes {
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+.note {
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.add-notes-button {
+  margin-bottom: 15px;
+  margin-top: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+}
+.write-review-button {
+  width: fit-content;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+}
+
+.add-notes-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.section-title p {
+  color: #212189;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.note-label {
+  display: flex;
+
+  div {
+    margin-right: 10px;
+  }
+}
+
+.note-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.topic-title p {
+  color: gray;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.summary p {
+  text-align: left;
+  margin-top: 10px;
+  color: #231638;
+}
+
+.summary-header {
+  background-color: #212189;
+  padding: 10px;
+  vertical-align: middle;
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-header h4 {
+  color: white;
+  margin: auto;
+}
+
+.summary-header p {
+  color: white;
+  margin: auto;
+}
+
+.review-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-section {
+  padding-top: 1%;
+  padding-bottom: 2%;
+}
+
+.feedback-header h3 {
+  font-weight: 600;
+}
+
+.rating-section {
+  display: flex;
+}
+
+.star-span {
+  color: #25183a;
+  font-size: 13px;
+  margin-right: 10px;
+}
+
+.text-margin {
+  margin-right: 4px;
+}
+
+.line-padding {
+  line-height: 0;
+  display: flex;
+  align-items: center;
+}
+
+.rating-heading {
+  font-size: 44px;
+  color: #212189;
+  font-weight: 900;
+  margin-right: 5px;
+}
+
+.side-nav-button-menu {
+  background-color: white;
+  border-color: white;
+  color: #212189;
+  font-weight: 600;
+  height: 40px;
+  width: 40px;
+  margin: 0px 10px;
+}
+
+.side-nav-button-review {
+  background-color: #262261;
+  border-color: #212189;
+  color: white;
+  height: 30px;
+  width: 30px;
+}
+
+.comment-feedback {
+  padding-top: 2%;
+}
+
+.comment {
+  display: flex;
+}
+
+.commentator {
+  margin-left: 10px;
+  align-self: center;
+}
+
+.comment-like-dislike {
+  display: flex;
+  align-items: baseline;
+}
+
+.comment-like-dislike small {
+  font-size: 10px;
+  margin-right: 5px;
+}
+
+.date {
+  margin-left: 5px;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.comment-text {
+  color: black;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+.comment-like-dislike img {
+  margin-left: 5px;
+}
+
+.row-space {
+  padding-top: 1%;
+}
+
+.comment-avatar {
+  color: white;
+  background-color: #212189;
+  cursor: pointer !important;
+}
+
+:host ::ng-deep .ant-comment-content-author-name {
+  color: #212189;
+}
+
+:host ::ng-deep .ant-comment-content-detail p {
+  margin-bottom: inherit;
+  white-space: normal !important;
+}
+
+.lecture {
+  color: #212189;
+  font-weight: 500;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.reply-comment {
+  color: #212189;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.reply-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.msg-icon {
+  padding-right: 20px;
+  cursor: pointer;
+}
+
+:host ::ng-deep .ant-avatar-string {
+  position: static;
+}
+
+.qa-user-icon {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 14px;
+  background-color: #212189;
+}
+
+.text-box {
+  width: 99%;
+  margin-left: 1%;
+}
+
+.ask-question {
+  display: flex;
+}
+
+.input-group {
+  background-color: #f5f8ff;
+  margin-top: 10px;
+  border-radius: 5px;
+  padding: 12px;
+}
+
+:host ::ng-deep .ant-input-group-addon {
+  border: none;
+  background-color: #f5f8ff;
+}
+
+.reply-label {
+  color: #212189;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.quiz-player {
+  // min-height: 600px; 
+  // height: auto; 
+  // // max-height: 90vh; 
+  // width: 100% !important;
+  // background-color: #edf6ff;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+  // justify-content: center;
+}
+
+.article-player {
+  min-height: 550px;
+  width: 100%;
+  max-height: 550px;
+  overflow-y: auto;
+}
+
+.show-more-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.show-more-button {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  border-radius: 4px;
+  color: #fe4a55;
+  height: 50px;
+}
+
+.show-more-button:hover {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+  height: 50px;
+}
+
+.alternate-section-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: #212189;
+  color: white;
+  border: none;
+  max-width: 25px;
+}
+
+.unpin-alternate-section-button {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  background-color: #fe4a55 !important;
+  color: white;
+  border: none;
+}
+
+.unpin-alternate-section-button-height1 {
+  height: 100%;
+}
+
+.unpin-alternate-section-button-height2 {
+  height: 100%;
+}
+
+.custom-dropdown {
+  width: 100%;
+}
+
+.collapse-alternate {
+  background-color: #ffebec;
+}
+
+.pinnedCollapse {
+  background-color: #ffebec;
+}
+
+.pinnedCollapse-topic {
+  background-color: #ffebec;
+}
+
+.pinnedCollapse-topic:hover {
+  background-color: #fbd6d8;
+}
+
+.custom-rate ::ng-deep .ant-rate {
+  font-size: 12px !important;
+  margin-top: 6px !important;
+  margin-left: 3px !important;
+  padding-bottom: 3px;
+}
+.disabled-star ::ng-deep .ant-rate {
+  font-size: 12px !important;
+  margin-top: 6px !important;
+  margin-left: 3px !important;
+  padding-bottom: 3px;
+  color: lightgray !important;
+}
+
+:host ::ng-deep .ant-rate-star:not(:last-child) {
+  margin-right: 0px !important;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-right: 20px;
+}
+
+.alternate-icon-container {
+  margin-left: 20px;
+}
+
+.pushpin-icon {
+  font-size: 25px;
+}
+
+.pushpin-icon-straight {
+  font-size: 18px;
+  color: #fe4a55;
+}
+
+.alternate-reviews {
+  font-size: 10px !important;
+}
+
+.alternate-instructor-size {
+  font-size: 12px !important;
+}
+
+.alternate-instructor-image {
+  height: 31px;
+  width: 31px;
+  border-radius: 50%;
+  margin-bottom: 5%;
+}
+
+.alternate-instructor-section-name {
+  color: #212189;
+  margin: 0;
+
+  margin-left: 4%;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+.spinner {
+  text-align: center;
+  margin-top: 1%;
+  margin-bottom: 3%;
+}
+
+.topic-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visibility {
+  display: none;
+}
+
+:host ::ng-deep .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #212189;
+  border-color: #212189;
+}
+
+.resources-container {
+  border: 1px solid;
+  margin-right: 35px;
+  border-color: #212189;
+}
+
+.resources-dropdown {
+  font-size: 10px;
+  padding: 3px;
+  color: #212189;
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .rate-section {
+    text-align: left;
+    width: auto;
+    display: flow;
+  }
+
+  .rating-head {
+    flex-direction: column;
+  }
+
+  .content-row {
+    flex-direction: column-reverse;
+  }
+
+  .card {
+    margin-top: 5% !important;
+  }
+
+  .chat-row {
+    flex-direction: column;
+  }
+
+  .chat-button {
+    margin-bottom: 40px !important;
+    width: auto;
+  }
+  .question-button {
+    margin-bottom: 20px !important;
+    width: auto !important;
+    margin-left: 0% !important;
+  }
+
+  .add-notes-button {
+    margin-bottom: 20px !important;
+    width: fit-content;
+  }
+
+  .chat-scroll {
+    height: auto !important;
+  }
+
+  .box {
+    height: fit-content;
+    padding: 23px;
+  }
+
+  .chat-img {
+    padding-top: 0%;
+  }
+
+  .course-content-header .inner-content {
+    display: block !important;
+  }
+
+  .divider {
+    visibility: hidden;
+    display: none;
+  }
+  .menu-actions {
+    margin-top: 15px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .header-row {
+    flex-direction: column !important;
+    flex-flow: column !important;
+  }
+}
+
+@media screen and (max-width: 993px) {
+  .visibility {
+    display: block;
+  }
+
+  .hide-class {
+    display: none;
+  }
+
+  .row {
+    margin-top: 5%;
+  }
+}
+
+.review-rate {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+::ng-deep .ant-modal-close-icon {
+  color: red;
+}
+
+.qa-scroller {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.comment-feedback-scroller {
+  overflow-y: auto;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height to vertically center */
+}
+
+.course-type-icon {
+  padding-right: 16px;
+  height: 18px;
+  width: 33px;
+}
+
+
+@media screen and (max-width: 410px ){
+  .quiz-player {
+    min-height: 780px !important;
+    height: auto !important;
+  }
+}
+
+.chat-more-option {
+  margin-left: auto;
+  color: #212189;
+  font-size: 18px;
+}
+
+@media screen and (max-width: 879px) {
+  .show-more-button{
+      width: fit-content !important;
+  }
+}
+
+
+::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #212189;
+}
+::ng-deep .ant-tabs-tab-btn:hover {
+  color: #292929;
+}
+::ng-deep .ant-tabs-tab:hover {
+  color: #292929;
+}
+::ng-deep .ant-tabs-ink-bar{
+  background: #212189;
+}

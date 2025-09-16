@@ -1,0 +1,637 @@
+<div class="container">
+  <div class="ai-grader-landing-page">
+    <div
+      class="banner banner-container"
+      id="banner_container"
+      #banner_container
+    >
+      <video autoplay muted loop playsinline class="bg-video">
+        <source
+          src="../../../../assets/images/background-video.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+
+      <app-container>
+        <app-ai-grader-loader *ngIf="isProcessing"></app-ai-grader-loader>
+        <div
+          class="justify-alignment resp-margin"
+          style="justify-content: center"
+          nz-row
+        >
+          <div class="text-align-responsive landing-banner">
+            <div class="landing-page-banner">
+              <div class="landing-page-heading">
+                <h3>AI Grader for Instructors</h3>
+                <p>Supports handwriting recognition</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-div" nz-row>
+          <div class="box left-box" nz-col [nzSpan]="12">
+            <div>
+              <h2>Instant results, zero hassle</h2>
+            </div>
+
+            <div
+              nz-col
+              [nzSpan]="24"
+              class="upload-section mt-4 mb-3"
+              (drop)="onDrop($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave()"
+              [class.dragging]="isDragging"
+            >
+              <div class="upload-box text-center">
+                <ng-container
+                  *ngIf="
+                    uploadedFiles && uploadedFiles.length > 0;
+                    else uploadPrompt
+                  "
+                >
+                  <div class="file-preview-grid">
+                    <ng-container
+                      class="file-wrapper"
+                      *ngFor="let file of uploadedFiles; let i = index"
+                    >
+                      <ng-container
+                        *ngIf="
+                          file.type === 'application/pdf';
+                          else imagePreview
+                        "
+                      >
+                        <ng-container *ngFor="let page of file.pages">
+                          <div class="pdf-page-card">
+                            <pdf-viewer
+                              [src]="file.src"
+                              [page]="page"
+                              [original-size]="false"
+                              [render-text]="true"
+                              [show-all]="false"
+                              [fit-to-page]="true"
+                              [autoresize]="true"
+                              (after-load-complete)="onPdfLoaded($event, file)"
+                            ></pdf-viewer>
+
+                            <div class="page-number">{{ page }}</div>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+
+                      <ng-template #imagePreview>
+                        <div class="pdf-page-card">
+                          <img
+                            [src]="file.previewUrl"
+                            alt="{{ file.name }}"
+                            width="100%"
+                            height="auto"
+                          />
+                          <div class="page-number">1</div>
+                          <div class="file-name">{{ file.name }}</div>
+                        </div>
+                      </ng-template>
+                    </ng-container>
+                  </div>
+
+                  <div class="upload-actions mt-3">
+                    <button
+                      nz-button
+                      nzType="default"
+                      (click)="resetUpload()"
+                      style="margin-right: 15px"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      nz-button
+                      nzType="primary"
+                      (click)="fileInput.click()"
+                    >
+                      Add More
+                    </button>
+                    <input
+                      #fileInput
+                      type="file"
+                      hidden
+                      accept="application/pdf"
+                      multiple
+                      (change)="onFileUpload($event)"
+                    />
+                  </div>
+                </ng-container>
+
+                <ng-template #uploadPrompt>
+                  <img
+                    src="../../../../assets/icons/AiGrader.svg"
+                    alt="upload"
+                    width="194px"
+                    height="194px"
+                    class="mb-3"
+                  />
+                  <p>
+                    <a
+                      href="#"
+                      (click)="fileInput.click(); $event.preventDefault()"
+                      style="text-decoration: underline; color: #212189"
+                      class="font-bold"
+                      >Upload</a
+                    >
+                    <span class="font-bold"> student copies </span>
+                    <span style="color: #212189">(can be handwritten)</span>
+                    <input
+                      #fileInput
+                      type="file"
+                      hidden
+                      accept="application/pdf"
+                      (change)="onFileUpload($event)"
+                    />
+                  </p>
+                  <p style="font-size: 12px">
+                    Upload one or more files to generate Ai grading
+                  </p>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Form Box -->
+          <div class="box" nz-col [nzSpan]="12">
+            <div class="dropdown-wrapper">
+              <label style="color: black"
+                >Class name <span class="required">*</span></label
+              ><br />
+
+              <input
+                type="text"
+                class="dropdown-input"
+                placeholder="Enter new class name like [MBA 2025]"
+                [(ngModel)]="className"
+              />
+            </div>
+
+            <div class="dropdown-wrapper">
+              <label style="color: black"
+                >Assessment name <span class="required">*</span></label
+              ><br />
+
+              <input
+                type="text"
+                class="dropdown-input"
+                placeholder="Enter new assessment name like [Business Studies]"
+                [(ngModel)]="assessmentName"
+              />
+            </div>
+
+            <div nz-col [nzSpan]="24" class="mb-2 mt-2">
+              <label style="color: black"
+                >Evaluation Criteria <span class="required">*</span></label
+              >
+              <textarea
+                nz-input
+                rows="4"
+                [(ngModel)]="evaluationCriteria"
+                placeholder="You can leave instructions for AI to make our analysis as close as possible to your real feedback"
+              ></textarea>
+            </div>
+
+            <div nz-col [nzSpan]="24" class="mt-4">
+              <p style="color: black">Upload Rubric</p>
+              <div class="rubric-key display-flex">
+                <div class="custom-upload-wrapper">
+                  <span class="file-name">{{
+                    selectedFileName || "Upload rubric or answer key"
+                  }}</span>
+                  <label for="fileInput" class="upload-btn">Upload File</label>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    class="hidden-file-input"
+                    accept="application/pdf"
+                    (change)="onAnswerFileSelected($event)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="display-flex w-100 justify-content-center mt-2">
+              <button
+                [ngClass]="{
+                  'btn-disable':
+                    !evaluationCriteria || uploadedFiles?.length == 0 || !className || !assessmentName,
+                  'grade-btn': evaluationCriteria && uploadedFiles?.length > 0
+                }"
+                [disabled]="!evaluationCriteria || uploadedFiles?.length == 0"
+                nz-button
+                nzType="primary"
+                (click)="gradeNow()"
+                class="mt-2"
+              >
+                Grade now
+              </button>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="power-of-grader">
+      <app-container>
+        <div class="grader-row" nz-row>
+          <div class="free-image" nz-col [nzSpan]="12">
+            <img
+              src="../../../assets/images/free-image.png"
+              alt="free image"
+              class="free-img"
+            />
+          </div>
+          <div class="grader-text" nz-col [nzSpan]="12">
+            <h3>Your First 500 Papers Graded for Free</h3>
+            <span style="font-weight: 500"
+              >Experience the Power of AI Grading at Zero Cost</span
+            ><br />
+            <span style="font-family: 'Poppins-regular'; font-size: 15px">
+              Sign up today and get 500 free papers to grade using our AI
+              grader. Discover how effortless, accurate, and time-saving grading
+              can be with our cutting-edge AI grading tool. No commitments, just
+              results.
+            </span>
+            <br /><br />
+            <button
+              nz-button
+              [nzType]="'primary'"
+              class="free-btn"
+              (click)="onButtonOnClick()"
+            >
+              Get Started Now
+            </button>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="premium-courses" id="premium_courses" #premium_courses>
+      <app-container>
+        <div style="justify-content: center" class="justify-alignment">
+          <h3>How It Works</h3>
+
+          <div class="steps-container">
+            <!-- Step 1 -->
+            <div class="step">
+              <img
+                src="../../../assets/icons/one-icon.svg"
+                alt="Step 1"
+                class="step-icon"
+              />
+              <h4>Upload Student Papers</h4>
+              <p>
+                Drag and drop to upload one or multiple scanned answer sheets,
+                including handwritten copies.
+              </p>
+            </div>
+            <div class="step">
+              <!-- Arrow 1 -->
+              <img
+                src="../../../assets/icons/arrow-down-curve.svg"
+                alt="Arrow 1"
+                class="arrow arrow-1"
+              />
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+              <img
+                src="../../../assets/icons/two-icon.svg"
+                alt="Step 2"
+                class="step-icon"
+              />
+              <h4>Upload Rubrics or Answer Key</h4>
+              <p>
+                Provide your custom rubrics or answer key to enable
+                subject-specific AI evaluation.
+              </p>
+            </div>
+            <div class="step">
+              <!-- Arrow 2 -->
+              <img
+                src="../../../assets/icons/arrow-up-curve.svg"
+                alt="Arrow 2"
+                class="arrow arrow-2"
+              />
+            </div>
+            <!-- Step 3 -->
+            <div class="step">
+              <img
+                src="../../../assets/icons/three-icon.svg"
+                alt="Step 3"
+                class="step-icon"
+              />
+              <h4>Get a Detailed Report Instantly</h4>
+              <p>
+                Receive detailed, AI-generated scores, feedback, and performance
+                analytics — ready to export and share.
+              </p>
+            </div>
+          </div>
+
+          <div class="get-started">
+            <button nz-button [nzType]="'primary'" (click)="onButtonOnClick()">
+              Try AI Grader Today!
+            </button>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="slider slider-bg-light">
+      <app-container>
+        <div class="trusted-container">
+          <h3 class="title">
+            Our AI Grading System Is Trusted By Top Schools
+          </h3>
+          <span
+            >FastLearner’s AI grading system is designed for instructors who
+            need speed, reliability,<br />
+            and customization — all while maintaining exceptional
+            accuracy.</span
+          >
+
+          <div class="logo-marquee-wrapper">
+            <div class="logo-marquee" #logoCarousel>
+              <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+              <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+
+              <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+
+              <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+            </div>
+          </div>
+
+          <!-- <div class="stats">
+            <div class="stat-box">
+              <h2>1,000+</h2>
+              <p>Schools</p>
+            </div>
+            <div class="stat-box">
+              <h2>1M+</h2>
+              <p>Happy Students</p>
+            </div>
+            <div class="stat-box">
+              <h2>100K+</h2>
+              <p>Happy Teachers</p>
+            </div>
+          </div> -->
+        </div>
+      </app-container>
+    </div>
+
+    <div class="about-us bg-light" id="about_us_bg_light" #about_us_bg_light>
+      <app-container>
+        <div nz-row style="justify-content: center" class="justify-alignment">
+          <div nz-col class="">
+            <div class="about-us-section">
+              <div class="adventure-padding">
+                <div class="about-us-heading">
+                  <h2>Why Educators Trust Our AI Grading Tool</h2>
+                </div>
+                <div class="about-us-text">
+                  <span>
+                    FastLearner’s AI Grading Tool streamlines assessments with
+                    powerful features like
+                    <br />
+                    handwriting recognition, bulk grading, and automated result
+                    sharing. Perfect for institutions, <br />it ensures
+                    efficient, auditable, and data-friendly evaluation, making
+                    it the ultimate AI <br />
+                    grading assistant for teachers.
+                  </span>
+                </div>
+              </div>
+              <div
+                class="about-us-cards"
+                style="display: flex; justify-content: center"
+              >
+                <div class="detail-cards" nz-row [nzGutter]="16">
+                  <app-static-card
+                    [showButtonWhenLoggedIn]="!isLoggedIn"
+                    [staticCards]="isLoggedIn ? loggedInStatic : staticCards"
+                  ></app-static-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="get-started display-flex justify-content-center">
+          <button nz-button [nzType]="'primary'" (click)="onButtonOnClick()">
+            Get Started Now
+          </button>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="teacher-review">
+      <app-container>
+        <h3 class="display-flex justify-content-center">
+          What Teachers Are Saying
+        </h3>
+        <div class="testimonial-cards">
+          <!-- Card 1 -->
+          <div class="testimonial-card">
+            <img src="../../../../assets/images/ilyna.png" alt="Lily Jones" />
+            <h2>Ms. Iriyna</h2>
+            <div class="role">English Teacher - High School</div>
+            <div class="stars">★★★★★</div>
+            <h4>
+              Finally, a grader for teachers that understands our workload!
+            </h4>
+            <p>
+               I've been teaching for over 12 years, and FastLearner’s AI Grader
+              is the best AI grading tool I’ve added to my workflow. It grades
+              essays, calculates percentages, and even acts as an average
+              calculator — all in seconds. Total game-changer!
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="testimonial-card">
+            <img src="../../../../assets/images/adam.png" alt="John Smith" />
+            <h2>Mr. Adam Smith</h2>
+            <div class="role">Math Instructor</div>
+            <div class="stars">★★★★★</div>
+            <h4>The AI percentage calculator is incredibly accurate!</h4>
+            <p>
+              No more second-guessing my grade calculations. This AI grading
+              tool for teachers does everything — from scoring papers to
+              generating class averages. The built-in percentage calculator is
+              spot on every time!
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="testimonial-card">
+            <img
+              src="../../../../assets/images/sophia.png"
+              alt="Sophia Smith"
+            />
+            <h2>Mrs. Emily Thompson</h2>
+            <div class="role">College Lecturer</div>
+            <div class="stars">★★★★★</div>
+            <h4>I use it daily — saves me hours every week.</h4>
+            <p>
+              The bulk grading feature is brilliant. I simply upload scanned
+              copies, and the system handles the rest. It even provides insights
+              using an AI average calculator, making progress reports a breeze.
+            </p>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
+    <div id="effortless-section" class="effortless-card-section" #effortless>
+      <app-container>
+        <div class="effortless-wrapper">
+          <div class="image-box">
+            <img
+              src="../../../../assets/images/effor-essay.png"
+              alt="AI Grading"
+            />
+          </div>
+          <div class="content-box">
+            <h2>Effortless Essay Grading With AI</h2>
+            <p class="subtitle">
+              Grade Essays in Seconds. No More Manual Marking
+            </p>
+            <p class="description">
+              Say goodbye to subjective grading and hours spent on essays.
+              FastLearner’s AI essay grader for teachers brings you a smarter
+              way to assess student writing. Our intelligent essay grader
+              analyzes structure, grammar, content, and rubric alignment,
+              delivering instant, consistent, and unbiased results.
+            </p>
+            <p style="font-family: 'Poppins-semibold'">
+              Experience the power of out AI Essay Checker:
+            </p>
+            <div class="feature-cards">
+              <div class="feature-card">
+                Upload essays <br />(typed or handwritten)
+              </div>
+              <div class="feature-card">
+                Instantly receive detailed scores and feedback
+              </div>
+              <div class="feature-card">
+                Export results or share with students in one click
+              </div>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="grading-main"></div>
+    <div id="grading-section" class="grading-card-section" #grading>
+      <app-container>
+        <div class="grading-tools-section">
+          <h2 class="section-title mb-2">
+            Maximize Productivity with Next-Level Grading Tools
+          </h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value">95%</div>
+              <div class="stat-label">Faster Grading</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">20+</div>
+              <div class="stat-label">Hours save in a week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">98%</div>
+              <div class="stat-label">Accuracy</div>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="reason-teacher">
+      <app-container></app-container>
+    </div>
+
+    <div class="student-pick" id="student_pick" #student_pick>
+      <app-container [className]="'custom-container-content-center'">
+        <div class="justify-alignment newsletter-class">
+          <div
+            class="text-align-responsive"
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <div class="student-pick-content">
+              <div class="text-align">
+                <h2
+                  class="news-heading"
+                  style="
+                    font-weight: 400;
+                    color: #212189;
+                    font-family: 'Poppins-bold';
+                    font-size: 28px;
+                    line-height: 35px;
+                  "
+                >
+                  No Tech Skills Needed — Let AI Grader Do the Heavy Lifting
+                </h2>
+                <span class="student-pick-heading">Get Started Instantly</span
+                ><br />
+                <span style="font-size: 15px">
+                  No learning curve. Simply upload your student papers and let
+                  our AI grading tool handle the rest. It’s fast, accurate, and
+                  effortless.
+                </span>
+              </div>
+              <div>
+                <div class="get-started" style="margin-top: 15px">
+                  <button
+                    nz-button
+                    [nzType]="'primary'"
+                    (click)="onButtonOnClick()"
+                  >
+                    AI Grade Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="banner-image-news">
+              <img
+                class="banner-image-news-image"
+                src="../../../../assets/images/tech-skill.png"
+                alt="Banner"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="faq-container" id="faq_container" #faq_container>
+      <app-container [className]="'custom-container-content-center'">
+        <div class="faq-heading">
+          <h2>
+            Frequently <br />
+            Asked Questions
+          </h2>
+        </div>
+        <div class="faq-container-inner">
+          <div class="acc-item" *ngFor="let faq of items">
+            <div class="title-faq" (click)="expand(faq, $event)">
+              <div class="title-class">{{ faq.title }}</div>
+              <div class="icon" *ngIf="!faq.isExpanded">+</div>
+              <div class="icon" *ngIf="faq.isExpanded">-</div>
+            </div>
+
+            <div class="acc-description p-3">
+              <p>{{ faq.description }}</p>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+  </div>
+</div>

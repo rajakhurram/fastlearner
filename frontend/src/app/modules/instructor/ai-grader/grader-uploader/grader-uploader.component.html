@@ -1,0 +1,283 @@
+<div class="grader-results-header">
+  <!-- Left: Title -->
+  <h3 class="grader-title">AI Grader</h3>
+
+  <nz-card *ngIf="showUpgradePlan" class="grader-card">
+    <div class="grader-info">
+      <div class="progress-section">
+        <div class="label">Papers Graded</div>
+        <div class="progress-bar">
+          <span class="plan">Free</span>
+          <div style="width: 200px">
+            <nz-progress
+              [nzPercent]="(gradedPapers / allowedPapers) * 100"
+              [nzStrokeColor]="'#212189'"
+              [nzShowInfo]="false"
+            ></nz-progress>
+          </div>
+
+          <div class="count">{{ gradedPapers }} / {{ allowedPapers }}</div>
+        </div>
+      </div>
+      <app-button (buttonCallBack)="openSubscriptionPlan()">
+        <img
+          src="./../../../assets/icons/Upgrade.svg"
+          alt="Upgrade"
+          width="20"
+          height="20"
+          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px;"
+        />
+        Upgrade
+      </app-button>
+    </div>
+  </nz-card>
+</div>
+
+<div class="container">
+  <nz-card class="card">
+    <app-ai-grader-loader *ngIf="isProcessing"></app-ai-grader-loader>
+    <div nz-row>
+      <div class="form-group">
+        <div class="dropdown-wrapper">
+          <label>Class name <span class="required">*</span></label>
+
+          <ng-container *ngIf="!showNewClassInput; else newClassInput">
+            <nz-select
+              class="dropdown-input"
+              nzPlaceHolder="Select Class"
+              [(ngModel)]="selectedClass"
+              (ngModelChange)="onClassDropdownChange($event)"
+              [nzAllowClear]="true"
+              [nzShowSearch]="true"
+              (nzScrollToBottom)="onClassScrollToBottom()"
+            >
+              <nz-option
+                [nzValue]="'__create__'"
+                [nzLabel]="'Create New Class'"
+                style="color: #212189; font-weight: 600"
+              >
+              </nz-option>
+              <nz-option
+                *ngFor="let cls of classes"
+                [nzValue]="cls.id"
+                [nzLabel]="cls.name"
+              >
+              </nz-option>
+            </nz-select>
+          </ng-container>
+
+          <ng-template #newClassInput>
+            <input
+              type="text"
+              class="dropdown-input"
+              placeholder="Enter new class name"
+              [(ngModel)]="newClassName"
+              (keydown.enter)="handleClassCreate()"
+            />
+          </ng-template>
+        </div>
+
+        <div class="dropdown-wrapper">
+          <label>Assessment name <span class="required">*</span></label>
+
+          <ng-container
+            *ngIf="!showNewAssessmentInput; else newAssessmentInput"
+          >
+            <nz-select
+              class="dropdown-input"
+              nzPlaceHolder="Select Assessment"
+              [(ngModel)]="selectedAssessment"
+              (ngModelChange)="onAssessmentDropdownChange($event)"
+              [nzAllowClear]="true"
+              [nzShowSearch]="true"
+              (nzScrollToBottom)="onAssessmentScrollToBottom()"
+            >
+              <nz-option
+                [nzDisabled]="!selectedClass"
+                [nzValue]="'__create__'"
+                [nzLabel]="'Create New Assessment'"
+              >
+              </nz-option>
+              <nz-option
+                *ngFor="let asm of assessments"
+                [nzValue]="asm.id"
+                [nzLabel]="asm.name"
+              >
+              </nz-option>
+            </nz-select>
+          </ng-container>
+
+          <ng-template #newAssessmentInput>
+            <input
+              type="text"
+              class="dropdown-input"
+              placeholder="Enter new assessment name"
+              [(ngModel)]="newAssessmentName"
+              (keydown.enter)="handleAssessmentCreate()"
+              (blur)="cancelNewAssessmentInput()"
+            />
+          </ng-template>
+        </div>
+      </div>
+
+      <div nz-col [nzSpan]="24" class="mb-2 mt-2">
+        <label>Evaluation Criteria <span class="required">*</span></label>
+        <textarea
+          nz-input
+          rows="4"
+          [(ngModel)]="evaluationCriteria"
+          placeholder="You can leave instructions for AI to make our analysis as close as possible to your real feedback"
+        ></textarea>
+      </div>
+
+      <div nz-col [nzSpan]="24" class="mt-4">
+        <p>Upload Rubric</p>
+        <div class="rubric-key display-flex">
+          <p>Upload rubric or answer key</p>
+          <div class="custom-upload-wrapper">
+            <span class="file-name">{{
+              selectedFileName || "No file chosen"
+            }}</span>
+            <label for="fileInput" class="upload-btn">Upload File</label>
+            <input
+              type="file"
+              id="fileInput"
+              class="hidden-file-input"
+              (change)="onAnswerFileSelected($event)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        nz-col
+        [nzSpan]="24"
+        class="upload-section mt-4 mb-3"
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        [class.dragging]="isDragging"
+      >
+        <label>Upload student copies <span class="required">*</span></label>
+
+        <div class="upload-box text-center">
+          <ng-container
+            *ngIf="uploadedFiles && uploadedFiles.length > 0; else uploadPrompt"
+          >
+            <div class="file-preview-grid">
+              <ng-container
+                class="file-wrapper"
+                *ngFor="let file of uploadedFiles; let i = index"
+              >
+                <ng-container
+                  *ngIf="file.type === 'application/pdf'; else imagePreview"
+                >
+                  <ng-container *ngFor="let page of file.pages">
+                    <div class="pdf-page-card">
+                      <pdf-viewer
+                        [src]="file.src"
+                        [page]="page"
+                        [original-size]="false"
+                        [render-text]="true"
+                        [show-all]="false"
+                        [fit-to-page]="true"
+                        [autoresize]="true"
+                        (after-load-complete)="onPdfLoaded($event, file)"
+                      ></pdf-viewer>
+
+                      <div class="page-number">{{ page }}</div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+
+                <ng-template #imagePreview>
+                  <div class="pdf-page-card">
+                    <img
+                      [src]="file.previewUrl"
+                      alt="{{ file.name }}"
+                      width="100%"
+                      height="auto"
+                    />
+                    <div class="page-number">1</div>
+                    <div class="file-name">{{ file.name }}</div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+
+            <div class="upload-actions mt-3">
+              <button nz-button nzType="default" (click)="resetUpload()">
+                Cancel
+              </button>
+              <button nz-button nzType="primary" (click)="fileInput.click()">
+                Add More
+              </button>
+              <input
+                #fileInput
+                type="file"
+                hidden
+                multiple
+                (change)="onFileUpload($event)"
+              />
+            </div>
+          </ng-container>
+
+          <ng-template #uploadPrompt>
+            <img
+              src="../../../../assets/icons/AiGrader.svg"
+              alt="upload"
+              width="194px"
+              height="194px"
+              class="mb-3"
+            />
+            <p>
+              <a
+                href="#"
+                (click)="fileInput.click(); $event.preventDefault()"
+                style="text-decoration: underline; color: #212189"
+                class="font-bold"
+                >Upload</a
+              >
+              <span class="font-bold"> student copies </span>
+              <span style="color: #212189">(can be handwritten)</span>
+              <input
+                #fileInput
+                type="file"
+                hidden
+                multiple
+                (change)="onFileUpload($event)"
+              />
+            </p>
+            <p style="font-size: 12px">
+              Upload one or more files to generate AI grading
+            </p>
+            <p style="font-size: 12px">(Each PDF can be up to 6 pages)</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="display-flex w-100 justify-content-center mt-2">
+        <button
+          [class.btn-disable]="
+            !selectedAssessment ||
+            !evaluationCriteria ||
+            uploadedFiles?.length == 0
+          "
+          [disabled]="
+            !selectedAssessment ||
+            !evaluationCriteria ||
+            uploadedFiles?.length == 0 ||
+            (gradedPapers>=allowedPapers && showUpgradePlan)
+          "
+          nz-button
+          nzType="primary"
+          (click)="gradeNow()"
+          class="mt-2"
+          class="grade-btn"
+        >
+          Grade now
+        </button>
+      </div>
+    </div>
+  </nz-card>
+</div>

@@ -1,0 +1,236 @@
+<div class="subscription-plan-container">
+  <nz-card [nzBordered]="false" class="card">
+    <div class="subscription-header">
+      <div>
+        <h4>Choose Your Subscription Plan</h4>
+        <p class="subsc-para-res">
+          Invest in Yourself Today, and Witness Your Success Tomorrow!
+        </p>
+      </div>
+
+    </div>
+    <div class="subscription-heading">
+      <p>Invest in Yourself Today, and Witness Your Success Tomorrow!</p>
+    </div>
+
+    <div class="button-align">
+      
+      <div class="custom-switch">
+        <div
+          class="switch-box left"
+          [class.active]="!displayAnnual"
+          (click)="toggleSwitch(false)"
+        >
+          Monthly
+        </div>
+        <div
+          class="switch-box right"
+          [class.active]="displayAnnual"
+          (click)="toggleSwitch(true)"
+        >
+        Annual
+        </div>
+        
+        <div class="custom-message">
+          
+          SAVE UP TO 50%
+          
+        </div>
+        <div class="switch-indicator" [class.right]="displayAnnual"></div>
+      </div>
+
+    </div>
+
+    <div class="card-content">
+      <div class="card-content-row display-flex" nz-row>
+        <ng-container *ngFor="let subscription of subscriptionList">
+          <div
+            *ngIf="
+              subscription?.active &&
+              subscription?.price > 0 &&
+              (displayAnnual
+                ? subscription?.duration === 12
+                : subscription?.duration < 12) &&
+              !(subscription?.planType === 'STANDARD' && !showStandardPlan)
+            "
+            class="sub-card border-radius ml-1"
+            [ngClass]="subscription?.planType.toLowerCase()"
+          >
+            <nz-card
+              [nzBorderless]="true"
+              class="main-card"
+              [nzCover]="
+                displayAnnual
+                  ? subscription?.name === 'Standard Student Plan'
+                    ? enterpriseAnnualDiscount
+                    : subscription?.name === 'Premium Instructor Plan' ? premiumEnterpriseAnnualDiscount: 
+
+                      subscription?.name === 'Enterprise Instructor Plan'
+                    ? EnterpriseEnterpriseAnnualDiscount
+                    : null
+                  : null
+              "
+            >
+              <div class="content-header">
+                <div class="main-head">
+                  <img
+                    *ngIf="subscription?.name === 'Premium Instructor Plan'"
+                    class="mr-2"
+                    src="../../../../assets/icons/gold_crown.svg"
+                  />
+
+                  <img
+                    *ngIf="subscription?.name === 'Enterprise Instructor Plan'"
+                    class="mr-2"
+                    src="../../../../assets/icons/dot-right-arrow-red.svg"
+                  />
+
+                  <img
+                    *ngIf="subscription?.name === 'Standard Student Plan'"
+                    class="mr-2"
+                    src="../../../../assets/icons/dot-right-arrow.svg"
+                  />
+                  <h3 class="plan">{{ subscription?.name }}</h3>
+                </div>
+                <div class="align-items-center">
+                  <h1 class="display-inline-block">
+                    {{
+                      subscription?.price === 0
+                        ? ""
+                        : displayAnnual 
+                        ? "$" + subscription?.price / subscription?.duration
+                        : "$" + subscription?.price
+                    }}
+                  </h1>
+
+                  <span
+                    class="duration-text display-inline-block mt-4 ml-1 font-12"
+                    >/{{
+                      displayAnnual &&
+                      subscription?.name != "Standard Student Plan"
+                        ? "Month"
+                        : "Month"
+                    }}</span
+                  >
+
+                  <span
+                    style="color: black"
+                    *ngIf="
+                      displayAnnual
+                    "
+                    >Billed Annually</span
+                  >
+
+                  <!-- <span
+                      *ngIf="subscription?.planType.toLowerCase() == 'standard'"
+                      class="free-trial font-14 display-inline-block ml-4"
+                      >15 days free trial</span
+                    > -->
+                </div>
+              </div>
+              <div
+                class="card-body"
+                [ngClass]="{
+                    'mt-1':
+                      displayAnnual &&
+                      subscription?.name !== 'Standard Student Plan',
+                    '':
+                      displayAnnual &&
+                      subscription?.name == 'Standard Student Plan',
+                  }"
+              >
+                <h5>{{ subscription?.contentHeading }}</h5>
+
+                <small
+                  *ngFor="
+                    let line of (subscription?.content || '').split('\\n')
+                  "
+                >
+                  <img
+                    class="sparkel"
+                    [src]="getSvgForCard(subscription?.planType)"
+                  />
+                  <span>{{ line }}</span>
+                </small>
+              </div>
+              <div class="card-actions display-flex justify-content-center">
+                <button
+                  *ngIf="subscription?.planType === 'standard'"
+                  nz-button
+                  class="plan-button skip-now cursor-pointer"
+                  (click)="
+                    onSelectPlan(
+                      subscription?.name,
+                      subscription?.id,
+                      subscription?.paypalPlanId
+                    )
+                  "
+                  [nzType]="'default'"
+                >
+                  Skip for Now
+                </button>
+                <button
+                  *ngIf="subscription?.planType !== 'standard'"
+                  nz-button
+                  class="plan-button"
+                  (click)="
+                    onSelectPlan(
+                      subscription?.name,
+                      subscription?.id,
+                      subscription?.paypalPlanId
+                    )
+                  "
+                  [nzType]="'primary'"
+                >
+                  Select Plan
+                </button>
+              </div>
+
+              <ng-template #enterpriseAnnualDiscount>
+                <img
+                  class="enterprise-annual-discount"
+                  src="../../../../assets/icons/enterprise-annual-discount.svg"
+                  alt=""
+                />
+              </ng-template>
+
+              <ng-template #premiumEnterpriseAnnualDiscount>
+                <img
+                  class="enterprise-annual-discount"
+                  src="../../../../assets/icons/Premium-annual-disscount.svg"
+                  alt=""
+                />
+              </ng-template>
+              <ng-template #EnterpriseEnterpriseAnnualDiscount>
+                <img
+                  class="enterprise-annual-discount"
+                  src="../../../../assets/icons/Enterprise-annual-disscount.svg"
+                  alt=""
+                />
+              </ng-template>
+              
+            </nz-card>
+          </div>
+        </ng-container>
+      </div>
+
+      <div
+        class="skip-now-container display-flex justify-content-center"
+        style="margin-top: 10px"
+      >
+        <button
+          (click)="handleFreePlan()"
+          class="skip-now-link cursor-pointer"
+          style="
+            background: white;
+            border: none;
+            color: darkblue;
+            text-decoration: underline;
+          "
+        >
+          Skip for Now
+        </button>
+      </div>
+    </div>
+  </nz-card>
+</div>

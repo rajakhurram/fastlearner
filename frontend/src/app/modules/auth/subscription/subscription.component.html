@@ -1,0 +1,257 @@
+<div class="container">
+  <div class="subscription">
+    <nz-card class="card">
+      <div class="subscription-header">
+        <h4>Subscriptions</h4>
+      </div>
+      <div class="card-content">
+        <div class="card-content-row" nz-row>
+          <div nz-col nzXs="22" nzMd="8" nzLg="8">
+            <div class="plan">
+              <p class="m-0 bold">Plan</p>
+              <h4 *ngIf="isSubscribed" class="m-0 black">
+                {{ subscriptionDetails?.planName }}
+              </h4>
+              <h4 *ngIf="!isSubscribed" class="m-0 black">
+                You haven't selected any plan yet
+              </h4>
+              <small *ngIf="isSubscribed" class="m-0">{{
+                subscriptionDetails?.planMessage
+              }}</small>
+            </div>
+          </div>
+          <div class="payment" nz-col nzXs="22" nzMd="8" nzLg="4">
+            <div class="plan">
+              <p class="m-0 bold">Payment</p>
+              <h4 *ngIf="isSubscribed" class="m-0 black">
+                ${{ subscriptionDetails?.planPrice }}
+              </h4>
+              <h4 *ngIf="!isSubscribed" class="m-0 black">$0.00</h4>
+              <small *ngIf="isSubscribed" class="m-0">{{
+                subscriptionDetails?.freeTrialMessage
+              }}</small>
+            </div>
+          </div>
+          <div
+            nz-col
+            class="margin-offset cancel-payment"
+            nzXs="22"
+            nzMd="22"
+            nzLg="8"
+          >
+            <div class="plan-actions">
+              <button
+                *ngIf="isSubscribed"
+                [disabled]="subscriptionDetails?.planName == 'Free Plan'"
+                nz-button
+                (click)="cancelSubscription()"
+                class="button-cancel"
+                [nzType]="'primary'"
+              >
+                Cancel Subscription
+              </button>
+              <button
+                *ngIf="!isSubscribed"
+                nz-button
+                (click)="cancelSubscription()"
+                class="button-cancel"
+                [nzType]="'primary'"
+              >
+                Subscribe Now
+              </button>
+              <nz-divider class="divider" nzType="vertical"></nz-divider>
+              <button
+                [disabled]="disabledChangePlanButton"
+                (click)="openSubscriptionPlan()"
+                nz-button
+                class="button"
+                [nzType]="'primary'"
+              >
+                Change your plan
+              </button>
+            </div>
+          </div>
+        </div>
+        <nz-divider></nz-divider>
+        <!-- <ng-container *ngIf="paymentProfile!=null"> -->
+        <p class="m-0 bold">Payment Methods</p>
+        <div
+          class="paymentMethod"
+          nz-row
+          *ngFor="let paymentProfile of paymentProfiles; let i = index"
+        >
+          <ng-container *ngIf="paymentProfile">
+            <div nz-col nzXs="24" nzMd="8" nzLg="8">
+              <div class="plan">
+                <div class="payment-details">
+                  <div class="card-img">
+                    <img
+                      *ngIf="paymentProfile?.cardType == 'Visa'"
+                      src="../../../../assets/icons/visa-card.svg"
+                    />
+                    <img
+                      *ngIf="paymentProfile?.cardType == 'MasterCard'"
+                      src="../../../../assets/icons/master-card.svg"
+                    />
+                  </div>
+                  <div class="card-details">
+                    <p>{{ paymentProfile?.cardNumber }}</p>
+                    <small
+                      >Expiry {{ paymentProfile?.expiryMonth }}/{{
+                        paymentProfile?.expiryYear
+                      }}</small
+                    >
+                  </div>
+                </div>
+                <div>
+                  <!-- <label
+                    nz-checkbox
+                    [(ngModel)]="paymentProfile.isSave"
+                    (ngModelChange)="paymentDefault(paymentProfile)"
+                    >Save for later subscriptions</label
+                  > -->
+                  <label
+                    nz-radio
+                    [(ngModel)]="paymentProfile.isSave"
+                    (ngModelChange)="paymentDefault(paymentProfile)"
+                    >Save for later subscriptions</label
+                  >
+                </div>
+                <div *ngIf="i == paymentProfiles.length - 1">
+                  <button
+                    nz-button
+                    class="signup-form-button"
+                    [nzType]="'primary'"
+                    (click)="openPaymentMethod()"
+                  >
+                    Add a new card
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="card-payment" nzXs="22" nzMd="8" nzLg="8">
+              <div class="plan-actions">
+                <button
+                  nz-button
+                  class="button-cancel"
+                  [nzType]="'primary'"
+                  (click)="removePaymentProfile(paymentProfile)"
+                >
+                  Remove Card
+                </button>
+                <nz-divider class="divider" nzType="vertical"></nz-divider>
+                <button
+                  nz-button
+                  class="button"
+                  [nzType]="'primary'"
+                  (click)="updatePaymentProfile(paymentProfile)"
+                >
+                  Update Card
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <!-- </ng-container> -->
+        <ng-container
+          *ngIf="paymentProfiles == null || paymentProfiles.length == 0"
+        >
+          <nz-empty nzNotFoundImage="simple"></nz-empty>
+        </ng-container>
+        <nz-divider></nz-divider>
+        <div class="billing-history">
+          <nz-tabset (nzSelectChange)="tabCheck($event)">
+            <nz-tab nzTitle="Subscription History">
+              <nz-table
+                #basicTable
+                [nzData]="transactionHistoryDetail"
+                [nzShowPagination]="false"
+                class="subscription-history-table"
+              >
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Invoices</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let history of transactionHistoryDetail">
+                    <td>{{ history?.creationAt | date : "yyyy-MM-dd" }}</td>
+                    <td>{{ history?.name }}</td>
+                    <td>${{ history?.subscriptionAmount.toFixed(2) }}</td>
+                    <td>{{ history?.responseText }}</td>
+                    <td>{{ history?.status }}</td>
+                    <td (click)="openPurchasedInvoiceFromSubscription(history?.id)">
+
+                      <img
+                        src="../../../../assets/icons/invoice-pdf.svg"
+                        alt="Invoice"
+                        [ngStyle]="{
+                          opacity: history?.subscriptionId ? 1 : 0.5,
+                          cursor: history?.subscriptionId ? 'pointer' : 'not-allowed',
+                          'pointer-events': history?.subscriptionId ? 'auto' : 'none'
+                        }"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+              <nz-pagination
+                style="float: right"
+                class="display-inline-block mt-2"
+                [nzPageIndex]="transactionHistoryPayLoad.pageNo + 1"
+                [nzTotal]="transactionHistoryTotalElements"
+                [nzPageSize]="transactionHistoryPayLoad.pageSize"
+                (nzPageIndexChange)="onTransactionHistoryPageChange($event)"
+              >
+              </nz-pagination>
+            </nz-tab>
+            <nz-tab nzTitle="Purchased History">
+              <nz-table
+                #basicTable
+                [nzData]="purchasedHistory"
+                [nzShowPagination]="false"
+              >
+                <thead>
+                  <tr>
+                    <th class="custom-header">Date</th>
+                    <th class="custom-header">Amount</th>
+                    <th class="custom-header">Description</th>
+                    <th class="custom-header">Invoices</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let history of purchasedHistory">
+                    <td>{{ history?.enrolledAt | date : "yyyy-MM-dd" }}</td>
+                    <td>${{ history?.price.toFixed(2) }}</td>
+                    <td>{{ "Purchased a premium course" }}</td>
+                    <td (click)="openPurchasedInvoice(history?.courseId)">
+                      <img
+                        class="cursor-pointer"
+                        src="../../../../assets/icons/invoice-pdf.svg"
+                        alt="Invoice"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+              <nz-pagination
+                style="float: right"
+                class="display-inline-block mt-2"
+                [nzPageIndex]="purchasedHistoryPayLoad.pageNo + 1"
+                [nzTotal]="purchasedHistoryTotalElements"
+                [nzPageSize]="purchasedHistoryPayLoad.pageSize"
+                (nzPageIndexChange)="onPurchasedHistoryPageChange($event)"
+              >
+              </nz-pagination>
+            </nz-tab>
+          </nz-tabset>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

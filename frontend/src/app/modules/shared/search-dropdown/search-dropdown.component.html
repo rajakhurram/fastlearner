@@ -1,0 +1,20 @@
+<nz-select
+  [style.width]="config?.style?.width"
+  [style.height]="config?.style?.height"
+  [style.background-color]="'#f0f0f0'"
+  [nzBackdrop]="true"
+  [(ngModel)]="config.selectedValue"
+  (ngModelChange)="selectedCallBackFn($event)"
+  [nzSize]="'large'"
+  nzPlaceHolder="{{ config.placeHolder }}"
+  [nzShowSearch]="config.showSearch"
+  (nzOnSearch)="searchCallBackFn($event)"
+  (nzScrollToBottom)="onScrollToBottom()"
+  [nzAutoClearSearchValue]="config.allowClear"
+  [nzAllowClear]="config.allowClear"
+  [nzServerSearch]="config.serverSearch"
+>
+  <ng-container *ngFor="let value of config.values">
+    <nz-option [nzLabel]="value?.name" [nzValue]="value"></nz-option>
+  </ng-container>
+</nz-select>

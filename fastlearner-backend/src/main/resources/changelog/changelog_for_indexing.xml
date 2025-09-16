@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro
+        http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <!--  COURSE  -->
+    <changeSet id="idx-course-indexes" author="qasim">
+        <createIndex indexName="idx_course_course_status_id" tableName="course">
+            <column name="course_status"/>
+            <column name="id"/>
+        </createIndex>
+        <createIndex indexName="idx_course_created_by_course_status" tableName="course">
+            <column name="created_by"/>
+            <column name="course_status"/>
+        </createIndex>
+        <createIndex indexName="idx_course_course_status_title" tableName="course">
+            <column name="course_status"/>
+            <column name="title"/>
+        </createIndex>
+        <createIndex indexName="idx_course_instructor_course_status" tableName="course">
+            <column name="instructor_id"/>
+            <column name="course_status"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  CATEGORY, LEVEL, USERS  -->
+    <changeSet id="idx-category-level-users" author="qasim">
+        <createIndex indexName="idx_course_category_id" tableName="course_category">
+            <column name="id"/>
+        </createIndex>
+        <createIndex indexName="idx_users_id" tableName="users">
+            <column name="id"/>
+        </createIndex>
+        <createIndex indexName="idx_course_level_id" tableName="course_level">
+            <column name="id"/>
+        </createIndex>
+        <createIndex indexName="idx_user_profile_created_by" tableName="user_profile">
+            <column name="created_by"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  ENROLLMENT  -->
+    <changeSet id="idx-enrollment" author="qasim">
+        <createIndex indexName="idx_enrollment_course_student" tableName="enrollment">
+            <column name="course_id"/>
+            <column name="student_id"/>
+        </createIndex>
+        <createIndex indexName="idx_enrollment_course_id" tableName="enrollment">
+            <column name="course_id"/>
+        </createIndex>
+        <createIndex indexName="idx_enrollment_instructor_date" tableName="enrollment">
+            <column name="enrolled_date"/>
+            <column name="student_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  FAVOURITE / REVIEWS / VISITOR  -->
+    <changeSet id="idx-favourite-review-visitor" author="qasim">
+        <createIndex indexName="idx_favourite_course_course_user" tableName="favourite_course">
+            <column name="course_id"/>
+            <column name="created_by"/>
+        </createIndex>
+        <createIndex indexName="idx_course_review_course" tableName="course_review">
+            <column name="course_id"/>
+        </createIndex>
+        <createIndex indexName="idx_course_visitor_visited_instructor_course" tableName="course_visitor">
+            <column name="visited_at"/>
+            <column name="instructor_id"/>
+            <column name="course_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  DOCUMENT / PROGRESS / COMPLETION  -->
+    <changeSet id="idx-document-progress" author="qasim">
+        <createIndex indexName="idx_url" tableName="document">
+            <column name="url"/>
+        </createIndex>
+        <createIndex indexName="idx_user_course_progress" tableName="user_course_progress">
+            <column name="course_id"/>
+            <column name="student_id"/>
+        </createIndex>
+        <createIndex indexName="idx_user_course_progress_student_topic" tableName="user_course_progress">
+            <column name="student_id"/>
+            <column name="topic_id"/>
+            <column name="is_completed"/>
+        </createIndex>
+        <createIndex indexName="idx_ucp_topic_course_student_completion" tableName="user_course_progress">
+            <column name="course_id"/>
+            <column name="topic_id"/>
+            <column name="student_id"/>
+            <column name="is_completed"/>
+        </createIndex>
+        <createIndex indexName="idx_ucp_topic_student" tableName="user_course_progress">
+            <column name="topic_id"/>
+            <column name="student_id"/>
+            <column name="is_completed"/>
+        </createIndex>
+        <createIndex indexName="idx_ucp_student_last_mod" tableName="user_course_progress">
+            <column name="student_id"/>
+            <column name="last_mod_date"/>
+            <column name="seek_time"/>
+        </createIndex>
+        <createIndex indexName="idx_user_course_completion" tableName="user_course_completion">
+            <column name="course_id"/>
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  AUTH / OTP  -->
+    <changeSet id="idx-auth-otp" author="qasim">
+        <createIndex indexName="idx_email" tableName="authentication_otp">
+            <column name="email"/>
+        </createIndex>
+        <createIndex indexName="idx_otp" tableName="authentication_otp">
+            <column name="otp"/>
+        </createIndex>
+        <createIndex indexName="idx_user_value" tableName="otp">
+            <column name="user_id"/>
+            <column name="value"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  INSTRUCTOR SALES  -->
+    <changeSet id="idx-instructor-sales" author="qasim">
+        <createIndex indexName="idx_instructor_sales_status_stripe_account_id_creation_date" tableName="instructor_sales">
+            <column name="status"/>
+            <column name="stripe_account_id"/>
+            <column name="creation_date"/>
+        </createIndex>
+        <createIndex indexName="idx_instructor_sales_status_payout_email" tableName="instructor_sales">
+            <column name="status"/>
+            <column name="payout_batch_id"/>
+            <column name="stripe_account_id"/>
+        </createIndex>
+        <createIndex indexName="idx_instructor_sales_instructor_period" tableName="instructor_sales">
+            <column name="instructor_id"/>
+            <column name="creation_date"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  ANSWERS / QUESTIONS  -->
+    <changeSet id="idx-answer-question" author="qasim">
+        <sql dbms="postgresql">
+            CREATE INDEX idx_answer_question_user_profile
+            ON answer (question_id, created_by) INCLUDE (answer_text);
+        </sql>
+        <createIndex indexName="idx_question_course" tableName="question">
+            <column name="id"/>
+            <column name="course_id"/>
+        </createIndex>
+        <createIndex indexName="idx_question_id" tableName="question">
+            <column name="id"/>
+            <column name="topic_id"/>
+            <column name="course_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  QUIZ / SECTION / ALT SECTION  -->
+    <changeSet id="idx-quiz-section" author="qasim">
+        <createIndex indexName="idx_quiz_question_answer_quiz_question_id" tableName="quiz_question_anwser">
+            <column name="quiz_question_id"/>
+        </createIndex>
+        <createIndex indexName="idx_section_course_active" tableName="section">
+            <column name="course_id"/>
+            <column name="is_active"/>
+            <column name="sequence_number"/>
+        </createIndex>
+        <createIndex indexName="idx_user_alternate_section_user_course" tableName="user_alternate_section">
+            <column name="user_id"/>
+            <column name="course_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  TAGS / SUBSCRIPTIONS  -->
+    <changeSet id="idx-tags-subscribed" author="qasim">
+        <createIndex indexName="idx_course_tag_course_id_tag_id" tableName="course_tag">
+            <column name="course_id"/>
+            <column name="tag_id"/>
+        </createIndex>
+        <createIndex indexName="idx_subscribed_user_active_subscribed_id_payment_status" tableName="subscribed_user">
+            <column name="is_active"/>
+            <column name="subscribed_id"/>
+            <column name="payment_status"/>
+        </createIndex>
+        <createIndex indexName="idx_subscribed_user_start_date" tableName="subscribed_user">
+            <column name="start_date"/>
+        </createIndex>
+    </changeSet>
+
+    <!--  TOPIC / VISITS / VIDEO  -->
+    <changeSet id="idx-topic-visits-video" author="qasim">
+        <createIndex indexName="idx_topic_section_id_topic_type_id" tableName="topic">
+            <column name="section_id"/>
+            <column name="topic_type_id"/>
+        </createIndex>
+        <createIndex indexName="idx_user_profile_visit_id_date" tableName="user_profile_visit">
+            <column name="user_profile_id"/>
+            <column name="created_date"/>
+        </createIndex>
+        <createIndex indexName="idx_video_url" tableName="video">
+            <column name="videourl"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

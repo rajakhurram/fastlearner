@@ -1,0 +1,216 @@
+<div class="container">
+  <div class="co-pilot">
+    <nz-card class="card">
+      <div class="chat-container">
+        <div class="chat-header" *ngIf="chatHistory.length === 0">
+          <div class="logo-chat">
+            <img
+              width="45"
+              class="logo-style"
+              alt="Logo"
+              src="./../../../../assets/icons/co-pilot.svg"
+            />
+            <h2>Hi, I am <span class="highlight">FastLearner AI</span></h2>
+          </div>
+          <p>How can I help you today?</p>
+        </div>
+
+        <div
+          class="chat-messages"
+          *ngIf="chatHistory.length > 0 || showSpinner"
+          #chatContainer
+        >
+          <div
+            *ngFor="let chat of chatHistory"
+            [ngClass]="chat.sender"
+            class="chat-block"
+          >
+            <div class="message-text">{{ chat.text }}</div>
+
+            <!-- Show courses -->
+            <div *ngFor="let entity of chat.entities">
+              <ng-container [ngSwitch]="entity.type">
+                <!-- Course Card -->
+                <div *ngSwitchCase="'course'" class="course-card mt-3">
+                  <div class="heading">
+                    <h4>
+                      Course Title:
+                      <a
+                        (click)="routeToCourseDetails(entity.url)"
+                        class="link-style start-learning-link"
+                        style="
+                          color: #0464fc;
+                          margin-left: 8px;
+                          text-decoration: none;
+                        "
+                        onmouseover="this.style.textDecoration='underline'"
+                        onmouseout="this.style.textDecoration='none'"
+                      >
+                        {{ entity.title }}
+                      </a>
+                    </h4>
+                    <!-- Start Learning Button -->
+                  </div>
+                  <!-- Sections -->
+                  <a>
+                    <div
+                      *ngFor="let section of entity.sections"
+                      (click)="
+                        routeToCourseContent($event, entity, section.section_id)
+                      "
+                      class="card-container__card__content__matches"
+                    >
+                      <svg
+                        id="play-button"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17.207"
+                        height="17.207"
+                        viewBox="0 0 20 20"
+                      >
+                        <g id="Group_106703" data-name="Group 106703">
+                          <g id="Group_106702" data-name="Group 106702">
+                            <path
+                              id="Path_125177"
+                              data-name="Path 125177"
+                              d="M8.6,0a8.6,8.6,0,1,0,8.6,8.6A8.6,8.6,0,0,0,8.6,0Zm0,15.486A6.883,6.883,0,1,1,15.486,8.6,6.891,6.891,0,0,1,8.6,15.486Z"
+                              fill="#212189"
+                            />
+                            <path
+                              id="Path_125178"
+                              data-name="Path 125178"
+                              d="M199.14,164.746l-4.172-2.409c-.574-.331-1.043-.06-1.043.6v4.818c0,.662.469.934,1.043.6l4.172-2.409A.637.637,0,0,0,199.14,164.746Z"
+                              transform="translate(-187.408 -156.745)"
+                              fill="#212189"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+                      <p
+                        class="card-container__card__content__matches__content"
+                      >
+                        {{ section.section_name }} (Section)
+                      </p>
+                    </div>
+                  </a>
+                  <a>
+                    <div
+                      *ngFor="let topic of entity.topics"
+                      (click)="
+                        routeToCourseContent(
+                          $event,
+                          entity,
+                          topic.section_id,
+                          topic.topic_id
+                        )
+                      "
+                      class="card-container__card__content__matches"
+                    >
+                      <svg
+                        id="play-button"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17.207"
+                        height="17.207"
+                        viewBox="0 0 20 20"
+                      >
+                        <g id="Group_106703" data-name="Group 106703">
+                          <g id="Group_106702" data-name="Group 106702">
+                            <path
+                              id="Path_125177"
+                              data-name="Path 125177"
+                              d="M8.6,0a8.6,8.6,0,1,0,8.6,8.6A8.6,8.6,0,0,0,8.6,0Zm0,15.486A6.883,6.883,0,1,1,15.486,8.6,6.891,6.891,0,0,1,8.6,15.486Z"
+                              fill="#212189"
+                            />
+                            <path
+                              id="Path_125178"
+                              data-name="Path 125178"
+                              d="M199.14,164.746l-4.172-2.409c-.574-.331-1.043-.06-1.043.6v4.818c0,.662.469.934,1.043.6l4.172-2.409A.637.637,0,0,0,199.14,164.746Z"
+                              transform="translate(-187.408 -156.745)"
+                              fill="#212189"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+                      <p
+                        class="card-container__card__content__matches__content"
+                      >
+                        {{ topic.topic_name }} (Topic)
+                      </p>
+                    </div>
+                  </a>
+                </div>
+
+                <div *ngSwitchCase="'instructor'" class="instructor-card mt-3">
+                  <div>
+                    <a
+                      *ngIf="entity.url"
+                      (click)="routeToInstructorProfile(entity.url)"
+                      class="link-style"
+                      style="color: #0464fc"
+                    >
+                      <h4>{{ entity.name }}</h4>
+                    </a>
+                    <h4 *ngIf="!entity.url" style="color: #0464fc">
+                      {{ entity.name }}
+                    </h4>
+                  </div>
+                  <p>
+                    Specialization:
+                    {{ entity.specialization || "Not available" }}
+                  </p>
+                  <p>Experience: {{ entity.experience || "Not available" }}</p>
+
+                  <p *ngIf="entity.contact; else noEmail">
+                    Email:
+                    <a href="mailto:{{ entity.contact }}">{{
+                      entity.contact
+                    }}</a>
+                  </p>
+                  <ng-template #noEmail>
+                    <p>Email: Not available</p>
+                  </ng-template>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <nz-spin
+            [nzSize]="'large'"
+            class="spinner"
+            nzSimple
+            *ngIf="showSpinner"
+          ></nz-spin>
+        </div>
+
+        <div class="chat-input-wrapper">
+          <div class="input-icon">
+            <img
+              width="25"
+              class="logo-style"
+              alt="Search Icon"
+              src="./../../../../assets/icons/search-co.svg"
+            />
+          </div>
+          <input
+            type="text"
+            placeholder="Write your message..."
+            [(ngModel)]="message"
+            [disabled]="showSpinner"
+            (keydown.enter)="sendMessage()"
+          />
+
+          <button
+            class="send-btn"
+            (click)="sendMessage()"
+            [disabled]="showSpinner"
+          >
+            <img
+              width="25"
+              class="logo-style"
+              alt="Send Icon"
+              src="./../../../../assets/icons/tick-send.svg"
+            />
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

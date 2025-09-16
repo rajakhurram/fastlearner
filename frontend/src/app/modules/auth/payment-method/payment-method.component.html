@@ -1,0 +1,297 @@
+<nz-layout>
+  <nz-content class="content">
+    <div class="mt-2 mb-4">
+      <div nz-row>
+        <div nz-col nzSpan="24" class="text-align-center">
+          <h2 class="color-blue payment-method-text">
+            Choose a payment method
+          </h2>
+        </div>
+      </div>
+
+      <div nz-row>
+        <div nz-col nzSpan="24" class="text-align-center">
+          <p class="color-black font-18">
+              {{ paymentMessage }}
+          </p>
+        </div>
+      </div>
+
+      <div class="payment-card-body-row" nz-row>
+        <div nz-col class="margin-offset" nzXs="24" nzMd="24" nzLg="12">
+          <div class="card-shadow h-100">
+            <div class="ml-3 mr-3 mt-2 pt-4">
+              <div nz-row>
+                <h2 class="color-blue">Payment method</h2>
+              </div>
+
+              <div nz-row class="payment-details-color border-radius">
+                <div
+                  class="w-100 justify-content-between align-items-center border-bottom"
+                >
+                  <div class="ml-2 mt-1 mb-1">
+                    <label nz-radio ngModel="true"></label>
+                    <p class="color-black vertical-center display-inline-block">
+                      Credit card/Debit card
+                    </p>
+                  </div>
+                  <img
+                    class="mr-2"
+                    src="../../../../assets/icons/master-cards.svg"
+                  />
+                </div>
+
+                <div
+                  class="w-100 justify-content-between align-items-center mt-1"
+                >
+                  <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                    <div nz-row class="mt-1">
+                      <div class="date-division">
+                        <p class="color-black">First Name</p>
+                        <input
+                          nz-input
+                          placeholder="Name on card"
+                          [(ngModel)]="paymentProfile.firstName"
+                          (keypress)="allowOnlyLetters($event)"
+
+                        />
+                        <div
+                          style="color: red"
+                          *ngIf="paymentProfile.firstName?.length > 50"
+                        >
+                          First name cannot be greater than 50 characters long.
+                        </div>
+                      </div>
+
+                      <div class="cvv-division ml-4">
+                        <p class="color-black">Last Name</p>
+                        <input
+                          nz-input
+                          placeholder="Name on card"
+                          [(ngModel)]="paymentProfile.lastName"
+                          (keypress)="allowOnlyLetters($event)"
+                        />
+                        <div
+                          style="color: red"
+                          *ngIf="paymentProfile.lastName?.length > 50"
+                        >
+                          Last name cannot be greater than 50 characters long.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-100 justify-content-between align-items-center">
+                  <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                    <div nz-row>
+                      <p
+                        class="color-black vertical-center display-inline-block"
+                      >
+                        Card Number
+                      </p>
+                    </div>
+                    <div nz-row class="mt-1">
+                      <input
+                        nz-input
+                        placeholder="1111  2222  3333  4444"
+                        [(ngModel)]="paymentProfile.cardNumber"
+                        (keypress)="allowNumericDigitsOnlyOnKeyUp($event)"
+                        (input)="checkInput($event)"
+                        maxlength="19"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-100 justify-content-between align-items-center">
+                  <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                    <div nz-row class="mt-1">
+                      <div class="date-division">
+                        <p class="color-black">Expiry Date</p>
+                        <input
+                          nz-input
+                          placeholder="MM/YY"
+                          [(ngModel)]="paymentProfile.date"
+                          (keyup)="onExpiryDateKeyDown($event)"
+                          (paste)="onPaste($event)"
+                          (keypress)="allowNumericDigitsOnlyOnKeyUp($event)"
+                          minlength="5"
+                          maxlength="5"
+                        />
+                      </div>
+
+                      <div class="cvv-division ml-4">
+                        <p class="color-black">CVC/CVV</p>
+                        <input
+                          nz-input
+                          placeholder="123"
+                          maxlength="3"
+                          [(ngModel)]="paymentProfile.cvv"
+                          (keypress)="allowNumericDigitsOnlyOnKeyUp($event)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-100 justify-content-between align-items-center">
+                  <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                    <label
+                      nz-checkbox
+                      [(ngModel)]="paymentProfile.isSave"
+                    ></label>
+                    <p class="color-black display-inline-block pl-4">
+                      Save for later subscriptions
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div
+                nz-row
+                class="payment-details-color border-radius mt-2"
+                (click)="onSelectPlan()"
+              >
+                <img
+                  class="w-100 cursor-pointer"
+                  src="../../../../assets/icons/paypal-payment.svg"
+                />
+              </div> -->
+
+              <div nz-row class="mt-3">
+                {{ "" }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div nz-col nzXs="24" nzMd="24" nzLg="8" class="ml-1">
+          <div class="card-shadow h-100 mt-3">
+            <div class="ml-3 mr-3 mt-2 pt-4">
+              <div nz-row>
+                <h2 class="color-blue">Summary</h2>
+              </div>
+
+              <div class="disscount">
+                <ng-container *ngIf="!discountApplied">
+                <input
+                  type="text"
+                  [(ngModel)]="promoCode"
+                  (keydown)="preventEmoji($event)"
+                  (keydown.enter)="addDiscount()"
+                  (paste)="preventEmojiOnPaste($event)"
+                  nz-input
+                  placeholder="Enter promo code"
+                  style="border: none; box-shadow: none; flex: 1; margin:4px;"
+                  [maxlength]="12"
+                  [minlength]="6"
+                  (ngModelChange)="onPromoCodeChange($event)"
+                />
+
+                <div class="separator"
+                ></div>
+                <button
+                  class="disscount-button"
+                  nz-button
+                  nzType="primary"
+                  ngGhost
+                  (click)="addDiscount()"
+                  [disabled]="!promoCode"
+                >
+                  Apply
+                </button>
+              </ng-container>
+
+                <!-- This will be applied when disscount is added -->
+                 
+                <div *ngIf="discountApplied" class="success-message">
+                  <span class="checkmark"><img
+                    class="mr-2"
+                    src="../../../../assets/icons/Check-green.svg"
+                  /></span>
+                  {{ appliedCode }}
+                  <span class="close" (click)="removeDiscount()">×</span>
+                </div>
+
+              </div>
+
+
+              <div
+                *ngIf="!isPurchaseMode"
+                nz-row
+                class="display-flex justify-content-between"
+              >
+                <p class="color-black">Plan</p>
+                <p class="plan-color">{{ subscriptionData?.name }}</p>
+              </div>
+              <div
+                *ngIf="isPurchaseMode"
+                nz-row
+                class="display-flex justify-content-between"
+              >
+                <p class="color-black">Course Type</p>
+                <p class="plan-color">Premium</p>
+              </div>
+
+              <div nz-row class="display-flex justify-content-between mt-2">
+                <p class="color-black">Price</p>
+                <p class="color-black">
+                  ${{ isPurchaseMode ? coursePrice : subscriptionData?.price }}
+                </p>
+              </div>
+
+              <div *ngIf="discountApplied" nz-row class="display-flex justify-content-between mt-2">
+                <p class="color-black">Disscount</p>
+                <p class="color-black">
+                  -${{ discountInDollars?.toFixed(2) }}
+                </p>
+              </div>
+
+
+
+              <div
+                nz-row
+                class="display-flex justify-content-between margin-card border-bottom margin-more"
+              ></div>
+
+              <ng-container *ngIf="!discountApplied">
+
+              <div nz-row class="display-flex justify-content-between mt-4">
+                <p class="color-black">Total</p>
+                <p class="plan-color">
+                  ${{ isPurchaseMode ? coursePrice : subscriptionData?.price }} 
+                </p>
+              </div>
+            </ng-container>
+              <div *ngIf="discountApplied" nz-row class="display-flex justify-content-between mt-2">
+                <p class="color-black">Total</p>
+                <p class="color-black">
+                  ${{ discountedPrice?.toFixed(2) }}
+                </p>
+              </div>
+
+              <div
+                nz-row
+                class="display-flex justify-content-between margin-card border-bottom mt-4"
+              ></div>
+
+              <div
+                class="responsive-margin display-flex justify-content-center mt-4"
+              >
+                <button
+                  class="pay-now border-radius mb-4"
+                  nz-button
+                  nzType="primary"
+                  nzGhost
+                  (click)="addSubscription()"
+                >
+                  Pay Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-content>
+</nz-layout>

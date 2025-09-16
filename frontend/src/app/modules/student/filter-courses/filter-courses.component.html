@@ -1,0 +1,236 @@
+<div class="container">
+  <div class="filter-course">
+    <nz-card class="outer-card">
+      <div class="header">
+        <h2 class="break-word">
+          {{ courseList?.length }}
+          {{ courseList?.length > 1 ? "Results" : "Result" }}
+          for "{{ searchKeyword }}"
+        </h2>
+
+        <div class="main-cards-row" nz-row [nzGutter]="16">
+          <div
+            class="card-container"
+            *ngFor="let course of courseList; let i = index"
+          >
+            <div
+              (click)="routeToCourseDetailsContent(course?.courseUrl)"
+              class="card-container__card"
+            >
+              <div class="card-container__card__image">
+                <!-- <div *ngIf="course?.courseType === 'PREMIUM'" class="free-label">
+                  <nz-tag class="tag-premium-color" [nzColor]="'#FC9C00'">Premium</nz-tag>
+                </div> -->
+                <img
+                  class="image-height"
+                  alt="example"
+                  [src]="
+                    course?.thumbnailUrl
+                      ? course?.thumbnailUrl
+                      : '../../../assets/icons/html-course.svg'
+                  "
+                />
+              </div>
+              <div class="card-container__card__content">
+                <div class="display-flex justify-content-space-between">
+                  <h4 class="card-container__card__content__heading">
+                    {{ course?.title }}
+                    <img
+                      *ngIf="course?.courseType === 'PREMIUM'"
+                      class="pb-2"
+                      src="../../../../assets/icons/premium.svg"
+                      alt=""
+                    />
+                  </h4>
+
+                  <ng-container *ngIf="course?.courseType == 'PREMIUM'">
+                    <h4
+                      *ngIf="!course?.isEnrolled"
+                      class="card-container__card__content__price"
+                    >
+                      ${{ course?.price }}
+                    </h4>
+                    <h4 class="font-14 mr-4" *ngIf="course?.isEnrolled">
+                      Start Learning
+
+                      <img
+                        class="view-all-img"
+                        height="15px"
+                        width="15px"
+                        alt="Arrow"
+                        src="../../../../assets/icons/arrow-dark.svg"
+                      />
+                    </h4>
+                  </ng-container>
+                </div>
+                <p
+                  [innerHTML]="course?.description"
+                  class="card-container__card__content__description"
+                ></p>
+                <div (click)="routeToInsructorProfile(course?.userProfileUrl)">
+                  <nz-avatar
+                    [nzSize]="20"
+                    nzIcon="user"
+                    [nzSrc]="course?.profilePictureUrl"
+                    nzAlt="Preview"
+                  ></nz-avatar>
+                  <span class="instructor-name">{{ course?.creatorName }}</span>
+                </div>
+                <div class="card-container__card__content__reviews">
+                  <small class="size review"
+                    >{{ course?.rating?.toFixed(1) }}
+                  </small>
+                  <nz-rate
+                    class="size star-container"
+                    [nzCharacter]="starTemplate"
+                    [ngModel]="course?.rating"
+                    nzAllowHalf
+                    nzDisabled
+                  ></nz-rate>
+                  <ng-template #starTemplate>
+                    <span
+                      style="font-size: small"
+                      nzTheme="fill"
+                      nz-icon
+                      nzType="star"
+                    ></span>
+                  </ng-template>
+                  <small class="rate-text-color"
+                    >({{ course?.numberOfViewers }})</small
+                  >
+                    <nz-avatar
+                      *ngIf="course?.contentType === courseContentType.COURSE"
+                      [nzSize]="14"
+                      nzIcon="user"
+                      nzAlt="Time"
+                      nzSrc="./../../assets/icons/timer.svg"
+                    ></nz-avatar>
+                    <span class="timer">
+                      {{ course?.contentType === courseContentType.COURSE.toUpperCase() ? course?.duration : course?.testTotalQuestion + ' Questions' }}
+                    </span>
+                  </div>
+                  
+                <div>
+                  <ng-container
+                    *ngIf="
+                      course?.sections?.length > 0 || course?.topics?.length > 0
+                    "
+                  >
+                    <p class="matches">
+                      <span>{{
+                        course?.sections?.length + course?.topics?.length
+                      }}</span>
+                      match(es) for
+                      <span class="searched-term">"{{ searchKeyword }}"</span>
+                    </p>
+                    <div
+                      *ngFor="let section of course?.sections"
+                      (click)="
+                        routeToCourseContent($event, course, section?.sectionId)
+                      "
+                      class="card-container__card__content__matches"
+                    >
+                      <svg
+                        id="play-button"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17.207"
+                        height="17.207"
+                        viewBox="0 0 20 20"
+                      >
+                        <g id="Group_106703" data-name="Group 106703">
+                          <g id="Group_106702" data-name="Group 106702">
+                            <path
+                              id="Path_125177"
+                              data-name="Path 125177"
+                              d="M8.6,0a8.6,8.6,0,1,0,8.6,8.6A8.6,8.6,0,0,0,8.6,0Zm0,15.486A6.883,6.883,0,1,1,15.486,8.6,6.891,6.891,0,0,1,8.6,15.486Z"
+                              fill="#292929"
+                            />
+                            <path
+                              id="Path_125178"
+                              data-name="Path 125178"
+                              d="M199.14,164.746l-4.172-2.409c-.574-.331-1.043-.06-1.043.6v4.818c0,.662.469.934,1.043.6l4.172-2.409A.637.637,0,0,0,199.14,164.746Z"
+                              transform="translate(-187.408 -156.745)"
+                              fill="#292929"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+
+                      <p
+                        class="card-container__card__content__matches__content"
+                      >
+                        {{ section?.name }} (Section)
+                      </p>
+                    </div>
+                    <div
+                      *ngFor="let topic of course.topics"
+                      (click)="
+                        routeToCourseContent(
+                          $event,
+                          course,
+                          topic?.sectionId,
+                          topic?.topicId
+                        )
+                      "
+                      class="card-container__card__content__matches"
+                    >
+                      <svg
+                        id="play-button"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17.207"
+                        height="17.207"
+                        viewBox="0 0 20 20"
+                      >
+                        <g id="Group_106703" data-name="Group 106703">
+                          <g id="Group_106702" data-name="Group 106702">
+                            <path
+                              id="Path_125177"
+                              data-name="Path 125177"
+                              d="M8.6,0a8.6,8.6,0,1,0,8.6,8.6A8.6,8.6,0,0,0,8.6,0Zm0,15.486A6.883,6.883,0,1,1,15.486,8.6,6.891,6.891,0,0,1,8.6,15.486Z"
+                              fill="#292929"
+                            />
+                            <path
+                              id="Path_125178"
+                              data-name="Path 125178"
+                              d="M199.14,164.746l-4.172-2.409c-.574-.331-1.043-.06-1.043.6v4.818c0,.662.469.934,1.043.6l4.172-2.409A.637.637,0,0,0,199.14,164.746Z"
+                              transform="translate(-187.408 -156.745)"
+                              fill="#292929"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+                      <p
+                        class="card-container__card__content__matches__content"
+                      >
+                        {{ topic?.name }} (Topic)
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <nz-divider></nz-divider>
+          </div>
+        </div>
+        <div class="main-cards-row" nz-row [nzGutter]="16"></div>
+        <div class="center" *ngIf="courseList?.length == 0">
+          <div>
+            <nz-empty [nzNotFoundContent]="'No Course Found'"></nz-empty>
+          </div>
+        </div>
+        <div *ngIf="courseList?.length != 0" class="show-more-button-container">
+          <button
+            [disabled]="disableShowMore"
+            nz-button
+            nzGhost
+            class="show-more-button"
+            [nzType]="'primary'"
+            (click)="showMoreCourse()"
+          >
+            Show More
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

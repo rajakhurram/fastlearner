@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs '20.11.1'
+    }
+
+    environment {
+        PATH = "/root/.nvm/versions/node/v20.11.1/bin:$PATH"
+        NODE_OPTIONS = '--max-old-space-size=4096'
+    }
+
+    stages {
+        // stage('Notify Start') {
+        //     steps {
+        //         mail(
+        //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
+        //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Started",
+        //             body: "The build process for ${env.JOB_NAME} #${env.BUILD_NUMBER} has started."
+        //         )
+        //     }
+        // }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+                sh 'npm install --save-dev puppeteer'
+            }
+        }
+
+        stage('Set Chrome Bin Path') {
+            steps {
+                script {
+                    def chromeBinPath = sh(
+                        script: "node -e \"console.log(require('puppeteer').executablePath())\"",
+                        returnStdout: true
+                    ).trim()
+                    env.CHROME_BIN = chromeBinPath
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm i -g @angular/cli@15.1.0'
+                sh 'ng build --configuration production --aot --build-optimizer --source-map=false'
+            }
+        }
+
+        // stage('Run Tests with Coverage') {
+        //     steps {
+        //         sh 'ng test --code-coverage --browsers=ChromeHeadlessNoSandbox --watch=false'
+        //     }
+        // }
+    }
+
+    // post {
+    //     success {
+    //         mail(
+    //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
+    //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Succeeded",
+    //             body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} was successfully completed."
+    //         )
+    //     }
+    //     failure {
+    //         mail(
+    //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
+    //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Failed",
+    //             body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} failed. Please check the console output for more details."
+    //         )
+    //     }
+    // }
+}

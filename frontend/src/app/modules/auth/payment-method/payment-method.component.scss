@@ -1,0 +1,172 @@
+.payment-method-text {
+  font-weight: 600 !important;
+}
+
+.content {
+  width: 85%;
+  background: white;
+  margin-left: 7%;
+  margin-top: 4%;
+  margin-bottom: 4%;
+}
+
+.card-shadow {
+  box-shadow: 5px 7px 29px #0f47af29;
+}
+
+.payment-details-color {
+  background-color: #f6f6f6;
+}
+
+:host ::ng-deep .ant-radio-inner {
+  border: 2px solid black;
+}
+
+:host ::ng-deep .ant-radio-inner::after {
+  background-color: black !important;
+}
+
+.justify-content-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.border-bottom {
+  border-bottom: 3px solid;
+  border-color: #d7d7d7;
+}
+
+.date-division {
+  width: 48%;
+}
+
+.cvv-division {
+  width: 48%;
+}
+
+:host ::ng-deep .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #212189;
+}
+
+.plan-color {
+  color: #fe4a55;
+}
+
+.margin-card {
+}
+
+.pay-now {
+  border-color: #fe4a55 !important;
+  background-color: #fe4a55 !important;
+  color: white !important;
+  font-weight: bolder;
+  width: 50%;
+  height: 50px;
+}
+
+.margin-offset {
+  margin-left: 8.33333333%;
+}
+
+.margin-more {
+  margin-top: 30%;
+}
+
+.error-msg {
+  color: #fe4a55;
+}
+
+@media screen and (max-width: 993px) {
+  .payment-card-body-row {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5%;
+    margin-bottom: 5%;
+  }
+
+  h2 {
+    font-size: 18px !important;
+  }
+
+  .card-shadow {
+    margin: 0px !important;
+    margin-left: 0%;
+  }
+
+  .margin-more {
+    margin-top: 5%;
+  }
+  .card-shadow {
+    box-shadow: none;
+  }
+
+  .margin-offset {
+    margin-left: 0%;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .justify-content-between {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .responsive-margin {
+    padding-top: 20px !important;
+    margin-top: 1% !important;
+  }
+}
+
+.disscount {
+  border: 1px solid #d9d9d9; 
+  border-radius: 4px; 
+  display: flex; 
+  overflow: hidden;
+  margin-bottom: 1em;
+}
+
+.separator{
+  width: 1px;
+  height: 24px;
+  background-color: #000000;
+  margin: 4px 0px;
+}
+
+.disscount-button{
+  border-left: 1px solid #d9d9d9; 
+  border-radius: 0; 
+  color: #1890ff;
+  border: none;
+  background: none;
+  box-shadow: none;
+  margin: 3px;
+}
+
+.disscount input:focus,
+.disscount-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.success-message {
+  background-color: #e6ffed;
+  padding: 10px;
+  border-radius: 5px;
+  color: #389e0d;
+  display: flex
+;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  color: black;
+}
+.checkmark {
+  color: green;
+  font-weight: bold;
+}
+.close {
+  margin-left: auto;
+  cursor: pointer;
+  color: gray;
+}

@@ -1,0 +1,26 @@
+.amount-input {
+    width: 70%;
+    height: 40px;
+    border: 1px solid #adadd4 !important;
+}
+
+.amount-input::placeholder {
+    padding-left: 10px;
+}
+
+.amount-input {
+    padding-left: 10px;
+}
+
+.stripe-btn {
+    border-color: #fe4a55 !important;
+    background-color: #fe4a55 !important;
+    color: white !important;
+    height: 40px !important;
+}
+
+.amount-input:focus {
+    outline: none;
+    border-color: #adadd4 !important;
+}
+

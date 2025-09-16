@@ -1,0 +1,135 @@
+::ng-deep .ant-modal-content {
+  border-radius: 4px;
+}
+
+::ng-deep .ant-result-title {
+  color:#212189;
+  font-family: 'Poppins-medium';
+}
+
+.ant-btn-primary {
+  background-color: #FE4A55;
+  border-color: #FE4A55;
+}
+
+::ng-deep .ant-modal-close {
+  color: #FE4A55;
+}
+
+
+::ng-deep .ant-modal-header {
+  border-bottom: none !important;
+  color: #212189 !important;
+}
+
+::ng-deep .ant-modal-title {
+  color: #212189 !important;
+  font-weight: 600;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 50px;
+}
+
+.student-name {
+  color: #212189;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0 0 8px 0;
+}
+
+.student-subinfo {
+  font-size: 13px;
+  margin: 2px 0;
+  margin-top: -5px;
+}
+
+.highlight {
+  display: block;
+  color: #212189;
+  font-weight: 500;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: red;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 16px 0;
+}
+
+.form-group {
+  margin-top: 10px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #f9f9fc;
+  border: 0px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: #212189;
+  box-shadow: 0 0 0 2px rgba(33, 33, 137, 0.1);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.cancel-btn {
+  background-color: #fff;
+  border: 1px solid #f44336;
+  color: #f44336;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #ffeaea;
+}
+
+.send-btn {
+  background-color: #212189;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100px;
+  
+&.disabled-btn {
+    background-color: #d9d9d9;
+    color: #999;
+    cursor: not-allowed;
+  }
+
+}
+
+
+.send-btn:hover {
+  background-color: #1b1a75;
+}

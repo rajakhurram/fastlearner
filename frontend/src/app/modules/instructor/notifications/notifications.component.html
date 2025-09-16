@@ -1,0 +1,82 @@
+<div class="container">
+  <div class="notifications">
+    <!-- <div class="notification-header">
+      <h3>Notifications</h3> -->
+      <nz-card class="card">
+        <div class="notification-container">
+          <div class="notification-header">
+            <h3>Notifications</h3>
+            <ng-container *ngIf="notifications && notifications?.length > 0">
+              <div
+              *ngFor="let notification of notifications; let i = index"
+              class="border-bottom"
+            >
+              <div
+                class="notification-box cursor-pointer"
+                [class.unseen-notification]="!notification.read"
+                (click)="redirect(notification)"
+              >
+                <div class="notification-content">
+                  <div>
+                    <button
+                    *ngIf="notification?.senderImageURL==null"
+                      class="side-nav-button1"
+                      nz-button
+                      nzType="primary"
+                      nzShape="circle"
+                    >
+                      {{ notification?.senderName | initialCharactor }}
+                    </button>
+                    <nz-avatar
+                    *ngIf="notification?.senderImageURL!=null"
+                    [nzSize]="46"
+                    nzIcon="user"
+                    class="sidebar-nav-button"
+                    nzAlt="Profile"
+                    [nzSrc]="notification?.senderImageURL"
+                  ></nz-avatar>
+                  </div>
+                  <div class="notification-text">
+                    <h4 style="margin: 0px">{{ notification.senderName }}</h4>
+                    <p
+                    style="margin: 0px; word-break: break-word"
+                    class="notification-content-text"
+                    nz-tooltip
+                    [nzTooltipTitle]="isOverflow ? notification.content : ''"
+                    nzTooltipPlacement="top"
+                    (mouseover)="checkOverflow($event)"
+                  >
+                    {{ notification.content }}
+                  </p>
+                  
+                    <span class="time">{{ notification.timeInterval }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </ng-container>
+            <nz-empty *ngIf="notifications?.length == 0 || notifications==undefined"></nz-empty> 
+        </div></div>
+        <div class="buttons" *ngIf="notifications && notifications?.length > 0">
+          <button
+            [disabled]="payLoad.pageNo + 1 === totalPages"
+            class="back-btn"
+            nz-button
+            nzType="default"
+            (click)="showMoreNotifications()"
+          >
+            Show More
+          </button>
+          <button
+            class="clear-btn"
+            nz-button
+            nzType="primary"
+            (click)="clearAllNotifications()"
+          >
+            Mark All as Read
+          </button>
+        </div>
+      </nz-card>
+    <!-- </div> -->
+  </div>
+</div>

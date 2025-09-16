@@ -1,0 +1,165 @@
+:host ::ng-deep vg-player {
+  position: sticky !important;
+}
+
+:host ::ng-deep vg-scrub-bar {
+  z-index: 450 !important;
+  margin: 0 5px;
+  height: 7px !important;
+}
+
+vg-scrub-bar {
+  padding: 10px 0px 5px 0px !important;
+}
+
+:host ::ng-deep vg-scrub-bar-current-time,
+:host ::ng-deep vg-scrub-bar-buffering-time {
+  height: 7px !important;
+}
+
+vg-overlay-play .vg-overlay-play {
+  cursor: default !important;
+}
+
+
+:host ::ng-deep vg-scrub-bar-current-time .slider {
+  margin-top: -4px !important;
+}
+
+.time-display {
+}
+
+.time-space {
+  margin-right: 3px !important;
+  margin-left: 0px !important;
+}
+
+.separator {
+  color: white;
+  align-items: center;
+  display: flex;
+  margin-bottom: 2px;
+  font-weight: bold;
+}
+
+.time-pause {
+  width: 45px !important;
+  padding-bottom: 1px;
+}
+
+.custom-scrub-bar {
+  z-index: 450 !important;
+}
+
+.video-container {
+  width: 40%;
+}
+
+:host ::ng-deep vg-track-selector {
+  cursor: pointer !important;
+  border: none !important;
+  outline: none !important;
+}
+
+vg-track-selector select.trackSelector {
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+  margin-top: 0px !important;
+  width: 50px !important;
+  padding: 0px !important;
+}
+
+vg-track-selector select.trackSelector option {
+  font-size: 12px;
+  font-family: "Poppins-regular";
+}
+
+::cue {
+  color: white;
+  /* Change the text color */
+  background: rgba(0, 0, 0, 0.7);
+  /* Add a background */
+  font-size: 19px;
+  line-height: 6;
+  /* Change font size */
+  text-shadow: 1px 1px 2px black;
+  font-family: "Poppins-regular";
+}
+
+/* Hide cues when no track is selected */
+
+::cue(no-track) {
+  display: none;
+  visibility: hidden !important;
+  /* Hide cues */
+}
+
+/* Style for English track */
+
+::cue(.english) {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 1400px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 7;
+  }
+}
+
+@media screen and (max-width: 1130px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 9;
+    font-size: small;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 9;
+    font-size: large !important;
+  }
+}
+
+@media screen and (max-width: 879px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 10;
+    font-size: medium !important;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 9;
+    font-size: small !important;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 12;
+    font-size: x-small !important;
+  }
+}
+
+@media screen and (max-width: 472px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 13;
+    font-size: xx-small !important;
+  }
+}
+
+@media screen and (max-width: 422px) {
+  ::cue {
+    font-size: 16px;
+    line-height: 14;
+    font-size: 8px !important;
+  }
+}

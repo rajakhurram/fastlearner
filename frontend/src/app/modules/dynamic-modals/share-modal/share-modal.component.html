@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="share">
+    <h4>{{ title }}</h4>
+    <div class="field">
+      <label class="font-bold">{{ label }}</label>
+      <nz-input-group
+        style="margin-top: 10px"
+        nzSearch
+        nzSize="large"
+        [nzAddOnAfter]="suffixButton"
+      >
+        <input
+          id="myInput"
+          type="text"
+          name="url"
+          class="url"
+          [(ngModel)]="shareURL"
+          nz-input
+          placeholder="URL"
+          readonly
+        />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button
+          (click)="copyToClipboard()"
+          nz-button
+          class="signup-form-button"
+          nzType="primary"
+          nzSize="large"
+          nzSearch
+        >
+          <img class="copy-icon" src="../../../../assets/icons/copy-icon.svg"> Copy
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+.contact-us-container {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 20px;
+}
+.contact-us-main-heading h1 {
+  color: #212189;
+  font-weight: bolder;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 69px;
+  font-family: 'Poppins-bold';
+}
+.contact-us-submit-btn {
+  background: #fe4a55;
+  color: white;
+  border: #fe4a55;
+}
+.contact-us-submit-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+  border: #fe4a55;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+}
+.text-overlay h2 {
+  font-weight: bolder;
+}
+.content-style {
+  padding-left: 20px;
+  word-break: break-word;
+}
+.icons-padding {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+.social-media-icons {
+  display: flex;
+  justify-content: start;
+}
+.contact-us-rigth-card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.2);
+  border-radius: 5px;
+}
+.contact-us-rigth-card-heading h3 {
+  font-weight: 600;
+}
+
+.card {
+  height: 456px;
+}
+.contact-card {
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 650px) {
+  .text-overlay {
+    position: static;
+    margin-left: 25px;
+    transform: none;
+  }
+}
+
+/*****************************************************
+	Custom styling example bellow.
+*****************************************************/
+
+.contact-us-rigth-card-heading h2 {
+  font-weight: bolder;
+  font-family: 'Poppins-bold';
+}
+
+@media screen and (max-width: 1400px) {
+  .contact-us-main-heading h1 {
+    font-size: 50px;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .contact-us-main-heading h1 {
+    font-size: 40px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .contact-us-main-heading h1 {
+    font-size: 30px;
+  }
+ .card{
+  margin-top: 10px;
+ } 
+
+}

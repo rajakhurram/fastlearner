@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="favorite-courses">
+    <nz-card class="card">
+      <div class="favorite-course-header">
+        <h3 style="color: #212189;">My Courses</h3>
+        <div class="search-box">
+          <div nz-row class="row-direction">
+            <div nz-col nzXs="24" nzSm="8" nzMd="8" nzLg="8">
+              <nz-input-group nzSize="large">
+                <div>
+                  <label class="label-color">Sort by</label>
+                </div>
+                <nz-select
+                  class="label-color"
+                  [(ngModel)]="selectedValue"
+                  nzSize="large"
+                  nzShowSearch
+                  nzAllowClear="false"
+                  nzPlaceHolder="Choose from the options below"
+                  (ngModelChange)="onChangeOfFilter($event)"
+                >
+                <nz-option nzLabel="View All" nzValue="4"></nz-option>
+                  <nz-option
+                    nzLabel="Recently Accessed"
+                    nzValue="1"
+                  ></nz-option>
+                  <nz-option nzLabel="Oldest Accessed" nzValue="0"></nz-option>
+                  <nz-option nzLabel="Completed" nzValue="2"></nz-option>
+                  <nz-option nzLabel="In Progress" nzValue="3"></nz-option>
+                </nz-select>
+              </nz-input-group>
+            </div>
+            <div
+              class="search margin-offset"
+              nz-col
+              nzXs="24"
+              nzSm="8"
+              nzMd="8"
+              nzLg="8"
+            >
+              <div>
+                <nz-input-group
+                  nzSize="large"
+                  class="input-search"
+                  [nzSuffix]="suffixIconSearch"
+                >
+                  <input
+                    nzSize="large"
+                    type="text"
+                    nz-input
+                    placeholder="Search my courses"
+                    name="title"
+                    [(ngModel)]="myCourses.title"
+                    (keyup)="search(true)"
+                  />
+                </nz-input-group>
+                <ng-template #suffixIconSearch>
+                  <span
+                    (click)="search(false)"
+                    style="color: #212189"
+                    nz-icon
+                    nzType="search"
+                  ></span>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-cards">
+        <div class="main-cards-row" nz-row [nzGutter]="16">
+          <div nz-col *ngFor="let myCourse of myCourseList; let i = index">
+            <div class="hover-card-container">
+              <app-course-card
+                [course]="myCourse"
+                (routeToInstructorprofileEmitter)="
+                  routeToInsructorProfile($event)
+                "
+                (routeToCourseEmitter)="routeToCourseDetails($event)"
+                [fromMyCourse]="true"
+              ></app-course-card>
+            </div>
+          </div>
+          <div class="center" *ngIf="myCourseList.length == 0">
+            <div>
+              <nz-empty [nzNotFoundContent]="'No Course Found'"></nz-empty>
+            </div>
+          </div>
+        </div>
+        <div class="show-more-button-container">
+          <button
+            [disabled]="page == noOfCount - 1 || myCourseList.length == 0"
+            (click)="showMore()"
+            nz-button
+            nzGhost
+            class="show-more-button"
+            [nzType]="'primary'"
+          >
+            Show More
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

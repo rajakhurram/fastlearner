@@ -1,0 +1,319 @@
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading h3 {
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.heading span {
+  color: black;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.dashboard-stats {
+  padding-top: 2%;
+}
+
+.card {
+  height: 150px;
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+}
+
+.card h4 {
+  color: #212189;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 0;
+  display: inline-block;
+}
+
+.card p {
+  color: black;
+  font-weight: 600;
+}
+
+.card-bar {
+  display: flex;
+}
+
+.card-bar h4 {
+  color: #212189;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 0;
+  display: inline-block;
+}
+
+.graph-image {
+  // width: -webkit-fill-available;
+  width: 20%;
+  float: right;
+  margin-top: -2%;
+}
+
+.card-bar p {
+  color: black;
+  font-weight: 600;
+}
+
+.course-creation {
+  padding-top: 2%;
+}
+
+.create-course-btn {
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.create-course-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+}
+
+.jump {
+  display: flex;
+  justify-content: space-between;
+}
+
+.jump h3 {
+  font-size: 20px;
+  margin: 10px;
+  margin-left: 0px;
+  font-weight: 600;
+}
+
+.main-card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+}
+
+.my-course {
+  padding-top: 2%;
+}
+
+.my-course-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.my-course-heading h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fe4a55;
+}
+
+.filter-wrapper {
+  display: flex;
+}
+
+.input-search {
+  height: 40px;
+}
+
+:host ::ng-deep .ant-table-thead > tr > th {
+  background: #edf6ff;
+  color: #212189;
+  font-weight: 600;
+}
+
+:host ::ng-deep .ant-table-container {
+  overflow: auto;
+}
+
+:host ::ng-deep .ant-select-arrow {
+  margin-top: -5%;
+}
+
+:host ::ng-deep .ant-select:hover .ant-select-clear {
+  margin-top: -5%;
+}
+
+.responsive-margin {
+  margin: 33px;
+  margin-left: 5px;
+}
+
+@media screen and (max-width: 1178px) {
+  .justify-row {
+    justify-content: center;
+  }
+
+  .justify-row-margin {
+    margin-bottom: 10px;
+  }
+  .card {
+    height: 100%;
+  }
+
+  .my-course-header {
+    // flex-direction: column;
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 778px) {
+  .graph-image {
+    // width: 100%;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .card {
+    height: 185px !important;
+  }
+}
+@media screen and (max-width: 1600px) {
+  .responsive-margin {
+    // margin: 0px;
+  }
+}
+
+:host ::ng-deep .sort-by .ant-select-arrow {
+  margin-top: -3% !important;
+}
+
+:host ::ng-deep .sort-by .ant-select-clear {
+  margin-top: -3% !important;
+}
+
+.create-course-btn-1 {
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.create-course-btn-1:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+}
+
+.search-select {
+  min-width: 118px !important;
+  margin-left: -19%;
+}
+
+@media screen and (max-width: 700px) {
+  .my-course-header {
+    margin-bottom: 20px;
+    flex-direction: column;
+  }
+  .search-select {
+    margin-left: 0px !important;
+    min-width: 125px !important;
+  }
+}
+
+:host ::ng-deep .donut .ant-progress-inner {
+  width: 100px !important;
+  height: 100px !important;
+  font-size: 20px !important;
+}
+
+:host ::ng-deep .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #212189;
+  border-color: #212189;
+}
+
+:host ::ng-deep .ant-checkbox {
+  border: 2px solid #212189;
+  background-color: #212189;
+}
+
+:host ::ng-deep .ant-checkbox-input {
+  height: 15px;
+  width: 15px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.action-edit {
+  border: 1px solid;
+  border-color: #212189;
+  padding: 7px 10px;
+  background-color: white;
+}
+
+
+
+.action-delete {
+  border: 1px solid;
+  border-color: #ffd2d4;
+  padding: 7px 10px;
+  background-color: white;
+}
+
+.action-delete[disabled] {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
+}
+:host ::ng-deep .ant-switch {
+  background: #1890ff;
+  background-color: #fe4a55 !important;
+  min-width: 0px !important;
+  height: 13px !important;
+}
+
+:host ::ng-deep .ant-switch-handle {
+  top: -2.3px !important;
+  left: 0px !important;
+  width: 17px !important;
+  height: 16px !important;
+}
+
+:host ::ng-deep .ant-switch-checked .ant-switch-handle {
+  left: 16px !important;
+}
+
+:host ::ng-deep .ant-switch-checked {
+  // background-color: #FE4A55 !important;
+  background-color: #28a745 !important;
+}
+
+.disable-switch ::ng-deep .ant-switch {
+  background: #1890ff !important;
+  background-color: gray !important;
+}
+
+@media screen and (max-width: 1024px) {
+  :host ::ng-deep .ant-card-body {
+      padding: 15px !important; 
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .card p {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .card p {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 1178px) {
+  .card p {
+    font-size: 14px;
+  }
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+

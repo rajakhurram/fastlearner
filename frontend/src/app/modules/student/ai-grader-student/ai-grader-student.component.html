@@ -1,0 +1,83 @@
+<div class="top-heading display-flex" style="padding-left: 50px;margin-top: 25px" id="top">
+  <h3>AI Grader Results</h3>
+</div>
+
+<div class="container">
+  <nz-card [ngStyle]="{}" class="card">
+    <div nz-row>
+      <div class="top-heading">
+        <h3 class="">Classes</h3>
+      </div>
+    </div>
+
+
+    <div nz-row>
+      <div nz-col nzSpan="20">
+        <app-class-assessment-dropdown
+          class="w-100"
+          [byStudent]="true"
+          (selectedClassCallBackEmit)="selectedClassCallBack($event)"
+          (selectedAssessmentCallBackEmit)="selectedAssessmentCallBack($event)"
+        ></app-class-assessment-dropdown>
+      </div>
+
+    </div>
+
+    <div nz-row class="mt-2" style="margin-bottom: 16px;">
+      <nz-collapse class="w-100" id="top" *ngIf="classes.length">
+        <ng-container *ngFor="let class of classes; let i = index">
+          <nz-collapse-panel
+            (nzActiveChange)="onPanelClick(class, true)"
+            [nzActive]="class?.panelOpen"
+            [nzShowArrow]="false"
+            [nzHeader]="headerTemplate"
+          >
+            <app-table
+              (action)="handleTableAction($event)"
+              (pageChange)="onPageChange($event)"
+              [tableConfig]="tableConfig"
+            ></app-table>
+          </nz-collapse-panel>
+
+          <ng-template #expandIcon>
+            <div class="switch-container">
+              <img src="../../../../../assets/icons/Ellipse 1258.svg" />
+            </div>
+          </ng-template>
+          <ng-template #headerTemplate>
+            <div class="display-flex details-class" style="align-items: center;">
+              <p
+                class="color-blue font-bold m-0 font-16"
+              >
+                {{ class?.name }}
+              </p>
+
+              <p style="margin-left: 30px; " class="font-16 m-0"
+              > ({{class?.assignmentCount}} Assessments) </p>
+             
+            </div>
+
+            <div class="display-flex action-items-gap ml-auto">
+              
+            </div>
+            <div class="display-block ml-1">
+              <img
+                *ngIf="class?.panelOpen"
+                class="arrow-svg"
+                src="../../../../../assets/icons/prem-expanded.svg"
+              />
+              <img
+                *ngIf="!class?.panelOpen"
+                class="arrow-svg"
+                src="../../../../../assets/icons/Group 66462.svg"
+              />
+            </div>
+          </ng-template>
+        </ng-container>
+      </nz-collapse>
+    </div>
+  </nz-card>
+</div>
+
+<!-- 
+<app-ai-grader-student-result></app-ai-grader-student-result> -->

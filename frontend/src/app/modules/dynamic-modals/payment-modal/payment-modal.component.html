@@ -1,0 +1,109 @@
+<div class="mt-2 mb-4">
+
+    <div nz-row>
+        <div nz-col nzSpan="24">
+            <div>
+                <div class="ml-3 mr-3 pt-4">
+                    <div nz-row>
+                        <h2 class="color-blue">Add a new payment method</h2>
+                    </div>
+
+                    <div nz-row class="payment-details-color border-radius">
+                        <div class="w-100 justify-content-between align-items-center border-bottom">
+                            <div class="ml-2 mt-1 mb-1">
+                                <label nz-radio ngModel="true"></label>
+                                <p class="color-black vertical-center display-inline-block">Credit card/Debit
+                                    card</p>
+                            </div>
+                            <img class="mr-2" src="../../../../assets/icons/master-cards.svg" alt="MasterCard">
+                        </div>
+                        
+                        <div class="w-100 justify-content-between align-items-center mt-1">
+                            <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                                <div nz-row class="mt-1">
+                                    <div class="date-division">
+                                        <p class="color-black">First Name</p>
+                                        <input nz-input placeholder="Name on card" [(ngModel)]="paymentProfile.firstName" />
+                                        <div
+                                        style="color: red"
+                                        *ngIf="paymentProfile.firstName?.length > 50"
+                                      >
+                                        First name cannot be greater than 50 characters long.
+                                      </div>
+                                      </div>
+                                      
+
+
+                                    <div class="cvv-division ml-4">
+                                        <p class="color-black">Last Name</p>
+                                        <input nz-input placeholder="Name on card" [(ngModel)]="paymentProfile.lastName" />
+                                        <div
+                                        style="color: red"
+                                        *ngIf="paymentProfile.lastName?.length > 50"
+                                      >
+                                        Last name cannot be greater than 50 characters long.
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-100 justify-content-between align-items-center">
+                            <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                                <div nz-row>
+                                    <p class="color-black vertical-center display-inline-block">Card Number</p>
+                                </div>
+                                <div nz-row class="mt-1">
+                                        <input
+                                        nz-input
+                                        placeholder="1111  2222  3333  4444"
+                                        [(ngModel)]="paymentProfile.cardNumber"
+                                        (keypress)="allowNumericDigitsOnlyOnKeyUp($event)"
+                                        (input)="checkInput($event)"
+                                        maxlength="19"
+                                      />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-100 justify-content-between align-items-center">
+                            <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                                <div nz-row class="mt-1">
+                                    <div class="date-division">
+                                        <p class="color-black">Expiry Date</p>
+                                        <input nz-input placeholder="MM/YY" [(ngModel)]="paymentProfile.date"
+                                            (keyup)="onExpiryDateKeyDown($event)" (paste)="onPaste($event)"  (keypress)="allowNumericDigitsOnlyOnKeyUp($event)"                           minlength="5"
+                                            maxlength="5"/>
+                                    </div>
+
+
+
+                                    <div class="cvv-division ml-4">
+                                        <p class="color-black">CVC/CVV</p>
+                                        <input nz-input placeholder="123" maxlength="3" [(ngModel)]="paymentProfile.cvv"
+                                            (keypress)="allowNumericDigitsOnlyOnKeyUp($event)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-100 justify-content-between align-items-center">
+                            <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                                <label nz-checkbox [(ngModel)]="paymentProfile.isSave"></label>
+                                <p class="color-black display-inline-block pl-4">Securely save this card for my
+                                    later purchase</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div nz-row class="justify-content-end mt-3">
+                        <button nz-button class="color-black close-modal border-radius" [nzType]="'primary'" (click)="closeModal()">Cancel</button>
+                        <button nz-button class="add-profile border-radius ml-2" [nzType]="'primary'" (click)="savePaymentProfile()">{{paymentProfileData == null ? 'Add' : 'Update'}}</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

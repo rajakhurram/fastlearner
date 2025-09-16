@@ -1,0 +1,89 @@
+<div
+  class="container"
+>
+  <div class="justify-div">
+    <label class="label-class">{{ selectLabel }}</label>
+    <nz-select
+      [nzBackdrop]="true"
+      [(ngModel)]="selectedCourse"
+      (ngModelChange)="selectCurrentCourse($event)"
+      [nzSize]="'large'"
+      nzPlaceHolder="{{ selectPlaceholder }}"
+      [nzShowSearch]="true"
+      (nzOnSearch)="affiliateSearch && searchCallBack($event)"
+      (nzScrollToBottom)="affiliateSearch && loadMoreAffiliate()"
+      (nzOpenChange)="affiliateSearch && selectOpen($event)"
+      [nzAutoClearSearchValue]="false"
+      [nzAllowClear]="true"
+      [nzServerSearch]="affiliateSearch"
+    >
+      <ng-container *ngIf="courseSearch">
+        <nz-option
+          *ngFor="let course of coursesList?.courseDetailsByType"
+          [nzLabel]="course?.courseTitle"
+          [nzValue]="{
+            title: course?.courseTitle,
+            id: course?.courseId,
+            reward: coursesList?.reward
+          }"
+        >
+        </nz-option>
+      </ng-container>
+      <ng-container *ngIf="affiliateSearch">
+        <nz-option
+          nzCustomContent
+          *ngFor="let affiliate of affiliateList"
+          [nzLabel]="affiliate?.name"
+          [nzValue]="{
+            reward: affiliate?.defaultReward,
+            affiliateId: affiliate?.affiliateId,
+            affiliateName: affiliate?.name,
+            uuid: affiliate?.uuid
+          }"
+        >
+          <span class="affiliate-name">{{ affiliate?.isSelf ? 'Self' : affiliate?.name }}</span>
+          <span class="affiliate-email ml-4">{{'<'}}{{ affiliate?.email }}{{'>'}}</span>
+        </nz-option>
+      </ng-container>
+    </nz-select>
+  </div>
+  <div class="justify-div">
+    <!-- <label class="label-class">Rewards in %</label>
+    <nz-input-group nzSize="large">
+      <input
+        class="input-field"
+        type="number"
+        nz-input
+        [(ngModel)]="selectedCourseReward"
+        placeholder="%"
+        max="90"
+        min="1"
+        (input)="rewardValidation($event)"
+        (ngModelChange)="setReward($event)"
+      />
+    </nz-input-group> -->
+  
+    <label class="label-class">Rewards in %</label>
+    <nz-input-group nzSize="large">
+      <input
+        class="input-field"
+        type="text"
+        nz-input
+        [(ngModel)]="selectedCourseReward"
+        placeholder="%"
+        max="90"
+        min="1"
+        (input)="rewardValidation($event)"
+        (ngModelChange)="setReward($event)"
+      />
+    </nz-input-group>
+  </div>
+  <div class="button-container">
+    <app-button
+      (buttonCallBack)="onAddCourseEmit()"
+      [config]="buttonConfig"
+      [buttonText]="buttonText"
+      [disabled]="rewardInvalid || !selectedCourse"
+    ></app-button>
+  </div>
+</div>

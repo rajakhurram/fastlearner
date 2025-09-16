@@ -1,0 +1,879 @@
+<ng-container *ngIf="!isLoading; else loadingTemplate">
+  <div class="container">
+    <div class="course-details">
+      <div class="course-content">
+        <div class="justify-alignment" nz-row [nzGutter]="16">
+          <div nz-col nzXs="24" nzMd="24" nzLg="16">
+            <div class="course-header">
+              <h1 class="font break-word">
+                <!-- {{ courseDetails?.metaHeading ?? courseDetails?.title }} -->
+                {{ courseDetails?.title }}
+
+              </h1>
+              <p class="header-description break-word">
+                <!-- {{ courseDetails?.metaDescription ?? courseDetails?.about }} -->
+                {{ courseDetails?.about }}
+              </p>
+            </div>
+            <div class="video-player" *ngIf="courseDetails?.previewVideoUrl != null && courseDetails?.previewVideoUrl != ''">
+              <app-video-player
+                #videoPlayerElement
+                [autoPlayValue]="false"
+                [currentSelectedTopic]="currentSelectedTopic"
+                [fromCourseInformation]="false"
+                [isTooltipVisible]="isTooltipVisible"
+              ></app-video-player>
+            </div>
+
+            <div *ngIf="courseDetails?.previewVideoUrl == null || courseDetails?.previewVideoUrl == ''">
+              <img class="w-100" [src]="courseDetails?.courseThumbnailUrl">
+            </div>
+
+            <div
+              nz-col
+              class="sticky-card-responsive"
+              nzXs="26"
+              nzMd="26"
+              nzLg="8"
+            >
+              <div class="sticky-res visibility">
+                <nz-card class="card">
+                  <div class="label-container">
+                    <p class="font-light">This {{courseDetails?.contentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}} includes:</p>
+                    <img
+                      *ngIf="courseDetails?.courseType == courseType.PREMIUM"
+                      src="../../../../assets/icons/premium-details.svg"
+                    />
+                  </div>
+                  <ul class="font-light">
+                    <li class="include-list">
+                      {{ courseDetails?.contentType?.toLowerCase() === courseContentType.COURSE ? (totalSectionTimeInSeconds | msIntoHHMMSS) : (testTotalQuestions + ' Questions') }}
+                    </li>
+                    <li class="include-list">Access on mobile and PC</li>
+                    <li class="include-list">Lifetime access on completion</li>
+                    <li class="include-list">
+                      {{
+                        courseDetails?.hasCertificate
+                          ? "Certificate of completion"
+                          : "No certificate provided for this course"
+                      }}
+                    </li>
+                  </ul>
+                  <div class="side-card-btn">
+                    <div>
+                      <button
+                        (click)="startCouseLearning()"
+                        class="course-hover-btn"
+                        nz-button
+                        nzType="primary"
+                      >
+                        {{ showBuyButton ? "Buy Now" : courseButtonName }}
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        *ngIf="isLoggedIn"
+                        (click)="toggleFavoriteCourse()"
+                        class="course-hover-default-btn"
+                        nz-button
+                        nzType="default"
+                      >
+                        <span
+                          nz-icon
+                          nzType="heart"
+                          [nzTheme]="
+                            courseDetails?.isFavourite ? 'fill' : 'outline'
+                          "
+                        ></span>
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        (click)="openShareCourseModal()"
+                        class="share-hover-default-btn"
+                        nz-button
+                        nzType="default"
+                      >
+                        <span
+                          nz-icon
+                          nzType="share-alt"
+                          nzTheme="outline"
+                        ></span>
+                      </button>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+            <div class="rating">
+              <span class="font">{{ courseDetails?.review?.toFixed(1) }}</span>
+              &nbsp;
+              <nz-rate
+                [ngModel]="courseDetails?.review"
+                nzAllowHalf
+                nzDisabled
+              ></nz-rate>
+              &nbsp;
+              <span>
+                <a
+                  style="text-decoration: underline"
+                  (click)="scrollToFeedback()"
+                >
+                  ({{ courseDetails?.noOfReviewers }} Ratings)
+                </a>
+              </span>
+              &nbsp;
+              <span>
+                {{ courseDetails?.totalStudents }} 
+                {{ courseDetails?.totalStudents === 1 ? 'student' : 'students' }}
+              </span>
+                          </div>
+
+            <hr />
+            <div nz-row>
+              <div nz-col nzSpan="7">
+                <div class="course-extra">
+                  <div class="image-section">
+                    <button
+                      *ngIf="courseDetails?.profilePicture == null"
+                      class="side-nav-button1"
+                      nz-button
+                      nzType="primary"
+                      nzShape="circle"
+                    >
+                      {{ courseDetails?.creatorName | initialCharactor }}
+                    </button>
+                    <nz-avatar
+                      *ngIf="courseDetails?.profilePicture != null"
+                      [nzSize]="32"
+                      nzIcon="user"
+                      class="sidebar-nav-button"
+                      nzAlt="Preview"
+                      [nzSrc]="courseDetails?.profilePicture"
+                    ></nz-avatar>
+                  </div>
+                  <div class="user-info">
+                    <p class="course-extra-label">Created By</p>
+                    <p
+                      class="cursor"
+                      (click)="
+                        routeToInsructorProfile(courseDetails?.userProfileUrl)
+                      "
+                    >
+                      {{ courseDetails?.creatorName }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <nz-divider class="divider" nzType="vertical"></nz-divider>
+              <div nz-col nzSpan="7">
+                <div class="course-extra">
+                  <div class="image-section">
+                    <img
+                      height="28px"
+                      width="28px"
+                      src="../../../../assets/icons/last-update.svg"
+                      alt="Last Update"
+                    />
+                  </div>
+                  <div class="user-info">
+                    <p class="course-extra-label">Last Update</p>
+                    <p>
+                      {{
+                        courseDetails?.lastUpdate
+                          ? (courseDetails?.lastUpdate | date : "mediumDate")
+                          : "-"
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <nz-divider class="divider" nzType="vertical"></nz-divider>
+              <div nz-col nzSpan="7">
+                <div class="course-extra">
+                  <div class="image-section">
+                    <img
+                      height="28px"
+                      width="28px"
+                      [src]="
+                        courseDetails?.level === 'Expert'
+                          ? '../../../../assets/icons/expert-level.svg'
+                          : courseDetails?.level === 'Intermediate'
+                          ? '../../../../assets/icons/Intermediate.svg'
+                          : courseDetails?.level === 'Beginner'
+                          ? '../../../../assets/icons/Beginner.svg'
+                          : '../../../../assets/icons/All-Level.svg'
+                      "
+                      alt="Level"
+                    />
+                  </div>
+                  <div class="user-info">
+                    <p class="course-extra-label">Level</p>
+                    <p>{{ courseDetails?.level }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div>
+              <div class="description-header">
+                <h2>Description</h2>
+              </div>
+              <div class="content">
+                <p
+                  class="paraShow break-word"
+                  [innerHTML]="courseDetails?.courseDescription"
+                ></p>
+                <!-- <span
+                class="show-more-pointer"
+                (click)="showDescription = !showDescription"
+              >
+                <a>
+                  {{ !showDescription ? "Show More" : "Show Less" }}
+                </a>
+                <span
+                  class="show-more-icon"
+                  nz-icon
+                  [nzType]="!showDescription ? 'down' : 'up'"
+                  nzTheme="outline"
+                ></span>
+              </span> -->
+              </div>
+            </div>
+            <div class="learning-goals">
+              <div class="learning-header" id="course-content">
+                <h3>What you'll learn</h3>
+              </div>
+              <div class="learning-content">
+                <div class="row-space" nz-row>
+                  <div
+                    *ngFor="
+                      let course of courseDetails?.courseOutcome;
+                      let i = index
+                    "
+                    nz-col
+                    nzLg="12"
+                    nzMd="12"
+                    nzSm="12"
+                    nzXs="24"
+                  >
+                    <div *ngIf="i < courseOutcomeLength" class="course-outcome">
+                      <div>
+                        <img
+                          class="check-icon"
+                          src="../../../../assets/icons/ic_check_24px.svg"
+                          alt="Check"
+                        />
+                      </div>
+                      &nbsp;
+                      <div style="max-width: 100% !important">
+                        <span class="break-word">{{ course }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngIf="showMore"
+                  class="row-space"
+                  (click)="
+                    showCourseOutcome(courseOutcomeLength > 4 ? true : false)
+                  "
+                >
+                  <span class="show-more-pointer">
+                    <a class="show-more">{{
+                      courseOutcomeLength > cousrseOutcomeDefaultLength
+                        ? "Show Less"
+                        : "Show More"
+                    }}</a>
+                    <span
+                      class="show-more-icon"
+                      nz-icon
+                      [nzType]="
+                        courseOutcomeLength > cousrseOutcomeDefaultLength
+                          ? 'up'
+                          : 'down'
+                      "
+                      nzTheme="outline"
+                    ></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="course-content">
+              <div class="course-header">
+                <h3>Course Content</h3>
+              </div>
+              <div class="course-outline">
+                <div class="section-topic-header">
+                  <div class="section-topic-time">
+                    <span>• {{ totalSections }} {{totalSections > 1 ? 'Sections' : 'Section'}}</span> &nbsp;
+                    <span>• {{ totalTopics }} {{totalTopics > 1 ? 'Topics' : 'Topic'}}</span> &nbsp;
+                    <span style="white-space: pre">
+                      • {{
+                        courseDetails?.contentType?.toLowerCase() === courseContentType.COURSE
+                          ? (totalSectionTimeInSeconds | msIntoHHMMSS)
+                          : (testTotalQuestions + ' ' + (testTotalQuestions === 1 ? 'Question' : 'Questions'))
+                      }}
+                    </span>                    
+                  </div>
+                  <div class="expand">
+                    <a id="expandAll" (click)="toggleAllSection()">{{
+                      expandButtonName
+                    }}</a>
+                  </div>
+                </div>
+              </div>
+              <div class="course-section">
+                <nz-collapse nzAccordion>
+                  <nz-collapse-panel
+                    [nzExpandedIcon]="
+                      section.panelOpen ? iconMinusTpl : iconPlusTpl
+                    "
+                    [nzExtra]="extraContent"
+                    *ngFor="
+                      let section of courseDetails?.sectionDetails;
+                      let i = index
+                    "
+                    [nzHeader]="sectionNameTemplate"
+                    [nzActive]="section.panelOpen"
+                    (nzActiveChange)="toggleSectionPanel($event, section)"
+                  >
+                    <div class="section-inner-content">
+                      <div
+                        nz-row
+                        class="section-inner-content-row"
+                        *ngFor="let topic of section?.topicDetails"
+                      >
+                        <div
+                          style="cursor: pointer"
+                          (click)="
+                            routeToCourseDetailsWithIds(
+                              section.sectionId,
+                              topic?.topicId
+                            )
+                          "
+                          nz-col
+                          nzXs="10"
+                          nzMd="10"
+                          nzLg="18"
+                        >
+                          <img
+                            *ngIf="topic?.topicType == 'Video'"
+                            src="../../../../assets/icons/video-icon.svg"
+                            alt="Video"
+                          />
+                          <img
+                            *ngIf="topic?.topicType == 'Article'"
+                            src="../../../../assets/icons/document.svg"
+                            alt="Document"
+                          />
+                          <img
+                            *ngIf="topic?.topicType == 'Animation'"
+                            src="../../../../assets/icons/animation.svg"
+                            alt="Animation"
+                          />
+
+                          <img
+                            *ngIf="topic?.topicType == 'Quiz'"
+                            src="../../../../assets/icons/Quiz.svg"
+                            alt="Quiz"
+                          />
+                          &nbsp;
+                          <span
+                            [ngStyle]="{
+                              'text-decoration':
+                                topic?.topicType == 'Video'
+                                  ? 'underline'
+                                  : 'none'
+                            }"
+                            class="topic-color"
+                            >{{ topic?.topicName }}</span
+                          >
+                        </div>
+                        <div
+                          class="topic-duration"
+                          nz-col
+                          nzOffset="1"
+                          nzLg="5"
+                          nzXs="8"
+                          nzMd="8"
+                        >
+                          {{ topic?.topicDuration | msIntoHHMMSS }}
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #iconMinusTpl>
+                      <img
+                        class="space"
+                        src="../../../../assets/icons/contract-minus.svg"
+                        alt="Collapse"
+                      />
+                    </ng-template>
+                    <ng-template #iconPlusTpl>
+                      <img
+                        class="space"
+                        src="../../../../assets/icons/expand-plus.svg"
+                        alt="Expand"
+                      />
+                    </ng-template>
+                    <ng-template #extraContent>
+                      <img
+                        *ngIf="
+                          !section?.isFree && !courseDetails?.isAlreadyBought
+                        "
+                        src="../../../../assets/icons/lock.svg"
+                        alt="Lock"
+                      />
+                      &nbsp;
+                      <span>
+                        • {{ section?.totalLectures }} {{ section?.totalLectures === 1 ? 'Lecture' : 'Lectures' }} •
+                        {{ section.totalTime | msIntoHHMMSS }}
+                      </span>                      
+                    </ng-template>
+                    <ng-template #sectionNameTemplate>
+                      <p class="sectionTemp">
+                        {{ section.sectionName }}
+                      </p>
+                    </ng-template>
+                  </nz-collapse-panel>
+                </nz-collapse>
+              </div>
+            </div>
+            <div
+              [ngStyle]="{
+                'padding-bottom': courseDetails?.hasCertificate ? '0px' : '2%'
+              }"
+              class="prerequisite"
+            >
+              <div class="prerequisite-header">
+                <h3>Prerequisite</h3>
+              </div>
+              <div class="prerequisite-content">
+                <ul
+                  *ngFor="let data of courseDetails?.prerequisite"
+                  class="prerequisite-list"
+                >
+                  <li class="break-word">{{ data }}</li>
+                </ul>
+              </div>
+            </div>
+            <div
+              *ngIf="courseDetails?.hasCertificate"
+              class="certificate-container"
+            >
+              <div class="certificate-header">
+                <h5>Earn a Career Certificate</h5>
+                <p class="certificate-description">
+                  Showcase this certificate on your LinkedIn profile, resume, or
+                  CV, and share it across your social media platforms or in your
+                  performance reviews.
+                </p>
+              </div>
+              <div class="certificate-content">
+                <img src="../../../../assets/icons/Certificate-sec.svg" />
+              </div>
+            </div>
+            <div class="instructor-section">
+              <div class="instructor-header">
+                <h4>Instructor</h4>
+              </div>
+              <div class="instructor-content">
+                <div class="instructor-img">
+                  <nz-avatar
+                    [nzShape]="'square'"
+                    [nzSize]="64"
+                    [nzIcon]="'user'"
+                    nzAlt="Preview"
+                    [nzSrc]="courseDetails?.profilePicture"
+                  ></nz-avatar>
+                </div>
+                <div class="instructor-content-name">
+                  <small
+                    class="cursor"
+                    (click)="
+                      routeToInsructorProfile(courseDetails?.userProfileUrl)
+                    "
+                    >{{ courseDetails?.creatorName }}</small
+                  >
+                  <small class="instructor-description">{{
+                    courseDetails?.headline
+                  }}</small>
+                  <div class="instructor-content-icons">
+                    <img
+                      class="icon-img"
+                      height="15px"
+                      alt="Play"
+                      width="15px"
+                      src="../../../../assets/icons/play-icon.svg"
+                    />
+                    <small class="icon-title">
+                      {{ courseDetails?.totalCourses }}
+                      {{
+                        courseDetails?.totalCourses === 1 ? "Course" : "Courses"
+                      }}
+                    </small>
+
+                    <img
+                      class="icon-img"
+                      height="15px"
+                      width="15px"
+                      alt="Group User"
+                      src="../../../../assets/icons/group-user.svg"
+                    />
+                    <small class="icon-title"
+                      >{{ courseDetails?.totalEnrolled }} Students</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="instructor-description-long">
+                <small [innerHTML]="courseDetails?.aboutMe"> </small>
+              </div>
+            </div>
+            <div class="feedback-section" id="feedback">
+              <div class="feedback-header">
+                <h3>Students Feedback</h3>
+              </div>
+              <div style="justify-content: space-between" nz-row>
+                <div>
+                  <div class="rating-section">
+                    <div>
+                      <h5 class="rating-heading">
+                        {{ courseDetails?.review?.toFixed(1) }}
+                      </h5>
+                    </div>
+                    <div>
+                      <nz-rate
+                        class="star-container"
+                        [ngModel]="courseDetails?.review"
+                        nzDisabled
+                        nzAllowHalf
+                      ></nz-rate>
+                      <p class="rating-text">
+                        Based on {{ courseDetails?.noOfReviewers }} 
+                        {{ courseDetails?.noOfReviewers === 1 ? 'review' : 'reviews' }}
+                      </p>                      
+                    </div>
+                  </div>
+                </div>
+                <div nz-col nzXs="22" nzMd="22" nzLg="16">
+                  <div class="progress-bar">
+                    <div class="line-padding" nz-row>
+                      <div nz-col class="">
+                        <small class="text-margin">5</small
+                        ><span
+                          class="star-span"
+                          nz-icon
+                          nzType="star"
+                          nzTheme="fill"
+                        ></span>
+                      </div>
+                      <div nz-col nzSpan="22" class="star-line">
+                        <nz-progress
+                          [nzPercent]="courseDetails?.courseFeedback?.rating5"
+                          nzStatus="active"
+                          [nzStrokeColor]="'#FFC600'"
+                        ></nz-progress>
+                      </div>
+                    </div>
+                    <div class="line-padding" nz-row>
+                      <div nz-col>
+                        <small class="text-margin">4</small
+                        ><span
+                          class="star-span"
+                          nz-icon
+                          nzType="star"
+                          nzTheme="fill"
+                        ></span>
+                      </div>
+                      <div nz-col nzSpan="22" class="star-line">
+                        <nz-progress
+                          [nzPercent]="courseDetails?.courseFeedback?.rating4"
+                          nzStatus="active"
+                          [nzStrokeColor]="'#FFC600'"
+                        ></nz-progress>
+                      </div>
+                    </div>
+                    <div class="line-padding" nz-row>
+                      <div nz-col>
+                        <small class="text-margin">3</small
+                        ><span
+                          class="star-span"
+                          nz-icon
+                          nzType="star"
+                          nzTheme="fill"
+                        ></span>
+                      </div>
+                      <div nz-col nzSpan="22" class="star-line">
+                        <nz-progress
+                          [nzPercent]="courseDetails?.courseFeedback?.rating3"
+                          nzStatus="active"
+                          [nzStrokeColor]="'#FFC600'"
+                        ></nz-progress>
+                      </div>
+                    </div>
+                    <div class="line-padding" nz-row>
+                      <div nz-col>
+                        <small class="text-margin">2</small
+                        ><span
+                          class="star-span"
+                          nz-icon
+                          nzType="star"
+                          nzTheme="fill"
+                        ></span>
+                      </div>
+                      <div nz-col nzSpan="22" class="star-line">
+                        <nz-progress
+                          [nzPercent]="courseDetails?.courseFeedback?.rating2"
+                          nzStatus="active"
+                          [nzStrokeColor]="'#FFC600'"
+                        ></nz-progress>
+                      </div>
+                    </div>
+                    <div class="line-padding" nz-row>
+                      <div nz-col>
+                        <small style="margin-right: 5.2px; margin-left: 2px"
+                          >1</small
+                        ><span
+                          class="star-span"
+                          nz-icon
+                          nzType="star"
+                          nzTheme="fill"
+                        ></span>
+                      </div>
+                      <div nz-col nzSpan="22" class="star-line">
+                        <nz-progress
+                          [nzPercent]="courseDetails?.courseFeedback?.rating1"
+                          nzStatus="active"
+                          [nzStrokeColor]="'#FFC600'"
+                        ></nz-progress>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div
+                *ngFor="
+                  let comment of courseDetails?.courseFeedback?.feedbackComments
+                "
+                class="comment-feedback"
+              >
+                <div class="comment">
+                  <button
+                    *ngIf="comment?.profileImage == null"
+                    class="side-nav-button-review"
+                    nz-button
+                    nzType="primary"
+                    nzShape="circle"
+                  >
+                    {{ comment?.userName | initialCharactor }}
+                  </button>
+                  <nz-avatar
+                    *ngIf="comment?.profileImage != null"
+                    [nzSize]="32"
+                    nzIcon="user"
+                    class="sidebar-nav-button"
+                    nzAlt="Preview"
+                    [nzSrc]="comment?.profileImage"
+                  ></nz-avatar>
+                  <span class="commentator"> {{ comment?.userName }}</span>
+                </div>
+                <div class="comment">
+                  <nz-rate
+                    [ngModel]="comment?.rating"
+                    nzDisabled
+                    nzAllowHalf
+                  ></nz-rate>
+                  <small class="date">{{
+                    comment?.createdAt | date : "longDate"
+                  }}</small>
+                </div>
+                <span class="comment-text">{{ comment?.comment }}</span>
+                <div class="comment-like-dislike">
+                  <small>Did you find this helpful?</small>
+                  <small
+                    >{{ comment?.likes
+                    }}<img
+                      style="cursor: pointer"
+                      (click)="commentActions('LIKED', comment?.reviewId)"
+                      height="20px"
+                      width="20px"
+                      alt="Like"
+                      src="../../../../assets/icons/like.svg"
+                  /></small>
+                  <small
+                    >{{ comment?.dislikes
+                    }}<img
+                      style="cursor: pointer"
+                      (click)="commentActions('DISLIKED', comment?.reviewId)"
+                      height="20px"
+                      width="20px"
+                      src="../../../../assets/icons/dislike.svg"
+                      alt="dislike"
+                  /></small>
+                </div>
+                <hr />
+              </div>
+              <div *ngIf="hasMoreComments">
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzGhost
+                  class="show-more-button"
+                  (click)="fetchMoreComments()"
+                  [disabled]="!hasMoreComments"
+                  >
+                  Show More
+                </button>
+              </div>
+            </div>
+            <div class="related-courses">
+              <div class="related-course-header">
+                <h2>Related Courses</h2>
+              </div>
+              <div
+                *ngIf="noOfCount > 2 || courseList.length != 0"
+                class="main-cards"
+              >
+                <div class="main-cards-row" nz-row [nzGutter]="16">
+                  <div nz-col *ngFor="let course of courseList; let i = index">
+                    <div
+                      style="margin-right: 20px"
+                      class="hover-card-container"
+                    >
+                      <app-course-card
+                        [course]="course"
+                        (routeToCourseEmitter)="routeToCourseDetails($event)"
+                        (routeToInstructorprofileEmitter)="
+                          routeToInsructorProfile($event)
+                        "
+                      ></app-course-card>
+                    </div>
+                  </div>
+                </div>
+                <div class="show-more-button-container">
+                  <button
+                    [disabled]="
+                      courseList.length <= 1 ||
+                      noOfCount < 2 ||
+                      courseList.length == 0
+                    "
+                    (click)="nextPageOfRelatedCourse()"
+                    nz-button
+                    nzGhost
+                    class="show-more-button"
+                    [nzType]="'primary'"
+                  >
+                    Show More
+                  </button>
+                </div>
+              </div>
+
+              <div style="margin-top: 30px" *ngIf="courseList.length == 0">
+                <p>No Related Courses Found</p>
+              </div>
+            </div>
+          </div>
+          <div
+            nz-col
+            class="sticky-card-responsive hide-card"
+            nzXs="26"
+            nzMd="26"
+            nzLg="8"
+          >
+            <div>
+              <div class="sticky">
+                <nz-card class="card">
+                  <div class="label-container">
+                    <p class="font-light">This {{courseDetails?.contentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}} includes:</p>
+                    <img
+                      *ngIf="courseDetails?.courseType == courseType.PREMIUM"
+                      src="../../../../assets/icons/premium-details.svg"
+                    />
+                  </div>
+                  <ul class="font-light">
+                    <li class="include-list">
+                      {{ courseDetails?.contentType?.toLowerCase() === courseContentType.COURSE ? (totalSectionTimeInSeconds | msIntoHHMMSS) : (testTotalQuestions + ' Questions') }}
+                    </li>
+                    <li class="include-list">Access on mobile and PC</li>
+                    <li class="include-list">Lifetime access on completion</li>
+                    <li class="include-list">
+                      {{
+                        courseDetails?.hasCertificate
+                          ? "Certificate of completion"
+                          : "No certificate provided for this
+                    course"
+                      }}
+                    </li>
+                  </ul>
+                  <div
+                    class="price-container"
+                    *ngIf="
+                      courseDetails?.courseType == courseType.PREMIUM &&
+                      !courseDetails?.isAlreadyBought
+                    "
+                  >
+                    <div class="price">
+                      <p class="price-tag">Price</p>
+                      <p class="price-tag">${{ courseDetails?.price }}</p>
+                    </div>
+                  </div>
+                  <div class="side-card-btn">
+                    <div>
+                      <button
+                        (click)="startCouseLearning()"
+                        class="course-hover-btn"
+                        nz-button
+                        nzType="primary"
+                      >
+                        {{ showBuyButton ? "Buy Now" : courseButtonName }}
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        *ngIf="isLoggedIn"
+                        (click)="toggleFavoriteCourse()"
+                        class="course-hover-default-btn"
+                        nz-button
+                        nzType="default"
+                      >
+                        <span
+                          nz-icon
+                          nzType="heart"
+                          [nzTheme]="
+                            courseDetails?.isFavourite ? 'fill' : 'outline'
+                          "
+                        ></span>
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        (click)="openShareCourseModal()"
+                        class="share-hover-default-btn"
+                        nz-button
+                        nzType="default"
+                      >
+                        <span
+                          nz-icon
+                          nzType="share-alt"
+                          nzTheme="outline"
+                        ></span>
+                      </button>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <div class="spinner-container">
+    <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
+  </div>
+</ng-template>

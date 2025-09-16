@@ -1,0 +1,1133 @@
+<ng-container class="">
+  <div id="NavBar" class="navbar" [class.sticky]="isSticky">
+    <div class="nav-top">
+      <div
+        [ngClass]="isLoggedIn ? 'width-full' : 'width-res'"
+        class="inner-content"
+      >
+        <img
+          width="225px"
+          class="logo-style"
+          (click)="routeToLandingPage()"
+          alt="Logo"
+          src="./../../../../assets/icons/FL-Logo (1).svg"
+        />
+        <div class="search-bar">
+          <nz-input-group
+            class="input-group-container"
+            nzSearch
+            nzSize="large"
+            [nzAddOnAfter]="suffixIconSearch"
+          >
+            <input
+              class="search-input-container"
+              placeholder="Search"
+              [(ngModel)]="searchKeyword"
+              (nzOnSearch)="getSearchSuggestions($event)"
+              (keydown)="handleKeydown($event)"
+              (ngModelChange)="searchByKeyword($event)"
+              #searchInput
+            />
+          </nz-input-group>
+          <div
+            [ngStyle]="{
+              'box-shadow':
+                searchResults?.length || searchInstructorResults?.length
+                  ? '2px 5px 17px rgba(120, 164, 243, 0.5)'
+                  : 'none'
+            }"
+            class="search-results-container"
+          >
+            <ng-container *ngIf="searchResults?.length">
+              <div
+                class="nav-options display-flex align-items-center"
+                *ngFor="let result of searchResults; let i = index"
+                [class.highlight]="i === selectedIndex"
+                (click)="onListItemClicked(result)"
+              >
+                <nz-avatar
+                  class="ml-3 search-thumbnail"
+                  [nzSize]="24"
+                  nzIcon="user"
+                  [nzSrc]="result?.thumbnail"
+                  nzAlt="Profile"
+                ></nz-avatar>
+                <p (keydown)="event($event)" class="search-item-list">
+                  {{ result.title }}
+                </p>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="searchInstructorResults?.length">
+              <div
+                (click)="routeToInstructorProfile(profile?.profileUrl)"
+                class="nav-options display-flex align-items-center"
+                *ngFor="let profile of searchInstructorResults; let j = index"
+                [class.highlight]="j + searchResults?.length === selectedIndex"
+              >
+                <nz-avatar
+                  style="margin-left: 5%"
+                  [nzSize]="24"
+                  nzIcon="user"
+                  [nzSrc]="profile?.profilePicture"
+                ></nz-avatar>
+                <p (keydown)="event($event)" class="search-item-list ml-1">
+                  {{ profile.fullName }}
+                </p>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="showNoCourseText">
+              <div>
+                <p class="search-item-list">Data not found</p>
+              </div>
+            </ng-container>
+          </div>
+          <ng-template #suffixIconSearch>
+            <span
+              *ngIf="searchKeyword?.length > 2"
+              class="cross-search-icon"
+              (click)="clearSearch()"
+              nz-icon
+              nzType="close"
+            ></span>
+            <span
+              class="search-icon"
+              (click)="searchByIconClick(searchKeyword)"
+              nz-icon
+              nzType="search"
+            ></span>
+          </ng-template>
+        </div>
+      </div>
+      <div class="co-pilot">
+        <button
+          nz-button
+          class="btn-icon-only"
+          [nzType]="'primary'"
+          (click)="onButtonOnClick()"
+          (mouseenter)="hover = true"
+          (mouseleave)="hover = false"
+          aria-label="Ask AI"
+        >
+          <img
+            [src]="
+              hover
+                ? 'assets/icons/Ask AI (on-hover).svg'
+                : 'assets/icons/Ask AI.svg'
+            "
+            alt="Ask AI"
+            height="29px"
+          />
+        </button>
+      </div>
+
+      <div class="ai-grader">
+        <a href="/ai-grader" class="ai-grader-link">
+          <span style="color: #212189;     margin-left: 10px;">AI Grader</span>
+          <img
+            height="15px"
+            class="ml-5x"
+            alt="New"
+            src="assets/icons/ai-grader-new.svg"
+            loading="lazy"
+        /></a>
+      </div>
+
+      <div class="inner-content-right" style="justify-content: end">
+        <ul class="menu-items">
+          <li>
+            <span
+              (click)="showNoCourseText = false"
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="menuCategory"
+              >Categories</span
+            >
+          </li>
+          <li>
+            <span (click)="routeToInstructorWelcomePage()"
+              >Teach on Fastlearner</span
+            >
+          </li>
+          <li *ngIf="isLoggedIn">
+            <a
+              nz-dropdown
+              (click)="showNoCourseText = false"
+              nzTrigger="click"
+              [nzVisible]="isMenuOpen"
+              (nzVisibleChange)="isMyCourseMenuVisible($event)"
+              [nzDropdownMenu]="menuMyCourse"
+              >My Courses</a
+            >
+          </li>
+        </ul>
+        <div *ngIf="!isLoggedIn">
+          <div class="btn-style">
+            <button
+              class="sign-up-btn"
+              (click)="routeToSignInScreen()"
+              nz-button
+              nzType="default"
+            >
+              Sign In
+            </button>
+            <button
+              class="sign-in-btn"
+              (click)="routeToSignUpScreen()"
+              nz-button
+              nzType="primary"
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isLoggedIn" class="btn-style">
+          <span
+            (nzVisibleChange)="changeOfFavoriteCourse($event)"
+            nz-dropdown
+            [nzVisible]="isFavMenuOpen"
+            (click)="showNoCourseText = false"
+            nzTrigger="click"
+            [nzDropdownMenu]="menuFavorite"
+            class="heart-icon ml-20px"
+            nz-icon
+            nzType="heart"
+            [nzTheme]="isHeartClick ? 'fill' : 'outline'"
+          ></span>
+
+          <div>
+            <button
+              (nzVisibleChange)="notificationToggle($event)"
+              nz-dropdown
+              nzTrigger="click"
+              (click)="showNoCourseText = false"
+              [nzDropdownMenu]="menuNotification"
+              [nzVisible]="isNotificationDropdownVisible"
+              class="notification-nav"
+              (click)="removeNotificationCount()"
+              nz-button
+            >
+              <div class="notification-icon-container">
+                <img
+                  height="30px"
+                  class="ml-5px"
+                  alt="Notifications"
+                  src="../../../../assets/icons/notifications.svg"
+                  loading="lazy"
+                />
+                <div
+                  *ngIf="notificationCount > 0"
+                  class="notification-style notification-count"
+                  [class.notification-count-plus]="notificationCount > 4"
+                >
+                  <span>{{
+                    notificationCount > 4 ? "4+" : notificationCount
+                  }}</span>
+                </div>
+              </div>
+            </button>
+          </div>
+          <button
+            *ngIf="!loggedInUser?.profilePicture"
+            nz-dropdown
+            nzTrigger="click"
+            (click)="showNoCourseText = false"
+            [nzDropdownMenu]="menuUser"
+            class="ml-5px side-nav-button"
+            nz-button
+            nzType="primary"
+            nzShape="circle"
+          >
+            {{ getInitialOfLoggedInUser | initialCharactor }}
+          </button>
+          <nz-avatar
+            *ngIf="loggedInUser?.profilePicture"
+            [nzSize]="46"
+            nz-dropdown
+            style="cursor: pointer"
+            nzTrigger="click"
+            (click)="showNoCourseText = false"
+            nzAlt="Profile"
+            nzIcon="user"
+            [nzDropdownMenu]="menuUser"
+            [nzSrc]="loggedInUser?.profilePicture"
+          ></nz-avatar>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<nz-dropdown-menu #menuCategory="nzDropdownMenu">
+  <div *ngIf="categoryList?.length" id="category-menu">
+    <ul class="category-menu" nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div *ngFor="let category of categoryList">
+        <li nz-menu-item (click)="routeToCourseList(category?.name)">
+          {{ category?.name }}
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuFavorite="nzDropdownMenu">
+  <div id="favorite-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div *ngFor="let favorite of favoriteCourseList">
+        <li
+          (click)="routeToCourseDetails(favorite.courseUrl)"
+          class="course-menu-item"
+          nz-menu-item
+        >
+          <div class="course-display">
+            <img
+              class="img-drop-down"
+              [src]="
+                favorite?.courseThumbnailUrl
+                  ? favorite?.courseThumbnailUrl
+                  : '../../../assets/icons/html-course.svg'
+              "
+              alt="Preview"
+              loading="lazy"
+            />
+            <span class="course-title-dropdown">{{ favorite?.title }}</span>
+          </div>
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+      <div class="center" *ngIf="favoriteCourseList.length == 0">
+        <li class="course-menu-item" nz-menu-item>
+          <nz-empty [nzNotFoundContent]="'Your wishlist is empty'"></nz-empty>
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+      <div class="button">
+        <button
+          nz-button
+          [disabled]="favoriteCourseList.length == 0"
+          class="signup-form-button"
+          (click)="routeToFavoriteCourses()"
+          [nzType]="'primary'"
+        >
+          View All Favourite Course
+        </button>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuMyCourse="nzDropdownMenu">
+  <div id="my-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+
+      <div class="course-list" (scroll)="onScroller($event)">
+        <ng-container *ngFor="let myCourse of myCourseList">
+          <li
+            (click)="routeToCourseDetails(myCourse.courseUrl)"
+            class="course-menu-item"
+            nz-menu-item
+          >
+            <div class="course-display">
+              <img
+                alt="Preview"
+                class="img-drop-down"
+                loading="lazy"
+                [src]="
+                  myCourse?.courseThumbnailUrl ||
+                  '../../../assets/icons/html-course.svg'
+                "
+              />
+              <span class="course-title-dropdown">{{ myCourse?.title }}</span>
+            </div>
+          </li>
+          <li nz-menu-divider></li>
+        </ng-container>
+        <div class="center" *ngIf="myCourseList.length == 0">
+          <li class="course-menu-item" nz-menu-item>
+            <nz-empty [nzNotFoundContent]="'This section is empty'"></nz-empty>
+          </li>
+          <li nz-menu-divider></li>
+        </div>
+      </div>
+
+      <!-- Separate Button -->
+      <div class="button">
+        <button
+          nz-button
+          [disabled]="myCourseList.length === 0"
+          class="signup-form-button"
+          (click)="routeToMyCourses()"
+          [nzType]="'primary'"
+        >
+          View all courses
+        </button>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuFavoriteMobile="nzDropdownMenu">
+  <div id="favorite-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div *ngFor="let favorite of favoriteCourseList">
+        <li
+          (click)="routeToCourseDetails(favorite.courseUrl)"
+          class="course-menu-item"
+          nz-menu-item
+        >
+          <div class="course-display">
+            <img
+              class="img-drop-down"
+              loading="lazy"
+              [src]="
+                favorite?.courseThumbnailUrl
+                  ? favorite?.courseThumbnailUrl
+                  : '../../../assets/icons/html-course.svg'
+              "
+              alt="Preview"
+            />
+            <span class="course-title-dropdown">{{ favorite?.title }}</span>
+          </div>
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+      <div class="center" *ngIf="favoriteCourseList.length == 0">
+        <li class="course-menu-item" nz-menu-item>
+          <nz-empty [nzNotFoundContent]="'Your wishlist is empty'"></nz-empty>
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+      <div class="button">
+        <button
+          nz-button
+          class="signup-form-button"
+          (click)="routeToFavoriteCourses()"
+          [nzType]="'primary'"
+        >
+          View All Favourite Course
+        </button>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuMyCourseMobile="nzDropdownMenu">
+  <div id="my-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div *ngFor="let myCourse of myCourseList">
+        <li
+          (click)="routeToCourseDetails(myCourse.courseUrl)"
+          class="course-menu-item"
+          nz-menu-item
+        >
+          <div class="course-display">
+            <img
+              class="img-drop-down"
+              [src]="
+                myCourse?.courseThumbnailUrl
+                  ? myCourse?.courseThumbnailUrl
+                  : '../../../assets/icons/html-course.svg'
+              "
+              alt="Preview"
+              loading="lazy"
+            />
+            <span class="course-title-dropdown">{{ myCourse?.title }}</span>
+          </div>
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+      <div class="center" *ngIf="myCourseList.length == 0">
+        <li class="course-menu-item" nz-menu-item>
+          <nz-empty [nzNotFoundContent]="'This section is empty'"></nz-empty>
+        </li>
+        <li nz-menu-divider></li>
+      </div>
+      <div class="button">
+        <button
+          nz-button
+          class="signup-form-button"
+          (click)="[routeToMyCourses()]"
+          [nzType]="'primary'"
+        >
+          View all courses
+        </button>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuUser="nzDropdownMenu">
+  <div id="user-profile-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="user-profile">
+          <div>
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              class="sidebar-nav-button"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="46"
+              nzIcon="user"
+              class="sidebar-nav-button"
+              nzAlt="Profile"
+              [nzSrc]="loggedInUser?.profilePicture"
+              (click)="routeToUserProfile()"
+            ></nz-avatar>
+          </div>
+          <div class="user-profile-text">
+            <p>{{ loggedInUser?.fullName }}</p>
+            <p>{{ loggedInUser?.email }}</p>
+            <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+          </div>
+        </div>
+        <li nz-menu-divider></li>
+        <li id="my-courses" (click)="routeToMyCourses()" nz-menu-item>
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/courses-menu.svg"
+          />
+          My Courses
+        </li>
+
+        <li
+          id="favorite-courses"
+          (click)="routeToFavoriteCourses()"
+          nz-menu-item
+        >
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/heart-menu.svg"
+          />
+          Favorites
+        </li>
+        <li nz-menu-item (click)="routeToNotificationPage()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/noti-menu.svg"
+          />Notifications
+        </li>
+        <li nz-menu-item (click)="routeToStudentResultPage()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/Ai-grader.svg"
+          />AI Grader Results
+        </li>
+        <li id="subscription" (click)="routeToSubscription()" nz-menu-item>
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/subscription-menu.svg"
+          />
+          Subscriptions
+        </li>
+        <li (click)="routeToInstructorDashboard()" nz-menu-item>
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/dashboard-menu.svg"
+          />
+          Teacher's Dashboard
+        </li>
+        <li nz-menu-item (click)="signOut()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/logout.svg"
+          />Logout
+        </li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuUserMobile="nzDropdownMenu">
+  <div id="user-profile-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="user-profile">
+          <div>
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              class="sidebar-nav-button"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="46"
+              nzIcon="user"
+              class="sidebar-nav-button"
+              nzAlt="Profile"
+              [nzSrc]="loggedInUser?.profilePicture"
+            ></nz-avatar>
+          </div>
+          <div class="user-profile-text">
+            <p>{{ loggedInUser?.fullName }}</p>
+            <p>{{ loggedInUser?.email }}</p>
+            <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+          </div>
+        </div>
+        <li nz-menu-divider></li>
+        <li id="my-courses" (click)="routeToMyCourses()" nz-menu-item>
+          My Courses
+        </li>
+        <li
+          id="favorite-courses"
+          (click)="routeToFavoriteCourses()"
+          nz-menu-item
+        >
+          Favorites
+        </li>
+        <li nz-menu-item (click)="routeToNotificationPage()">Notifications</li>
+        <li id="subscription" (click)="routeToSubscription()" nz-menu-item>
+          Subscriptions
+        </li>
+        <li (click)="routeToInstructorDashboard()" nz-menu-item>
+          Teacher's Dashboard
+        </li>
+        <li nz-menu-item (click)="signOut()">Logout</li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuNotification="nzDropdownMenu">
+  <div id="my-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <!-- <div class="border-bottom">
+        <div class="notification-box pb-4"> -->
+        <div class="notification-content-heading">
+          <div class="notification-text">
+            <p class="font-14 mb-1">Notifications</p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount > 0"
+            >
+              You have {{ notificationCount }} new notifications
+            </p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount == 0"
+            >
+              New notifications
+            </p>
+          </div>
+        </div>
+        <!-- </div>
+      </div> -->
+
+        <div
+          (click)="redirect(notification)"
+          class="remove-space cursor-pointer"
+          [class.border-bottom]="i != notifications.length - 1"
+          *ngFor="let notification of notifications; let i = index"
+        >
+          <div
+            class="notification-box pb-4"
+            [class.unseen-notification]="!notification.read"
+          >
+            <div class="notification-content">
+              <div class="notification-text">
+                <div style="line-height: 15px">
+                  <p class="color-blue notification-message font-12 mb-1">
+                    {{ notification.senderName }}
+                  </p>
+                  <p class="notification-message font-12 mb-2">
+                    {{ notification.content }}
+                  </p>
+                </div>
+                <span class="font-10 mb-0 time-text">{{
+                  notification.creationDate
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="notifications?.length">
+          <p
+            class="text-align-center mt-4 mb-1 cursor-pointer"
+            (click)="routeToNotificationPage()"
+          >
+            See All Notifications
+          </p>
+        </div>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuNotificationMobile="nzDropdownMenu">
+  <div id="my-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="notification-content-heading">
+          <div class="notification-text">
+            <p class="font-14 mb-1">Notifications</p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount > 0"
+            >
+              You have {{ notificationCount }} new notifications
+            </p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount == 0"
+            >
+              No new notifications
+            </p>
+          </div>
+        </div>
+        <!-- </div>
+      </div> -->
+
+        <div
+          (click)="redirect(notification)"
+          class="remove-space cursor-pointer"
+          [class.border-bottom]="i != notifications.length - 1"
+          *ngFor="let notification of notifications; let i = index"
+        >
+          <div
+            class="notification-box pb-4"
+            [class.unseen-notification]="!notification.read"
+          >
+            <div class="notification-content">
+              <div class="notification-text">
+                <div style="line-height: 15px">
+                  <p class="color-blue notification-message font-12 mb-1">
+                    {{ notification.senderName }}
+                  </p>
+                  <p class="notification-message font-12 mb-2">
+                    {{ notification.content }}
+                  </p>
+                </div>
+                <span class="font-10 mb-0 time-text">{{
+                  notification.creationDate
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="notifications?.length">
+          <p
+            class="text-align-center mt-4 mb-1 cursor-pointer"
+            (click)="routeToNotificationPage()"
+          >
+            See All Notifications
+          </p>
+        </div>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<div
+  id="NavBar"
+  class="navbar-responsive"
+  [class.sticky]="isSticky"
+  [ngStyle]="{ 'border-bottom': navbarVisible ? '2px solid #F8F8FA' : 'none' }"
+>
+  <div
+    class="nav-top"
+    [ngStyle]="{
+      'justify-content': !navbarVisible ? 'space-between' : 'space-between',
+     
+    }"
+  >
+    <div class="navLeft">
+      <div *ngIf="!navbarVisible && !showSearch" class="burger-icon">
+        <img
+          (click)="toggleBurgerMenu()"
+          src="./../../../../assets/icons/burger-menu.svg"
+          alt="Menu"
+          loading="lazy"
+        />
+      </div>
+      <div
+        *ngIf="!showSearch"
+        [ngStyle]="{
+          width: isLoggedIn ? '' : '85%',
+          'margin-left': navbarVisible ? '19%' : '0px'
+        }"
+        class="inner-content"
+      >
+        <img
+          [ngStyle]="{ width: logoWidth + 'px' }"
+          class="logo-style-mob"
+          (click)="routeToLandingPage()"
+          alt="Logo"
+          loading="lazy"
+          src="./../../../../assets/icons/FL-Logo (1).svg"
+        />
+      </div>
+    </div>
+    <div style="display: flex; align-items: center">
+
+      <div class="search-icon-mob" (click)="toggleSearch()">
+        <img
+          height="20px"
+          src="../../../../assets/icons/search.svg"
+          alt="Search"
+          loading="lazy"
+        />
+      </div>
+
+      <div *ngIf="isLoggedIn" class="noti-icon-nav">
+        <button
+          (nzVisibleChange)="notificationToggleMobile($event)"
+          class="notification-nav"
+          (click)="routeToNotificationPage()"
+          nz-button
+        >
+          <div class="notification-icon-container">
+            <img
+              height="25px"
+              src="../../../../assets/icons/notifications.svg"
+              alt="Notifications"
+              loading="lazy"
+            />
+            <div
+              *ngIf="notificationCount > 0"
+              class="notification-style-nav notification-count-mobile"
+            >
+              <span>{{
+                notificationCount > 4 ? "4+" : notificationCount
+              }}</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="responsive-navbar-view" *ngIf="navbarVisible">
+  <div class="container-div">
+    <div *ngIf="isLoggedIn" (click)="showUserToggle = !showUserToggle">
+      <div class="user-profile-side-bar">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+          "
+        >
+          <div style="display: flex">
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              class="sidebar-nav-button"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="46"
+              nzIcon="user"
+              class="sidebar-nav-button"
+              nzAlt="Profile"
+              [nzSrc]="loggedInUser?.profilePicture"
+            ></nz-avatar>
+            <div class="user-profile-side-text">
+              <p>{{ loggedInUser?.fullName }}</p>
+              <p>{{ loggedInUser?.email }}</p>
+              <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+            </div>
+          </div>
+
+          <img
+            style="height: 15px; width: 16px; margin-top: 8px"
+            [ngStyle]="{ rotate: showUserToggle ? '90deg' : 'none' }"
+            src="../../../../assets/icons/side-arrow.svg"
+            alt="Side Arrow"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!showUserToggle" style="padding: 16px">
+      <div *ngIf="!isLoggedIn">
+        <div class="auth-content">
+          <p class="sign-in" (click)="routeToSignInScreen()">Sign In</p>
+          <p class="sign-up" (click)="routeToSignUpScreen()">Sign Up</p>
+        </div>
+      </div>
+      <div *ngIf="isLoggedIn">
+        <div class="auth-content">
+          <p
+            *ngIf="isLoggedIn"
+            class="sign-up"
+            (click)="routeToInstructorWelcomePage()"
+          >
+            Teach on Fastlearner
+          </p>
+        </div>
+      </div>
+      <nz-divider class="divider"></nz-divider>
+
+      <div class="ai-grader">
+        <a href="/ai-grader" class="ai-grader-link">
+          <span style="color: #212189">AI Grader</span>
+          <img
+            height="15px"
+            class="ml-5x"
+            alt="New"
+            src="assets/icons/ai-grader-new.svg"
+            loading="lazy"
+        /></a>
+      </div>
+
+      <nz-divider class="divider"></nz-divider>
+      <div class="mobile-navbar-content">
+        <ul class="menu-items-mobile">
+          <li (click)="routeToCoursePage()" class="list-style">
+            <span
+              nz-dropdown
+              nzTrigger="click"
+              (click)="showNoCourseText = false"
+              [nzDropdownMenu]="menuCategory"
+              >Categories</span
+            >
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li></li>
+          <li
+            *ngIf="!isLoggedIn"
+            (click)="routeToInstructorWelcomePage()"
+            class="list-style"
+          >
+            <span>Teach on Fastlearner</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li
+            (click)="routeToFavoriteCourses()"
+            *ngIf="isLoggedIn"
+            class="list-style"
+          >
+            <span>Favourites</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li
+            (click)="routeToMyCourses()"
+            *ngIf="isLoggedIn"
+            class="list-style"
+          >
+            <span>My Courses</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li *ngIf="isLoggedIn" class="list-style" (click)="signOut()">
+            <span>Logout</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+        </ul>
+
+        <div *ngIf="isLoggedIn" class="logged-in-mobile"></div>
+      </div>
+    </div>
+    <div *ngIf="showUserToggle" style="padding: 16px">
+      <div>
+        <ul class="menu-items-mobile">
+          <li class="list-style" id="my-courses" (click)="routeToMyCourses()">
+            <span> My Courses </span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li
+            class="list-style"
+            id="favorite-courses"
+            (click)="routeToFavoriteCourses()"
+          >
+            <span>Favorites</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li class="list-style" (click)="routeToNotificationPage()">
+            <span> Notifications </span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+
+          <li
+            class="list-style"
+            id="subscription"
+            (click)="routeToSubscription()"
+          >
+            <span>Subscriptions</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li class="list-style" (click)="routeToInstructorDashboard()">
+            <span>Teacher's Dashboard</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="navbarVisible || showSearch" class="burger-icon-cross">
+    <img
+      style="height: 20px"
+      (click)="toggleBurgerMenu()"
+      alt="Close"
+      loading="lazy"
+      src="./../../../../assets/icons/cross.svg"
+    />
+  </div>
+</div>
+
+<div class="responsive-search-view" *ngIf="showSearch">
+  <div style="padding: 16px; display: flex; justify-content: space-between">
+    <div class="search-bar-mobile" style="width: 90%">
+      <nz-input-group
+        class="input-group-container"
+        nzSearch
+        nzSize="large"
+        [nzAddOnAfter]="suffixIconSearch"
+      >
+        <input
+          class="search-input-container"
+          placeholder="Search"
+          [(ngModel)]="searchKeyword"
+          (nzOnSearch)="getSearchSuggestions($event)"
+          (keydown)="handleKeydown($event)"
+          (ngModelChange)="searchByKeyword($event)"
+          #searchInput
+        />
+        <div
+          [ngStyle]="{
+            'box-shadow': searchResults.length
+              ? '2px 5px 17px rgba(120, 164, 243, 0.5)'
+              : 'none'
+          }"
+          class="search-results-container"
+        >
+          <ng-container
+            *ngIf="searchResults?.length || searchInstructorResults?.length"
+          >
+            <div
+              class="nav-options display-flex align-items-center"
+              *ngFor="let result of searchResults; let i = index"
+              [class.highlight]="i === selectedIndex"
+            >
+              <nz-avatar
+                class="ml-3 search-thumbnail"
+                [nzSize]="24"
+                nzIcon="user"
+                [nzSrc]="result?.thumbnail"
+                nzAlt="Profile"
+              ></nz-avatar>
+              <p
+                (click)="onListItemClicked(result)"
+                (keydown)="event($event)"
+                class="search-item-list"
+              >
+                {{ result?.title }}
+              </p>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="searchInstructorResults?.length">
+            <div
+              (click)="routeToInstructorProfile(profile?.profileUrl)"
+              class="nav-options display-flex align-items-center"
+              *ngFor="let profile of searchInstructorResults; let j = index"
+              [class.highlight]="j + searchResults?.length === selectedIndex"
+            >
+              <nz-avatar
+                style="margin-left: 5%"
+                [nzSize]="24"
+                nzIcon="user"
+                [nzSrc]="profile?.profilePicture"
+              ></nz-avatar>
+              <p (keydown)="event($event)" class="search-item-list ml-1">
+                {{ profile.fullName }}
+              </p>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="showNoCourseText">
+            <div>
+              <p class="search-item-list">No course found</p>
+            </div>
+          </ng-container>
+        </div>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span
+          *ngIf="searchKeyword.length > 2"
+          class="cross-search-icon"
+          (click)="clearSearch()"
+          nz-icon
+          nzType="close"
+        ></span>
+        <span
+          class="search-icon"
+          (click)="searchByIconClick(searchKeyword)"
+          nz-icon
+          nzType="search"
+        ></span>
+      </ng-template>
+    </div>
+    <span class="search-icon-nav">
+      <img
+        style="height: 20px"
+        (click)="toggleSearch()"
+        src="./../../../../assets/icons/cross-search.svg"
+        alt="Search"
+        loading="lazy"
+      />
+    </span>
+  </div>
+</div>

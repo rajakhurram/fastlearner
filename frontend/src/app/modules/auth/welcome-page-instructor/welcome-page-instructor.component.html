@@ -1,0 +1,19 @@
+<div class="welcome-page">
+    <nz-card class="card">
+        <div class="welcome-header">
+            <h3>Welcome to the Instructor's Dashboard</h3>
+            <p>Here are the steps you can follow to create your first course</p>
+        </div>
+        <div class="stepper">
+            <img class="stepper-image" height="100px" src="../../../../assets/icons/3_Steps (2).svg" alt="Steps">
+        </div>
+        <div class="user-icon">
+            <img class="user-icon-image" height="200px" src="../../../../assets/icons/instructor-user.svg" alt="User">
+        </div>
+        <div class="button-actions">
+            <p>Are you Ready to Begin?</p>
+            <button (click)="routeToCreateCourse()" nz-button class="pay-now-button" [nzType]="'primary'">Create Your Course</button>
+            <a (click)="skip()">Skip</a>
+        </div>
+    </nz-card>
+</div>

@@ -1,0 +1,58 @@
+.banner {
+  background-color: white;
+}
+.banner-about-us {
+  background-color: #f8f8fa;
+}
+.image-container {
+  position: relative;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+}
+.text-overlay h2 {
+  font-weight: bolder;
+}
+.course-card-section {
+  background-color: white;
+}
+.banner-image-style {
+  display: flex;
+  justify-content: center;
+}
+.landing-page-banner {
+  padding-top: 20%;
+  padding-bottom: 15%;
+}
+.student-pick {
+  color: black;
+}
+h3 {
+  color: #212189;
+  font-weight: bolder;
+  margin: 0;
+}
+.content-bottom {
+  padding-bottom: 10px;
+}
+.text-overlay h1 {
+  color: #212189;
+  font-weight: bolder;
+}
+
+@media screen and (max-width: 650px) {
+  .text-overlay {
+    position: static;
+    margin-left: 25px;
+    transform: none;
+  }
+}
+
+
+.content-bottom h2 {
+  font-weight: bolder;
+}

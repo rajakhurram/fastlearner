@@ -1,0 +1,65 @@
+<ng-container *ngIf="courses?.length > 0; else loadingTemplate">
+  <div
+    [ngClass]="moveButtonRight ? 'slider-container-res' : 'slider-container'"
+  >
+    <div class="slider" #carousel>
+      <div
+        class="course"
+        #carouselCard
+        *ngFor="let course of courses; let i = index"
+      >
+        <app-course-card
+          [course]="course"
+          [isPremium]="isPremium"
+          [buttonTheme]="buttonTheme"
+          (routeToInstructorprofileEmitter)="routeToInsructorProfile($event)"
+          (routeToCourseEmitter)="routeToCourseEmitter($event)"
+        ></app-course-card>
+      </div>
+    </div>
+
+    <app-slider-button
+      *ngIf="moveButtonRight && courses?.length > 3"
+      (slideRightEmitter)="slideRight()"
+      (slideLeftEmitter)="slideLeft()"
+      [theme]="buttonTheme"
+      [enableRightButton]="true"
+      [enableLeftButton]="true"
+      [moveButtonRight]="moveButtonRight"
+      [showButton]="showButton"
+      [showButtonWhenLoggedIn]="showButtonWhenLoggedIn"
+    ></app-slider-button>
+  </div>
+  <app-slider-button
+    *ngIf="!moveButtonRight && courses?.length > 3"
+    (slideRightEmitter)="slideRight()"
+    (slideLeftEmitter)="slideLeft()"
+    [theme]="buttonTheme"
+    [moveButtonRight]="moveButtonRight"
+    [enableRightButton]="isRightBtnEnable"
+    [enableLeftButton]="isLeftBtnEnable"
+    [showButtonWhenLoggedIn]="showButtonWhenLoggedIn"
+    [applyMargin]="applyMargin"
+  ></app-slider-button>
+
+  <div class="center" *ngIf="courses?.length == 0">
+    <div>
+      <nz-empty [nzNotFoundContent]="'No Course Found'"></nz-empty>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <!-- <div class="spinner-container" [ngClass]="">
+    {{ courses?.length }}
+    <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
+  </div> -->
+  <div class="center" *ngIf="courses?.length == 0">
+    <div class="empty-div">
+      <nz-empty
+        [ngStyle]="{ color: buttonTheme == 'dark' ? 'white' : '#292929' }"
+        [nzNotFoundContent]="'No Course Found'"
+      ></nz-empty>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'pm2 stop fastlearner-python || true'
+                sh 'pm2 start /usr/bin/python3 --name fastlearner-python -- app.py'
+            }
+        }
+
+//         stage('Run') {
+//             steps {
+//                 sh 'python3 app.py'
+//             }
+//         }
+    }
+}

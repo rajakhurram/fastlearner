@@ -1,0 +1,159 @@
+
+<div class="empty-container" *ngIf="notFound">
+  <nz-empty nzNotFoundContent="No User Found"></nz-empty>
+</div>
+
+
+<div *ngIf="!notFound">
+<div class="container">
+  <div class="instructor-profile">
+    <nz-card class="card">
+      <div class="header">
+        <!-- <h3 class="bold">Instructor</h3> -->
+        <div class="profile">
+          <div class="profile-picture">
+            <nz-avatar
+              [nzSize]="180"
+              nzIcon="user"
+              [nzSrc]="instructorPublicProfile?.profilePicture"
+              nzAlt="Picture"
+            ></nz-avatar>
+          </div>
+          <div class="profile-details">
+            <h2 class="mb-0 bold">{{ instructorPublicProfile?.fullName }}</h2>
+            <p class="mb-5">{{ instructorPublicProfile?.headline }}</p>
+            <div class="social-icon">
+              <img
+                (click)="routeTo(instructorPublicProfile?.twitterUrl)"
+                src="../../../../assets/icons/TProfile.svg"
+                class="cursor-pointer"
+                alt="X"
+              />
+              <img
+                (click)="routeTo(instructorPublicProfile?.facebookUrl)"
+                src="../../../../assets/icons/facebook-rec.svg"
+                class="cursor-pointer"
+                alt="Facebook"
+              />
+              <img
+                (click)="routeTo(instructorPublicProfile?.linkedInUrl)"
+                src="../../../../assets/icons/linkedin-rec.svg"
+                class="cursor-pointer"
+                alt="LinkedIn"
+              />
+              <img
+                (click)="routeTo(instructorPublicProfile?.youtubeUrl)"
+                src="../../../../assets/icons/youtube-rec.svg"
+                class="cursor-pointer"
+                alt="Youtube"
+              />
+              <img
+                alt="Attachment"
+                (click)="routeTo(instructorPublicProfile?.websiteUrl)"
+                src="../../../../assets/icons/attachment.svg"
+                class="cursor-pointer"
+              />
+            </div>
+            <div class="stats">
+              <div class="total-students">
+                <h3 class="mb-0 bold">
+                  {{ instructorPublicProfile?.totalStudents }}
+                </h3>
+                <small class="gray-bold">Total students</small>
+              </div>
+              <div class="total reviews">
+                <h3 class="mb-0 bold">
+                  {{ instructorPublicProfile?.totalReviews }}
+                </h3>
+                <small class="gray-bold">Reviews</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="education-details">
+          <div class="specialization">
+            <small>Specialization</small>
+            <h5 class="color-class">
+              {{ instructorPublicProfile?.specialization }}
+            </h5>
+          </div>
+          <div class="qualification">
+            <small>Qualification</small>
+            <h5 class="color-class">
+              {{ instructorPublicProfile?.qualification }}
+            </h5>
+          </div>
+          <div class="experience">
+            <small>Experience</small>
+            <h5 class="color-class">
+              {{ instructorPublicProfile?.experience }}
+            </h5>
+          </div>
+        </div>
+
+        <hr />
+      </div>
+      <div class="about-us-section pad-t">
+        <h3 class="bold">About me</h3>
+        <p class="paraShow" [innerHTML]="instructorPublicProfile?.aboutMe"></p>
+        <!-- <a
+            *ngIf="
+              instructorPublicProfile?.aboutMe &&
+              instructorPublicProfile?.aboutMe?.length > 450
+            "
+            class="show-more"
+            (click)="showDescription = !showDescription"
+          >
+            {{ !showDescription ? "Show More" : "Show Less" }}
+          </a> -->
+        <!-- <span
+          *ngIf="
+          instructorPublicProfile?.aboutMe?.length &&
+          instructorPublicProfile?.aboutMe?.length > 450
+        "
+            class="show-more-icon"
+            nz-icon
+            [nzType]="!showDescription ? 'down' : 'up'"
+            nzTheme="outline"
+          ></span> -->
+      </div>
+      <hr />
+      <div class="my-course pad-t">
+        <div class="my-course-header">
+          <h3 class="bold">Courses ({{ courseList.length }})</h3>
+        </div>
+        <div class="courses">
+          <div class="main-cards">
+            <div class="main-cards-row" nz-row [nzGutter]="16">
+              <div nz-col *ngFor="let course of courseList; let i = index">
+                <app-course-card
+                  (routeToCourseEmitter)="routeToCourseDetails($event)"
+                  [course]="course"
+                ></app-course-card>
+              </div>
+              <div class="center" *ngIf="courseList.length == 0">
+                <div>
+                  <nz-empty [nzNotFoundContent]="'No Course Found'"></nz-empty>
+                </div>
+              </div>
+            </div>
+            <div class="show-more-button-container">
+              <button
+                [disabled]="noOfCount < 2 || courseList.length == 0"
+                (click)="showMore()"
+                nz-button
+                nzGhost
+                class="show-more-button"
+                [nzType]="'primary'"
+              >
+                Show More
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>
+</div>

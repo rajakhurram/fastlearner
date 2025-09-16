@@ -1,0 +1,82 @@
+<!-- <div class="card-container">
+  <div
+    class="card"
+    *ngFor="let card of staticCards"
+    [ngClass]="{ flipped: instructorView }"
+    [ngStyle]="{ 'background-image': 'url(' + card.imageUrl + ')' }"
+  >
+    <div
+      [ngStyle]="{ height: instructorView ? '35%' : '48%' }"
+      class="card-content"
+    >
+      <h2>{{ card.heading }}</h2>
+      <div class="border"></div>
+      <p>{{ card.content }}</p>
+    </div>
+    <div class="card-back">
+      <h2>Instructor Info</h2>
+      <p>{{ card.instructorContent }}</p>
+    </div>
+  </div>
+</div> -->
+
+<div class="card-container">
+  <div
+    class="card"
+    (click)="routeToInstructor(card?.url)"
+    *ngFor="let card of staticCards"
+    [ngClass]="[instructorView ? 'height-ins-view flipped' : 'height-view']"
+    [ngStyle]="{
+      'background-image': 'url(' + card.imageUrl + ')',
+      'height': card.height
+    }"
+  >
+    <div class="card-front">
+      <div [ngClass]="{ 'height-class': !instructorView }">
+        <h2>{{ card.heading }}</h2>
+        <div class="border"></div>
+        <p>{{ card.content }}</p>
+        <div *ngIf="card?.showButton">
+          <app-button
+            *ngIf="showButtonWhenLoggedIn"
+            [buttonText]="'Sign In'"
+            (buttonCallBack)="routeToSignIn()"
+          ></app-button>
+        </div>
+      </div>
+    </div>
+    <div class="card-back">
+      <div class="picture-container" style="margin-bottom: 20px">
+        <img [src]="card.flipImage" />
+        <div class="text-container">
+          <h2 class="flip-name">{{ card.heading }}</h2>
+          <p class="flip-designation">Instructor</p>
+        </div>
+      </div>
+      <div>
+        <p class="label">About Me</p>
+        <p class="flip-content">{{ card.flipContent }}</p>
+      </div>
+      <div class="view-all-container">
+        <p (click)="routeToInstructor(card?.url)">
+          View Profile
+          <img
+            class="view-all-img"
+            height="18px"
+            width="18px"
+            alt="Arrow"
+            src="./../../../assets/icons/arrow-dark.svg"
+          />
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-slider-button
+  [showButtonWhenLoggedIn]="true"
+  [showButton]="showButton"
+  [hideSliderButtons]="true"
+  *ngIf="instructorView"
+  (buttonClickEmitter)="routeToTeachOnFastlearner()"
+  [buttonText]="'Teach on FastLearner'"
+></app-slider-button>

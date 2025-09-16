@@ -1,0 +1,129 @@
+<div nz-row class="invoice-container">
+  <div nz-col nzSpan="8"></div>
+
+  <div nz-col nzSpan="8" class="invoice-border mt-4 mb-4">
+    <div class="ml-3 mr-3">
+      <!-- <div class="text-align-end mt-2">
+                <img class="cross-icon" src="../../../../assets/icons/cross_icon.svg" alt="Cancel">
+            </div> -->
+
+      <div nz-row class="mt-1">
+        <div nz-col nzSpan="12" style="margin-top: 4%;"
+        >
+          <img
+            src="../../../../assets/icons/FL-Logo (2).svg"
+            alt="Logo"
+            class="logo-style"
+          />
+        </div>
+        <div nz-col nzSpan="12" class="font-14" style="color: #d9d9d9; margin-top: 4%;"
+        >
+          <p class="margin-0">FastLearner, Inc.</p>
+          <p class="margin-0">10100 Robert Watkins Way</p>
+          <p class="margin-0">Elk Grove, California 95757</p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div nz-row style="flex-direction: column">
+        <h3 class="color-blue font-16">Receipt From FastLearner</h3>
+        <p class="color-black font-12 margin-0">
+          Your transaction is completed and processed securely.
+        </p>
+        <p class="color-black font-12">
+          Please retain this copy for your records.
+        </p>
+      </div>
+
+      <hr />
+
+      <div nz-row class="mt-1">
+        <h4 class="color-blue font-12" style="font-weight: 400;">Transaction</h4>
+      </div>
+
+      <div nz-row class="mt-1 margin-0">
+        <div nz-col nzSpan="8">
+          <h4 class="font-12" style="font-weight: 400; color: #707070;">Plan</h4>
+        </div>
+        <div>
+          <p class="color-black font-12">
+            {{ transactionHistory?.subscriptionId?.name }}
+          </p>
+        </div>
+      </div>
+
+      <div nz-row class="mt-1 margin-0">
+        <div nz-col nzSpan="8">
+          <p class="font-12" style=" color: #707070;">Price</p>
+        </div>
+        <div>
+          <p class="color-black font-12">
+            ${{ transactionHistory?.subscriptionAmount }}
+          </p>
+        </div>
+      </div>
+
+      <div nz-row class="mt-1 margin-0">
+        <div nz-col nzSpan="8">
+          <p class="font-12" style=" color: #707070;">Starting Date</p>
+        </div>
+        <div>
+          <p class="color-black font-12">
+            {{ transactionHistory?.creationAt }}
+          </p>
+        </div>
+      </div>
+
+      <!-- <div nz-row class="mt-1 margin-0">
+                <div nz-col nzSpan="8">
+                    <p class="color-black font-12">End Date</p>
+                </div>
+                <div>
+                    <p class="color-black font-12">{{transactionInvoice?.planDetail?.endDate}}</p>
+                </div>
+            </div> -->
+
+      <div nz-row class="mt-1 margin-0">
+        <div nz-col nzSpan="8">
+          <p class="font-12" style="color: #707070;">Payment Id</p>
+        </div>
+        <div>
+          <p class="color-black font-12">
+            {{ transactionHistory?.authSubscriptionId }}
+          </p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div nz-row class="mt-1">
+        <h4 class="color-blue font-12">Customer</h4>
+      </div>
+
+      <div nz-row class="mt-1">
+        <div nz-col nzSpan="8">
+          <p class="font-12" style=" color: #707070;">Name</p>
+        </div>
+        <div>
+          <p class="color-black font-12">
+            {{ transactionHistory?.user?.fullName }}
+          </p>
+        </div>
+      </div>
+
+      <div nz-row class="mt-1 margin-0">
+        <div nz-col nzSpan="8">
+          <p class="font-12" style=" color: #707070;">Email</p>
+        </div>
+        <div>
+          <p class="color-black font-12">
+            {{ transactionHistory?.user?.email }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div nz-col nzSpan="8"></div>
+</div>

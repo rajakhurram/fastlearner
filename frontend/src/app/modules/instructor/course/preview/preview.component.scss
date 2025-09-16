@@ -1,0 +1,135 @@
+.course-information-area {
+  border: 2px solid #e7e7e7;
+}
+
+.back-color {
+  background-color: #f5f8ff;
+}
+
+.row-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading {
+  font-size: 16px;
+  margin: 1% 0% 1% 2%;
+}
+
+.tags {
+  color: #2c7dfd;
+  font-size: 14px;
+  font-weight: 100 !important;
+}
+
+.image-class {
+  max-width: 100%;
+  min-width: 100%;
+  // height: 100%;
+  // height: auto;
+  // max-height: 400px;
+  // min-height: 400px;
+  // margin: auto;
+  object-fit: cover;
+}
+
+.preview {
+  max-width: 100%;
+  min-width: 100%;
+  // height: auto;
+  // max-height: 400px;
+  // min-height: 400px;
+  margin: auto;
+  object-fit: cover;
+}
+
+.table-class {
+  overflow: auto;
+}
+
+.backBtn {
+  margin-right: 25px;
+  width: 100%;
+  border-color: #fe4a55 !important;
+  color: #fe4a55 !important;
+  height: 45px !important;
+  font-weight: bolder;
+  padding-left: 79px;
+  padding-right: 79px;
+}
+
+.continueBtn {
+  margin-right: 8px;
+  margin-left: 25px;
+  width: 100%;
+  border-color: #fe4a55 !important;
+  background-color: #fe4a55 !important;
+  color: white !important;
+  height: 45px !important;
+  font-weight: bolder;
+  padding-left: 64px;
+  padding-right: 64px;
+}
+
+.quiz-seperator {
+  color: #707070 !important;
+}
+
+.single-topic-checkbox {
+  padding-top: 5px !important;
+  padding-left: 15px !important;
+}
+
+:host ::ng-deep .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #212189;
+  border-color: #212189;
+}
+
+.justify-content {
+  justify-content: center;
+}
+
+.margin-class {
+  margin-left: 2%;
+}
+.margin-class-heading {
+  margin-left: 1%;
+}
+
+@media screen and (max-width: 770px) {
+  .continueBtn {
+    width: auto !important;
+    height: 44px !important;
+  }
+  .backBtn {
+    height: 44px !important;
+  }
+  .margin-class {
+    margin-left: 0px;
+  }
+  .margin-class-heading {
+    margin-left: 0px;
+  }
+
+  .margin-bottom {
+    margin-bottom: 10px;
+  }
+
+  p {
+    word-wrap: break-word;
+  }
+}
+@media screen and (max-width: 550px) {
+  .backBtn {
+    height: 44px !important;
+    width: 100% !important;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .continueBtn {
+    height: 44px !important;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 100% !important;
+  }
+}

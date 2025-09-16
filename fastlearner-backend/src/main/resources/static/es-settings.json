@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "edge_ngram_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 3,
+          "max_gram": 20,
+          "token_chars": ["letter"]
+        }
+      },
+      "analyzer": {
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "edge_ngram_tokenizer",
+          "filter": ["lowercase"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "ngram_analyzer",
+        "search_analyzer": "standard"
+      }
+    }
+  }
+}

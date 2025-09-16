@@ -1,0 +1,11 @@
+<svg id="图层_x0020_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21.599" height="21.599" viewBox="0 0 21.599 21.599">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="21.599" height="21.599" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Repeat_Grid_1" data-name="Repeat Grid 1" clip-path="url(#clip-path)">
+    <circle id="Ellipse_1289" data-name="Ellipse 1289" cx="10.799" cy="10.799" r="10.799" fill="#c9c9c9"/>
+  </g>
+  <path id="Path_107062" data-name="Path 107062" d="M4.7,10.762.75,6.535a1.44,1.44,0,1,1,2.1-1.966L5.9,7.829l4.822-4.506a1.444,1.444,0,0,1,.136-.112l2.268-2.119a1.44,1.44,0,0,1,1.966,2.1L8.166,9.669l-.007-.008L5.763,11.9,4.7,10.762Z" transform="translate(2.728 5.304)" fill="#fff" fill-rule="evenodd"/>
+</svg>

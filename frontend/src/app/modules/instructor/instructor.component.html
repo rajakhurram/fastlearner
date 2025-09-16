@@ -1,0 +1,992 @@
+<nz-layout>
+  <nz-sider class="sidebar-main" *ngIf="!navbarVisible" nzWidth="250px">
+    <div class="logo">
+      <img
+        width="165px"
+        (click)="routeToLandingPage()"
+        src="../../../assets/icons/FL-Logo (1).svg"
+        alt="Logo"
+      />
+    </div>
+    <ul nz-menu nzTheme="light" nzMode="inline">
+      <li
+        [nzSelected]="activeDashboard"
+        (click)="changeTab(InstructorTabs.DASHBOARD)"
+        nz-menu-item
+        [class.instructor-menu]="
+          selectedRoute == '/instructor/instructor-dashboard'
+        "
+      >
+        <img
+          class="icon"
+          src="../../../assets/icons/dashboard.svg"
+          alt="Dashboard"
+        />
+        <span
+          [ngClass]="{
+            'icon-text1': selectedRoute === '/instructor/instructor-dashboard',
+            'icon-text': selectedRoute !== '/instructor/instructor-dashboard'
+          }"
+          >Dashboard</span
+        >
+      </li>
+      <li
+        [nzSelected]="activeCourse"
+        (click)="changeTab(InstructorTabs.COURSE)"
+        nz-menu-item
+        [class.instructor-menu]="selectedRoute == '/instructor/course'"
+      >
+        <img
+          class="icon"
+          src="../../../assets/icons/create-course.svg"
+          alt="Create"
+        />
+        <span
+          [ngClass]="{
+            'icon-text1': selectedRoute === '/instructor/course',
+            'icon-text': selectedRoute !== '/instructor/course'
+          }"
+          >Create Course</span
+        >
+      </li>
+      <li
+        [nzSelected]="activePerformance"
+        (click)="changeTab(InstructorTabs.PERFORMANCE)"
+        nz-menu-item
+        [class.instructor-menu]="selectedRoute == '/instructor/performance'"
+      >
+        <img
+          class="icon"
+          src="../../../assets/icons/performance.svg"
+          alt="Performance"
+        />
+        <span
+          [ngClass]="{
+            'icon-text1': selectedRoute === '/instructor/performance',
+            'icon-text': selectedRoute !== '/instructor/performance'
+          }"
+          >Performance</span
+        >
+      </li>
+      <li
+        [class.instructor-menu]="activeGraderClasses || activeGraderAssessment"
+        nz-submenu
+        nzOpen="false"
+        [nzTitle]="AIGrader"
+        class="affiliate-li"
+      >
+        <ul>
+          <li
+            [ngClass]="{
+            'icon-text1': activeGraderClasses,
+            }"
+            [class.instructor-menu]="activeGraderClasses"
+            class="affiliate-nested-li affiliate-sub-menus"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Classes"
+            (click)="!hideGrader && changeTab(InstructorTabs.AI_GRADER_CLASSES)"
+            [nzDisabled]="hideGrader"
+          ></li>
+
+          <li
+            [ngClass]="{
+            'icon-text1': activeGraderAssessment,
+            }"
+            [class.instructor-menu]="activeGraderAssessment"
+            class="affiliate-nested-li affiliate-sub-menus"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Assessment"
+            (click)="
+              !hideGrader && changeTab(InstructorTabs.AI_GRADER_ASSESSMENTS)
+            "
+            [nzDisabled]="hideGrader"
+          ></li>
+        </ul>
+
+        <ng-template #AIGrader
+          ><span> <img src="../../../assets/icons/ai_grader_icon.svg" /> </span
+          ><span
+            style="padding-left: 10px"
+            class="icon-text"
+            [ngClass]="{
+              'icon-text1': activeGraderClasses || activeGraderAssessment,
+              'icon-text': !activeGraderClasses && !activeGraderAssessment
+            }"
+            >AI Grader</span
+          >
+          <span
+            (click)="openSubscriptionPlan()"
+            *ngIf="hideGrader"
+            style="font-size: 16px !important; color: white"
+            class="ml-4"
+            nz-icon
+            nzType="lock"
+            nzTheme="fill"
+          ></span>
+        </ng-template>
+
+        <ng-template #Classes
+          ><span></span
+          ><span
+            [ngClass]="{
+              'icon-text1': activeGraderClasses || activeGraderAssessment,
+              'icon-text': !activeGraderClasses && !activeGraderAssessment
+            }"
+            >Classes</span
+          >
+        </ng-template>
+      </li>
+      <li
+        [class.instructor-menu]="
+          activeAffiliateProfiles ||
+          activePremiumCourses ||
+          activePremiumStudents
+        "
+        (click)="openAffiliateTab()"
+        nz-submenu
+        nzOpen="false"
+        nzIcon="crown"
+        [nzTitle]="Premium"
+        class="affiliate-li"
+      >
+        <ul>
+          <li
+            [ngClass]="{
+            'icon-text1': activeAffiliateProfiles,
+            }"
+            [class.instructor-menu]="activeAffiliateProfiles"
+            class="affiliate-nested-li affiliate-sub-menus"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Affiliate Profiles"
+            (click)="
+              !hideAffiliate && changeTab(InstructorTabs.AFFILIATE_PROFILES)
+            "
+            [nzDisabled]="hideAffiliate"
+          ></li>
+
+          <li
+            [ngClass]="{
+            'icon-text1': activePremiumCourses,
+            }"
+            [class.instructor-menu]="activePremiumCourses"
+            class="affiliate-nested-li affiliate-sub-menus"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Premium Courses"
+            (click)="
+              !hideAffiliate && changeTab(InstructorTabs.PREMIUM_COURSES)
+            "
+            [nzDisabled]="hideAffiliate"
+          ></li>
+
+          <li
+            [ngClass]="{
+            'icon-text1': activePremiumStudents,
+          }"
+            [class.instructor-menu]="activePremiumStudents"
+            class="affiliate-nested-li affiliate-sub-menus"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Premium Students"
+            (click)="
+              !hideAffiliate && changeTab(InstructorTabs.PREMIUM_STUDENTS)
+            "
+            [nzDisabled]="hideAffiliate"
+          ></li>
+        </ul>
+
+        <ng-template #Premium
+          ><span></span
+          ><span
+            [ngClass]="{
+              'icon-text1':
+                activeAffiliateProfiles ||
+                activePremiumCourses ||
+                activePremiumStudents,
+              'icon-text':
+                !activeAffiliateProfiles &&
+                !activePremiumCourses &&
+                !activePremiumStudents
+            }"
+            >Premium</span
+          >
+          <span
+            (click)="openSubscriptionPlan()"
+            *ngIf="hideAffiliate"
+            style="font-size: 16px !important; color: white"
+            class="ml-4"
+            nz-icon
+            nzType="lock"
+            nzTheme="fill"
+          ></span>
+        </ng-template>
+      </li>
+      <li
+        [nzSelected]="activePayment"
+        (click)="changeTab(InstructorTabs.PAYMENT)"
+        nz-menu-item
+        [class.instructor-menu]="selectedRoute == '/instructor/payment'"
+      >
+        <img
+          class="icon"
+          src="../../../assets/icons/stripe-payment.svg"
+          alt="Notifications"
+        />
+        <span
+          [ngClass]="{
+            'icon-text1': selectedRoute === '/instructor/payment',
+            'icon-text': selectedRoute !== '/instructor/payment'
+          }"
+          >Payment</span
+        >
+      </li>
+      <li nz-menu-item (click)="signOut()" routerLinkActive="instructor-menu">
+        <img class="icon" src="../../../assets/icons/logout.svg" alt="Logout" />
+        <span>Logout</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <div class="side-bar-responsive" *ngIf="sideBarVisible">
+    <div class="container-div">
+      <div class="menu-responsive">
+        <div
+          *ngIf="!sideBarVisible"
+          (click)="sideBarToggle()"
+          class="sidebar-icon-menu"
+        >
+          <img src="../../../assets/icons/burger-menu.svg" alt="menu" />
+        </div>
+      </div>
+      <ul nz-menu nzTheme="light" class="side-bar-ul-items">
+        <li
+          [routerLink]="['instructor-dashboard']"
+          nz-menu-item
+          [class.instructor-menu]="
+            selectedRoute == '/instructor/instructor-dashboard'
+          "
+        >
+          <img
+            class="icon"
+            src="../../../assets/icons/dashboard.svg"
+            alt="Dashboard"
+          />
+          <span
+            [ngClass]="{
+              'icon-text1':
+                selectedRoute === '/instructor/instructor-dashboard',
+              'icon-text': selectedRoute !== '/instructor/instructor-dashboard'
+            }"
+            >Dashboard</span
+          >
+        </li>
+        <li
+          [routerLink]="['course']"
+          nz-menu-item
+          [class.instructor-menu]="selectedRoute == '/instructor/course'"
+        >
+          <img
+            class="icon"
+            src="../../../assets/icons/create-course.svg"
+            alt="Create Course"
+          />
+          <span
+            [ngClass]="{
+              'icon-text1': selectedRoute === '/instructor/course',
+              'icon-text': selectedRoute !== '/instructor/course'
+            }"
+            >Create Course</span
+          >
+        </li>
+        <li
+          [routerLink]="['performance']"
+          nz-menu-item
+          [class.instructor-menu]="selectedRoute == '/instructor/performance'"
+        >
+          <img
+            class="icon"
+            src="../../../assets/icons/performance.svg"
+            alt="Performance"
+          />
+          <span
+            [ngClass]="{
+              'icon-text1': selectedRoute === '/instructor/performance',
+              'icon-text': selectedRoute !== '/instructor/performance'
+            }"
+            >Performance</span
+          >
+        </li>
+        <li
+          [class.instructor-menu]="
+            activeGraderClasses || activeGraderAssessment
+          "
+          nz-submenu
+          nzOpen="false"
+          [nzTitle]="AIGrader"
+          class="affiliate-li"
+        >
+          <ul>
+            <li
+              [ngClass]="{
+            'icon-text1': activeGraderClasses,
+            }"
+              [class.instructor-menu]="activeGraderClasses"
+              class="affiliate-nested-li affiliate-sub-menus"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Classes"
+              (click)="
+                !hideGrader && changeTab(InstructorTabs.AI_GRADER_CLASSES)
+              "
+              [nzDisabled]="false"
+            ></li>
+
+            <li
+              [ngClass]="{
+            'icon-text1': activeGraderAssessment,
+            }"
+              [class.instructor-menu]="activeGraderAssessment"
+              class="affiliate-nested-li affiliate-sub-menus"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Assessment"
+              (click)="
+                !hideGrader && changeTab(InstructorTabs.AI_GRADER_ASSESSMENTS)
+              "
+              [nzDisabled]="false"
+            ></li>
+          </ul>
+
+          <ng-template #AIGrader
+            ><span>
+              <img src="../../../assets/icons/ai_grader_icon.svg" /> </span
+            ><span
+              style="padding-left: 10px"
+              class="icon-text"
+              [ngClass]="{
+                'icon-text1': activeGraderClasses || activeGraderAssessment,
+                'icon-text': !activeGraderClasses && !activeGraderAssessment
+              }"
+              >AI Grader</span
+            >
+          </ng-template>
+
+          <ng-template #Classes
+            ><span></span
+            ><span
+              [ngClass]="{
+                'icon-text1': activeGraderClasses || activeGraderAssessment,
+                'icon-text': !activeGraderClasses && !activeGraderAssessment
+              }"
+              >Classes</span
+            >
+            <span
+              (click)="openSubscriptionPlan()"
+              *ngIf="hideGrader"
+              style="font-size: 16px !important; color: white"
+              class="ml-4"
+              nz-icon
+              nzType="lock"
+              nzTheme="fill"
+            ></span>
+          </ng-template>
+        </li>
+        <li
+          [class.instructor-menu]="
+            activeAffiliateProfiles ||
+            activePremiumCourses ||
+            activePremiumStudents
+          "
+          (click)="openAffiliateTab()"
+          nz-submenu
+          nzOpen="false"
+          nzIcon="crown"
+          [nzTitle]="Premium"
+          class="affiliate-li"
+        >
+          <ul *ngIf="!hideAffiliate">
+            <li
+              [ngClass]="{
+            'icon-text1': activeAffiliateProfiles,
+            }"
+              [class.instructor-menu]="activeAffiliateProfiles"
+              class="affiliate-nested-li affiliate-sub-menus-mob"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Affiliate Profiles"
+              (click)="
+                !hideAffiliate && changeTab(InstructorTabs.AFFILIATE_PROFILES)
+              "
+              [nzDisabled]="hideAffiliate"
+            ></li>
+
+            <li
+              [ngClass]="{
+            'icon-text1': activePremiumCourses,
+            }"
+              [class.instructor-menu]="activePremiumCourses"
+              class="affiliate-nested-li affiliate-sub-menus-mob"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Premium Courses"
+              (click)="
+                !hideAffiliate && changeTab(InstructorTabs.PREMIUM_COURSES)
+              "
+              [nzDisabled]="hideAffiliate"
+            ></li>
+
+            <li
+              [ngClass]="{
+            'icon-text1': activePremiumStudents,
+          }"
+              [class.instructor-menu]="activePremiumStudents"
+              class="affiliate-nested-li affiliate-sub-menus-mob"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Premium Students"
+              (click)="
+                !hideAffiliate && changeTab(InstructorTabs.PREMIUM_STUDENTS)
+              "
+              [nzDisabled]="hideAffiliate"
+            ></li>
+          </ul>
+
+          <ng-template #Premium
+            ><span></span
+            ><span
+              [ngClass]="{
+                'icon-text1':
+                  activeAffiliateProfiles ||
+                  activePremiumCourses ||
+                  activePremiumStudents,
+                'icon-text':
+                  !activeAffiliateProfiles &&
+                  !activePremiumCourses &&
+                  !activePremiumStudents
+              }"
+              >Premium</span
+            >
+            <span
+              (click)="openSubscriptionPlan()"
+              *ngIf="hideAffiliate"
+              style="font-size: 16px !important; color: white"
+              class="ml-4"
+              nz-icon
+              nzType="lock"
+              nzTheme="fill"
+            ></span>
+          </ng-template>
+        </li>
+        <!-- <li
+          (click)="openAffiliateTab()"
+          nz-submenu
+          nzOpen="false"
+          nzIcon="team"
+          [nzTitle]="affiliate"
+          class="affiliate-li"
+        >
+          <ul>
+            <li
+              class="affiliate-nested-li"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Affiliate Profiles"
+              nzIcon="user"
+              (click)="changeTab(InstructorTabs.AFFILIATE_PROFILES)"
+            ></li>
+
+            <li
+              class="affiliate-nested-li"
+              nz-submenu
+              nzOpen="false"
+              nzTitle="Premium Courses"
+              nzIcon="crown"
+              (click)="changeTab(InstructorTabs.PREMIUM_COURSES)"
+            ></li>
+          </ul>
+
+          <ng-template #affiliate
+            ><span></span
+            ><span
+              [ngClass]="{
+                'icon-text1': selectedRoute === '/instructor/affiliate',
+                'icon-text': selectedRoute !== '/instructor/affiliate'
+              }"
+              >Affiliate</span
+            ></ng-template
+          >
+        </li>
+        <li
+          [routerLink]="['premium-student']"
+          nz-menu-item
+          [class.instructor-menu]="
+            selectedRoute == '/instructor/premium-student'
+          "
+        >
+          <img
+            class="icon"
+            src="../../../assets/icons/Student-blue.svg"
+            alt="Premium Students"
+          />
+          <span
+            [ngClass]="{
+              'icon-text1': selectedRoute === '/instructor/premium-student',
+              'icon-text': selectedRoute !== '/instructor/premium-student'
+            }"
+          >
+            Premium Students
+          </span>
+        </li> -->
+        <li
+          [nzSelected]="activePayment"
+          (click)="changeTab(InstructorTabs.PAYMENT)"
+          nz-menu-item
+          [class.instructor-menu]="selectedRoute == '/instructor/payment'"
+        >
+          <img
+            class="icon"
+            src="../../../assets/icons/notification.svg"
+            alt="Notifications"
+          />
+          <span
+            [ngClass]="{
+              'icon-text1': selectedRoute === '/instructor/payment',
+              'icon-text': selectedRoute !== '/instructor/payment'
+            }"
+            >Payment</span
+          >
+        </li>
+        <li nz-menu-item (click)="signOut()" routerLinkActive="instructor-menu">
+          <img
+            class="icon"
+            src="../../../assets/icons/logout.svg"
+            alt="Logout"
+          />
+          <span>Logout</span>
+        </li>
+      </ul>
+    </div>
+    <div class="burger-icon-cross">
+      <img
+        style="height: 20px"
+        (click)="sideBarToggle()"
+        src="../../../assets/icons/cross.svg"
+      />
+    </div>
+  </div>
+  <nz-layout>
+    <nz-header class="sidebar-main">
+      <ul class="nav-items">
+        <li>
+          <button
+            *ngIf="selectedRoute !== '/instructor/course'"
+            class="create-course-btn"
+            nz-button
+            nzType="default"
+            (click)="routeToCreateCourse()"
+          >
+            Create Course
+          </button>
+        </li>
+        <li (click)="routeToStudentDashboard()"><a>Student</a></li>
+        <li>
+          <div>
+            <button
+              (nzVisibleChange)="notificationToggle($event)"
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="menuNotification"
+              [nzVisible]="isNotificationDropdownVisible"
+              class="notification-nav"
+              (click)="removeNotificationCount()"
+              nz-button
+            >
+              <div class="notification-icon-container">
+                <img
+                  height="30px"
+                  class="ml-5px"
+                  src="../../../../assets/icons/notifications.svg"
+                />
+                <div
+                  *ngIf="notificationCount > 0"
+                  class="notification-style notification-count"
+                  [class.notification-count-plus]="notificationCount > 4"
+                >
+                  <span style="font-size: 10px"
+                    >{{ notificationCount > 4 ? "4+" : notificationCount }}
+                  </span>
+                </div>
+              </div>
+            </button>
+          </div>
+        </li>
+
+        <li>
+          <button
+            *ngIf="!loggedInUser?.profilePicture"
+            nz-dropdown
+            nzTrigger="click"
+            [nzDropdownMenu]="menuUser"
+            class="ml-5px side-nav-button"
+            nz-button
+            nzType="primary"
+            nzShape="circle"
+          >
+            {{ getInitialOfLoggedInUser | initialCharactor }}
+          </button>
+          <nz-avatar
+            nz-dropdown
+            nzAlt="Profile"
+            nzTrigger="click"
+            [nzDropdownMenu]="menuUser"
+            *ngIf="loggedInUser?.profilePicture"
+            [nzSize]="46"
+            nzIcon="user"
+            style="cursor: pointer"
+            class="sidebar-nav-button"
+            [nzSrc]="loggedInUser?.profilePicture"
+          ></nz-avatar>
+        </li>
+      </ul>
+    </nz-header>
+    <div class="menu-responsive">
+      <div (click)="sideBarToggle()" class="sidebar-icon-menu">
+        <img
+          *ngIf="!sideBarVisible"
+          src="../../../assets/icons/burger-menu.svg"
+        />
+      </div>
+
+      <div class="logo">
+        <img
+          (click)="routeToLandingPage()"
+          width="250px"
+          src="../../../assets/icons/FL-Logo (1).svg"
+        />
+      </div>
+
+      <div
+        *ngIf="!menuVisible"
+        (click)="menuToggle()"
+        style="
+          display: flex;
+          align-items: center;
+          position: absolute;
+          right: 15px;
+          margin-top: 18px;
+        "
+      >
+        <button
+          *ngIf="!loggedInUser?.profilePicture"
+          class="sidebar-nav-button-navbar"
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+        >
+          {{ getInitialOfLoggedInUser | initialCharactor }}
+        </button>
+        <nz-avatar
+          *ngIf="loggedInUser?.profilePicture"
+          [nzSize]="36"
+          nzAlt="Profile"
+          nzIcon="user"
+          class="sidebar-nav-button-navbar"
+          [nzSrc]="loggedInUser?.profilePicture"
+        ></nz-avatar>
+      </div>
+    </div>
+
+    <nz-layout class="menu-responsive-view" *ngIf="menuVisible">
+      <div class="container-div-menu">
+        <div class="user-profile-side-bar">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+            "
+          >
+            <div style="display: flex">
+              <button
+                *ngIf="!loggedInUser?.profilePicture"
+                class="sidebar-nav-button"
+                nz-button
+                nzType="primary"
+                nzShape="circle"
+              >
+                {{ getInitialOfLoggedInUser | initialCharactor }}
+              </button>
+              <nz-avatar
+                *ngIf="loggedInUser?.profilePicture"
+                [nzSize]="46"
+                nzIcon="user"
+                class="sidebar-nav-button"
+                nzAlt="Profile"
+                [nzSrc]="loggedInUser?.profilePicture"
+              ></nz-avatar>
+              <div class="user-profile-side-text">
+                <p>{{ loggedInUser?.fullName }}</p>
+                <p>{{ loggedInUser?.email }}</p>
+                <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ul class="nav-items-responsive">
+          <li (click)="routeToInstructorProfile()" class="list-style">
+            <a>Public Profile</a>
+            <img src="../../../../assets/icons/side-arrow.svg" alt="Arrow" />
+          </li>
+          <li class="list-style" (click)="routeToStudentDashboard()">
+            <a>Student</a>
+            <img src="../../../../assets/icons/side-arrow.svg" alt="Arrow" />
+          </li>
+        </ul>
+      </div>
+      <div
+        *ngIf="menuVisible"
+        style="margin-left: 8% !important"
+        class="burger-icon-cross mobile-view-icon"
+      >
+        <img
+          style="height: 20px"
+          (click)="menuToggle()"
+          src="../../../assets/icons/cross.svg"
+        />
+      </div>
+    </nz-layout>
+
+    <nz-content>
+      <nz-breadcrumb></nz-breadcrumb>
+      <router-outlet></router-outlet>
+    </nz-content>
+    <nz-footer></nz-footer>
+  </nz-layout>
+</nz-layout>
+
+<nz-dropdown-menu #menuUser="nzDropdownMenu">
+  <div id="user-profile-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="user-profile">
+          <div>
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              class="side-nav-button1"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="46"
+              nzIcon="user"
+              class="side-nav-button1"
+              nzAlt="Profile"
+              [nzSrc]="loggedInUser?.profilePicture"
+              (click)="routeToInstructorProfile()"
+            ></nz-avatar>
+          </div>
+          <div class="user-profile-text">
+            <p>{{ loggedInUser?.fullName }}</p>
+            <p>{{ loggedInUser?.email }}</p>
+            <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+          </div>
+        </div>
+        <li nz-menu-divider></li>
+        <li nz-menu-item (click)="routeToInstructorProfile()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/profile-menu.svg"
+          />
+          Public Profile
+        </li>
+        <li nz-menu-item (click)="routeToNotificationPage()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/noti-menu.svg"
+          />Notifications
+        </li>
+        <li nz-menu-item (click)="routeToStudentDashboard()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/student-menu.svg"
+          />Student
+        </li>
+        <li id="subscription" (click)="routeToSubscription()" nz-menu-item>
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/subscription-menu.svg"
+          />
+          Subscriptions
+        </li>
+        <li nz-menu-item (click)="signOut()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/logout.svg"
+          />Logout
+        </li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuUserMobile="nzDropdownMenu">
+  <div id="user-profile-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="user-profile">
+          <div>
+            <button
+              class="side-nav-button1"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+          </div>
+          <div class="user-profile-text">
+            <p>{{ loggedInUser?.fullName }}</p>
+            <p>{{ loggedInUser?.email }}</p>
+            <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+          </div>
+        </div>
+        <li nz-menu-divider></li>
+        <li nz-menu-item (click)="routeToInstructorProfile()">
+          Public Profile
+        </li>
+        <li nz-menu-item (click)="routeToNotificationPage()">Notifications</li>
+        <li nz-menu-item (click)="routeToStudentDashboard()">Student</li>
+        <li nz-menu-item (click)="signOut()">Logout</li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuNotification="nzDropdownMenu">
+  <div id="my-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="notification-content-heading">
+          <div class="notification-text">
+            <p class="font-14 mb-1">Notifications</p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount > 0"
+            >
+              You have {{ notificationCount }} new notifications
+            </p>
+            <p class="notification-message font-10 mb-2">New notifications</p>
+          </div>
+        </div>
+
+        <div
+          (click)="redirect(notification)"
+          class="remove-space cursor-pointer"
+          [class.border-bottom]="i != notifications.length - 1"
+          *ngFor="let notification of notifications; let i = index"
+        >
+          <div
+            class="notification-box pb-4"
+            [class.unseen-notification]="!notification.read"
+          >
+            <div class="notification-content">
+              <div class="notification-text">
+                <div style="line-height: 15px">
+                  <p class="color-blue notification-message font-12 mb-1">
+                    {{ notification.senderName }}
+                  </p>
+                  <p class="notification-message font-12 mb-2">
+                    {{ notification.content }}
+                  </p>
+                </div>
+                <span class="font-10 mb-0 time-text">{{
+                  notification.creationDate
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="notifications?.length">
+          <p
+            class="text-align-center mt-4 mb-1 cursor-pointer"
+            (click)="routeToNotificationPage()"
+          >
+            See All Notifications
+          </p>
+        </div>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #menuNotificationMobile="nzDropdownMenu">
+  <div id="my-course-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="notification-content-heading">
+          <div class="notification-text">
+            <p class="font-14 mb-1">Notifications</p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount > 0"
+            >
+              You have {{ notificationCount }} new notifications
+            </p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount == 0"
+            >
+              No new notifications
+            </p>
+          </div>
+        </div>
+
+        <div
+          (click)="redirect(notification)"
+          class="remove-space cursor-pointer"
+          [class.border-bottom]="i != notifications.length - 1"
+          *ngFor="let notification of notifications; let i = index"
+        >
+          <div
+            class="notification-box pb-4"
+            [class.unseen-notification]="!notification.read"
+          >
+            <div class="notification-content">
+              <div class="notification-text">
+                <div style="line-height: 15px">
+                  <p class="color-blue notification-message font-12 mb-1">
+                    {{ notification.senderName }}
+                  </p>
+                  <p class="notification-message font-12 mb-2">
+                    {{ notification.content }}
+                  </p>
+                </div>
+                <span class="font-10 mb-0 time-text">{{
+                  notification.creationDate
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="notifications?.length">
+          <p
+            class="text-align-center mt-4 mb-1 cursor-pointer"
+            (click)="routeToNotificationPage()"
+          >
+            See All Notifications
+          </p>
+        </div>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>

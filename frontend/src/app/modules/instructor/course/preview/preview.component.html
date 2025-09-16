@@ -1,0 +1,393 @@
+<div class="course-information-area border-radius mt-1">
+  <form [formGroup]="courseInformationData">
+    <div nz-row class="">
+      <h3 class="font-bold ml-1 pt-4">
+        {{
+          selectedContentType == courseContentType.COURSE ? "Course" : "Test"
+        }}
+        information
+      </h3>
+    </div>
+
+    <div nz-row>
+      <div
+        class="back-color border-radius margin-class-heading"
+        nz-col
+        nzLg="11"
+        nzMd="11"
+        nzSm="11"
+        nzXs="24"
+      >
+        <p class="heading font-bold color-blue ml-2 mt-1">Title</p>
+        <h5 class="ml-2 color-black break-word mr-2">
+          {{ courseInformationData.get("courseTitle")?.value }}
+        </h5>
+      </div>
+      <div
+        class="back-color border-radius margin-class"
+        nz-col
+        nzLg="12"
+        nzMd="12"
+        nzSm="12"
+        nzXs="24"
+      >
+        <p class="heading font-bold color-blue ml-2 mt-1">Category</p>
+        <h5 class="ml-2 color-black break-word mr-2">
+          {{ courseInformationData.get("courseCategory")?.value.name }}
+        </h5>
+      </div>
+    </div>
+
+    <div nz-row class="mt-1">
+      <div
+        class="back-color border-radius margin-class-heading"
+        nz-col
+        nzLg="11"
+        nzMd="11"
+        nzSm="11"
+        nzXs="24"
+      >
+        <p class="heading font-bold color-blue ml-2 mt-1">
+          About this
+          {{
+            selectedContentType == courseContentType.COURSE ? "course" : "test"
+          }}
+        </p>
+        <h5 class="ml-2 color-black break-word mr-2">
+          {{ courseInformationData.get("courseHeadline")?.value }}
+        </h5>
+      </div>
+      <div
+        class="back-color border-radius margin-class"
+        nz-col
+        nzLg="12"
+        nzMd="12"
+        nzSm="12"
+        nzXs="24"
+      >
+        <p class="heading font-bold color-blue ml-2 mt-1">Level</p>
+        <h5 class="ml-2 color-black break-word mr-2">
+          {{ courseInformationData.get("courseLevel")?.value.name }}
+        </h5>
+      </div>
+    </div>
+
+    <div nz-row class="mt-1">
+      <div class="back-color border-radius ml-1" style="width: 98%">
+        <p class="heading font-bold color-blue ml-1 mt-1">Description</p>
+        <h5
+          id="description"
+          class="ml-1 break-word color-black mr-1"
+          [innerHTML]="description"
+        ></h5>
+      </div>
+    </div>
+
+    <div nz-row class="mt-1">
+      <div class="back-color border-radius ml-1 mr-1 w-100">
+        <p class="heading font-bold color-blue ml-1 mt-1">Hashtags</p>
+        <h5
+          class="display-inline-block tags ml-1 break-word mr-1"
+          *ngFor="let tagCtrl of courseTagArray.controls; let i = index"
+        >
+          #{{ tagCtrl.get("name")?.value }}
+        </h5>
+      </div>
+    </div>
+
+    <div nz-row class="mt-1">
+      <div class="back-color border-radius ml-1" style="width: 98%">
+        <p class="heading font-bold color-blue ml-1 mt-1">Prerequisite</p>
+        <h5 class="ml-1 color-black break-word mr-1">
+          {{ courseInformationData.get("prerequisite")?.value }}
+        </h5>
+      </div>
+    </div>
+
+    <div nz-row class="mt-1">
+      <div class="back-color border-radius ml-1" style="width: 98%">
+        <p class="heading font-bold color-blue ml-1 mt-1">
+          What will students learn in your
+          {{
+            selectedContentType == courseContentType.COURSE ? "course" : "test"
+          }}?*
+        </p>
+        <h5
+          class="ml-1 color-black break-word mr-1"
+          *ngFor="
+            let summary of courseInformationData.get('courseSummaries')?.value
+          "
+        >
+          <ul>
+            <li>{{ summary.courseSummaryInfo }}</li>
+          </ul>
+        </h5>
+      </div>
+    </div>
+
+    <div nz-row style="align-items: baseline" class="mt-1 mb-1" [nzGutter]="12">
+      <div
+        class="border-radius margin-bottom"
+        nz-col
+        nzLg="12"
+        nzMd="12"
+        nzSm="12"
+        nzXs="24"
+      >
+        <p class="heading font-bold color-blue display-inline-flex ml-2 mt-1">
+          Preview Video
+        </p>
+
+        <div style="min-height: 250px; max-height: 250px" class="ml-2">
+          <app-video-player
+            *ngIf="previewVideo?.videoUrl"
+            #videoPlayerElement
+            [currentSelectedTopic]="previewVideo"
+            [autoPlayValue]="false"
+            [isTooltipVisible]="isTooltipVisible"
+            [customSize]="true"
+          ></app-video-player>
+
+          <img
+            *ngIf="!previewVideo?.videoUrl"
+            class="preview"
+            [src]="videoSrc"
+            alt="Preview"
+          />
+        </div>
+      </div>
+      <div
+        class="border-radius margin-bottom"
+        nz-col
+        nzLg="12"
+        nzMd="12"
+        nzSm="12"
+        nzXs="24"
+      >
+        <p class="heading font-bold color-blue display-inline-flex ml-2 mt-1">
+          Thumbnail
+        </p>
+
+        <div style="min-height: 250px; max-height: 250px" class="mr-2">
+          <img
+            class="image-class"
+            *ngIf="courseInformationData.get('thumbnailPath')?.value"
+            [src]="courseInformationData.get('thumbnailPath')?.value"
+          />
+          <img
+            class="thumbnail h-100"
+            *ngIf="!courseInformationData.get('thumbnailPath')?.value"
+            [src]="imageSrc"
+            alt="Thumbnail"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="mt-1" *ngFor="let section of sectionsData; let i = index">
+  <ng-container *ngIf="!section.delete">
+    <div nz-row>
+      <div nz-col [nzSpan]="24" style="max-width: 100%">
+        <h3 class="font-bold break-word">
+          Section {{ section.level }}: {{ section.name }}
+        </h3>
+      </div>
+    </div>
+
+    <div class="back-color" *ngFor="let topic of section.topics; let j = index">
+      <ng-container *ngIf="topic.selectedContentType != '' && !topic.delete">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="font-16 font-bold color-blue mt-1 ml-1">
+              Topic {{ topic.level }}
+            </p>
+            <h5 class="mt--1 ml-1 color-black">{{ topic.name }}</h5>
+          </div>
+        </div>
+
+        <ng-container *ngIf="topic.selectedContentType == typeArticle">
+          <hr class="quiz-seperator ml-1 mr-1" />
+          <div class="mt-1" nz-row>
+            <nz-table
+              nzTemplateMode
+              class="w-100 table-class"
+              *ngIf="topic.article.articleDocumnetUrl"
+            >
+              <thead>
+                <tr>
+                  <th class="font-bold back-color color-blue">File Name</th>
+                  <th class="font-bold back-color color-blue">File Type</th>
+                  <th class="font-bold back-color color-blue">Date</th>
+                  <th class="font-bold back-color color-blue">Content type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-bold back-color color-black w-50">
+                    {{ topic.article.articleFileName }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.article.articleFileType }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.article.articleDate }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.selectedContentType }}
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+          <div class="mt-2" nz-row>
+            <div nz-col nzSpan="24">
+              <p
+                id="description"
+                class="ml-1 color-black"
+                [innerHTML]="topic.article.content"
+              ></p>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="topic.selectedContentType == typeVideo">
+          <hr class="quiz-seperator ml-1 mr-1" />
+          <div nz-row>
+            <nz-table nzTemplateMode class="w-100 table-class">
+              <thead>
+                <tr>
+                  <th class="font-bold back-color color-blue">File Name</th>
+                  <th class="font-bold back-color color-blue">File Type</th>
+                  <th class="font-bold back-color color-blue">Date</th>
+                  <th class="font-bold back-color color-blue">Content type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="topic.video.videoData.videoFileType">
+                  <td class="font-bold back-color color-black w-50">
+                    {{ topic.video.videoData.videoFileName }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.video.videoData.videoFileType }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.video.videoData.date }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.selectedContentType }}
+                  </td>
+                </tr>
+                <tr *ngFor="let document of topic.video.documentData.documents">
+                  <td class="font-bold back-color color-black w-50">
+                    {{ document.documentFileName }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ document.documentFileType }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ document.date }}
+                  </td>
+                  <td class="font-bold back-color color-black">
+                    {{ topic.selectedContentType }}
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="topic.selectedContentType == typeQuiz">
+          <hr class="quiz-seperator ml-1 mr-1" />
+          <ng-container
+            *ngFor="let question of topic.quiz.questions; let k = index"
+          >
+            <ng-container *ngIf="!question.delete">
+              <div nz-row>
+                <p class="font-16 font-bold color-blue mt-1 ml-1">
+                  {{ question.label }}
+                </p>
+              </div>
+              <div nz-row>
+                <h5 class="ml-1 color-black">{{ question.ques }}</h5>
+              </div>
+
+              <div nz-row>
+                <p
+                  class="display inline-block font-16 font-bold color-blue mt-1 ml-1"
+                >
+                  Options
+                </p>
+                <h5
+                  class="display-inline-block color-black ml-3 mt-1 pt-4"
+                  [class.color-blue]="answer?.isCorrectAnswer"
+                  *ngFor="let answer of question.answers"
+                >
+                  <ng-container *ngIf="!answer.delete">
+                    <span
+                      *ngIf="answer?.isCorrectAnswer"
+                      class="font-14"
+                      nz-icon
+                      nzType="check"
+                      nzTheme="outline"
+                    ></span>
+                    {{ answer.ans }}
+                  </ng-container>
+                </h5>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<div nz-row>
+  <div class="mt-1 ml-1 display-inline-block">
+    <label nz-checkbox [(ngModel)]="course.certificateEnabled"></label>
+  </div>
+
+  <div class="mt-1 ml-1 display-inline-block">
+    <span class="font-bold">Issue a certificate for this course</span>
+  </div>
+
+  <div class="mt-1 ml-1" *ngIf="course.certificateEnabled == true">
+    <span
+      nz-tooltip
+      nzTooltipTitle="Uncheck the box, If you want to upload a free course that doesn't require a certificate."
+      nzTooltipPlacement="top"
+      nz-icon
+      nzType="info-circle"
+      nzTheme="outline"
+    ></span>
+  </div>
+</div>
+
+<div nz-row class="mt-3 justify-content">
+  <div nz-col>
+    <button
+      class="backBtn"
+      nz-button
+      nzType="primary"
+      nzGhost
+      (click)="steps(1)"
+    >
+      Back
+    </button>
+  </div>
+
+  <div nz-col>
+    <button
+      class="continueBtn"
+      nz-button
+      nzType="primary"
+      nzGhost
+      (click)="publishCourse()"
+    >
+      Publish
+    </button>
+  </div>
+</div>

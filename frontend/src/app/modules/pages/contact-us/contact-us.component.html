@@ -1,0 +1,189 @@
+<div class="contact-us-main-container">
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <img width="100%" src="../../../../assets/images/contact-us.png" alt="" />
+      <div class="contact-us-main-heading text-overlay">
+        <h1>Get in Touch</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-us-container">
+    <div nz-row>
+      <div nz-col nzSpan="23"></div>
+    </div>
+    <div nz-row [nzGutter]="16" class="contact-card">
+      <div nz-col nzXs="24" nzLg="14" nzXXl="14">
+        <nz-card class="card" class="contact-us-rigth-card">
+          <div class="sign-up-form">
+            <form
+              [formGroup]="contactUsForm"
+              autocomplete="off"
+              class="signup-form"
+              (ngSubmit)="onFormSubmit($event)"
+            >
+              <nz-form-item>
+                <nz-form-control>
+                  <label>Full Name</label>
+                  <nz-input-group>
+                    <input
+                      class="input-field"
+                      type="text"
+                      nz-input
+                      formControlName="fullName"
+                      placeholder="Enter full name"
+                    />
+                  </nz-input-group>
+                  <div
+                    *ngIf="
+                      contactUsForm.get('fullName').invalid &&
+                      contactUsForm.get('fullName').dirty
+                    "
+                  >
+                    <div
+                      style="color: red"
+                      *ngIf="contactUsForm.get('fullName').errors['required']"
+                    >
+                      Full Name is required.
+                    </div>
+                    <div
+                      style="color: red"
+                      *ngIf="contactUsForm.get('fullName').errors['maxlength']"
+                    >
+                      Full Name cannot be greater than 50 characters long.
+                    </div>
+                  </div>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <label>Email</label>
+                  <nz-input-group>
+                    <input
+                      class="input-field"
+                      type="email"
+                      nz-input
+                      formControlName="email"
+                      placeholder="Enter email address"
+                      (input)="validateEmail($event)"
+                    />
+                  </nz-input-group>
+                  <div
+                    *ngIf="!emailValid"
+                    class="error-message"
+                    style="color: red"
+                  >
+                    Please enter a valid email address.
+                  </div>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please enter your phone number">
+                  <label>Phone Number</label>
+                  <nz-input-group>
+                    <input
+                      class="input-field"
+                      type="text"
+                      nz-input
+                      maxlength="15"
+                      formControlName="phoneNumber"
+                      placeholder="Enter phone number"
+                      (keypress)="onlyNumberAllowed($event)"
+                    />
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please enter your query">
+                  <label>Description</label>
+                  <nz-textarea-count [nzMaxCharacterCount]="2000">
+                    <textarea
+                      formControlName="description"
+                      nz-input
+                      rows="3"
+                      placeholder="Share your question or query. We’ll get back to you ASAP"
+                      (input)="validateDescription($event)"
+                    ></textarea>
+                  </nz-textarea-count>
+                </nz-form-control>
+              </nz-form-item>
+
+              <div class="button-sign-up">
+                <button
+                  [disabled]="isSubmit"
+                  nz-button
+                  class="contact-us-submit-btn"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col nzXs="24" nzLg="10" nzXXl="10">
+        <nz-card class="contact-us-rigth-card card">
+          <div class="contact-us-rigth-card-heading">
+            <h2>We are Here to Help You</h2>
+          </div>
+          <div class="contact-us-rigth-card-content">
+            <p>
+              Our team is one click away from you. Contact us through the
+              details below, and we’d love to answer.
+            </p>
+          </div>
+          <div class="card-content-img">
+            <div class="icons-padding">
+              <img
+                height="40px"
+                src="../../../../assets/icons/phone.svg"
+                alt=""
+              /><span class="content-style">Mobile : +1 (510) 935-3636 </span>
+            </div>
+            <div class="icons-padding">
+              <img
+                height="40px"
+                src="../../../../assets/icons/mail.svg"
+                alt=""
+              /><span class="content-style"
+                ><p>contactus&#64;fastlearner.ai</p></span
+              >
+            </div>
+            <div class="icons-padding">
+              <img
+                height="40px"
+                src="../../../../assets/icons/location.svg"
+                alt=""
+              /><span class="content-style">
+                10209 Trail Blaze Ct, Elk Grove, CA 95757</span
+              >
+            </div>
+          </div>
+          <!--TODO: <div class="social-media-icons">
+            <img
+              style="cursor: pointer"
+              (click)="routeToFacebook()"
+              height="60px"
+              width="60px"
+              src="../../../../assets/icons/facebook-colored.svg"
+            />
+            <img
+              style="cursor: pointer"
+              height="60px"
+              width="60px"
+              src="../../../../assets/icons/google-colored.svg"
+            />
+
+            <img
+              style="cursor: pointer"
+              (click)="routeToLinkedIn()"
+              height="60px"
+              width="60px"
+              src="../../../../assets/icons/linkedin-colored.svg"
+            />
+          </div> -->
+        </nz-card>
+      </div>
+    </div>
+  </div>
+</div>

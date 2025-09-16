@@ -1,0 +1,123 @@
+::ng-deep .ant-steps-item-finish .ant-steps-item-icon {
+  border-color: #fe4a55;
+  background-color: #fe4a55;
+}
+
+::ng-deep .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: white;
+}
+
+.margin-class {
+  margin-left: 8.33333333%;
+}
+
+::ng-deep
+  .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-icon {
+  background: #ffb7bb;
+  border: none;
+}
+
+::ng-deep
+  .ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title::after {
+  background-color: #fe4a55;
+}
+
+::ng-deep
+  .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-description {
+  color: #212189;
+  font-size: 13px;
+  font-weight: 600;
+  //word-break: break-all !important;
+}
+::ng-deep
+  .ant-steps-item-wait
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-description {
+  color: #212189;
+  font-size: 13px;
+  // font-weight: 600;
+
+  //word-break: break-all !important;
+}
+::ng-deep
+  .ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-description {
+  color: #212189;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+::ng-deep .ant-steps-item-icon .ant-steps-icon {
+  top: 6.5px !important;
+}
+
+::ng-deep
+  .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-icon {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+::ng-deep .ant-steps-item-wait .ant-steps-item-icon {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+::ng-deep .ant-steps-item-finish .ant-steps-item-icon {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+:host ::ng-deep .ant-steps-item-title::after {
+  height: 3px !important;
+}
+@media screen and (max-width: 600px) {
+  .responsive-row {
+    flex-direction: column;
+  }
+
+  .margin-class {
+    margin-left: 0px;
+  }
+
+  :host ::ng-deep .ant-steps-item-content {
+    display: block !important;
+        word-wrap: break-word;
+        white-space: break-spaces;
+  }
+}
+
+:host ::ng-deep .ant-steps-item-container {
+  display : flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 880px ) {
+  :host ::ng-deep .ant-steps-item-container {
+    display: contents;
+  }
+  :host ::ng-deep .ant-steps-item-content {
+    display: block !important;
+    word-wrap: break-word;
+    white-space: break-spaces;
+  }
+  
+}
+
+@media screen and (max-width: 550px ) {
+  :host ::ng-deep .ant-steps-item-title {
+    line-height: 24px !important;
+  }
+}

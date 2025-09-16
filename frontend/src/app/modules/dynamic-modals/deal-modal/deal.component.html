@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="deal">
+    <h4>A Special Gift Awaits Before You Leave!</h4>
+    <p>Do you know that we have an Annual Plan for you.</p>
+    <img
+      style="width: fit-content; align-self: center"
+      class="image-class"
+      src="../../../../assets/icons/deal.svg"
+    />
+  </div>
+  <div class="deal-actions">
+    <button
+      (click)="openSubscriptionPlan()"
+      nz-button
+      class="signup-form-button"
+      [nzType]="'primary'"
+    >
+      Accept this offer
+    </button>
+    <button
+      (click)="cancelSubscription()"
+      nz-button
+      class="button"
+      [nzType]="'primary'"
+    >
+      Cancel Subscription anyway
+    </button>
+  </div>
+</div>

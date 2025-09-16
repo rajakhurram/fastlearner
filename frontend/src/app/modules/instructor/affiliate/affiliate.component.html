@@ -1,0 +1,45 @@
+<div class="top-heading display-flex" id="top">
+  <h3>Affiliates</h3>
+</div>
+
+<div class="container">
+  <nz-card [ngStyle]="{}" class="card">
+    <ng-container *ngIf="!showLoader">
+      <div nz-row>
+        <div class="w-50">
+          <app-search-filter
+            [config]="searchFilter"
+            (searchCallBack)="searchCallBack($event)"
+            (clearCallBack)="onSearchClear()"
+          >
+          </app-search-filter>
+        </div>
+
+        <div class="ml-auto">
+          <app-button
+            [config]="buttonConfig"
+            [buttonText]="'Add Affiliate'"
+            (buttonCallBack)="addAffiliate(affiliateMode.ADD)"
+          >
+          </app-button>
+        </div>
+      </div>
+
+      <div nz-row class="mt-4 display-block">
+        <app-table
+          [tableConfig]="tableConfig"
+          (action)="handleTableAction($event)"
+          (routeAction)="onRowClick($event)"
+          (pageChange)="handlePageChange($event)"
+        >
+        </app-table>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showLoader">
+      <div class="spinner-container">
+        <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
+      </div>
+    </ng-container>
+  </nz-card>
+</div>

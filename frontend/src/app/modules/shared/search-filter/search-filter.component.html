@@ -1,0 +1,28 @@
+<nz-input-group
+  class="input-search"
+  [nzSuffix]="suffixIconSearch"
+  nzSize="large"
+  [ngStyle]="{ width: config.width, height: config.height }"
+>
+  <input
+    type="text"
+    nz-input
+    [placeholder]="config.placeHolder"
+    (keyup.enter)="callBackFn()"
+    [(ngModel)]="input"
+  />
+</nz-input-group>
+<ng-template #suffixIconSearch>
+  <span
+    class="cursor-pointer clear-icon"
+    nz-icon
+    nzType="close-circle"
+    (click)="clearInput()"
+  ></span>
+  <span
+    style="color: #212189"
+    nz-icon
+    nzType="search"
+    (click)="callBackFn()"
+  ></span>
+</ng-template>

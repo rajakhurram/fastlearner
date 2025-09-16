@@ -1,0 +1,22 @@
+<div class="display-flex mt-1">
+  <div style="width: 45%">
+    <app-search-dropdown
+      #classDropdown
+      [config]="searchClassDropdownConfig"
+      (searchCallBack)="searchClassCallBack($event)"
+      (selectedCallBack)="selectedClassCallBack($event)"
+      (loadMore)="loadMoreClassData()"
+    ></app-search-dropdown>
+  </div>
+
+  <div style="width: 45%" class="ml-4">
+    <app-search-dropdown
+      #assessmentDropdown
+      [config]="searchAssessmentDropdownConfig"
+      (searchCallBack)="searchAssessmentCallBack($event)"
+      (selectedCallBack)="selectedAssessmentCallBack($event)"
+      (loadMore)="loadMoreAssessmentData()"
+    >
+    </app-search-dropdown>
+  </div>
+</div>

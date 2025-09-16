@@ -1,0 +1,265 @@
+.grader-results-header h3 {
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.heading h3 {
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+}
+
+:host ::ng-deep .ant-table-thead > tr > th {
+  background: linear-gradient(to bottom, #edf6ff, #dae8f8);
+  color: #212189;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.submission-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.create-course-btn-1 {
+  border: #212189 1px solid;
+  background: #212189;
+  border-radius: 4px;
+  color: #fff;
+  height: 45px;
+  padding: 10px 20px;
+}
+
+.create-course-btn-1:hover {
+  background: linear-gradient(180deg, #212189, #1d1d9c);
+}
+
+.quiz-seperator {
+  color: #707070 !important;
+}
+
+.top-bar {
+  display: flex;
+  padding: 10px 20px;
+  flex-direction: column;
+}
+
+.info {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.info span {
+  display: block;
+  font-size: 14px;
+}
+
+.info a {
+  display: block;
+  font-weight: bold;
+  color: #3c3c9e;
+  text-decoration: none;
+}
+
+.controls {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.class-search input {
+}
+
+.filter select {
+  padding: 0px 10px;
+  font-size: 16px;
+  min-width: 246px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.export button {
+  background-color: #212189;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.input-search {
+  height: 40px;
+}
+
+.filter-wrapper {
+  display: flex;
+}
+
+.class-top-bar {
+  display: flex;
+  padding: 10px 20px;
+  justify-content: space-between;
+}
+
+:host ::ng-deep .ant-table-container {
+  overflow: auto;
+}
+
+.action-share {
+  border: 1px solid;
+  border-color: #212189;
+  padding: 4px 8px;
+  background-color: white;
+  color: #212189;
+  height: 37px;
+  width: 37px;
+}
+
+.action-share:hover {
+  border: 1px solid;
+  border-color: #212189;
+  padding: 4px 8px;
+  background-color: #212189;
+  color: white;
+  height: 37px;
+  width: 37px;
+}
+
+.class-name span {
+  font-size: 16px;
+}
+
+.class-name a {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.class-assignment span {
+  font-size: 16px;
+}
+
+.class-assignment a {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.custom-status-tag {
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 0 12px;
+  font-size: 13px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+}
+
+.tag-needs-approval {
+  background-color: #e6eaff;
+  color: #212189;
+}
+
+.tag-approved {
+  background-color: #d1f4e2;
+  color: #1b7a3c;
+}
+
+.tag-processing {
+  background-color: white;
+  color: #747ca3;
+}
+
+.tag-error {
+  background-color: red;
+  color: white;
+}
+
+.tag-default {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+@media screen and (max-width: 700px) {
+  .class-top-bar {
+    display: block;
+  }
+  .assignment-btn {
+    margin-top: 4%;
+  }
+  .controls {
+    display: block;
+  }
+  .search-assign {
+    display: block;
+  }
+  .app-filter-search {
+    width: 100%;
+  }
+  .filter {
+    margin-top: 4%;
+    width: auto;
+  }
+  .filter select {
+    width: 100%;
+    min-width: 150px !important;
+  }
+  .button {
+    margin-top: 4%;
+  }
+}
+
+.grader-card {
+  border-radius: 4px;
+  box-shadow: none;
+  border: none;
+}
+
+.grader-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.label {
+  font-family: 'Poppins-SemiBold';
+  color: #212189;
+  font-size: 12px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plan {
+  font-size: 12px;
+  color: #313131;
+}
+
+.count {
+  font-size: 12px;
+  color: black;
+  margin-top: 2px;
+  font-family: 'Poppins-medium';
+}
+
+.upgrade-btn {
+  background-color: #ff4d4f;
+  border: none;
+}
+
+::ng-deep .grader-card .ant-card-body {
+  padding: 8px; /* or 0px if you want no padding */
+}

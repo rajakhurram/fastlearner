@@ -1,0 +1,30 @@
+<div class="container">
+    <p class="message">{{ msg }}</p>
+  
+    <div nz-row class="mt-3 justify-content">
+      <div nz-col>
+        <button
+          class="continueBtn"
+          nz-button
+          nzType="primary"
+          nzGhost
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+      </div>
+  
+      <div nz-col nzSpan="4">
+        <button
+          class="backBtn"
+          nz-button
+          nzType="primary"
+          nzGhost
+          (click)="onOk()"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+  

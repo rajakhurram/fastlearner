@@ -1,0 +1,855 @@
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.slider {
+  display: flex;
+  overflow: hidden;
+  will-change: transform;
+  // width: 100%;
+}
+.slider:active {
+  cursor: grabbing;
+}
+
+// /* Prevent text selection when grabbing or dragging */
+// .no-select {
+//   // user-select: none; /* Disable text selection */
+//   // -webkit-user-select: none;
+//   // -moz-user-select: none;
+//   // -ms-user-select: none;
+//   // -o-user-select: none;
+// }
+
+// button {
+//   background-color: #007bff;
+//   color: #fff;
+//   border: none;
+//   padding: 10px;
+//   cursor: pointer;
+// }
+
+// button:hover {
+//   background-color: #0056b3;
+// }
+
+// .center {
+//   height: 70vh;
+//   display: flex;
+//   justify-content: center;
+// }
+
+// .empty-div {
+//   display: flex;
+//   align-items: center;
+// }
+
+// // .card {
+// //   border-radius: 2%;
+// //   flex: 0 0 25%; /* 25% means 4 cards per row */
+// //   margin: 10px;
+// //   width: 375px;
+// // }
+
+// .level-duration-container {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// }
+
+// .image-height {
+//   margin-top: 10px;
+//   border-radius: 2%;
+//   aspect-ratio: 16/9;
+//   width: 351px;
+//   height: 198px;
+// }
+
+// .topics {
+//   display: flex;
+//   justify-content: space-evenly;
+// }
+
+// .topics-text {
+//   margin-left: -25px;
+//   color: #292929;
+// }
+
+// .tags-rating {
+//   display: flex;
+//   justify-content: space-between;
+// }
+
+// .view-details {
+//   display: flex;
+//   justify-content: space-evenly;
+// }
+
+// .free-label {
+//   position: absolute;
+//   top: 20px;
+//   left: 20px;
+// }
+
+// .details-text {
+//   margin-left: -25px;
+// }
+
+// .tag-color {
+//   color: #212189;
+//   font-weight: 100;
+// }
+
+// .view-details .view-details-link a {
+//   color: #0052f5;
+// }
+
+// .view-details .view-details-link a:hover {
+//   color: #fe4a55;
+// }
+
+// .view-details .view-details-link span {
+//   color: #0052f5;
+// }
+
+// .view-details .view-details-link span:hover {
+//   color: #fe4a55;
+// }
+
+// .card-text-align {
+//   text-align: center;
+//   border-radius: 5px;
+//   border-color: white;
+//   box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+// }
+
+// .user-info {
+//   display: flex;
+// }
+// .course-title-text {
+//   display: -webkit-box;
+//   -webkit-box-orient: vertical;
+//   -webkit-line-clamp: 1;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: normal;
+//   margin-bottom: 0px !important;
+// }
+
+// .description {
+//   overflow: hidden;
+//   display: -webkit-box;
+//   -webkit-box-orient: vertical;
+//   -webkit-line-clamp: 2;
+//   white-space: pre-wrap;
+//   height: 46px;
+//   margin-bottom: 16px;
+// }
+
+// .course-creator-premium {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-top: 10px;
+//   margin-bottom: 10px;
+// }
+
+// .timer {
+//   color: #212189;
+
+//   margin-left: 5px;
+// }
+
+// .price {
+//   color: #212189;
+//   margin-left: 5px;
+//   font-size: 20px;
+//   font-weight: 600;
+// }
+
+// :host ::ng-deep .ant-card-meta-title {
+//   color: #212189;
+//   font-weight: 700;
+//   white-space: normal;
+//   text-overflow: initial;
+// }
+
+// .slider-button-container {
+//   display: flex;
+//   justify-content: end;
+// }
+
+// .slider-button {
+//   height: 56px;
+//   border: 1px solid #212189;
+//   border-radius: 10px;
+//   padding: 22px;
+//   align-items: center;
+//   display: flex;
+//   margin: 15px;
+// }
+// .slider-container {
+//   display: flex;
+//   align-items: center;
+// }
+
+// .slider {
+//   display: flex;
+//   overflow: hidden;
+//   //   width: 90%;
+//   transition: transform 0.5s ease-in-out;
+// }
+
+// button {
+//   background-color: #007bff;
+//   color: #fff;
+//   border: none;
+//   padding: 10px;
+//   cursor: pointer;
+// }
+
+// button:hover {
+//   background-color: #0056b3;
+// }
+
+// .card {
+//   border-radius: 2%;
+//   flex: 0 0 25%; /* 25% means 4 cards per row */
+//   margin: 20px;
+//   width: 375px;
+//   //   box-shadow: 11px 11px 30px #bcd5ff;
+// }
+
+// .level-text {
+//   font-size: 14px;
+//   font-family: "Poppins-regular";
+//   color: #212189;
+//   margin-left: 10px;
+// }
+
+// .duration-container {
+//   display: flex;
+// }
+
+// .level-duration-container {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   margin-top: 12px;
+//   margin-bottom: -14px;
+// }
+
+// .image-height {
+//   margin-top: 10px;
+//   border-radius: 2%;
+//   aspect-ratio: 16/9;
+//   width: 351px;
+//   height: 198px;
+// }
+
+// .topics {
+//   display: flex;
+//   justify-content: space-evenly;
+// }
+
+// .topics-text {
+//   margin-left: -25px;
+//   color: #292929;
+// }
+
+// .tags-rating {
+//   display: flex;
+//   justify-content: space-between;
+// }
+
+// .view-details {
+//   display: flex;
+//   justify-content: space-evenly;
+// }
+
+// .details-text {
+//   margin-left: -25px;
+// }
+
+// .tag-color {
+//   color: #212189;
+//   font-weight: 100;
+// }
+// .tag-premium-color {
+//   color: white;
+//   font-weight: 100;
+// }
+
+// .view-details .view-details-link a {
+//   color: #0052f5;
+// }
+
+// .view-details .view-details-link a:hover {
+//   color: #fe4a55;
+// }
+
+// .view-details .view-details-link span {
+//   color: #0052f5;
+// }
+
+// .view-details .view-details-link span:hover {
+//   color: #fe4a55;
+// }
+
+// .course-creator-premium-box {
+//   display: flex;
+//   width: 46%;
+//   align-items: center;
+//   padding-top: 5px;
+// }
+
+// .instructor-name {
+//   color: #212189;
+//   margin-left: 5px;
+//   font-weight: 500;
+//   font-family: "Poppins-regular";
+//   font-size: 14px;
+// }
+// .instructor-name-premium {
+//   color: #292929;
+//   margin-left: 5px;
+//   font-weight: 500;
+//   font-family: "Poppins-regular";
+//   font-size: 14px;
+//   -webkit-line-clamp: 1;
+//   text-overflow: ellipsis;
+//   overflow: hidden;
+//   white-space: nowrap;
+//   width: 60%;
+//   margin-bottom: 0px !important;
+// }
+// .card-text-align {
+//   text-align: center;
+//   border-radius: 5px;
+//   border-color: white;
+//   box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+// }
+
+// .timer {
+//   color: #212189;
+//   margin-left: 5px;
+//   font-size: 14px;
+//   font-family: "Poppins-regular";
+// }
+// .timer-premium {
+//   color: #292929;
+//   margin-left: 5px;
+//   font-size: 14px;
+//   font-family: "Poppins-regular";
+//   font-weight: 500;
+// }
+// :host ::ng-deep .ant-card-meta-description {
+//   color: #292929;
+//   font-size: 14px;
+// }
+
+// .name-icon-container {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// }
+
+// :host ::ng-deep .ant-card-meta-title {
+//   color: #212189;
+//   font-weight: 700;
+//   white-space: normal;
+//   text-overflow: initial;
+//   white-space: normal;
+//   margin-bottom: 0px;
+//   font-size: 20px;
+// }
+
+// .spinner-container {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 72vh; /* Full viewport height to vertically center */
+// }
+
+// .slider {
+//   width: auto !important;
+// }
+
+// @media screen and (max-width: 1600px) {
+//   .card {
+//     width: 345px;
+//     margin: 15px;
+//   }
+
+//   .image-height {
+//     margin-top: 10px;
+//     width: 330px;
+//     height: 185px;
+//   }
+// }
+// @media screen and (max-width: 600px) {
+//   .slider-container {
+//     display: contents;
+//   }
+// }
+// @media screen and (max-width: 1025px) {
+//   .slider {
+//     justify-content: center;
+//   }
+// }
+// @media screen and (max-width: 1550px) {
+//   .slider {
+//     // width: 88% !important;
+//   }
+// }
+
+// @media screen and (max-width: 1500px) {
+//   .slider {
+//     width: auto !important;
+//   }
+// }
+
+// // @keyframes slideIn {
+// //   from {
+// //     transform: translateX(100%);
+// //     opacity: 0.7;
+// //   }
+// //   to {
+// //     transform: translateX(0);
+// //     opacity: 0.3;
+// //   }
+// // }
+
+// // @keyframes slideOut {
+// //   from {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// //   to {
+// //     transform: translateX(-100%);
+// //     opacity: 0.3;
+// //   }
+// // }
+
+// // /* Classes for animation */
+// // .slide-in {
+// //   animation: slideIn 0.5s ease forwards;
+// // }
+
+// // .slide-out {
+// //   animation: slideOut 0.5s ease forwards;
+// // }
+
+// // .slider {
+// //   display: flex;
+// //   overflow: hidden;
+// //   transition: transform 0.5s ease-in-out;
+// // }
+
+// // .card {
+// //   border-radius: 2%;
+// //   flex: 0 0 25%;
+// //   margin: 10px;
+// //   width: 375px;
+// //   transition: transform 0.5s ease;
+// // }
+// /* Highlight animation */
+// // @keyframes highlight {
+// //   from {
+// //     background-color: rgba(255, 255, 0, 0.3); /* Yellow highlight */
+// //   }
+// //   to {
+// //     background-color: transparent;
+// //   }
+// // }
+
+// // // /* Slide-in and Slide-out animations */
+// // @keyframes slideIn {
+// //   from {
+// //     transform: translateX(100%);
+// //     opacity: 0.9;
+// //   }
+// //   to {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// // }
+
+// // @keyframes slideOut {
+// //   from {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// //   to {
+// //     transform: translateX(-100%);
+// //     opacity: 0.9;
+// //   }
+// // }
+// // @keyframes slideInRight {
+// //   from {
+// //     transform: translateX(0);
+// //     opacity: 0.9;
+// //   }
+// //   to {
+// //     transform: translateX(100%);
+// //     opacity: 1;
+// //   }
+// // }
+
+// // @keyframes slideOutRight {
+// //   from {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// //   to {
+// //     transform: translateX(100%);
+// //     opacity: 0.9;
+// //   }
+// // }
+
+// // /* Classes for animation */
+// // .slide-in {
+// //   animation: slideIn 0.4s ease forwards;
+// // }
+
+// // .slide-out {
+// //   animation: slideOut 0.4s ease forwards;
+// // }
+// // .slide-in-right {
+// //   animation: slideInRight 0.4s ease forwards;
+// // }
+
+// // .slide-out-right {
+// //   animation: slideOutRight 0.4s ease forwards;
+// // }
+// // @keyframes slideIn {
+// //   from {
+// //     transform: translateX(100%);
+// //     opacity: 0;
+// //   }
+// //   to {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// // }
+
+// // @keyframes slideOut {
+// //   from {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// //   to {
+// //     transform: translateX(-100%);
+// //     opacity: 0;
+// //   }
+// // }
+
+// // @keyframes slideInRight {
+// //   from {
+// //     transform: translateX(-100%);
+// //     opacity: 0;
+// //   }
+// //   to {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// // }
+
+// // @keyframes slideOutRight {
+// //   from {
+// //     transform: translateX(0);
+// //     opacity: 1;
+// //   }
+// //   to {
+// //     transform: translateX(100%);
+// //     opacity: 0;
+// //   }
+// // }
+
+// // .slide-in {
+// //   animation: slideIn 0.4s ease forwards;
+// // }
+
+// // .slide-out {
+// //   animation: slideOut 0.4s ease forwards;
+// // }
+
+// // .slide-in-right {
+// //   animation: slideInRight 0.4s ease forwards;
+// // }
+
+// // .slide-out-right {
+// //   animation: slideOutRight 0.4s ease forwards;
+// // }
+
+// // .course {
+// //   // flex: 0 0 auto;
+// //   transition: transform 0.3s ease-in-out;
+// // }
+
+// .course {
+//   // transition: transform 0.6s ease-in-out;
+//   // /* If necessary, you can apply a slight opacity change to give a smoother effect */
+//   // transition: opacity 0.6s ease-in-out, transform 0.3s ease-in-out;
+// }
+
+// @keyframes slide-in-left {
+//   from {
+//     transform: translateX(-20%);
+//     opacity: 0.9;
+//   }
+//   to {
+//     transform: translateX(0);
+//     opacity: 1;
+//   }
+// }
+
+// @keyframes slide-in-right {
+//   from {
+//     transform: translateX(20%);
+
+//     opacity: 0.9;
+//   }
+//   to {
+//     transform: translateX(0);
+//     opacity: 1;
+//   }
+// }
+
+// .course {
+//   &.slide-in-left {
+//     animation: slide-in-left 0.6s ease-in-out;
+//   }
+//   &.slide-in-right {
+//     animation: slide-in-right 0.6s ease-in-out;
+//   }
+// }
+
+// .opacity-class {
+//   opacity: 0.5;
+// }
+// .slider {
+//   display: flex;
+//   transition: transform 0.5s ease-in-out; /* Smooth sliding */
+//   width: 100%;
+// }
+
+// .wrapper {
+//   max-width: 1100px;
+//   width: 100%;
+//   position: relative;
+// }
+
+// .wrapper i {
+//   height: 50px;
+//   width: 50px;
+//   background: rgb(118, 233, 118);
+//   text-align: center;
+//   line-height: 50px;
+//   border-radius: 50%;
+//   cursor: pointer;
+//   position: absolute;
+//   top: 50%;
+//   font-size: 1.25 rem;
+//   transform: translateY(-50%);
+//   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
+// }
+
+// .wrapper i:first-child {
+//   left: -22px;
+// }
+
+// .wrapper i:last-child {
+//   right: -22px;
+// }
+
+// .wrapper .carousel {
+//   display: grid;
+//   grid-auto-flow: column;
+//   grid-auto-columns: calc((100% / 3) - 12px);
+//   gap: 16px;
+//   overflow-x: auto;
+//   scroll-snap-type: x mandatory;
+//   scroll-behavior: smooth;
+//   scrollbar-width: 0;
+// }
+
+// .carousel::-webkit-scrollbar {
+//   display: none;
+// }
+
+// .carousel :where(.card, .img) {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .carousel.dragging {
+//   scroll-snap-type: none;
+//   scroll-behavior: auto;
+// }
+
+// .carousel.no-transition {
+//   scroll-behavior: auto;
+// }
+
+// .carousel.dragging .card {
+//   cursor: grab;
+//   user-select: none;
+// }
+
+// .carousel .card {
+//   scroll-snap-align: start;
+//   height: 340px;
+//   list-style: none;
+//   background: #fff;
+//   border-radius: 8px;
+//   display: flex;
+//   cursor: pointer;
+//   width: 98%;
+//   padding-bottom: 15px;
+//   align-items: center;
+//   justify-content: center;
+//   flex-direction: column;
+// }
+
+// .card .img {
+//   background: green;
+//   width: 145px;
+//   height: 145px;
+//   border-radius: 50%;
+// }
+
+// .card .img img {
+//   width: 140px;
+//   height: 140px;
+//   object-fit: cover;
+//   border-radius: 50%;
+//   border: 4px solid #fff;
+// }
+
+// .card h2 {
+//   font-weight: 500;
+//   font-size: 1.56rem;
+//   margin: 30px 0 5px;
+// }
+
+// .card span {
+//   color: #6a6d78;
+//   font-size: 1.31rem;
+// }
+
+// @media screen and (max-width: 900px) {
+//   .wrapper .carousel {
+//     grid-auto-columns: calc((100% / 2) - 9px);
+//   }
+// }
+
+// @media screen and (max-width: 600px) {
+//   .wrapper .carousel {
+//     grid-auto-columns: 100%;
+//   }
+// }
+
+.slider-container {
+  // position: relative;
+  width: 1220px;
+  margin: 0 auto;
+  padding-top: 2%;
+  // overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  cursor: grab;
+}
+.slider-container-res {
+  width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+@media screen and (max-width: 1750px) {
+  .slider-container-res {
+    // position: relative;
+    width: 800px;
+    // overflow: hidden;
+  }
+  .slider-container {
+    width: 1220px;
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 1450px) {
+  .slider-container-res {
+    // position: relative;
+    width: 700px;
+    // overflow: hidden;
+  }
+  .slider-container {
+    // position: relative;
+    width: 1210px;
+    // overflow: hidden;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .slider-container-res {
+    // position: relative;
+    width: 800px;
+    // overflow: hidden;
+  }
+  .slider-container {
+    // position: relative;
+    width: 1210px;
+    // overflow: hidden;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .slider-container-res {
+    // position: relative;
+    width: 700px;
+    // overflow: hidden;
+  }
+  .slider-container {
+    // position: relative;
+    width: 1060px;
+    // overflow: hidden;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .slider-container-res {
+    // position: relative;
+    width: 350px;
+    // overflow: hidden;
+  }
+  .slider-container {
+    // position: relative;
+    width: 700px;
+    // overflow: hidden;
+  }
+}
+@media screen and (max-width: 600px) {
+  .slider-container-res {
+    // position: relative;
+    display: block;
+    // overflow: hidden;
+  }
+  .slider-container {
+    // position: relative;
+    width: 350px;
+    // overflow: hidden;
+  }
+}
+
+.slider.dragging {
+  cursor: grabbing;
+}

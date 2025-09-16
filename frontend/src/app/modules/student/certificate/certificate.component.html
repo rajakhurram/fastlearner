@@ -1,0 +1,213 @@
+<div class="container">
+  <div class="certificate">
+    <div nz-row [nzGutter]="16">
+      <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="24" nzXl="17">
+        <div class="left-side">
+          <nz-spin *ngIf="isLoading" nzSize="large"></nz-spin>
+          <img
+            class="w-100"
+            *ngIf="certificateUrl && !isLoading"
+            [src]="certificateUrl"
+            alt="Certificate"
+            (load)="onImageLoad()"
+            (error)="onImageError()"
+          />
+        </div>
+        <div class="certificate-content-para">
+          <p class="paragraph">
+            This is to certify that <a>{{ certificate?.studentName }}</a> has
+            successfully accomplished the
+            <a>"{{ certificate?.courseTitle }}"</a> on
+            {{ certificate?.certifiedAt }} from instructor
+            <a>{{ certificate?.instructorName }}</a> via <a>FastLearner</a>.
+          </p>
+        </div>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="24" nzXl="7">
+        <div class="right-side">
+          <nz-card class="card">
+            <div class="certificate-recipient">
+              <div class="heading">
+                <h4 class="heading-weight">Certificate Recepient</h4>
+              </div>
+            </div>
+            <hr />
+            <div class="recipient-name">
+              <div>
+                <button
+                  *ngIf="!certificate?.studentProfileImage"
+                  class="side-nav-button"
+                  nz-button
+                  nzType="primary"
+                  nzShape="circle"
+                >
+                  {{ certificate?.studentName | initialCharactor }}
+                </button>
+                <nz-avatar
+                  *ngIf="certificate?.studentProfileImage"
+                  [nzSize]="46"
+                  nzIcon="user"
+                  class="sidebar-nav-button"
+                  nzAlt="Profile"
+                  [nzSrc]="certificate?.studentProfileImage"
+                ></nz-avatar>
+              </div>
+              <div>
+                <p class="name">
+                  <b>{{ certificate?.studentName }}</b>
+                </p>
+              </div>
+            </div>
+            <hr />
+            <div class="main-content">
+              <div class="about-us-heading">
+                <h4 class="heading-weight">About this course</h4>
+              </div>
+              <div class="course">
+                <img
+                  height="180px"
+                  width="280px"
+                  [src]="certificate?.coursePreview"
+                  alt="Preview"
+                />
+                <p class="para">{{ certificate?.courseTitle }}</p>
+              </div>
+              <div class="rating">
+                <span>{{ certificate?.courseAvgReviews }}</span>
+                &nbsp;
+                <nz-rate
+                  [ngModel]="certificate?.courseAvgReviews"
+                  nzAllowHalf
+                  nzDisabled
+                ></nz-rate>
+                &nbsp;
+                <span>({{ certificate?.courseReviewers }})</span>
+              </div>
+              <div class="section-topic-time">
+                <div
+                  style="
+                    display: flex;
+                    width: 100%;
+                    justify-content: space-between;
+                    font-size: 12px;
+                  "
+                >
+                  <p>• {{ certificate?.noOfSections }} Sections</p>
+                  <p>• {{ certificate?.noOfTopics }} Topics</p>
+                  <p>• {{ certificate?.courseDuration }}</p>
+                </div>
+              </div>
+              <hr />
+              <div class="instructor-details">
+                <div class="instructor-img">
+                  <button
+                    *ngIf="!certificate?.instructorProfileImage"
+                    class="side-nav-button"
+                    nz-button
+                    nzType="primary"
+                    nzShape="circle"
+                  >
+                    {{ certificate?.instructorName | initialCharactor }}
+                  </button>
+
+                  <nz-avatar
+                    *ngIf="certificate?.instructorProfileImage"
+                    [nzSize]="46"
+                    nzIcon="user"
+                    class="sidebar-nav-button"
+                    [nzSrc]="certificate?.instructorProfileImage"
+                    nzAlt="Profile"
+                  ></nz-avatar>
+                  <span class="m-l">{{ certificate?.instructorName }}</span>
+                </div>
+                <div class="instructor-rating">
+                  <span>{{ certificate?.instructorAvgReviews }}</span>
+                  <nz-rate
+                    [ngModel]="certificate?.instructorAvgReviews"
+                    nzAllowHalf
+                    nzDisabled
+                  ></nz-rate>
+                  <span>({{ certificate?.instructorReviewers }})</span>
+                </div>
+              </div>
+              <hr />
+              <div class="buttons">
+                <button
+                  class="download-btn"
+                  nz-popover
+                  [nzPopoverContent]="download"
+                  nz-button
+                  nzType="primary"
+                >
+                  <span nz-icon nzType="download" nzTheme="outline"></span
+                  >Download
+                </button>
+                &nbsp;&nbsp;&nbsp;
+                <button
+                  class="share-btn"
+                  nz-button
+                  nzType="primary"
+                  (click)="openShareCourseModal()"
+                  nz-button
+                  nzType="default"
+                >
+                  <span nz-icon nzType="share-alt" nzTheme="outline"></span>
+                  Share
+                </button>
+              </div>
+
+              <ng-template #download>
+                <div class="download-option">
+                  <p class="para1">Choose the format</p>
+                  <div class="center">
+                    <img
+                      [nz-tooltip]="'Download JPG'"
+                      alt="Download"
+                      (click)="downloadJPG()"
+                      height="30px"
+                      width="30px"
+                      src="../../../../assets/icons/jpeg-img.svg"
+                    />
+                    <img
+                      alt="Download"
+                      [nz-tooltip]="'Download PDF'"
+                      (click)="downloadPDF()"
+                      height="30px"
+                      width="30px"
+                      src="../../../../assets/icons/pdf-img.svg"
+                    />
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #share>
+                <div class="share-option">
+                  <p class="para1">Share this certificate</p>
+                  <div class="center">
+                    <img
+                      alt="Facebook"
+                      height="50px"
+                      width="50px"
+                      src="../../../../assets/icons/facebook-colored.svg"
+                    />
+                    <img
+                      alt="X"
+                      height="50px"
+                      width="50px"
+                      src="../../../../assets/icons/twitter-colored.svg"
+                    />
+                    <img
+                      alt="LinkedIn"
+                      height="50px"
+                      width="50px"
+                      src="../../../../assets/icons/linkedin-colored.svg"
+                    />
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

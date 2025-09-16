@@ -1,0 +1,2296 @@
+
+  <ng-container *ngIf="!isLoading; else loadingTemplate">
+    <div class="container">
+      <div class="course-content">
+        <div class="course-content-header">
+          <div class="header-row" nz-row>
+            <div class="inner-content">
+              <div class="logo cursor-pointer">
+                <img
+                  (click)="routeToLandingPage()"
+                  width="250px"
+                  src="../../../../assets/icons/FL_White logo.svg"
+                  alt="Logo"
+                />
+              </div>
+              <nz-divider class="divider" nzType="vertical"></nz-divider>
+              <div class="course-title">
+                <h4 class="break-word">
+                  {{ currentCourse }}
+                  <img
+                    *ngIf="currentCourseType === courseType.PREMIUM"
+                    width="15"
+                    height="15"
+                    style="margin-top: -2px"
+                    src="../../../../assets/icons/premium.svg"
+                  />
+                </h4>
+              </div>
+              <nz-divider class="divider" nzType="vertical"></nz-divider>
+              <div class="course-completion">
+                <h4>{{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}} Completion</h4>
+                <div class="text-row">
+                  <small>{{ courseProgress?.toFixed(1) }}% completed</small>
+
+                  <ng-container *ngIf="showCertificate">
+                    <img
+                      alt="Incomplete"
+                      *ngIf="!generateCertificateEnable"
+                      src="../../../../assets/icons/incompletion.svg"
+                    />
+                    <img
+                      alt="Incomplete"
+                      *ngIf="generateCertificateEnable"
+                      nz-tooltip
+                      nzTooltipTitle="Generate Certificate"
+                      (click)="getCertificateData()"
+                      nzTooltipPlacement="top"
+                      src="../../../../assets/icons/incompletion.svg"
+                    />
+                  </ng-container>
+                </div>
+                <nz-progress
+                  [nzPercent]="courseProgress"
+                  [nzShowInfo]="false"
+                  [nzStrokeColor]="'#00BA00'"
+                ></nz-progress>
+              </div>
+            </div>
+            <div class="menu-actions">
+              <button
+                (click)="openShareCourseModal()"
+                class="course-hover-default-btn"
+                nz-button
+                nzType="default"
+              >
+                <span nz-icon nzType="share-alt" nzTheme="outline"></span>
+              </button>
+              <button
+                class="course-hover-default-btn"
+                nz-dropdown
+                nzTrigger="click"
+                [nzVisible]="isDropdownVisible"
+                (nzVisibleChange)="onDropdownVisibilityChange($event)"
+                [nzDropdownMenu]="menuMore"
+                nz-button
+                nzType="default"
+              >
+                <span nz-icon nzType="more" nzTheme="outline"></span>
+              </button>
+              <button
+                *ngIf="!loggedInUser?.profilePicture"
+                nz-dropdown
+                nzTrigger="click"
+                [nzDropdownMenu]="menuUser"
+                [nzVisible]="isDropdownProfileVisible"
+                (nzVisibleChange)="onDropdownProfileVisibilityChange($event)"
+                class="side-nav-button-menu"
+                nz-button
+                nzType="primary"
+                nzShape="circle"
+              >
+                {{ getInitialOfLoggedInUser | initialCharactor }}
+              </button>
+              <nz-avatar
+                *ngIf="loggedInUser?.profilePicture"
+                [nzSize]="46"
+                nz-dropdown
+                style="cursor: pointer"
+                nzTrigger="click"
+                nzIcon="user"
+                [nzDropdownMenu]="menuUser"
+                [nzVisible]="isDropdownProfileVisible"
+                (nzVisibleChange)="onDropdownProfileVisibilityChange($event)"
+                [nzDropdownMenu]="menuUser"
+                nzAlt="Profile"
+                [nzSrc]="loggedInUser?.profilePicture"
+              ></nz-avatar>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="!isReviewing">
+        <div class="course-main-content">
+          <div class="breadcrums">
+            <nz-breadcrumb [nzSeparator]="'>'">
+              <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+              <nz-breadcrumb-item>{{ currentCategory }}</nz-breadcrumb-item>
+              <nz-breadcrumb-item
+                ><b class="break-word">{{
+                  currentCourse
+                }}</b></nz-breadcrumb-item
+              >
+            </nz-breadcrumb>
+          </div>
+          <div nz-row class="content-row" [nzGutter]="16">
+            <div nz-col nzXs="24" nzMd="24" nzLg="17">
+              <div class="inner-header">
+                <div class="rating-head">
+                  <div class="section-topic" id="topic-selected">
+                    <h3 class="break-word">
+                      Section {{ currentSelectedSection?.sequence }}:
+                      {{
+                        sectionPanelList?.length === 1 &&
+                        !sectionPanelList[0]?.free
+                          ? sectionPanelList[0]?.sectionName
+                          : currentSelectedSection?.sectionName
+                      }}
+                    </h3>
+                    <p class="break-word">
+                      Topic {{ currentSelectedSection?.sequence }}.{{
+                        currentSelectedTopic?.sequenceNumber
+                      }}:
+                      {{
+                        sectionPanelList?.length === 1 &&
+                        !sectionPanelList[0]?.free
+                          ? "Subscribe to access this topic and more."
+                          : currentSelectedTopic?.topicName
+                      }}
+                    </p>
+                  </div>
+                  <div class="rate-section">
+                    <span>Rate your Experience</span><br />
+                    <div>
+                      <span>{{
+                        sectionReview?.value
+                          ? sectionReview?.value.toFixed(1)
+                          : "0.0"
+                      }}</span>
+                      <nz-rate
+                        class="star-contaner"
+                        [ngModel]="sectionReview?.value"
+                        nzAllowHalf
+                        nzDisabled
+                      ></nz-rate>
+                      <span
+                        >({{
+                          sectionReview?.totalReviews
+                            ? sectionReview?.totalReviews
+                            : 0
+                        }})</span
+                      >
+                    </div>
+                    <button
+                      nz-button
+                      class="rating-button"
+                      (click)="handleRatingClick(currentSelectedSection)"
+                      [nzType]="'primary'"
+                    >
+                      Rate this Section
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                *ngIf="currentSelectedTopicType == 'Video'"
+                class="video-player"
+              >
+                <app-video-player
+                  #videoPlayerElement
+                  (videoCompleteEmitter)="videoCompleted($event)"
+                  [currentSelectedTopic]="currentSelectedTopic"
+                  (currentVideoTime)="getVideoTime($event)"
+                  [isTooltipVisible]="isTooltipVisible"
+                ></app-video-player>
+              </div>
+              <div
+                *ngIf="currentSelectedTopicType == 'Quiz'"
+                class="quiz-player"
+              >
+                <app-quiz-player class="w-100"
+                  (continueQuizEmitter)="skipQuiz($event)"
+                  (skipQuizEmitter)="skipQuiz($event)"
+                  [currentSelectedTopic]="currentSelectedTopic"
+                  [congratsScreen]="showCongratsScreen"
+                  [quizResults]="questionAnswersQuiz"
+                  (reviewCallBack)="reviewCallBack($event)"
+                  [quizQuestions]="quizQuestions"
+                  [title]="currentSelectedSection?.sectionName"
+                ></app-quiz-player>
+              </div>
+              <div
+                *ngIf="currentSelectedTopicType == 'Article'"
+                class="article-player"
+              >
+                <app-article
+                  [currentSelectedTopic]="currentSelectedTopic"
+                ></app-article>
+              </div>
+              <div class="tabs" id="tabs">
+                <nz-tabset
+                  [(nzSelectedIndex)]="tabIndex"
+                  [nzSize]="'large'"
+                  [nzTabBarGutter]="30"
+                >
+                  <ng-container *ngIf="showCourseContentTab">
+                    <nz-tab nzTitle="Course Contents">
+                      <div nz-col nzXs="24" nzMd="24" nzLg="7">
+                        <nz-card class="card">
+                          <div class="card-header">
+                            <h4>{{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}} Contents</h4>
+                          </div>
+                          <div class="sections">
+                            <nz-collapse class="collapse">
+                              <nz-collapse-panel
+                                class="collapse-header"
+                                *ngFor="
+                                  let section of sectionPanelList;
+                                  let i = index
+                                "
+                                [nzHeader]="header"
+                                [nzExtra]="expandIcon"
+                                [nzShowArrow]="false"
+                                (nzActiveChange)="
+                                  isPanelActive(section, $event, i)
+                                "
+                                [nzActive]="section?.active"
+                                [class.pinnedCollapse]="
+                                  section.alternateSection
+                                "
+                              >
+                                <div
+                                  *ngIf="
+                                    section?.alternateSectionPanelList
+                                      ?.length == 0
+                                  "
+                                  class="topics"
+                                >
+                                  <div
+                                    class="topic-header"
+                                    [class.pinnedCollapse-topic]="
+                                      section.alternateSection
+                                    "
+                                    *ngFor="
+                                      let topic of section?.topicList;
+                                      let j = index
+                                    "
+                                    (click)="
+                                      onSelectTopicFromPlayList(section, topic)
+                                    "
+                                    [class.selected]="
+                                      topic?.topicId == currentSelectedTopicId
+                                    "
+                                  >
+                                    <div class="topic-name">
+                                      <label
+                                        nz-checkbox
+                                        (ngModelChange)="
+                                          completeTopic(
+                                            section,
+                                            topic,
+                                            $event,
+                                            topic?.topicId,
+                                            topic?.seekTime,
+                                            topic?.topicType
+                                          )
+                                        "
+                                        [(ngModel)]="topic.isCompleted"
+                                        >{{ i + 1 }}.{{ j + 1 }}</label
+                                      >
+                                      <span class="overflow-hidden w-100"
+                                        ><p class="break-word">
+                                          {{ topic?.topicName }}
+                                        </p></span
+                                      >
+                                    </div>
+                                    <div class="topic-type">
+                                      <div>
+                                        <img
+                                          alt="Video"
+                                          *ngIf="topic?.topicType == 'Video'"
+                                          src="../../../../assets/icons/video-icon.svg"
+                                        />
+                                        <img
+                                          alt="Article"
+                                          *ngIf="topic?.topicType == 'Article'"
+                                          src="../../../../assets/icons/document.svg"
+                                        />
+                                        <img
+                                          alt="Animation"
+                                          *ngIf="
+                                            topic?.topicType == 'Animation'
+                                          "
+                                          src="../../../../assets/icons/animation.svg"
+                                        />
+                                        <img
+                                          alt="Quiz"
+                                          *ngIf="topic?.topicType == 'Quiz'"
+                                          src="../../../../assets/icons/Quiz.svg"
+                                        />
+                                        &nbsp;
+                                        <small>{{
+                                          topic?.topicType != "Quiz"
+                                            ? topic?.topicDuration
+                                            : ""
+                                        }}</small>
+                                      </div>
+                                      <div
+                                        *ngIf="topic.docs"
+                                        class="resources-container"
+                                      >
+                                        <!-- Adjust the value as needed -->
+                                        <a
+                                          class="resources-dropdown"
+                                          nz-dropdown
+                                          nzTrigger="click"
+                                          [nzDropdownMenu]="menu"
+                                          (click)="$event.stopPropagation()"
+                                        >
+                                          Resources
+                                          <span
+                                            style="margin-top: 1px"
+                                            nz-icon
+                                            nzType="down"
+                                          ></span>
+                                        </a>
+                                        <nz-dropdown-menu
+                                          #menu="nzDropdownMenu"
+                                        >
+                                          <ul nz-menu>
+                                            <li
+                                              *ngFor="let doc of topic.docs"
+                                              nz-menu-item
+                                              (click)="openDoc(doc)"
+                                            >
+                                              {{ doc.name }}
+                                            </li>
+                                          </ul>
+                                        </nz-dropdown-menu>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div
+                                  *ngIf="
+                                    section?.alternateSectionPanelList
+                                      ?.length != 0
+                                  "
+                                  class="alternate-section-margin"
+                                >
+                                  <nz-collapse>
+                                    <nz-collapse-panel
+                                      class="collapse-alternate collapse-alternate-color"
+                                      *ngFor="
+                                        let alternateSection of section.alternateSectionPanelList;
+                                        let k = index
+                                      "
+                                      [nzHeader]="header_alternate"
+                                      [nzExtra]="expandIcon_alternate"
+                                      [nzActive]="false"
+                                      [nzShowArrow]="false"
+                                      (nzActiveChange)="
+                                        isAlternatePanelActive(
+                                          alternateSection,
+                                          $event,
+                                          i
+                                        )
+                                      "
+                                    >
+                                      <div class="topics">
+                                        <div
+                                          class="alternate-topic-header"
+                                          *ngFor="
+                                            let topic of alternateSection.topicList;
+                                            let j = index
+                                          "
+                                          (click)="
+                                            onSelectTopicFromPlayList(
+                                              alternateSection,
+                                              topic
+                                            )
+                                          "
+                                          [class.alternate-topic-selected]="
+                                            topic?.topicId ==
+                                            currentSelectedTopicId
+                                          "
+                                        >
+                                          <div class="topic-name">
+                                            <label
+                                              nz-checkbox
+                                              (ngModelChange)="
+                                                completeTopic(
+                                                  alternateSection,
+                                                  topic,
+                                                  $event,
+                                                  topic?.topicId,
+                                                  topic?.seekTime,
+                                                  topic?.topicType
+                                                )
+                                              "
+                                              [(ngModel)]="topic.isCompleted"
+                                              >{{ i + 1 }}.{{ j + 1 }}</label
+                                            >
+                                            <span>{{ topic?.topicName }}</span>
+                                          </div>
+                                          <div class="topic-type">
+                                            <div>
+                                              <img
+                                                alt="Video"
+                                                *ngIf="
+                                                  topic?.topicType == 'Video'
+                                                "
+                                                src="../../../../assets/icons/video-icon.svg"
+                                              />
+                                              <img
+                                                alt="Article"
+                                                *ngIf="
+                                                  topic?.topicType == 'Article'
+                                                "
+                                                src="../../../../assets/icons/document.svg"
+                                              />
+                                              <img
+                                                alt="Animation"
+                                                *ngIf="
+                                                  topic?.topicType ==
+                                                  'Animation'
+                                                "
+                                                src="../../../../assets/icons/animation.svg"
+                                              />
+                                              <img
+                                                alt="Quiz"
+                                                *ngIf="
+                                                  topic?.topicType == 'Quiz'
+                                                "
+                                                src="../../../../assets/icons/Quiz.svg"
+                                              />
+                                              &nbsp;
+                                              <small>{{
+                                                topic?.topicType != "Quiz"
+                                                  ? topic?.topicDuration
+                                                  : ""
+                                              }}</small>
+                                            </div>
+                                            <div
+                                              *ngIf="topic.docs"
+                                              class="resources-container"
+                                            >
+                                              <!-- Adjust the value as needed -->
+                                              <a
+                                                class="resources-dropdown"
+                                                nz-dropdown
+                                                nzTrigger="click"
+                                                [nzDropdownMenu]="menu"
+                                                (click)="
+                                                  $event.stopPropagation()
+                                                "
+                                              >
+                                                Resources
+                                                <span
+                                                  nz-icon
+                                                  nzType="down"
+                                                ></span>
+                                              </a>
+                                              <nz-dropdown-menu
+                                                #menu="nzDropdownMenu"
+                                              >
+                                                <ul nz-menu>
+                                                  <li
+                                                    *ngFor="
+                                                      let doc of topic.docs
+                                                    "
+                                                    nz-menu-item
+                                                    (click)="openDoc(doc)"
+                                                  >
+                                                    {{ doc.name }}
+                                                  </li>
+                                                </ul>
+                                              </nz-dropdown-menu>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <ng-template #header_alternate>
+                                        <div
+                                          class="collapse-alternate display-flex pb-4"
+                                        >
+                                          <div
+                                            class="alternate-section-container"
+                                          >
+                                            <nz-avatar
+                                              style="margin-bottom: 40px"
+                                              [nzSize]="28"
+                                              nzIcon="user"
+                                              [nzSrc]="
+                                                alternateSection?.instructorImage
+                                              "
+                                              nzAlt="Profile"
+                                            ></nz-avatar>
+                                          </div>
+                                          <div>
+                                            <p
+                                              class="alternate-instructor-size color-blue"
+                                              style="
+                                                margin: 0;
+                                                margin-left: 10px;
+                                                font-weight: 600;
+                                              "
+                                            >
+                                              {{
+                                                alternateSection?.instructorName
+                                              }}
+                                              <small
+                                                class="alternate-reviews"
+                                                >{{
+                                                  alternateSection?.totalReviews.toFixed(
+                                                    2
+                                                  ) ?? 0
+                                                }}</small
+                                              >
+                                              <span>
+                                                <nz-rate
+                                                  *ngIf="
+                                                    alternateSection?.totalReviews >
+                                                    0
+                                                  "
+                                                  class="custom-rate"
+                                                  [ngModel]="
+                                                    alternateSection?.totalReviews
+                                                  "
+                                                  nzAllowHalf
+                                                  nzDisabled
+                                                ></nz-rate>
+                                                <nz-rate
+                                                  class="disabled-star"
+                                                  *ngIf="
+                                                    alternateSection?.totalReviews ==
+                                                    0
+                                                  "
+                                                  [ngModel]="5"
+                                                  nzAllowHalf
+                                                  nzDisabled
+                                                ></nz-rate>
+                                              </span>
+                                              <span class="alternate-reviews">
+                                                ({{
+                                                  alternateSection?.totalReviewer
+                                                }})
+                                              </span>
+                                            </p>
+                                            <p
+                                              class="alternate-instructor-size alternate-instructor-section-name"
+                                              nz-tooltip="{{
+                                                alternateSection?.sectionName
+                                              }}"
+                                            >
+                                              {{
+                                                alternateSection?.sectionName
+                                                  ?.length > 35
+                                                  ? alternateSection?.sectionName.substring(
+                                                      0,
+                                                      35
+                                                    ) + "..."
+                                                  : alternateSection?.sectionName
+                                              }}
+                                            </p>
+                                            <span style="margin-left: 6%">
+                                              <small
+                                                >{{
+                                                  alternateSection?.totalTopicCompleted
+                                                }}/{{
+                                                  alternateSection?.topicList
+                                                    ?.length
+                                                }}</small
+                                              >
+                                              &nbsp;
+                                              <small>{{
+                                                alternateSection?.sectionDuration
+                                              }}</small>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </ng-template>
+
+                                      <ng-template #expandIcon_alternate>
+                                        <ng-container>
+                                          <div class="alternate-icon-container">
+                                            <span style="padding-right: 8px">
+                                              <span
+                                                *ngIf="alternateSection?.isFree"
+                                              >
+                                                <span
+                                                  (click)="
+                                                    pinAlternateInstructor(
+                                                      alternateSection?.courseId,
+                                                      alternateSection?.sectionId
+                                                    )
+                                                  "
+                                                  ><img
+                                                    src="../../../../assets/icons/alternate_pin.svg"
+                                                    alt="Pin"
+                                                /></span>
+                                                <span>
+                                                  <img
+                                                    alt="Icon"
+                                                    (click)="
+                                                      alternateToggleSectionPanel(
+                                                        alternateSection
+                                                      )
+                                                    "
+                                                    class="alternate-arrow-icon arrow-icon-margin"
+                                                    [src]="
+                                                      alternateSection?.active
+                                                        ? '../../../../assets/icons/arrow-collapse.svg'
+                                                        : '../../../../assets/icons/ic_expand_more.svg'
+                                                    "
+                                                  />
+                                                </span>
+                                              </span>
+                                              <span
+                                                *ngIf="
+                                                  !alternateSection?.isFree
+                                                "
+                                                class="display-flex"
+                                                style="gap: 16px"
+                                              >
+                                                <span class="font-bold">{{
+                                                  alternateSection?.courseType
+                                                }}</span>
+                                                <img
+                                                  class="course-type-icon"
+                                                  *ngIf="
+                                                    alternateSection?.courseType ===
+                                                    'SUBSCRIPTION'
+                                                  "
+                                                  src="../../../../assets/icons/lock.svg"
+                                                />
+                                                <img
+                                                  class="course-type-icon"
+                                                  *ngIf="
+                                                    alternateSection?.courseType ===
+                                                    'PREMIUM'
+                                                  "
+                                                  src="../../../../assets/icons/premium.png"
+                                                />
+                                              </span>
+                                            </span>
+                                          </div>
+
+                                          <button
+                                            *ngIf="k == 0"
+                                            (click)="
+                                              closeAlternateCollapseDropdown(
+                                                $event,
+                                                section
+                                              )
+                                            "
+                                            nz-button
+                                            nzType="dashed"
+                                            nzSize="small"
+                                            class="unpin-alternate-section-button"
+                                            [ngClass]="{
+                                              'unpin-alternate-section-button-height1':
+                                                !alternateSection.active,
+                                              'unpin-alternate-section-button-height2':
+                                                alternateSection.active
+                                            }"
+                                          >
+                                            <img
+                                              alt="Close"
+                                              class="arrow-icon-margin"
+                                              src="../../../../assets/icons/alternate_close.svg"
+                                            />
+                                          </button>
+                                        </ng-container>
+                                      </ng-template>
+                                    </nz-collapse-panel>
+                                  </nz-collapse>
+                                </div>
+
+                                <ng-template #expandIcon>
+                                  <ng-container *ngIf="section?.showHeader">
+                                    <div class="icon-container">
+                                      <span
+                                        *ngIf="section?.alternateSection"
+                                        (click)="
+                                          unPinAlternateInstructor(
+                                            section?.sectionId
+                                          )
+                                        "
+                                        class="pushpin-icon-straight"
+                                        [nzRotate]="-44"
+                                        nz-icon
+                                        nzType="pushpin"
+                                        nzTheme="fill"
+                                      ></span>
+                                      <img
+                                        alt="Icon"
+                                        (click)="
+                                          toggleSectionPanel($event, section, i)
+                                        "
+                                        class="arrow-icon"
+                                        [class.arrow-icon-top]="
+                                          section?.alternateSection
+                                        "
+                                        [src]="
+                                          section?.active
+                                            ? '../../../../assets/icons/arrow-collapse.svg'
+                                            : '../../../../assets/icons/ic_expand_more.svg'
+                                        "
+                                      />
+                                    </div>
+
+                                    <button
+                                      (click)="
+                                        openAlternatePanel($event, section, i)
+                                      "
+                                      class="alternate-section-button"
+                                      [ngStyle]="{
+                                        'background-color': !section?.free
+                                          ? '#C2C7D2'
+                                          : '#212189'
+                                      }"
+                                      nz-button
+                                      nzType="dashed"
+                                      nzSize="small"
+                                    >
+                                      <img
+                                        class="arrow-icon-margin"
+                                        src="../../../../assets/icons/arrow-open.svg"
+                                        alt="Open"
+                                      />
+                                    </button>
+                                  </ng-container>
+                                </ng-template>
+
+                                <ng-template #header>
+                                  <div
+                                    class="section-container"
+                                    [class.pinnedCollapse]="
+                                      section.alternateSection
+                                    "
+                                    *ngIf="section?.showHeader"
+                                  >
+                                    <p>
+                                      Section {{ section?.sequence }} :
+                                      {{ section?.sectionName }}
+                                    </p>
+                                    <small
+                                      >{{ section?.totalTopicCompleted }}/{{
+                                        section?.totalTopics
+                                      }}</small
+                                    >
+                                    &nbsp;
+                                    <small>{{
+                                      section?.sectionDuration
+                                    }}</small>
+                                    <img
+                                      *ngIf="!section?.free"
+                                      class="ml-3"
+                                      src="../../../../assets/icons/lock.svg"
+                                      alt="Lock"
+                                    />
+                                  </div>
+                                </ng-template>
+                              </nz-collapse-panel>
+                            </nz-collapse>
+                          </div>
+                        </nz-card>
+                      </div>
+                    </nz-tab>
+                  </ng-container>
+                  <ng-container *ngIf="currentSelectedTopicType != 'Article'">
+                    <nz-tab
+                      *ngIf="currentSelectedTopicType != 'Quiz'"
+                      nzTitle="Chat"
+                      (nzClick)="onToggleTabs(0)"
+                    >
+                      <div class="chat">
+                        <div style="justify-content: space-between" nz-row>
+                          <div nz-col nzXs="14" nzMd="14" nzLg="6">
+                            <div class="chat-header">
+                              <h3>Chat with AI</h3>
+                            </div>
+                          </div>
+                          <div nz-col nzSpan="4">
+                            <div class="expand-screen">
+                              <span
+                                (click)="openChatModal()"
+                                class="expand-icon cursor-pointer"
+                                nz-icon
+                                nzType="expand-alt"
+                                nzTheme="outline"
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="chat-content">
+                          <div class="chat-row" nz-row [nzGutter]="16">
+                            <div nz-col nzXs="24" nzMd="24" nzLg="8">
+                              <div class="chat-left-side">
+                                <div class="box">
+                                  <div
+                                    class="align-heading"
+                                    *ngFor="
+                                      let panel of courseChat;
+                                      let i = index
+                                    "
+                                  >
+                                    <h4>
+                                      Section {{ panel?.sequenceNumber }}:
+                                      {{ panel?.sectionName }}
+                                    </h4>
+                                    <nz-collapse
+                                      style="background-color: white"
+                                      [nzBordered]="false"
+                                      [nzExpandIconPosition]="'right'"
+                                    >
+                                      <nz-collapse-panel
+                                        #p
+                                        class="chat-content-left"
+                                        *ngFor="
+                                          let topic of panel.topics;
+                                          let j = index
+                                        "
+                                        [nzHeader]="header"
+                                        [nzActive]="topic.active"
+                                        [ngStyle]="topic.customStyle"
+                                      >
+                                        <div
+                                          *ngFor="
+                                            let chat of topic?.chatTopicHistory
+                                          "
+                                          class="inner-questions"
+                                          [ngClass]="{
+                                            selected:
+                                              chat?.chatId === selectedChatId
+                                          }"
+                                          (click)="
+                                            getCourseChatHistory(
+                                              chat?.chatId,
+                                              chat?.time,
+                                              topic?.topicId
+                                            )
+                                          "
+                                        >
+                                          <div class="time">
+                                            <nz-tag
+                                              class="tag-border"
+                                              [nzColor]="'#212189'"
+                                              >{{ chat?.time }}</nz-tag
+                                            >
+                                          </div>
+                                          <div class="question-topic">
+                                            <span style="word-break: break-word">{{ chat?.title }}</span>
+                                          </div>
+                                          <div class="chat-more-option">
+                                            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" class="chat-more-option">
+                                              <span nz-icon nzType="more" ></span>
+                                            </a>
+                                            <nz-dropdown-menu #menu="nzDropdownMenu" nzPlacement="'bottomRight'">
+                                              <ul nz-menu>
+                                                <li nz-menu-item (click)="deleteChat(chat)">Delete</li>
+                                              </ul>
+                                            </nz-dropdown-menu>
+                                          </div>
+                                        </div>
+                                        <ng-template #header>
+                                          <div class="inner-chat-header">
+                                            <span
+                                              style="
+                                                text-align: left;
+                                                display: flex;
+                                                width: 85%;
+                                                word-break: break-word;
+                                                color: #292929;
+                                              "
+                                            >
+                                              {{ panel?.sequenceNumber }}.{{
+                                                topic?.sequence
+                                              }}
+                                              {{ topic?.topicName }}</span
+                                            >
+                                          </div>
+                                        </ng-template>
+                                      </nz-collapse-panel>
+                                    </nz-collapse>
+                                  </div>
+                                  <div
+                                    class="chat-img"
+                                    *ngIf="
+                                      !courseChatPresent && !courseChat.length
+                                    "
+                                  >
+                                    <img
+                                      src="../../../../assets/images/chat-ai.svg"
+                                      alt="Chat AI"
+                                    />
+                                    <div class="image-text-container">
+                                      <p class="image-text-container__text">
+                                        Ask your first question
+                                      </p>
+                                      <p class="image-text-container__text">
+                                        Start a chat
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div nz-col nzXs="24" nzMd="24" nzLg="16">
+                              <div class="chat-right-side">
+                                <div class="chat-box">
+                                  <div
+                                    *ngIf="courseChatPresent"
+                                    #chatContainer
+                                    class="chat-scroll"
+                                  >
+                                    <div
+                                      class="chat"
+                                      *ngFor="
+                                        let chat of courseChatHistory;
+                                        let i = index
+                                      "
+                                    >
+                                      <div class="row" nz-row [nzGutter]="16">
+                                        <div nz-col>
+                                          <div
+                                            *ngIf="
+                                              loggedInUser.profile
+                                                ?.profilePicture
+                                            "
+                                            class="user-avatar"
+                                          >
+                                            <nz-avatar
+                                              class="user-icon"
+                                              nzIcon="user"
+                                              [nzSrc]="
+                                                loggedInUser.profile
+                                                  ?.profilePicture
+                                              "
+                                              nzAlt="Profile"
+                                            ></nz-avatar>
+                                          </div>
+                                          <div
+                                            *ngIf="
+                                              !loggedInUser.profile
+                                                ?.profilePicture
+                                            "
+                                            class="user-avatar"
+                                          >
+                                            <nz-avatar
+                                              [nzSize]="50"
+                                              nz-comment-avatar
+                                              [nzText]="
+                                                getInitialOfLoggedInUser
+                                                  | initialCharactor
+                                              "
+                                              class="comment-avatar"
+                                              nzAlt="Profile"
+                                            ></nz-avatar>
+                                          </div>
+                                        </div>
+                                        <div nz-col style="flex: 1">
+                                          <div class="question">
+                                            <p>{{ chat?.question }}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div nz-row [nzGutter]="16">
+                                        <div nz-col>
+                                          <div class="user-avatar">
+                                            <nz-avatar
+                                              class="user-icon"
+                                              nzIcon="user"
+                                              nzSrc="../../../../assets/icons/chat-ai.svg"
+                                              nzAlt="Chat"
+                                            ></nz-avatar>
+                                          </div>
+                                        </div>
+                                        <div nz-col style="flex: 1">
+                                          <div class="reply">
+                                            <p>{{ chat?.answer }}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <nz-spin
+                                    [nzSpinning]="showSpinner"
+                                    class="spinner"
+                                    nzSimple
+                                  ></nz-spin>
+                                  <div class="row" nz-row [nzGutter]="16">
+                                    <div nz-col>
+                                      <div
+                                        *ngIf="
+                                          loggedInUser.profile?.profilePicture
+                                        "
+                                        class="user-avatar"
+                                      >
+                                        <nz-avatar
+                                          class="user-icon"
+                                          style="margin-left: 8px"
+                                          nzIcon="user"
+                                          [nzSrc]="
+                                            loggedInUser.profile?.profilePicture
+                                          "
+                                          nzAlt="Profile"
+                                        ></nz-avatar>
+                                      </div>
+                                      <div
+                                        *ngIf="
+                                          !loggedInUser.profile?.profilePicture
+                                        "
+                                        class="user-avatar"
+                                      >
+                                        <nz-avatar
+                                          [nzSize]="50"
+                                          nz-comment-avatar
+                                          style="margin-left: 8px"
+                                          [nzText]="
+                                            getInitialOfLoggedInUser
+                                              | initialCharactor
+                                          "
+                                          class="comment-avatar"
+                                          nzAlt="Preview"
+                                        ></nz-avatar>
+                                      </div>
+                                    </div>
+                                    <div nz-col style="flex: 1">
+                                      <textarea
+                                        (keyup.enter)="sendMessage()"
+                                        (keydown.control.enter)="sendMessage()"
+                                        (focus)="
+                                          getVideoCurrentTimeFromVideoPlayer()
+                                        "
+                                        class="text-area"
+                                        name="question"
+                                        [(ngModel)]="askQuestion"
+                                        [rows]="courseChatPresent ? '4' : '8'"
+                                        nz-input
+                                        placeholder="Write something"
+                                      ></textarea>
+                                    </div>
+                                  </div>
+                                  <div class="button-row">
+                                    <button
+                                      (click)="sendMessage()"
+                                      nz-button
+                                      class="chat-button"
+                                      [nzType]="'primary'"
+                                    >
+                                      Send
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </nz-tab>
+                  </ng-container>
+                  <nz-tab nzTitle="Notes" (nzClick)="onToggleTabs(1)">
+                    <div class="notes">
+                      <div class="notes-header">
+                        <h3>Add your notes</h3>
+                      </div>
+                      <div class="notes-content">
+                        <div class="add-notes">
+                          <textarea
+                            (focus)="getVideoCurrentTimeFromVideoPlayer()"
+                            class="note-field"
+                            [nzSize]="'large'"
+                            nz-input
+                            rows="4"
+                            name="note"
+                            [maxlength]="1000"
+                            [(ngModel)]="noteText"
+                            placeholder="Add your notes at {{
+                              currentVideoTime ?? '0sec'
+                            }}"
+                            type="text"
+                            (keydown.enter)="addNote()"
+                          ></textarea>
+                          <div
+                            style="color: red; padding-top: 5px"
+                            *ngIf="noteText?.length >= 1000"
+                          >
+                            Notes cannot exceed 1000 characters.
+                          </div>
+                        </div>
+                        <div class="add-note-button-box">
+                          <button
+                            [disabled]="noteText == ''"
+                            nz-button
+                            class="add-notes-button"
+                            (click)="addNote()"
+                            [nzType]="'primary'"
+                          >
+                            Add Notes
+                          </button>
+                        </div>
+                        <hr />
+                        <div class="note-list">
+                          <div
+                            *ngFor="let note of courseNote; let i = index"
+                            class="note"
+                          >
+                            <div nz-row class="note-title">
+                              <div style="width: 80%" class="note-label">
+                                <div class="time">
+                                  <nz-tag
+                                    class="tag-border"
+                                    [nzColor]="'#212189'"
+                                    >{{
+                                      note?.time ? note?.time : "0s"
+                                    }}</nz-tag
+                                  >
+                                </div>
+                                <div class="section-title">
+                                  <p>{{ i + 1 }}. {{ note?.sectionName }}</p>
+                                </div>
+                                <div class="topic-title">
+                                  <p>{{ note?.topicName }}</p>
+                                </div>
+                              </div>
+                              <div class="actions">
+                                <div nz-tooltip="Edit">
+                                  <img
+                                    class="cursor"
+                                    (click)="editNote(note?.topicNotesId)"
+                                    src="../../../../assets/icons/edit-icon.svg"
+                                    alt="Edit"
+                                  />
+                                </div>
+                                <div nz-tooltip="Delete">
+                                  <img
+                                    class="cursor"
+                                    (click)="deleteNote(note?.topicNotesId)"
+                                    src="../../../../assets/icons/delete-icon.svg"
+                                    alt="Delete"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div class="note-text">
+                              <nz-input-group
+                                *ngIf="!note?.disable"
+                                [nzSize]="'large'"
+                                class="note-input-group"
+                              >
+                                <textarea
+                                  #myInput
+                                  class="note-input"
+                                  [disabled]="note?.disable"
+                                  type="text"
+                                  name="note-{{ i }}"
+                                  [(ngModel)]="note.notes"
+                                  rows="4"
+                                  nz-input
+                                  [nzBorderless]="true"
+                                  [nzSize]="'large'"
+                                  (keydown.enter)="
+                                    updateNote(note?.topicNotesId)
+                                  "
+                                ></textarea>
+                              </nz-input-group>
+                              <p
+                                style="color: black; font-size: 16px"
+                                *ngIf="note?.disable"
+                              >
+                                {{ note?.notes }}
+                              </p>
+                            </div>
+                            <div
+                              *ngIf="!note?.disable"
+                              class="add-note-button-box"
+                            >
+                              <button
+                                [disabled]="note?.notes == ''"
+                                (click)="updateNote(note?.topicNotesId)"
+                                nz-button
+                                class="add-notes-button"
+                                [nzType]="'primary'"
+                              >
+                                Update Note
+                              </button>
+                            </div>
+                            <hr />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </nz-tab>
+                  <nz-tab nzTitle="Q&A" (nzClick)="onToggleTabs(2)">
+                    <div class="QandA" id="QandA">
+                      <div class="qa-header" id="qa-header">
+                        <h3>
+                          All questions in this {{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}}  ({{ totalQuestions }})
+                        </h3>
+                      </div>
+                      <div class="qa-content">
+                        <div
+                          class="qa-scroller"
+                          (scroll)="onQuestionScroll($event)"
+                        >
+                          <ng-template
+                            ngFor
+                            let-question
+                            let-index
+                            [ngForOf]="questionAnswers?.questionDetails"
+                          >
+                            <ng-template
+                              #commentTemplateRef
+                              let-question="question"
+                              let-i="index"
+                            >
+                              <nz-comment [nzAuthor]="question.userName">
+                                <nz-avatar
+                                  (click)="
+                                    routeToInsructorProfile(
+                                      question?.userProfileUrl
+                                    )
+                                  "
+                                  [nzSize]="32"
+                                  nz-comment-avatar
+                                  [nzText]="
+                                    question.userName | initialCharactor
+                                  "
+                                  [nzSrc]="question?.profileImage"
+                                  class="comment-avatar"
+                                  nzAlt="Preview"
+                                ></nz-avatar>
+                                <nz-comment-content>
+                                  <p *ngIf="question?.questionId">
+                                    {{ question?.questionText }}
+                                  </p>
+                                  <p *ngIf="question?.answerId">
+                                    {{ question?.answerText }}
+                                  </p>
+                                </nz-comment-content>
+                                <div
+                                  class="reply-wrapper"
+                                  *ngIf="!question?.answerText"
+                                >
+                                  <div>
+                                    <small
+                                      (click)="toggleReplyAndScroll(question)"
+                                      class="reply-comment"
+                                      >Reply</small
+                                    >
+                                  </div>
+                                  <div *ngIf="question?.questionId">
+                                    <small class="reply-comment">{{
+                                      question?.totalReplies
+                                    }}</small>
+                                    &nbsp;
+                                    <img
+                                      class="msg-icon"
+                                      (click)="getQuestionReplies(question)"
+                                      src="../../../../assets/icons/msg-icon.svg"
+                                      alt="Message"
+                                    />
+                                  </div>
+                                </div>
+                                <ng-container
+                                  *ngIf="
+                                    question.answerDetail &&
+                                    question.answerDetail.length &&
+                                    question?.showQuestionAnswers
+                                  "
+                                >
+                                  <ng-template
+                                    ngFor
+                                    let-answer
+                                    [ngForOf]="question.answerDetail"
+                                  >
+                                    <ng-template
+                                      [ngTemplateOutlet]="commentTemplateRef"
+                                      [ngTemplateOutletContext]="{
+                                        question: answer
+                                      }"
+                                    ></ng-template>
+                                  </ng-template>
+                                </ng-container>
+                                <div
+                                  *ngIf="question?.showReply"
+                                  class="reply-box"
+                                >
+                                  <nz-input-group
+                                    [nzSize]="'large'"
+                                    class="input-group"
+                                    [nzAddOnAfter]="sendSuffix"
+                                  >
+                                    <label class="reply-label">{{
+                                      getInitialOfLoggedInUser
+                                    }}</label>
+                                    <input
+                                      #replyInput
+                                      type="text"
+                                      placeholder="Add Reply"
+                                      nz-input
+                                      name="answer-{{ i }}"
+                                      [(ngModel)]="question.replyText"
+                                      [nzBorderless]="true"
+                                      [nzSize]="'large'"
+                                      (keydown.enter)="replyQuestion(question)"
+                                      [attr.id]="'reply-input-' + question.questionId"
+                                    />
+                                    <ng-template #sendSuffix>
+                                      <img
+                                        (click)="replyQuestion(question)"
+                                        src="../../../../assets/icons/reply-button.svg"
+                                        alt="Reply"
+                                      />
+                                    </ng-template>
+                                  </nz-input-group>
+                                </div>
+                              </nz-comment>
+                            </ng-template>
+                            <ng-template
+                              [ngTemplateOutlet]="commentTemplateRef"
+                              [ngTemplateOutletContext]="{
+                                question: question,
+                                index: index
+                              }"
+                            >
+                            </ng-template>
+                          </ng-template>
+                        </div>
+                        <hr />
+                        <div class="ask-question">
+                          <div class="user-avatar">
+                            <button
+                              *ngIf="!loggedInUser?.profilePicture"
+                              class="side-nav-button-ques"
+                              nz-button
+                              nzType="primary"
+                              nzShape="circle"
+                            >
+                              {{ getInitialOfLoggedInUser | initialCharactor }}
+                            </button>
+                            <nz-avatar
+                              *ngIf="loggedInUser?.profilePicture"
+                              [nzSize]="32"
+                              nzIcon="user"
+                              nzAlt="Preview"
+                              class="sidebar-nav-button1"
+                              [nzSrc]="loggedInUser?.profilePicture"
+                            ></nz-avatar>
+                          </div>
+                          <div class="text-box">
+                            <textarea
+                              class="text-box"
+                              rows="4"
+                              nz-input
+                              name="question"
+                              [(ngModel)]="questionText"
+                              placeholder="Write something"
+                              (keydown.enter)="addQuestion()"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div
+                          class="row"
+                          style="justify-content: end"
+                          nz-row
+                          [nzGutter]="16"
+                        >
+                          <div nz-col>
+                            <button
+                              nz-button
+                              class="question-button"
+                              (click)="addQuestion()"
+                              [nzType]="'primary'"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </nz-tab>
+                  <nz-tab
+                    *ngIf="currentSelectedTopicType != 'Quiz'"
+                    nzTitle="Summary"
+                    (nzClick)="onToggleTabs(3)"
+                  >
+                    <div class="summary">
+                      <p>{{ summary }}</p>
+                    </div>
+                  </nz-tab>
+                  <nz-tab nzTitle="Reviews" (nzClick)="onToggleTabs(4)">
+                    <div class="review">
+                      <div class="review-header">
+                        <h3>Rate this {{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}} </h3>
+                        <small class="review-rate"
+                          >Tell others what you think.</small
+                        >
+                        <button
+                          id="course-review-id"
+                          (click)="openReviewModal()"
+                          nz-button
+                          class="write-review-button"
+                          [nzType]="'primary'"
+                        >
+                          Write Review
+                        </button>
+                      </div>
+                      <hr />
+                      <div class="review-content">
+                        <div class="feedback-section">
+                          <div class="feedback-header" id="feedback-header">
+                            <h3>Students Feedback</h3>
+                          </div>
+                          <div style="justify-content: space-between" nz-row>
+                            <div nz-col nzXs="24" nzMd="24" nzLg="8">
+                              <div class="rating-section">
+                                <div>
+                                  <h1 class="rating-heading">
+                                    {{
+                                      completeReview?.totalReview
+                                        ? completeReview?.totalReview.toFixed(1)
+                                        : "0.0"
+                                    }}
+                                  </h1>
+                                </div>
+                                <div style="margin-left: 10px">
+                                  <nz-rate
+                                    class="star-container"
+                                    [ngModel]="completeReview?.totalReview"
+                                    nzAllowHalf
+                                    nzDisabled
+                                  ></nz-rate>
+                                  <p class="rating-text">
+                                    Based on
+                                      {{ completeReview?.totalUsers ? completeReview.totalUsers : 0 }}
+                                      {{ completeReview?.totalUsers === 1 ? 'review' : 'reviews' }}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div nz-col nzXs="24" nzLg="16">
+                              <div class="progress-bar">
+                                <div class="line-padding" nz-row>
+                                  <div nz-col>
+                                    <small class="text-margin">5</small
+                                    ><span
+                                      class="star-span"
+                                      nz-icon
+                                      nzType="star"
+                                      nzTheme="fill"
+                                    ></span>
+                                  </div>
+                                  <div nz-col nzSpan="22">
+                                    <nz-progress
+                                      [nzPercent]="completeReview?.rating5"
+                                      nzStatus="active"
+                                      [nzStrokeColor]="'#FFC600'"
+                                    ></nz-progress>
+                                  </div>
+                                </div>
+                                <div class="line-padding" nz-row>
+                                  <div nz-col>
+                                    <small class="text-margin">4</small
+                                    ><span
+                                      class="star-span"
+                                      nz-icon
+                                      nzType="star"
+                                      nzTheme="fill"
+                                    ></span>
+                                  </div>
+                                  <div nz-col nzSpan="22">
+                                    <nz-progress
+                                      [nzPercent]="completeReview?.rating4"
+                                      nzStatus="active"
+                                      [nzStrokeColor]="'#FFC600'"
+                                    ></nz-progress>
+                                  </div>
+                                </div>
+                                <div class="line-padding" nz-row>
+                                  <div nz-col>
+                                    <small class="text-margin">3</small
+                                    ><span
+                                      class="star-span"
+                                      nz-icon
+                                      nzType="star"
+                                      nzTheme="fill"
+                                    ></span>
+                                  </div>
+                                  <div nz-col nzSpan="22">
+                                    <nz-progress
+                                      [nzPercent]="completeReview?.rating3"
+                                      nzStatus="active"
+                                      [nzStrokeColor]="'#FFC600'"
+                                    ></nz-progress>
+                                  </div>
+                                </div>
+                                <div class="line-padding" nz-row>
+                                  <div nz-col>
+                                    <small class="text-margin">2</small
+                                    ><span
+                                      class="star-span"
+                                      nz-icon
+                                      nzType="star"
+                                      nzTheme="fill"
+                                    ></span>
+                                  </div>
+                                  <div nz-col nzSpan="22">
+                                    <nz-progress
+                                      [nzPercent]="completeReview?.rating2"
+                                      nzStatus="active"
+                                      [nzStrokeColor]="'#FFC600'"
+                                    ></nz-progress>
+                                  </div>
+                                </div>
+                                <div class="line-padding" nz-row>
+                                  <div nz-col>
+                                    <small
+                                      style="
+                                        margin-right: 5.2px;
+                                        margin-left: 2px;
+                                      "
+                                      >1</small
+                                    ><span
+                                      class="star-span"
+                                      nz-icon
+                                      nzType="star"
+                                      nzTheme="fill"
+                                    ></span>
+                                  </div>
+                                  <div nz-col nzSpan="22">
+                                    <nz-progress
+                                      [nzPercent]="completeReview?.rating1"
+                                      nzStatus="active"
+                                      [nzStrokeColor]="'#FFC600'"
+                                    ></nz-progress>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                          
+                            <div
+                              *ngFor="
+                                let comment of completeReview?.feedbackComments;
+                                let i = index
+                              "
+                              class="comment-feedback"
+                            >
+                              <div class="comment">
+                                <button
+                                  *ngIf="comment?.profileImage == null"
+                                  class="side-nav-button-review"
+                                  nz-button
+                                  nzType="primary"
+                                  nzShape="circle"
+                                >
+                                  {{ comment?.userName | initialCharactor }}
+                                </button>
+                                <nz-avatar
+                                  *ngIf="comment?.profileImage != null"
+                                  [nzSize]="32"
+                                  nzIcon="user"
+                                  nzAlt="Preview"
+                                  class="sidebar-nav-button"
+                                  [nzSrc]="comment?.profileImage"
+                                ></nz-avatar>
+                                <span class="commentator">
+                                  {{ comment?.userName }}</span
+                                >
+                              </div>
+                              <div class="comment pt-2 pb-4">
+                                <nz-rate
+                                  [ngModel]="comment?.rating"
+                                  nzAllowHalf
+                                  nzDisabled
+                                ></nz-rate>
+                                <small class="date">{{
+                                  comment?.createdAt | date : "longDate"
+                                }}</small>
+                              </div>
+                              <span class="comment-text">{{
+                                comment?.comment
+                              }}</span>
+                              <div class="comment-like-dislike pt-4">
+                                <small>Did you find this helpful?</small>
+                                <small
+                                  >{{ comment?.likes
+                                  }}<img
+                                    class="cursor-pointer"
+                                    (click)="
+                                      commentActions('LIKED', comment?.reviewId)
+                                    "
+                                    height="20px"
+                                    width="20px"
+                                    src="../../../../assets/icons/like.svg"
+                                    alt="Like"
+                                /></small>
+                                <small
+                                  >{{ comment?.dislikes
+                                  }}<img
+                                    class="cursor-pointer"
+                                    (click)="
+                                      commentActions(
+                                        'DISLIKED',
+                                        comment?.reviewId
+                                      )
+                                    "
+                                    height="20px"
+                                    width="20px"
+                                    src="../../../../assets/icons/dislike.svg"
+                                    alt="Dislike"
+                                /></small>
+                              </div>
+                              <hr />
+                              
+                              <!-- <div class="comment pt-2 pb-4">
+                          <nz-rate
+                            [ngModel]="comment?.rating"
+                            nzAllowHalf
+                            nzDisabled
+                          ></nz-rate>
+                          <small class="date font-bold">{{
+                            comment?.createdAt | date : "longDate"
+                          }}</small>
+                        </div>
+                        <span class="comment-text">{{ comment?.comment }}</span>
+                        <div class="comment-like-dislike pt-4">
+                          <small>Did you find this helpful?</small>
+                          <small
+                            >{{ comment?.likes
+                            }}<img
+                              (click)="
+                                commentActions('LIKED', comment?.reviewId)
+                              "
+                              height="20px"
+                              width="20px"
+                              src="../../../../assets/icons/like.svg"
+                              alt="Like"
+                          /></small>
+                          <small
+                            >{{ comment?.dislikes
+                            }}<img
+                              (click)="
+                                commentActions('DISLIKED', comment?.reviewId)
+                              "
+                              height="20px"
+                              width="20px"
+                              src="../../../../assets/icons/dislike.svg"
+                              alt="Dislike"
+                          /></small>
+                        </div> 
+                        <hr /> -->
+                            </div>
+                            <button
+                              nz-button
+                              nzType="primary"
+                              nzGhost
+                              class="show-more-button"
+                              (click)="onReviewScroll($event)"
+                              [disabled]="!hasMoreComments"
+                              >
+                              Show More
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                  </nz-tab>
+                </nz-tabset>
+              </div>
+            </div>
+            <div class="hide-class" nz-col nzXs="24" nzMd="24" nzLg="7">
+              <nz-card class="card">
+                <div class="card-header">
+                  <h4>{{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}} Contents</h4>
+                </div>
+                <div class="sections">
+                  <nz-collapse class="collapse">
+                    <nz-collapse-panel
+                      class="collapse-header"
+                      *ngFor="let section of sectionPanelList; let i = index"
+                      [nzHeader]="header"
+                      [nzExtra]="expandIcon"
+                      [nzShowArrow]="false"
+                      (nzActiveChange)="isPanelActive(section, $event, i)"
+                      [nzActive]="section?.active"
+                      [class.pinnedCollapse]="section.alternateSection"
+                    >
+                      <div
+                        *ngIf="section?.alternateSectionPanelList?.length == 0"
+                        class="topics"
+                      >
+                        <div
+                          class="topic-header"
+                          [class.pinnedCollapse-topic]="
+                            section.alternateSection
+                          "
+                          *ngFor="
+                            let topic of section?.topicList;
+                            let j = index
+                          "
+                          (click)="onSelectTopicFromPlayList(section, topic)"
+                          [class.selected]="
+                            topic?.topicId == currentSelectedTopicId
+                          "
+                        >
+                          <div class="topic-name">
+                            <label
+                              nz-checkbox
+                              (ngModelChange)="
+                                completeTopic(
+                                  section,
+                                  topic,
+                                  $event,
+                                  topic?.topicId,
+                                  topic?.seekTime,
+                                  topic?.topicType
+                                )
+                              "
+                              [(ngModel)]="topic.isCompleted"
+                              >{{ i + 1 }}.{{ j + 1 }}</label
+                            >
+                            <span class="overflow-hidden w-100"
+                              ><p class="break-word">
+                                {{ topic?.topicName }}
+                              </p></span
+                            >
+                          </div>
+                          <div class="topic-type">
+                            <div>
+                              <img
+                                alt="Video"
+                                *ngIf="topic?.topicType == 'Video'"
+                                src="../../../../assets/icons/video-icon.svg"
+                              />
+                              <img
+                                alt="Article"
+                                *ngIf="topic?.topicType == 'Article'"
+                                src="../../../../assets/icons/document.svg"
+                              />
+                              <img
+                                alt="Animation"
+                                *ngIf="topic?.topicType == 'Animation'"
+                                src="../../../../assets/icons/animation.svg"
+                              />
+                              <img
+                                alt="Quiz"
+                                *ngIf="topic?.topicType == 'Quiz'"
+                                src="../../../../assets/icons/Quiz.svg"
+                              />
+                              &nbsp;
+                              <small>{{
+                                topic?.topicType != "Quiz"
+                                  ? topic?.topicDuration
+                                  : ""
+                              }}</small>
+                            </div>
+                            <div *ngIf="topic.docs" class="resources-container">
+                              <!-- Adjust the value as needed -->
+                              <a
+                                class="resources-dropdown"
+                                nz-dropdown
+                                nzTrigger="click"
+                                [nzDropdownMenu]="menu"
+                                (click)="$event.stopPropagation()"
+                              >
+                                Resources
+                                <span
+                                  style="margin-top: 1px"
+                                  nz-icon
+                                  nzType="down"
+                                ></span>
+                              </a>
+                              <nz-dropdown-menu #menu="nzDropdownMenu">
+                                <ul nz-menu>
+                                  <li
+                                    *ngFor="let doc of topic.docs"
+                                    nz-menu-item
+                                    (click)="openDoc(doc)"
+                                  >
+                                    {{ doc.name }}
+                                  </li>
+                                </ul>
+                              </nz-dropdown-menu>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        *ngIf="section?.alternateSectionPanelList?.length != 0"
+                        class="alternate-section-margin"
+                      >
+                        <nz-collapse>
+                          <nz-collapse-panel
+                            class="collapse-alternate collapse-alternate-color"
+                            *ngFor="
+                              let alternateSection of section.alternateSectionPanelList;
+                              let k = index
+                            "
+                            [nzHeader]="header_alternate"
+                            [nzExtra]="expandIcon_alternate"
+                            [nzActive]="false"
+                            [nzShowArrow]="false"
+                            (nzActiveChange)="
+                              isAlternatePanelActive(
+                                alternateSection,
+                                $event,
+                                i
+                              )
+                            "
+                          >
+                            <div class="topics">
+                              <div
+                                class="alternate-topic-header"
+                                *ngFor="
+                                  let topic of alternateSection.topicList;
+                                  let j = index
+                                "
+                                (click)="
+                                  onSelectTopicFromPlayList(
+                                    alternateSection,
+                                    topic
+                                  )
+                                "
+                                [class.alternate-topic-selected]="
+                                  topic?.topicId == currentSelectedTopicId
+                                "
+                              >
+                                <div class="topic-name">
+                                  <label
+                                    nz-checkbox
+                                    (ngModelChange)="
+                                      completeTopic(
+                                        alternateSection,
+                                        topic,
+                                        $event,
+                                        topic?.topicId,
+                                        topic?.seekTime,
+                                        topic?.topicType
+                                      )
+                                    "
+                                    [(ngModel)]="topic.isCompleted"
+                                    >{{ i + 1 }}.{{ j + 1 }}</label
+                                  >
+                                  <span>{{ topic?.topicName }}</span>
+                                </div>
+                                <div class="topic-type">
+                                  <div>
+                                    <img
+                                      alt="Video"
+                                      *ngIf="topic?.topicType == 'Video'"
+                                      src="../../../../assets/icons/video-icon.svg"
+                                    />
+                                    <img
+                                      alt="Article"
+                                      *ngIf="topic?.topicType == 'Article'"
+                                      src="../../../../assets/icons/document.svg"
+                                    />
+                                    <img
+                                      alt="Animation"
+                                      *ngIf="topic?.topicType == 'Animation'"
+                                      src="../../../../assets/icons/animation.svg"
+                                    />
+                                    <img
+                                      alt="Quiz"
+                                      *ngIf="topic?.topicType == 'Quiz'"
+                                      src="../../../../assets/icons/Quiz.svg"
+                                    />
+                                    &nbsp;
+                                    <small>{{
+                                      topic?.topicType != "Quiz"
+                                        ? topic?.topicDuration
+                                        : ""
+                                    }}</small>
+                                  </div>
+                                  <div
+                                    *ngIf="topic.docs"
+                                    class="resources-container"
+                                  >
+                                    <!-- Adjust the value as needed -->
+                                    <a
+                                      class="resources-dropdown"
+                                      nz-dropdown
+                                      nzTrigger="click"
+                                      [nzDropdownMenu]="menu"
+                                      (click)="$event.stopPropagation()"
+                                    >
+                                      Resources
+                                      <span nz-icon nzType="down"></span>
+                                    </a>
+                                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                                      <ul nz-menu>
+                                        <li
+                                          *ngFor="let doc of topic.docs"
+                                          nz-menu-item
+                                          (click)="openDoc(doc)"
+                                        >
+                                          {{ doc.name }}
+                                        </li>
+                                      </ul>
+                                    </nz-dropdown-menu>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <ng-template #header_alternate>
+                              <div class="collapse-alternate display-flex pb-4">
+                                <div class="alternate-section-container">
+                                  <nz-avatar
+                                    style="margin-bottom: 40px"
+                                    [nzSize]="28"
+                                    nzIcon="user"
+                                    nzAlt="Preview"
+                                    [nzSrc]="alternateSection?.instructorImage"
+                                  ></nz-avatar>
+                                </div>
+                                <div>
+                                  <p
+                                    class="alternate-instructor-size color-blue"
+                                    style="
+                                      margin: 0;
+                                      margin-left: 10px;
+                                      font-weight: 600;
+                                    "
+                                  >
+                                    {{ alternateSection?.instructorName }}
+                                    <small class="alternate-reviews">{{
+                                      alternateSection?.totalReviews?.toFixed(
+                                        2
+                                      ) ?? 0
+                                    }}</small>
+                                    <span>
+                                      <nz-rate
+                                        *ngIf="
+                                          alternateSection?.totalReviews > 0
+                                        "
+                                        class="custom-rate"
+                                        [ngModel]="
+                                          alternateSection?.totalReviews
+                                        "
+                                        nzAllowHalf
+                                        nzDisabled
+                                      ></nz-rate>
+                                      <nz-rate
+                                        class="disabled-star"
+                                        *ngIf="
+                                          alternateSection?.totalReviews == 0
+                                        "
+                                        [ngModel]="5"
+                                        nzAllowHalf
+                                        nzDisabled
+                                      ></nz-rate>
+                                    </span>
+                                    <span class="alternate-reviews">
+                                      ({{ alternateSection?.totalReviewer }})
+                                    </span>
+                                  </p>
+                                  <p
+                                    class="alternate-instructor-size alternate-instructor-section-name"
+                                    nz-tooltip="{{
+                                      alternateSection?.sectionName
+                                    }}"
+                                  >
+                                    {{
+                                      alternateSection?.sectionName?.length > 35
+                                        ? alternateSection?.sectionName.substring(
+                                            0,
+                                            35
+                                          ) + "..."
+                                        : alternateSection?.sectionName
+                                    }}
+                                  </p>
+                                  <span style="margin-left: 6%">
+                                    <small
+                                      >{{
+                                        alternateSection?.totalTopicCompleted
+                                      }}/{{
+                                        alternateSection?.topicList?.length
+                                      }}</small
+                                    >
+                                    &nbsp;
+                                    <small>{{
+                                      alternateSection?.sectionDuration
+                                    }}</small>
+                                  </span>
+                                </div>
+                              </div>
+                            </ng-template>
+
+                            <ng-template #expandIcon_alternate>
+                              <ng-container>
+                                <div class="alternate-icon-container">
+                                  <span style="padding-right: 8px">
+                                    <span *ngIf="alternateSection?.isFree">
+                                      <span
+                                        (click)="
+                                          pinAlternateInstructor(
+                                            alternateSection?.courseId,
+                                            alternateSection?.sectionId
+                                          )
+                                        "
+                                        ><img
+                                          src="../../../../assets/icons/alternate_pin.svg"
+                                          alt="Pin"
+                                      /></span>
+                                      <span>
+                                        <img
+                                          alt="Icon"
+                                          (click)="
+                                            alternateToggleSectionPanel(
+                                              alternateSection
+                                            )
+                                          "
+                                          class="alternate-arrow-icon arrow-icon-margin"
+                                          [src]="
+                                            alternateSection?.active
+                                              ? '../../../../assets/icons/arrow-collapse.svg'
+                                              : '../../../../assets/icons/ic_expand_more.svg'
+                                          "
+                                        />
+                                      </span>
+                                    </span>
+                                    <span
+                                      *ngIf="!alternateSection?.isFree"
+                                      class="display-flex"
+                                      style="gap: 16px"
+                                    >
+                                      <span class="font-bold">{{
+                                        alternateSection?.courseType
+                                      }}</span>
+                                      <img
+                                        class="course-type-icon"
+                                        *ngIf="
+                                          alternateSection?.courseType ===
+                                          'SUBSCRIPTION'
+                                        "
+                                        src="../../../../assets/icons/lock.svg"
+                                      />
+                                      <img
+                                        class="course-type-icon"
+                                        *ngIf="
+                                          alternateSection?.courseType ===
+                                          'PREMIUM'
+                                        "
+                                        src="../../../../assets/icons/premium.png"
+                                      />
+                                    </span>
+                                  </span>
+                                </div>
+
+                                <button
+                                  *ngIf="k == 0"
+                                  (click)="
+                                    closeAlternateCollapseDropdown(
+                                      $event,
+                                      section
+                                    )
+                                  "
+                                  nz-button
+                                  nzType="dashed"
+                                  nzSize="small"
+                                  class="unpin-alternate-section-button"
+                                  [ngClass]="{
+                                    'unpin-alternate-section-button-height1':
+                                      !alternateSection.active,
+                                    'unpin-alternate-section-button-height2':
+                                      alternateSection.active
+                                  }"
+                                >
+                                  <img
+                                    alt="Close"
+                                    class="arrow-icon-margin"
+                                    src="../../../../assets/icons/alternate_close.svg"
+                                  />
+                                </button>
+                              </ng-container>
+                            </ng-template>
+                          </nz-collapse-panel>
+                        </nz-collapse>
+                      </div>
+
+                      <ng-template #expandIcon>
+                        <ng-container *ngIf="section?.showHeader">
+                          <div class="icon-container">
+                            <span
+                              *ngIf="section?.alternateSection"
+                              (click)="
+                                unPinAlternateInstructor(section?.sectionId)
+                              "
+                              class="pushpin-icon-straight"
+                              [nzRotate]="-44"
+                              nz-icon
+                              nzType="pushpin"
+                              nzTheme="fill"
+                            ></span>
+                            <img
+                              alt="Icon"
+                              (click)="toggleSectionPanel($event, section, i)"
+                              class="arrow-icon"
+                              [class.arrow-icon-top]="section?.alternateSection"
+                              [src]="
+                                section?.active
+                                  ? '../../../../assets/icons/arrow-collapse.svg'
+                                  : '../../../../assets/icons/ic_expand_more.svg'
+                              "
+                            />
+                          </div>
+
+                          <button
+                            (click)="openAlternatePanel($event, section, i)"
+                            class="alternate-section-button"
+                            [ngStyle]="{
+                              'background-color': !section?.free
+                                ? '#C2C7D2'
+                                : '#212189'
+                            }"
+                            nz-button
+                            nzType="dashed"
+                            nzSize="small"
+                          >
+                            <img
+                              alt="Arrow Open"
+                              class="arrow-icon-margin"
+                              src="../../../../assets/icons/arrow-open.svg"
+                            />
+                          </button>
+                        </ng-container>
+                      </ng-template>
+
+                      <ng-template #header>
+                        <div
+                          class="section-container"
+                          [class.pinnedCollapse]="section.alternateSection"
+                          *ngIf="section?.showHeader"
+                        >
+                          <p>
+                            Section {{ section?.sequence }} :
+                            {{ section?.sectionName }}
+                          </p>
+                          <small
+                            >{{ section?.totalTopicCompleted }}/{{
+                              section?.totalTopics
+                            }}</small
+                          >
+                          &nbsp; <small>{{ section?.sectionDuration }}</small>
+                          <img
+                            class="ml-3"
+                            alt="Lock"
+                            *ngIf="!section?.free"
+                            src="../../../../assets/icons/lock.svg"
+                          />
+                        </div>
+                      </ng-template>
+                    </nz-collapse-panel>
+                  </nz-collapse>
+                </div>
+              </nz-card>
+            </div>
+          </div>
+        </div>
+        </ng-container>
+        <ng-container *ngIf="isReviewing">
+          <app-quiz-review-questions
+            *ngIf="isReviewing"
+            [quizData]="questionAnswersQuiz"
+            [currentSelectedTopic]="currentSelectedTopic"
+            (backToQuizEvent)="reviewCallBack($event)"
+            (retakeQuizEvent)="retakeQuiz($event)"
+          ></app-quiz-review-questions>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+  <nz-dropdown-menu #menuUser="nzDropdownMenu">
+    <div id="user-profile-menu">
+      <ul nz-menu>
+        <li class="blue-divider" nz-menu-divider></li>
+        <div>
+          <div class="user-profile">
+            <div>
+              <button
+                *ngIf="!loggedInUser?.profilePicture"
+                class="side-nav-button1"
+                nz-button
+                nzType="primary"
+                nzShape="circle"
+              >
+                {{ getInitialOfLoggedInUser | initialCharactor }}
+              </button>
+              <nz-avatar
+                *ngIf="loggedInUser?.profilePicture"
+                [nzSize]="44"
+                nzIcon="user"
+                class="sidebar-nav-button1"
+                nzAlt="Preview"
+                [nzSrc]="loggedInUser?.profilePicture"
+              ></nz-avatar>
+            </div>
+            <div class="user-profile-text">
+              <p>{{ loggedInUser?.fullName }}</p>
+              <p>{{ loggedInUser?.email }}</p>
+              <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+            </div>
+          </div>
+          <li nz-menu-divider></li>
+          <li (click)="routeToMyCourses()" nz-menu-item>
+            <img
+              style="margin-right: 25px; width: 15px"
+              src="../../../../assets/icons/courses-menu.svg"
+            />
+            My Courses
+          </li>
+          <li (click)="routeToFavoriteCourses()" nz-menu-item>
+            <img
+              style="margin-right: 25px; width: 15px"
+              src="../../../../assets/icons/heart-menu.svg"
+            />
+            Favorites
+          </li>
+          <li nz-menu-item (click)="routeToNotificationPage()">
+            <img
+              style="margin-right: 25px; width: 15px"
+              src="../../../../assets/icons/noti-menu.svg"
+            />Notifications
+          </li>
+          <li (click)="routeToSubscription()" nz-menu-item>
+            <img
+              style="margin-right: 25px; width: 15px"
+              src="../../../../assets/icons/subscription-menu.svg"
+            />Subscriptions
+          </li>
+          <li (click)="routeToInstructorDashboard()" nz-menu-item>
+            <img
+              style="margin-right: 25px; width: 15px"
+              src="../../../../assets/icons/dashboard-menu.svg"
+            />
+            Teacher's Dashboard
+          </li>
+          <li nz-menu-item (click)="signOut()">
+            <img
+              style="margin-right: 25px; width: 15px"
+              src="../../../../assets/icons/logout.svg"
+            />Logout
+          </li>
+        </div>
+      </ul>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuMore="nzDropdownMenu">
+    <div id="more-menu">
+      <ul nz-menu>
+        <li class="blue-divider" nz-menu-divider></li>
+        <div>
+          <li (click)="openReviewModal()" nz-menu-item>Edit {{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}}  Rating</li>
+          <li nz-menu-divider></li>
+          <li (click)="toggleFavoriteCourse()" nz-menu-item>
+            Add to Favorites
+          </li>
+        </div>
+      </ul>
+    </div>
+  </nz-dropdown-menu>
+
+  <ng-template #loadingTemplate>
+    <div class="spinner-container">
+      <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
+    </div>
+  </ng-template>
+
+

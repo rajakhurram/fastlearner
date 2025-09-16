@@ -1,0 +1,331 @@
+<div class="top-heading display-flex" id="top">
+  <h3>AI Grader</h3>
+
+  <nz-card *ngIf="showUpgradePlan" class="grader-card ml-auto">
+    <div class="grader-info">
+      <div class="progress-section">
+        <div class="label">Papers Graded</div>
+        <div class="progress-bar">
+          <span class="plan">Free</span>
+          <div style="width: 200px">
+            <nz-progress
+              [nzPercent]="(gradedPapers / allowedPapers) * 100"
+              [nzStrokeColor]="'#212189'"
+              [nzShowInfo]="false"
+            ></nz-progress>
+          </div>
+
+          <div class="count">{{ gradedPapers }} / {{ allowedPapers }}</div>
+        </div>
+      </div>
+      <app-button (buttonCallBack)="openSubscriptionPlan()">
+        <img
+          src="./../../../assets/icons/Upgrade.svg"
+          alt="Upgrade"
+          width="20"
+          height="20"
+          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px"
+        />
+        Upgrade
+      </app-button>
+    </div>
+  </nz-card>
+</div>
+
+<div class="container">
+  <nz-card [ngStyle]="{}" class="card">
+    <div nz-row class="name-bg border-radius">
+      <div class="display-flex align-items-center">
+        <span
+          class="cursor-pointer align-items-center color-blue"
+          [nzIconfont]="'16'"
+          nzType="arrow-left"
+          nzTheme="outline"
+          nz-icon
+          (click)="backToResultScreen()"
+        ></span>
+        <span class="std-name color-blue font-bold font-16">{{
+          result?.studentName
+        }}</span>
+      </div>
+
+      <div class="cursor-pointer display-flex align-items-center ml-auto">
+        <span
+          class="display-flex align-items-center color-blue"
+          [nzIconfont]="'16'"
+          nzType="left"
+          nzTheme="outline"
+          nz-icon
+          (click)="onPageChange('left')"
+        ></span>
+        <span class="std-name color-blue font-bold font-12"
+          >{{ resultPayload?.pageNo + 1 }} of {{ totalPages }}</span
+        >
+        <span
+          class="cursor-pointer align-items-center color-blue"
+          [nzIconfont]="'16'"
+          nzType="right"
+          nzTheme="outline"
+          nz-icon
+          (click)="onPageChange('right')"
+        ></span>
+      </div>
+    </div>
+
+    <div nz-row class="result-details-bg border-radius mt-2">
+      <div class="display-flex flex-direction-column">
+        <span class="color-black font-12">Class</span>
+        <span class="color-blue font-bold font-12">{{
+          result?.className
+        }}</span>
+      </div>
+      <div class="display-flex flex-direction-column ml-2">
+        <span class="color-black font-12">Assessment</span>
+        <span class="color-blue font-bold font-12">{{
+          result?.assessmentName
+        }}</span>
+      </div>
+      <div class="display-flex flex-direction-column ml-2">
+        <span class="color-black font-12">Email</span>
+
+        <!-- Display email and edit icon -->
+        <span
+          class="color-blue font-bold font-12 display-flex align-center"
+          *ngIf="!result?.isEditingEmail && !result?.valuesLoader"
+        >
+          {{ result?.studentEmail }}
+          <i
+            nz-icon
+            nzType="edit"
+            class="ml-2 text-blue-500 cursor-pointer"
+            style="margin-top: 2px; color: #313131"
+            (click)="enableEditEmail(result)"
+          ></i>
+        </span>
+
+        <!-- Loading spinner -->
+        <span
+          *ngIf="result?.valuesLoader"
+          style="display: inline-flex; align-items: center; height: 20px"
+        >
+          <i
+            nz-icon
+            nzType="loading"
+            nzTheme="outline"
+            [style.fontSize.px]="18"
+            class="spin-icon"
+          ></i>
+        </span>
+
+        <!-- Input field for editing -->
+        <input
+          *ngIf="result?.isEditingEmail && !result?.valuesLoader"
+          #emailEdit
+          nz-input
+          [(ngModel)]="result.studentEmail"
+          (keydown.enter)="saveEmail($event, result)"
+          (blur)="cancelEdit(result)"
+          autofocus
+          class="font-12"
+        />
+      </div>
+
+      <div class="display-flex flex-direction-column ml-2">
+        <span class="color-black font-12">Score</span>
+        <span class="color-blue font-bold font-12">
+          {{
+            result?.grade != null
+              ? result.grade % 1 === 0
+                ? result.grade
+                : result.grade.toFixed(1)
+              : "-"
+          }}/{{ result?.score }}
+        </span>
+      </div>
+
+      <div class="display-flex ml-auto">
+        <div>
+          <app-button
+            [config]="shareButtonConfig"
+            [disabled]="result?.resultStatus != 'APPROVED' ? true : false"
+            [buttonText]="'Share'"
+            (buttonCallBack)="share()"
+          >
+          </app-button>
+        </div>
+
+        <div class="ml-4">
+          <app-button
+            [config]="approveButtonConfig"
+            [buttonText]="
+              result?.resultStatus == 'APPROVED' ? 'Approved' : 'Approve'
+            "
+            [disabled]="result?.resultStatus == 'APPROVED' ? true : false"
+            (buttonCallBack)="approve()"
+          >
+          </app-button>
+        </div>
+      </div>
+    </div>
+
+    <nz-row [nzGutter]="16" class="mt-2">
+      <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="10">
+        <div class="border-radius pdf-viewer-section">
+          <app-pdf-viewer
+            [src]="result?.fileUrl"
+            [isDownloadable]="true"
+          ></app-pdf-viewer>
+        </div>
+      </nz-col>
+      <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="14">
+        <div class="border-color border-radius">
+          <div
+            class="result-header border-bottom display-flex align-items-center"
+          >
+            <span class="color-blue font-bold font-12">Results</span>
+            <a
+              *ngIf="questions.length"
+              class="ml-auto"
+              (click)="expandAll(expandAllCheck ? false : true)"
+              >{{ !expandAllCheck ? "Expand all" : "Collapse All" }}</a
+            >
+          </div>
+          <ng-container *ngIf="questions.length">
+            <div
+              class="result-header border-bottom display-flex align-items-center"
+            >
+              <span class="color-black font-bold font-12 mr-auto"
+                >Score breakdown</span
+              >
+              <span class="color-black font-bold font-12"
+                >AI Confidence level</span
+              >
+              <span class="color-black font-bold font-12 mr-3 ml-auto"
+                >Action</span
+              >
+            </div>
+            <div class="scroll-container" (scroll)="onScroll($event)">
+              <nz-collapse>
+                <ng-container *ngFor="let question of questions; let i = index">
+                  <nz-collapse-panel
+                    [ngClass]="{
+                      'bg-F7F8FC': i % 2 == 0,
+                      'bg-white': i % 2 != 0
+                    }"
+                    (nzActiveChange)="onPanelClick(question)"
+                    [nzActive]="question?.panelOpen"
+                    [nzShowArrow]="false"
+                    [nzHeader]="headerTemplate"
+                  >
+                    <div
+                      class="rational-section display-flex flex-direction-column"
+                    >
+                      <span class="color-blue font-bold">Rational</span>
+                      <span class="color-black font-bold font-10">{{
+                        question?.feedback
+                      }}</span>
+                    </div>
+                  </nz-collapse-panel>
+                  <ng-template #headerTemplate>
+                    <div
+                      class="display-flex align-items-center justify-space-between w-100"
+                    >
+                      <div class="ml-1 mr-auto">
+                        <div class="display-flex flex-direction-column">
+                          <span class="color-black font-bold font-10"
+                            >Question {{ question?.questionNumber }}</span
+                          >
+                          <div *ngIf="!question?.enableQuestionEditing">
+                            <span class="color-blue font-bold font-12">
+                              {{
+                                question?.score != null
+                                  ? question.score % 1 === 0
+                                    ? question.score
+                                    : question.score.toFixed(1)
+                                  : "-"
+                              }}/{{
+                                question?.totalMarks != null
+                                  ? question.totalMarks % 1 === 0
+                                    ? question.totalMarks
+                                    : question.totalMarks.toFixed(1)
+                                  : "-"
+                              }}
+                            </span>
+
+                            <i
+                              style="padding-left: 7px"
+                              nz-icon
+                              nzType="edit"
+                              class="text-blue-500 cursor-pointer"
+                              (click)="
+                                enableEdit(question); $event.stopPropagation()
+                              "
+                            ></i>
+                          </div>
+                          <div *ngIf="question?.enableQuestionEditing">
+                            <input
+                              #questionScoreInput
+                              nz-input
+                              type="number"
+                              [(ngModel)]="question.editedQuestionNumber"
+                              max="10"
+                              min="0"
+                              (keydown.enter)="updateQuestionNumber(question)"
+                              (blur)="cancelQuestionEdit(question)"
+                              (input)="
+                                onInput(
+                                  $event,
+                                  question?.score,
+                                  question.totalMarks
+                                )
+                              "
+                              autofocus
+                              style="width: 200px"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <nz-badge
+                          [nzColor]="
+                            getConfidenceColor(question?.confidenceLevel)
+                          "
+                        ></nz-badge>
+                        <span>{{ question?.confidenceLevel }}</span>
+                      </div>
+
+                      <!-- <div class="ml-auto"> -->
+                      <nz-card
+                        class="custom-circle-icon card-circle mr-3 ml-auto mt-0"
+                      >
+                        <span
+                          *ngIf="!question?.panelOpen"
+                          nz-icon
+                          nzType="down"
+                          nzTheme="outline"
+                          class="color-blue font-bold"
+                        ></span>
+                        <span
+                          *ngIf="question?.panelOpen"
+                          nz-icon
+                          nzType="up"
+                          nzTheme="outline"
+                          class="color-blue font-bold"
+                        ></span>
+                      </nz-card>
+                      <!-- </div> -->
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </nz-collapse>
+            </div>
+          </ng-container>
+
+          <div *ngIf="!questions.length" class="mt-2">
+            <nz-empty [nzNotFoundContent]="'No Data'"></nz-empty>
+          </div>
+        </div>
+      </nz-col>
+    </nz-row>
+  </nz-card>
+</div>

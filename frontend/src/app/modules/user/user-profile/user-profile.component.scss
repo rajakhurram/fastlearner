@@ -1,0 +1,131 @@
+.user-profile {
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  width: 90%;
+  margin: auto;
+}
+
+.profile-header {
+  padding-bottom: 1%;
+}
+
+.user-section {
+  display: flex;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.user-info {
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.user-info p {
+  margin-bottom: 0;
+}
+
+.red {
+  color: red !important;
+  cursor: pointer;
+}
+
+.red a {
+  color: red;
+}
+
+.social-links {
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.row {
+  padding-bottom: 10px;
+}
+
+.label-web {
+  margin-left: 10px;
+}
+
+.sign-up-btn {
+  border: #fe4a55 1px solid;
+  border-radius: 4px;
+  font-size: 12px;
+  height: 29px;
+}
+.sign-up-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+.sign-in-btn {
+  margin-left: 10px;
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  font-size: 12px;
+  height: 29px;
+}
+.sign-in-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+}
+
+.btn-style {
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #212189;
+  border-color: #212189;
+}
+
+.label-container {
+  display: flex;
+  width: 10%;
+  align-items: end;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 900px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .label-container {
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+}
+.user-icon {
+  width: 64px !important;
+  height: 64px !important;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.showCourse {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.on-the-web {
+  font-size: 21px;
+  color: #212189;
+  padding: 5px;
+}
+
+.content-editor-quill {
+  height: 150px;
+}
+
+:host ::ng-deep input.ant-input.input-field {
+border-radius: 4px;
+
+}
