@@ -61,8 +61,6 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { FormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { NzCarouselModule } from 'ng-zorro-antd/carousel';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 export function playerFactory() {
   return player;
@@ -106,8 +104,6 @@ export function playerFactory() {
     AppRoutingModule,
     AntDesignModule,
     SharedModule,
-    NzCarouselModule,
-    PdfViewerModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
     NgOtpInputModule,
@@ -172,7 +168,6 @@ export function playerFactory() {
         `${environment.baseUrl}affiliate-course/by-course`,
         environment.baseUrl + `watch-time/`,
         environment.basePath +`copilot/chat/`,
-        `${environment.baseUrl}ai-result/create`,
       ],
     }),
     NgxUiLoaderModule.forRoot(NgxLoaderCongif.masterLoaderConfig),

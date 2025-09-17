@@ -67,11 +67,11 @@ export class CacheService {
     return JSON.parse(localStorage.getItem(key)) || [];
   }
 
-  public saveJsonData(key: string, data: any) {
+  public saveCourseData(key: string, data: any) {
     localStorage.setItem(key, JSON.stringify(data));
   }
 
-  public getJsonData(key: string): any {
+  public getCourseData(key: string): any {
     return JSON.parse(localStorage.getItem(key)) || "";
   }
 

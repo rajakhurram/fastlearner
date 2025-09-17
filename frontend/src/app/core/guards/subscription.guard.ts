@@ -41,12 +41,12 @@ export class SubscriptionGuard
     // console.log('Current URL:', state.url);
     const queryParamMap = route.queryParamMap;
 
-    if (queryParamMap.has('sessionId') && queryParamMap.has('isMobile')) {
+    if(queryParamMap.has('sessionId') && queryParamMap.has('isMobile')){
       const sessionId = queryParamMap.get('sessionId');
       const isMobile = queryParamMap.get('isMobile');
-      if (sessionId && isMobile === 'true') {
+      if(sessionId && isMobile === 'true'){
         return true;
-      } else {
+      }else{
         this._router.navigate(['/auth/sign-in']);
       }
     }
@@ -54,19 +54,7 @@ export class SubscriptionGuard
     if (isLoggedIn) {
       return true; // Allow access if logged in
     } else {
-      const currentRoute = state.url;
-      const subscriptionPathRegex =
-        /^\/(auth\/)?authorize-subscription\?subscriptionId=\d+$/;
-           if (
-      currentRoute !== '/' &&
-      currentRoute !== '/auth/sign-in' &&
-      currentRoute !== '/auth/sign-up' &&
-      currentRoute !== '/subscription-plan' &&
-      currentRoute !== '/auth/forget-password' &&
-      !subscriptionPathRegex.test(currentRoute)
-    ) {
       this._cacheService.saveInCache('redirectUrl', state.url);
-    }
       // Optionally, you can save the intended URL before redirecting
       this._router.navigate(['/auth/sign-in']); // Redirect to sign-in
       return false; // Deny access

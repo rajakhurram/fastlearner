@@ -1,73 +1,36 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs '20.11.1'
-    }
-
     environment {
-        PATH = "/root/.nvm/versions/node/v20.11.1/bin:$PATH"
-        NODE_OPTIONS = '--max-old-space-size=4096'
+        DEPLOY_PATH = "{{deploy-path}}"
     }
 
     stages {
-        // stage('Notify Start') {
-        //     steps {
-        //         mail(
-        //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
-        //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Started",
-        //             body: "The build process for ${env.JOB_NAME} #${env.BUILD_NUMBER} has started."
-        //         )
-        //     }
-        // }
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/qaximbalti/fastlearner-frontend.git'
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
-                sh 'npm install --save-dev puppeteer'
             }
         }
 
-        stage('Set Chrome Bin Path') {
+        stage('Build Angular App') {
             steps {
-                script {
-                    def chromeBinPath = sh(
-                        script: "node -e \"console.log(require('puppeteer').executablePath())\"",
-                        returnStdout: true
-                    ).trim()
-                    env.CHROME_BIN = chromeBinPath
-                }
+                sh 'ng build --configuration=production'
             }
         }
 
-        stage('Build') {
+        stage('Deploy to Nginx') {
             steps {
-                sh 'npm i -g @angular/cli@15.1.0'
-                sh 'ng build --configuration production --aot --build-optimizer --source-map=false'
+                sh '''
+                rm -rf $DEPLOY_PATH/*
+                cp -r dist/OPEN_SOURCE_FL/* $DEPLOY_PATH/
+                '''
             }
         }
-
-        // stage('Run Tests with Coverage') {
-        //     steps {
-        //         sh 'ng test --code-coverage --browsers=ChromeHeadlessNoSandbox --watch=false'
-        //     }
-        // }
     }
-
-    // post {
-    //     success {
-    //         mail(
-    //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
-    //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Succeeded",
-    //             body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} was successfully completed."
-    //         )
-    //     }
-    //     failure {
-    //         mail(
-    //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
-    //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Failed",
-    //             body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} failed. Please check the console output for more details."
-    //         )
-    //     }
-    // }
 }

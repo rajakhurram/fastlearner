@@ -1,4 +1,3 @@
-
 <nz-table
   style="overflow: auto"
   [nzPageSizeOptions]="[10, 20, 30]"
@@ -40,37 +39,9 @@
           *ngIf="!col.actions && col.header == 'Name'"
           >{{ row[col.field] }}</a
         >
-        <!-- Editable input field -->
-        <input
-          *ngIf="row.editableKey?.includes(col.field)"
-          #valueInput
-          nz-input
-          nzSize="large"
-          type="text"
-          [(ngModel)]="row[col.field]"
-          (keydown.enter)="editValue(row, col.field)"
-          (click)="$event.stopPropagation()"
-          (blur)="onAction($event, 'edit', row)"
-        />
-
-        <!-- Default span if not editable -->
         <span
-          *ngIf="
-            !row.editableKey?.includes(col.field) &&
-            !tableConfig?.clickableKeys?.includes(col.field)
-          "
-        >
-          {{ row[col.field] }}
-        </span>
-
-        <a
-          class="link-class"
-          *ngIf="
-            tableConfig?.clickableKeys?.includes(col.field) &&
-            !row.editableKey?.includes(col.field)
-          "
-          (click)="onAction($event, 'view', row)"
-          >{{ row[col.field] }}</a
+          *ngIf="!col.actions && col.header != 'Name' && col.header != 'Email'"
+          >{{ row[col.field] }}</span
         >
 
         <span
@@ -85,75 +56,61 @@
 
         <!-- Actions Cell with Edit and Delete buttons -->
         <div *ngIf="col.actions" class="action-buttons">
-          <button
-            *ngIf="row.showEditIcon"
-            class="action-edit border-radius cursor-pointer"
-            [disabled]="row.isSelf"
-            (click)="onAction($event, 'edit', row)"
-          >
-            <span
-              class="action-icon font-16"
-              nz-icon
-              nzType="edit"
-              nzTheme="outline"
-            ></span>
-          </button>
-          <button
-            *ngIf="row.showCopyIcon"
-            class="action-copy border-radius cursor-pointer"
-            (click)="onAction($event, 'copy', row)"
-          >
-            <span
-              class="action-icon font-16"
-              nz-icon
-              nzType="copy"
-              nzTheme="outline"
-            ></span>
-          </button>
-          <button
-            *ngIf="row.showDeleteIcon"
-            (click)="onAction($event, 'delete', row)"
-            [disabled]="row.isSelf"
-            class="action-delete border-radius cursor-pointer"
-          >
-            <span
-              class="action-icon font-16"
-              nz-icon
-              nzType="delete"
-              nzTheme="fill"
-            ></span>
-          </button>
-          <button
-            *ngIf="row.showViewIcon"
-            (click)="onAction($event, 'view', row, i + 1)"
-            [disabled]="row.isSelf"
-            class="action-view border-radius cursor-pointer"
-          >
-            <span
-              class="action-icon font-16"
-              nz-icon
-              nzType="eye"
-              nzTheme="outline"
-            ></span>
-          </button>
-          <!-- <nz-switch
+            <button
+              *ngIf="row.showEditIcon"
+              class="action-edit border-radius cursor-pointer"
+              [disabled]="row.isSelf"
+              (click)="onAction($event, 'edit', row)"
+            >
+              <span
+                class="action-icon font-16"
+                nz-icon
+                nzType="edit"
+                nzTheme="outline"
+              ></span>
+            </button>
+            <button
+              *ngIf="row.showCopyIcon"
+              class="action-copy border-radius cursor-pointer"
+              (click)="onAction($event, 'copy', row)"
+            >
+              <span
+                class="action-icon font-16"
+                nz-icon
+                nzType="copy"
+                nzTheme="outline"
+              ></span>
+            </button>
+            <button
+              *ngIf="row.showDeleteIcon"
+              (click)="onAction($event, 'delete', row)"
+              [disabled]="row.isSelf"
+              class="action-delete border-radius cursor-pointer"
+            >
+              <span
+                class="action-icon font-16"
+                nz-icon
+                nzType="delete"
+                nzTheme="fill"
+              ></span>
+            </button>
+            <!-- <nz-switch
             *ngIf="row.showSwitchIcon"
              [(ngModel)]="switchValue"></nz-switch> -->
-          <nz-switch
-            *ngIf="row.showSwitchIcon"
-            [(ngModel)]="row.switchValue"
-            (ngModelChange)="onAction($event, 'switch', row)"
-            [disabled]="row.isSelf"
-            class="action-switch border-radius cursor-pointer"
-          >
-          </nz-switch>
+             <nz-switch
+             *ngIf="row.showSwitchIcon"
+             [(ngModel)]="row.switchValue"
+             (ngModelChange)="onAction($event,'switch', row)"
+             [disabled]="row.isSelf"
+             class="action-switch border-radius cursor-pointer"
+           >
+           </nz-switch>
         </div>
       </td>
     </tr>
   </tbody>
 </nz-table>
 
-<div class="w-100 display-flex justify-content-end mt-1"></div>
 <nz-pagination
   *ngIf="tableConfig.paginated"
   [nzPageIndex]="tableConfig.pageNo + 1"

@@ -19,8 +19,7 @@ import { ArticleComponent } from './article/article.component';
 import { NotificationsModule } from '../instructor/notifications/notifications.module';
 import { VerifyCertificateComponent } from './verify-certificate/verify-certificate.component';
 import { QuizReviewQuestionsComponent } from './quiz-review-questions/quiz-review-questions.component';
-import { NzCarouselModule } from 'ng-zorro-antd/carousel';
-import { CoPilotComponent } from '../pages/co-pilot/co-pilot.component';
+// import { LazyLoadDirective } from '../directives/lazy-load.directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +37,6 @@ import { CoPilotComponent } from '../pages/co-pilot/co-pilot.component';
     ArticleComponent,
     VerifyCertificateComponent,
     QuizReviewQuestionsComponent,
-    CoPilotComponent
     // LazyLoadDirective
   ],
   imports: [
@@ -46,8 +44,7 @@ import { CoPilotComponent } from '../pages/co-pilot/co-pilot.component';
     StudentRoutingModule,
     SharedModule,
     AntDesignModule,
-    NotificationsModule,
-    NzCarouselModule,
+    NotificationsModule
   ],
   // exports: [LazyLoadDirective],
 })

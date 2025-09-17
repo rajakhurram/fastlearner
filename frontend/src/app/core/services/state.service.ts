@@ -192,13 +192,13 @@ export class StateService {
   saveCurrentRoute() {
     const currentRoute = this._router.url;
     const subscriptionPathRegex =
-      /^\/(auth\/)?authorize-subscription\?subscriptionId=\d+$/;
+      /^\/auth\/payment-method\?subscriptionId=\d+$/;
 
     if (
       currentRoute !== '/' &&
       currentRoute !== '/auth/sign-in' &&
       currentRoute !== '/auth/sign-up' &&
-      currentRoute !== '/subscription-plan' &&
+      currentRoute !== 'subscription-plan' &&
       currentRoute !== '/auth/forget-password' &&
       !subscriptionPathRegex.test(currentRoute)
     ) {

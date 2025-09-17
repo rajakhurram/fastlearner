@@ -69,76 +69,6 @@
         >
       </li>
       <li
-        [class.instructor-menu]="activeGraderClasses || activeGraderAssessment"
-        nz-submenu
-        nzOpen="false"
-        [nzTitle]="AIGrader"
-        class="affiliate-li"
-      >
-        <ul>
-          <li
-            [ngClass]="{
-            'icon-text1': activeGraderClasses,
-            }"
-            [class.instructor-menu]="activeGraderClasses"
-            class="affiliate-nested-li affiliate-sub-menus"
-            nz-submenu
-            nzOpen="false"
-            nzTitle="Classes"
-            (click)="!hideGrader && changeTab(InstructorTabs.AI_GRADER_CLASSES)"
-            [nzDisabled]="hideGrader"
-          ></li>
-
-          <li
-            [ngClass]="{
-            'icon-text1': activeGraderAssessment,
-            }"
-            [class.instructor-menu]="activeGraderAssessment"
-            class="affiliate-nested-li affiliate-sub-menus"
-            nz-submenu
-            nzOpen="false"
-            nzTitle="Assessment"
-            (click)="
-              !hideGrader && changeTab(InstructorTabs.AI_GRADER_ASSESSMENTS)
-            "
-            [nzDisabled]="hideGrader"
-          ></li>
-        </ul>
-
-        <ng-template #AIGrader
-          ><span> <img src="../../../assets/icons/ai_grader_icon.svg" /> </span
-          ><span
-            style="padding-left: 10px"
-            class="icon-text"
-            [ngClass]="{
-              'icon-text1': activeGraderClasses || activeGraderAssessment,
-              'icon-text': !activeGraderClasses && !activeGraderAssessment
-            }"
-            >AI Grader</span
-          >
-          <span
-            (click)="openSubscriptionPlan()"
-            *ngIf="hideGrader"
-            style="font-size: 16px !important; color: white"
-            class="ml-4"
-            nz-icon
-            nzType="lock"
-            nzTheme="fill"
-          ></span>
-        </ng-template>
-
-        <ng-template #Classes
-          ><span></span
-          ><span
-            [ngClass]="{
-              'icon-text1': activeGraderClasses || activeGraderAssessment,
-              'icon-text': !activeGraderClasses && !activeGraderAssessment
-            }"
-            >Classes</span
-          >
-        </ng-template>
-      </li>
-      <li
         [class.instructor-menu]="
           activeAffiliateProfiles ||
           activePremiumCourses ||
@@ -161,9 +91,7 @@
             nz-submenu
             nzOpen="false"
             nzTitle="Affiliate Profiles"
-            (click)="
-              !hideAffiliate && changeTab(InstructorTabs.AFFILIATE_PROFILES)
-            "
+            (click)="!hideAffiliate && changeTab(InstructorTabs.AFFILIATE_PROFILES)"
             [nzDisabled]="hideAffiliate"
           ></li>
 
@@ -176,9 +104,7 @@
             nz-submenu
             nzOpen="false"
             nzTitle="Premium Courses"
-            (click)="
-              !hideAffiliate && changeTab(InstructorTabs.PREMIUM_COURSES)
-            "
+            (click)="!hideAffiliate && changeTab(InstructorTabs.PREMIUM_COURSES)"
             [nzDisabled]="hideAffiliate"
           ></li>
 
@@ -191,9 +117,7 @@
             nz-submenu
             nzOpen="false"
             nzTitle="Premium Students"
-            (click)="
-              !hideAffiliate && changeTab(InstructorTabs.PREMIUM_STUDENTS)
-            "
+            (click)="!hideAffiliate && changeTab(InstructorTabs.PREMIUM_STUDENTS)"
             [nzDisabled]="hideAffiliate"
           ></li>
         </ul>
@@ -213,15 +137,7 @@
             }"
             >Premium</span
           >
-          <span
-            (click)="openSubscriptionPlan()"
-            *ngIf="hideAffiliate"
-            style="font-size: 16px !important; color: white"
-            class="ml-4"
-            nz-icon
-            nzType="lock"
-            nzTheme="fill"
-          ></span>
+          <span (click)="openSubscriptionPlan()" *ngIf="hideAffiliate" style="font-size: 16px !important; color: white;" class="ml-4" nz-icon nzType="lock" nzTheme="fill"></span>
         </ng-template>
       </li>
       <li
@@ -319,166 +235,77 @@
           >
         </li>
         <li
-          [class.instructor-menu]="
-            activeGraderClasses || activeGraderAssessment
-          "
-          nz-submenu
-          nzOpen="false"
-          [nzTitle]="AIGrader"
-          class="affiliate-li"
-        >
-          <ul>
-            <li
-              [ngClass]="{
-            'icon-text1': activeGraderClasses,
-            }"
-              [class.instructor-menu]="activeGraderClasses"
-              class="affiliate-nested-li affiliate-sub-menus"
-              nz-submenu
-              nzOpen="false"
-              nzTitle="Classes"
-              (click)="
-                !hideGrader && changeTab(InstructorTabs.AI_GRADER_CLASSES)
-              "
-              [nzDisabled]="false"
-            ></li>
-
-            <li
-              [ngClass]="{
-            'icon-text1': activeGraderAssessment,
-            }"
-              [class.instructor-menu]="activeGraderAssessment"
-              class="affiliate-nested-li affiliate-sub-menus"
-              nz-submenu
-              nzOpen="false"
-              nzTitle="Assessment"
-              (click)="
-                !hideGrader && changeTab(InstructorTabs.AI_GRADER_ASSESSMENTS)
-              "
-              [nzDisabled]="false"
-            ></li>
-          </ul>
-
-          <ng-template #AIGrader
-            ><span>
-              <img src="../../../assets/icons/ai_grader_icon.svg" /> </span
-            ><span
-              style="padding-left: 10px"
-              class="icon-text"
-              [ngClass]="{
-                'icon-text1': activeGraderClasses || activeGraderAssessment,
-                'icon-text': !activeGraderClasses && !activeGraderAssessment
-              }"
-              >AI Grader</span
-            >
-          </ng-template>
-
-          <ng-template #Classes
-            ><span></span
-            ><span
-              [ngClass]="{
-                'icon-text1': activeGraderClasses || activeGraderAssessment,
-                'icon-text': !activeGraderClasses && !activeGraderAssessment
-              }"
-              >Classes</span
-            >
-            <span
-              (click)="openSubscriptionPlan()"
-              *ngIf="hideGrader"
-              style="font-size: 16px !important; color: white"
-              class="ml-4"
-              nz-icon
-              nzType="lock"
-              nzTheme="fill"
-            ></span>
-          </ng-template>
-        </li>
-        <li
-          [class.instructor-menu]="
-            activeAffiliateProfiles ||
-            activePremiumCourses ||
-            activePremiumStudents
-          "
-          (click)="openAffiliateTab()"
-          nz-submenu
-          nzOpen="false"
-          nzIcon="crown"
-          [nzTitle]="Premium"
-          class="affiliate-li"
-        >
-          <ul *ngIf="!hideAffiliate">
-            <li
-              [ngClass]="{
+        [class.instructor-menu]="
+          activeAffiliateProfiles ||
+          activePremiumCourses ||
+          activePremiumStudents
+        "
+        (click)="openAffiliateTab()"
+        nz-submenu
+        nzOpen="false"
+        nzIcon="crown"
+        [nzTitle]="Premium"
+        class="affiliate-li"
+      >
+        <ul *ngIf="!hideAffiliate">
+          <li
+            [ngClass]="{
             'icon-text1': activeAffiliateProfiles,
             }"
-              [class.instructor-menu]="activeAffiliateProfiles"
-              class="affiliate-nested-li affiliate-sub-menus-mob"
-              nz-submenu
-              nzOpen="false"
-              nzTitle="Affiliate Profiles"
-              (click)="
-                !hideAffiliate && changeTab(InstructorTabs.AFFILIATE_PROFILES)
-              "
-              [nzDisabled]="hideAffiliate"
-            ></li>
+            [class.instructor-menu]="activeAffiliateProfiles"
+            class="affiliate-nested-li affiliate-sub-menus-mob"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Affiliate Profiles"
+            (click)="!hideAffiliate && changeTab(InstructorTabs.AFFILIATE_PROFILES)"
+            [nzDisabled]="hideAffiliate"
+          ></li>
 
-            <li
-              [ngClass]="{
+          <li
+            [ngClass]="{
             'icon-text1': activePremiumCourses,
             }"
-              [class.instructor-menu]="activePremiumCourses"
-              class="affiliate-nested-li affiliate-sub-menus-mob"
-              nz-submenu
-              nzOpen="false"
-              nzTitle="Premium Courses"
-              (click)="
-                !hideAffiliate && changeTab(InstructorTabs.PREMIUM_COURSES)
-              "
-              [nzDisabled]="hideAffiliate"
-            ></li>
+            [class.instructor-menu]="activePremiumCourses"
+            class="affiliate-nested-li affiliate-sub-menus-mob"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Premium Courses"
+            (click)="!hideAffiliate && changeTab(InstructorTabs.PREMIUM_COURSES)"
+            [nzDisabled]="hideAffiliate"
+          ></li>
 
-            <li
-              [ngClass]="{
+          <li
+            [ngClass]="{
             'icon-text1': activePremiumStudents,
           }"
-              [class.instructor-menu]="activePremiumStudents"
-              class="affiliate-nested-li affiliate-sub-menus-mob"
-              nz-submenu
-              nzOpen="false"
-              nzTitle="Premium Students"
-              (click)="
-                !hideAffiliate && changeTab(InstructorTabs.PREMIUM_STUDENTS)
-              "
-              [nzDisabled]="hideAffiliate"
-            ></li>
-          </ul>
+            [class.instructor-menu]="activePremiumStudents"
+            class="affiliate-nested-li affiliate-sub-menus-mob"
+            nz-submenu
+            nzOpen="false"
+            nzTitle="Premium Students"
+            (click)="!hideAffiliate && changeTab(InstructorTabs.PREMIUM_STUDENTS)"
+            [nzDisabled]="hideAffiliate"
+          ></li>
+        </ul>
 
-          <ng-template #Premium
-            ><span></span
-            ><span
-              [ngClass]="{
-                'icon-text1':
-                  activeAffiliateProfiles ||
-                  activePremiumCourses ||
-                  activePremiumStudents,
-                'icon-text':
-                  !activeAffiliateProfiles &&
-                  !activePremiumCourses &&
-                  !activePremiumStudents
-              }"
-              >Premium</span
-            >
-            <span
-              (click)="openSubscriptionPlan()"
-              *ngIf="hideAffiliate"
-              style="font-size: 16px !important; color: white"
-              class="ml-4"
-              nz-icon
-              nzType="lock"
-              nzTheme="fill"
-            ></span>
-          </ng-template>
-        </li>
+        <ng-template #Premium
+          ><span></span
+          ><span
+            [ngClass]="{
+              'icon-text1':
+                activeAffiliateProfiles ||
+                activePremiumCourses ||
+                activePremiumStudents,
+              'icon-text':
+                !activeAffiliateProfiles &&
+                !activePremiumCourses &&
+                !activePremiumStudents
+            }"
+            >Premium</span
+          >
+          <span (click)="openSubscriptionPlan()" *ngIf="hideAffiliate" style="font-size: 16px !important; color: white;" class="ml-4" nz-icon nzType="lock" nzTheme="fill"></span>
+        </ng-template>
+      </li>
         <!-- <li
           (click)="openAffiliateTab()"
           nz-submenu

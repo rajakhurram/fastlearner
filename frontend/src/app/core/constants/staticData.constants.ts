@@ -220,36 +220,3 @@ export const assignpremium = [
     ],
   },
 ];
-
-export const aiGraderCards   = [
-  {
-    imageUrl: '../../../../assets/images/static-1.webp',
-    heading: 'Support Handwriting & Scanned Copies',
-    content:
-      'FastLearner’s AI grader recognizes typed and handwritten work, ensuring all students are included.',
-  },
-  {
-    imageUrl: '../../../../assets/images/static-2.png',
-    heading: 'One-Click Grading for the Whole Class',
-    content:
-      'Grade dozens of student papers instantly with bulk AI grading, saving hours of manual effort for instructors.',
-  },
-  {
-    imageUrl: '../../../../assets/images/static-3.png',
-    heading: 'Easily Export Grading Results to a Spreadsheet',
-    content:
-      'Export grades, feedback, and performance data to Excel or CSV files easily. Our AI grading tool is perfect for tracking academic performance.',
-  },
-  {
-    imageUrl: '../../../../assets/images/static-4.png',
-    heading: 'Send Results Directly to Students Via Email',
-    content:
-      'FastLearner’s AI grading software automatically emails grades and feedback to students, streamlining communication and reporting.',
-  },
-  {
-    imageUrl: '../../../../assets/images/static-5.webp',
-    heading: 'Provides Audit-Ready Grading Reports',
-    content:
-      'Get detailed, audit-friendly AI grading reports that ensure transparency and compliance with institutional standards.',
-  },
-];

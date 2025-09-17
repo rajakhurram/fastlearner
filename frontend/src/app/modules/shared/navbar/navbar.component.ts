@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
   myCourses: MyCourses = new MyCourses();
   debounceTimeout: any = null;
   debounceDelay: number = 150; // Adjust the debounce delay as needed
-  hover = false;
+hover = false;
   isSticky: boolean = false;
   isLoggedIn: any;
   categoryList: Array<any> = [];
@@ -64,7 +64,7 @@ export class NavbarComponent implements OnInit {
   routeSubscription: Subscription;
   searchInputText?: any;
   isLoading: boolean = false;
-  logoWidth: number;
+logoWidth: number;
 
   loggedInUser: any = {
     fullName: '',
@@ -170,9 +170,9 @@ export class NavbarComponent implements OnInit {
 
     this.setLogoWidth();
 
-    window.addEventListener('resize', () => {
-      this.setLogoWidth();
-    });
+  window.addEventListener('resize', () => {
+    this.setLogoWidth();
+  });
   }
 
   toggleSearch() {
@@ -455,11 +455,11 @@ export class NavbarComponent implements OnInit {
           error?.error?.status ==
           this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
         ) {
-          this.favoriteCourseList = [];
+           this.favoriteCourseList = [];
         }
       },
     });
-  }
+    }
 
   onScroller(event: any): void {
     const dropdown = event.target;
@@ -660,23 +660,9 @@ export class NavbarComponent implements OnInit {
   }
 
   routeToInstructorWelcomePage() {
-    this._authService.welcomeInstructor().subscribe({
-      next: (res) => {
-        const welcomeShown = res?.data?.welcomeInstructorDashboard;
-
-        if (welcomeShown) {
-          this._router.navigate(['/instructor/instructor-dashboard']);
-        } else {
-          document.body.classList.remove('hide-scrollbar');
-          this.navbarVisible = false;
-          this._router.navigate(['welcome-instructor']);
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching welcome status', err);
-        // Optional: show error message or fallback route
-      },
-    });
+    document.body.classList.remove('hide-scrollbar');
+    this.navbarVisible = false;
+    this._router.navigate(['welcome-instructor']);
   }
 
   routeToFavoriteCourses() {
@@ -705,23 +691,22 @@ export class NavbarComponent implements OnInit {
 
   routeToUserProfile() {
     const userProfileUrl = this._authService.getUserProfileUrl();
-
+  
     if (!userProfileUrl) {
-      console.error(
-        'User profile URL is missing. Cannot redirect to the profile page.'
-      );
+      console.error('User profile URL is missing. Cannot redirect to the profile page.');
       return;
     }
-
+  
     const sanitizedFullName = userProfileUrl
       .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9\-]/g, '');
-
-    this._router.navigate(['user/profile'], {
-      queryParams: { url: sanitizedFullName },
-    });
+      .replace(/\s+/g, '-') 
+      .replace(/[^a-z0-9\-]/g, ''); 
+    
+    this._router.navigate(['user/profile'], { queryParams: { url: sanitizedFullName } });
   }
+  
+  
+  
 
   routeToSubscription() {
     document.body.classList.remove('hide-scrollbar');
@@ -733,7 +718,7 @@ export class NavbarComponent implements OnInit {
     document.body.classList.remove('hide-scrollbar');
     this.navbarVisible = false;
     this._router.navigate(['student/courses'], {
-      queryParams: { selection: category },
+      queryParams: { selection: category},
     });
   }
   routeToCoursePage() {
@@ -755,13 +740,6 @@ export class NavbarComponent implements OnInit {
     this.navbarVisible = false;
     this._router.navigate(['student/course-details', courseUrl]);
   }
-
-  routeToStudentResultPage() {
-    document.body.classList.remove('hide-scrollbar');
-    this.navbarVisible = false;
-    this._router.navigate(['student/grader-results']);
-  }
-
   routeToNotificationPage() {
     this.removeNotificationCount();
     document.body.classList.remove('hide-scrollbar');
@@ -818,21 +796,19 @@ export class NavbarComponent implements OnInit {
     this._router.navigate([url?.split('?')[0]], { queryParams });
   }
 
-  onButtonOnClick() {
-    this._router.navigate(['student/co-pilot']);
-  }
+setLogoWidth() {
+  const screenWidth = window.innerWidth;
 
-  setLogoWidth() {
-    const screenWidth = window.innerWidth;
-
-    if (screenWidth < 360) {
-      this.logoWidth = 125;
-    } else if (screenWidth < 420) {
-      this.logoWidth = 140;
-    } else if (screenWidth < 480) {
-      this.logoWidth = 170;
-    } else {
-      this.logoWidth = 190;
-    }
+  if (screenWidth < 360) {
+    this.logoWidth = 125;
+  } else if (screenWidth < 420) {
+    this.logoWidth = 140;
+  } else if (screenWidth < 480) {
+    this.logoWidth = 170;
+  } else {
+    this.logoWidth = 190;
   }
 }
+
+}
+

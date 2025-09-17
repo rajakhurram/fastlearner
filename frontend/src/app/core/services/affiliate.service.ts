@@ -7,16 +7,11 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class AffiliateService {
+ 
   constructor(private _http: HttpClient) {}
 
-  public acive_InActiveAssignCourse(
-    affiliateId?: any,
-    instructorAffiliateId?: any,
-    status?: any
-  ): Observable<any> {
-    return this._http.get(
-      `${environment.baseUrl}affiliate-course/course-active-inactive?affiliateCourseId=${affiliateId}&instructorAffiliateId=${instructorAffiliateId}&status=${status}`
-    );
+ public acive_InActiveAssignCourse(affiliateId?:any, instructorAffiliateId?: any, status?:any): Observable<any>  {
+  return this._http.get(`${environment.baseUrl}affiliate-course/course-active-inactive?affiliateCourseId=${affiliateId}&instructorAffiliateId=${instructorAffiliateId}&status=${status}`);
   }
   public getAffiliates(body): Observable<any> {
     return this._http.get(
@@ -40,7 +35,6 @@ export class AffiliateService {
       `${environment.baseUrl}instructor-affiliate/premium-courses-with-reward?affiliateId=${body?.affiliateId}`
     );
   }
-
   public getPremiumCoursesByInstructor(body): Observable<any> {
     return this._http.get(
       `${environment.baseUrl}course/premium-courses?pageNo=${

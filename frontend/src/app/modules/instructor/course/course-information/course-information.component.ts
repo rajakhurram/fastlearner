@@ -45,7 +45,7 @@ export class CourseInformationComponent {
   videoFileName?: string = '';
   videoFileBtn?: string = 'Upload File';
 
-  imageFileName?: string = 'No file chosen.';
+  imageFileName?: string = 'No choose file';
   imageFileBtn?: string = 'Upload File';
   imageSrc = '../../../../assets/images/add_image.svg';
   videoSrc = '../../../../../assets/images/add_video.svg';
@@ -185,7 +185,7 @@ export class CourseInformationComponent {
       prerequisite: ['', [Validators.required, Validators.maxLength(500)]],
       courseSummaries: this.fb.array([this.createCourseSummary()]),
       previewName: [''],
-      thumbnailName: ['No file chosen.'],
+      thumbnailName: ['No choose file'],
       previewVideoVttContent: [null],
       previewPath: ['', Validators.required],
       thumbnailPath: ['', Validators.required],
@@ -459,7 +459,7 @@ export class CourseInformationComponent {
               }
             },
             error: (error: any) => {
-              this.formGroup.get('thumbnailName')?.patchValue('No file chosen.');
+              this.formGroup.get('thumbnailName')?.patchValue('No choose file');
               this.videoFileName = '';
             },
           });
@@ -669,7 +669,7 @@ export class CourseInformationComponent {
           }
         },
         error: (error: any) => {
-          this.formGroup.get('thumbnailName')?.patchValue('No file chosen.');
+          this.formGroup.get('thumbnailName')?.patchValue('No choose file');
           this.imageProgressBar = false;
           this.videoFileName = '';
           // this._messageService.error(error?.error?.message);

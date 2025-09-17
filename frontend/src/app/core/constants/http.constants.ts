@@ -41,12 +41,10 @@ export class HttpConstants {
       MESSAGE: 'Conflict Occured',
     },
   };
-  
   static REQUEST_STATUS: any;
   constructor() {}
 }
 
 export const localApiBaseUrlPath = 'http://localhost';
-export const stagingApiBaseUrlPath = 'https://staging.fastlearner.ai';
 export const googleTrackingId = '{{google-tracking-id}}';
 export const googleTagId = '{{google-tag-id}}';

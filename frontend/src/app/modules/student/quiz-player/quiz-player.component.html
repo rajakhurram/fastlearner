@@ -1,31 +1,21 @@
-<div
-  class="quiz-player-screen"
-  [class.align-items-center]="!showCongratsScreen"
->
+<div class="quiz-player-screen" [class.align-items-center]="!showCongratsScreen">
   <div *ngIf="welcomeQuizScreen" class="quiz">
-    <h3>A few things before you start</h3>
-    <span
-      >The test has <strong> {{ numberOfQuestions }} </strong>
-      {{ numberOfQuestions > 1 ? "questions" : "question" }} and needs to be
-      finished within <strong> {{ durationInMinutes }} </strong>
-      {{ durationInMinutes > 1 ? "minutes" : "minute" }}.</span
-    >
-    <p>
-      The passing criteria is &nbsp;<strong>{{ passingCriteria }}</strong
-      >%.
-    </p>
+  <h3>A few things before you start</h3>
+  <span>The test has <strong> {{ numberOfQuestions }} </strong> {{numberOfQuestions > 1 ? 'questions' : 'question'}} and needs to be finished within <strong> {{ durationInMinutes }} </strong> {{durationInMinutes > 1 ? 'minutes' : 'minute'}}.</span>
+  <p>The passing criteria is &nbsp;<strong>{{ passingCriteria }}</strong>%.
+  </p>
 
-    <div class="quiz-buttons">
-      <button
-        (click)="startQuiz()"
-        class="start-quiz-btn"
-        nz-button
-        nzType="primary"
-      >
-        Start Quiz
-      </button>
-      &nbsp;
-      <!-- <button
+  <div class="quiz-buttons">
+    <button
+      (click)="startQuiz()"
+      class="start-quiz-btn"
+      nz-button
+      nzType="primary"
+    >
+      Start Quiz
+    </button>
+    &nbsp;
+    <!-- <button
       (click)="skipQuiz()"
       class="skip-quiz-btn"
       nz-button
@@ -33,59 +23,50 @@
     >
       Skip Quiz
     </button> -->
+  </div>
+</div>
+
+<div *ngIf="showQuizScreen" class="display-inline-block w-100">
+  <div class="question-timer-header">
+    <div class="main-head questions">
+      <div class="question-header display-flex">
+        <h3 class="question-number">
+          Question {{ index + 1 }} of {{ numberOfQuestions }}
+        </h3>
+        <h3 class="passing-criteria font-20">
+          Passing Criteria : <span class="font-bold">{{passingCriteria}}%</span>
+        </h3>
+      </div>
+  
+      <div class="timer-container">
+        <nz-avatar
+          [nzSize]="23"
+          nzIcon="user"
+          nzAlt="Time"
+          nzSrc="./../../assets/icons/Timer-quiz.svg"
+        ></nz-avatar>
+        <span class="timer-text">
+          {{ minutes }}:{{ seconds < 10 ? '0' + seconds : seconds }}
+        </span>
+        <button
+          nz-button
+          class="finish-quiz-btn"
+          (click)="finishQuiz()"
+          nzType="primary"
+        >
+          Finish Quiz
+        </button>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="showQuizScreen" class="display-inline-block w-100">
-    <div class="question-timer-header">
-      <div class="main-head questions">
-        <div class="question-header display-flex">
-          <h3 class="question-number">
-            Question {{ index + 1 }} of {{ numberOfQuestions }}
-          </h3>
-          <h3 class="passing-criteria font-20">
-            Passing Criteria :
-            <span class="font-bold">{{ passingCriteria }}%</span>
-          </h3>
-        </div>
-
-        <div class="timer-container">
-          <nz-avatar
-            [nzSize]="23"
-            nzIcon="user"
-            nzAlt="Time"
-            nzSrc="./../../assets/icons/Timer-quiz.svg"
-          ></nz-avatar>
-          <span class="timer-text">
-            {{ minutes }}:{{ seconds < 10 ? "0" + seconds : seconds }}
-          </span>
-          <button
-            nz-button
-            class="finish-quiz-btn"
-            (click)="finishQuiz()"
-            nzType="primary"
-          >
-            Finish Quiz
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="questions">
-      <div class="question-content">
-        <p
-          class="question-text"
-          style="
-            color: #212189;
-            font-size: 22px;
-            font-family: 'Poppins-medium';
-            margin-bottom: 0px;
-          "
-        >
-          {{ quizQuestions?.[index]?.questionText }}
-        </p>
-
-        <!-- <p style="color:#292929 ; font-family: 'Poppins-medium'; font-size: 14px; padding-top: 5px;">
+  <div class="questions">
+    <div class="question-content">
+      <p class="question-text" style="color: #212189; font-size: 22px; font-family: 'Poppins-medium'; margin-bottom: 0px;">
+        {{ quizQuestions?.[index]?.questionText }}
+      </p>
+      
+      <!-- <p style="color:#292929 ; font-family: 'Poppins-medium'; font-size: 14px; padding-top: 5px;">
         ({{
           quizQuestions?.[index]?.questionType === 'SINGLE_CHOICE'
             ? 'Choose the best answer'
@@ -96,197 +77,158 @@
             : ''
         }})
       </p> -->
-      </div>
-      <!-- <div class="question-type">
+    </div>
+    <!-- <div class="question-type">
       <p class="question-text">({{quizQuestions?.[index].questionType}})</p>
     </div> -->
-      <div class="answer-options">
-        <div nz-row [nzGutter]="16">
-          <div
-            class="mt-15 option-row"
-            *ngFor="let option of quizQuestions?.[index].quizAnswers; let i = index"
-            nz-col
-            nzSpan="24"
-            (click)="handleOptionClick(option)"
-            [class.right-answer-popup]="
-              correctAnswerId != null && option.answerId == correctAnswerId
-            "
-            [class.wrong-answer-popup]="
-              option.answerId == selectedAnswerId && wrongAnswer
-            "
+    <div class="answer-options">
+      <div nz-row [nzGutter]="16">
+        <div
+          class="mt-15"
+          *ngFor="let option of quizQuestions?.[index].quizAnswers; let i = index"
+          nz-col
+          nzSpan="24"
+          [class.right-answer-popup]="
+            correctAnswerId != null && option.answerId == correctAnswerId
+          "
+          [class.wrong-answer-popup]="
+            option.answerId == selectedAnswerId && wrongAnswer
+          "
+        >
+          <label
+            *ngIf="quizQuestions?.[index].questionType === questionType.SINGLE_CHOICE || quizQuestions?.[index].questionType === questionType.TRUE_FALSE"
           >
-            <label
-              *ngIf="quizQuestions?.[index].questionType === questionType.SINGLE_CHOICE || quizQuestions?.[index].questionType === questionType.TRUE_FALSE"
-              (click)="$event.stopPropagation()"
-            >
-              <input
-                class="cursor-pointer"
-                type="radio"
-                name="quizRadioGroup"
-                [value]="option.answerId"
-                [(ngModel)]="selectedAnswerId"
-                [disabled]="rightAnswer || wrongAnswer"
-                (change)="selectedAnswer(option)"
-              />
-            </label>
-
-            <label
-              *ngIf="quizQuestions?.[index].questionType === questionType.MULTIPLE_CHOICE"
-              (click)="$event.stopPropagation()"
-            >
-              <input
-                type="checkbox"
-                [checked]="option.active"
-                [disabled]="rightAnswer || wrongAnswer"
-                (change)="
-                  selectedMultipleAnswers(option); selectedAnswer(option)
-                "
-              />
-            </label>
-
-            <p
-              class="question-text"
-              style="line-height: 35px; display: contents"
-            >
-              <strong style="margin-left: 10px"
-                >{{ getOptionLabel(i) }}.</strong
-              >
-              {{ option?.answerText }}
-            </p>
-          </div>
+            <input
+              class="cursor-pointer"
+              type="radio"
+              name="quizRadioGroup"
+              [value]="option.answerId"
+              [(ngModel)]="selectedAnswerId"
+              [disabled]="rightAnswer || wrongAnswer"
+              (change)="selectedAnswer(option)"
+            />
+          </label>
+  
+          <label *ngIf="quizQuestions?.[index].questionType === questionType.MULTIPLE_CHOICE">
+            <input
+              type="checkbox"
+              [checked]="option.active"
+              [disabled]="rightAnswer || wrongAnswer"
+              (change)="selectedMultipleAnswers(option)"
+              (change)="selectedAnswer(option)"
+            />
+          </label>
+  
+          <p class="question-text" style="line-height: 35px; display: contents">
+            <strong style="margin-left: 10px;">{{ getOptionLabel(i) }}.</strong> {{ option?.answerText }}
+          </p>
         </div>
       </div>
-      <div class="action-btns mb-2">
-        <button
-          *ngIf="index > 0"
-          class="back-btn"
-          nz-button
-          (click)="previousQuestion()"
-          nzType="default"
-        >
-          Back
-        </button>
+    </div>
+    <div class="action-btns  mb-2">
+      <button
+        *ngIf="index > 0"
+        class="back-btn"
+        nz-button
+        (click)="previousQuestion()"
+        nzType="default"
+      >
+        Back
+      </button>
+  
+      &nbsp;
+  
+      <button
+        class="continue-btn"
+        nz-button
+        (click)="nextQuestion()"
+        nzType="primary"
+        [disabled]="isCurrentQuestionUnanswered()"
 
-        &nbsp;
-
-        <button
-          class="continue-btn"
-          nz-button
-          (click)="nextQuestion()"
-          nzType="primary"
-          [disabled]="isCurrentQuestionUnanswered()"
-        >
-          {{ quizBtnText }}
-        </button>
-      </div>
+  >
+    {{ quizBtnText }}
+      </button>
     </div>
   </div>
+</div>
 
-  <div *ngIf="showCongratsScreen" class="congrats-screen">
-    <div class="head questions">
-      {{ title }}
-    </div>
+<div *ngIf="showCongratsScreen" class="congrats-screen">
+  <div class="head questions">
+    {{title}}
+  </div>
 
-    <div class="content mt-3 mb-3">
-      <div class="quiz-header">
-        <div
-          *ngIf="
-            (questionAnswers?.totalCorrectAnswer /
-              questionAnswers?.totalQuestion) *
-              100 >=
-            passingCriteria
-          "
-          class="quiz-results-card"
-        >
-          <h2 class="pass-heading">
-            <!-- <img src="../../../../assets/icons/checked.svg" alt="check" /> -->
-            <span
-              nz-icon
-              nzType="check-circle"
-              nzTheme="fill"
-              style="color: #00ba00"
-            ></span>
+  <div class="content mt-3 mb-3">
+    <div class="quiz-header">
+      <div *ngIf="(questionAnswers?.totalCorrectAnswer  / questionAnswers?.totalQuestion) * 100 >= passingCriteria" class="quiz-results-card">
+        <h2 class="pass-heading">
+          <!-- <img src="../../../../assets/icons/checked.svg" alt="check" /> -->
+          <span nz-icon nzType="check-circle" nzTheme="fill" style="color: #00ba00;"></span>
 
-            Quiz Result
-          </h2>
-          <p>Nice job, You passed.</p>
-        </div>
+          Quiz Result
+        </h2>
+        <p>Nice job, You passed.</p>
+      </div>
 
-        <div
-          *ngIf="
-            (questionAnswers?.totalCorrectAnswer /
-              questionAnswers?.totalQuestion) *
-              100 <
-            passingCriteria
-          "
-          class="quiz-results-card"
-        >
-          <h2 class="fail-heading">
-            <img src="../../../../assets/icons/cross.svg" alt="Cross" />
+      <div *ngIf="(questionAnswers?.totalCorrectAnswer / questionAnswers?.totalQuestion) * 100 < passingCriteria" class="quiz-results-card">
+        <h2 class="fail-heading">
+          <img src="../../../../assets/icons/cross.svg" alt="Cross" />
 
-            Quiz Result
-          </h2>
-          <p>Failed {{ passingCriteria }}% required to pass.</p>
-        </div>
+          Quiz Result
+        </h2>
+        <p>Failed {{passingCriteria}}% required to pass.</p>
+      </div>
 
-        <div class="quiz-table">
-          <table class="quiz-summary">
-            <tr>
-              <td class="text-align-left"><strong>Your Percentage:</strong></td>
-              <td class="text-align-right">
-                {{
-                  (questionAnswers?.totalCorrectAnswer /
-                    questionAnswers?.totalQuestion) *
-                    100 | number : "1.0-2"
-                }}%
-              </td>
-            </tr>
-            <tr>
-              <td class="text-align-left">
-                <strong>Passing Criteria:</strong>
-              </td>
-              <td class="text-align-right">{{ passingCriteria }}%</td>
-            </tr>
-            <tr>
-              <td class="text-align-left">
-                <strong>Attempted Questions:</strong>
-              </td>
-              <td class="text-align-right">
-                {{ questionAnswers?.totalAttemptQuestion }} out of
-                {{ questionAnswers?.totalQuestion }}
-              </td>
-            </tr>
-            <tr>
-              <td class="text-align-left"><strong>Correct Answers:</strong></td>
-              <td class="text-align-right">
-                {{ questionAnswers?.totalCorrectAnswer }} out of
-                {{ questionAnswers?.totalQuestion }}
-              </td>
-            </tr>
-          </table>
+      <div class="quiz-table">
+        <table class="quiz-summary">
+          <tr>
+            <td class="text-align-left"><strong>Your Percentage:</strong></td>
+            <td class="text-align-right">
+              {{ (questionAnswers?.totalCorrectAnswer / questionAnswers?.totalQuestion) * 100 | number: '1.0-2' }}%
+            </td>
+          </tr>
+          <tr>
+            <td class="text-align-left"><strong>Passing Criteria:</strong></td>
+            <td class="text-align-right">{{passingCriteria}}%</td>
+          </tr>
+          <tr>
+            <td class="text-align-left">
+              <strong>Attempted Questions:</strong>
+            </td>
+            <td class="text-align-right">
+              {{ questionAnswers?.totalAttemptQuestion }} out of {{ questionAnswers?.totalQuestion }}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-align-left"><strong>Correct Answers:</strong></td>
+            <td class="text-align-right">
+              {{ questionAnswers?.totalCorrectAnswer }} out of {{ questionAnswers?.totalQuestion }}
+            </td>
+          </tr>
+        </table>
 
-          <div class="btn-wrapper">
-            <button
-              class="retry-btn"
-              nz-button
-              (click)="reviewQuiz()"
-              nzType="default"
-            >
-              Review Questions
-            </button>
-            <button
-              class="continue-btn"
-              nz-button
-              (click)="continue()"
-              nzType="primary"
-            >
-              Continue
-            </button>
-          </div>
+        <div class="btn-wrapper">
+          <button
+            class="retry-btn"
+            nz-button
+            (click)="reviewQuiz()"
+            nzType="default"
+          >
+            Review Questions
+          </button>
+          <button
+            class="continue-btn"
+            nz-button
+            (click)="continue()"
+            nzType="primary"
+          >
+            Continue
+          </button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 </div>
 
 <!-- <div *ngIf="showFailScreen" class="fail-screen">

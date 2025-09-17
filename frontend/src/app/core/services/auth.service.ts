@@ -318,8 +318,4 @@ export class AuthService {
     );            
 
   }
-
-  public welcomeInstructor(): Observable<any>{
-    return this._http.get(`${environment.baseUrl}user/user-welcome-status`);
-  }
 }

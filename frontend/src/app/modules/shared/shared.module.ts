@@ -32,13 +32,6 @@ import { LazyLoadDirective } from '../directives/lazy-load.directive';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { InputComponent } from './input/input.component';
 import { PreviewUploadComponent } from './preview-upload/preview-upload.component';
-import { SearchDropdownComponent } from './search-dropdown/search-dropdown.component';
-import { ClassAssessmentDropdownComponent } from './class-assessment-dropdown/class-assessment-dropdown.component';
-import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { AiGraderLandingPageComponent } from '../pages/ai-grader-landing-page/ai-grader-landing-page.component';
-import { NzCarouselModule } from "ng-zorro-antd/carousel";
-import { AiGraderLoaderComponent } from './ai-grader-loader/ai-grader-loader.component';
 
 @NgModule({
   declarations: [
@@ -65,12 +58,7 @@ import { AiGraderLoaderComponent } from './ai-grader-loader/ai-grader-loader.com
     InputComponent,
     PreviewUploadComponent,
     DropdownComponent,
-    LazyLoadDirective,
-    SearchDropdownComponent,
-    ClassAssessmentDropdownComponent,
-    PdfViewerComponent,
-    AiGraderLandingPageComponent,
-    AiGraderLoaderComponent
+    LazyLoadDirective
   ],
 
   imports: [
@@ -84,9 +72,7 @@ import { AiGraderLoaderComponent } from './ai-grader-loader/ai-grader-loader.com
     NzInputModule,
     NzSelectModule,
     FormsModule,
-    PdfViewerModule,
-    NzCarouselModule
-],
+  ],
   exports: [
     NavbarComponent,
     FooterComponent,
@@ -109,10 +95,6 @@ import { AiGraderLoaderComponent } from './ai-grader-loader/ai-grader-loader.com
     InputComponent,
     PreviewUploadComponent,
     DropdownComponent,
-    SearchDropdownComponent,
-    ClassAssessmentDropdownComponent,
-    PdfViewerComponent,
-    AiGraderLoaderComponent
   ],
 })
 export class SharedModule {}

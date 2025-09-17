@@ -11,7 +11,6 @@ export class ColumnConfig {
 export class TableConfig {
   columns: ColumnConfig[];
   rowData: any[];
-  clickableKeys?: any[];
   headerColor?: string;
   rowColor?: string;
   rowTextColor?: string;

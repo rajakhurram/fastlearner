@@ -102,8 +102,8 @@ describe('CacheService', () => {
     const key = 'courseData';
     const data = { courseId: 1, title: 'Test Course' };
 
-    service.saveJsonData(key, data);
-    const result = service.getJsonData(key);
+    service.saveCourseData(key, data);
+    const result = service.getCourseData(key);
 
     expect(result).toEqual(data);
   });
@@ -132,8 +132,8 @@ describe('CacheService', () => {
   it('should handle empty course data gracefully', () => {
     const key = 'courseData';
 
-    service.saveJsonData(key, {});
-    const result = service.getJsonData(key);
+    service.saveCourseData(key, {});
+    const result = service.getCourseData(key);
 
     expect(result).toEqual({});
   });

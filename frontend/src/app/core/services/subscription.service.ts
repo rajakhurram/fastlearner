@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { PaymentProfile } from '../models/payment-profile.model';
 import { CheckoutData, Subscription } from '../models/subscription.model';
@@ -39,7 +39,7 @@ export class SubscriptionService {
     let params = new HttpParams()
       .set('coupon', coupon)
       .set('couponType', couponType);
-
+  
     if (id) {
       if (couponType === 'SUBSCRIPTION') {
         params = params.set('subscriptionId', id.toString());
@@ -47,9 +47,11 @@ export class SubscriptionService {
         params = params.set('courseId', id.toString());
       }
     }
-
+  
     return this._http.get(`${environment.baseUrl}coupon/validate`, { params });
   }
+  
+  
 
   public courseCheckout(checkoutData: CheckoutData): Observable<any> {
     return this._http.post(`${environment.baseUrl}checkout/`, checkoutData);
@@ -115,10 +117,10 @@ export class SubscriptionService {
   public getTransactionHistoryByTransId(transId?: any): Observable<any> {
     return this._http.get(
       `${environment.baseUrl}transaction-history/get-by-id?transactionId=${transId}`,
-      {
-        responseType: 'blob',
-      }
-    );
+    {
+      responseType: 'blob',
+    }
+  );
   }
   public updateUserSubscriptionCheck(isSubscribe?: boolean) {
     let loggedInUserDetails = JSON.parse(
@@ -143,27 +145,26 @@ export class SubscriptionService {
   //   );
   // }
 
-  public loadSubscriptionPermissions(): Observable<void> {
-    return this._http
+  public loadSubscriptionPermissions(): void {
+    this._http
       .get(`${environment.baseUrl}subscription/current-subscription`)
-      .pipe(
-        map((response: any) => {
+      .subscribe({
+        next: (response: any) => {
           if (response?.status === 200) {
-            const permissions = response?.data?.permissions;
-            if (permissions?.length > 0) {
+            if (
+              response?.data?.permissions &&
+              response?.data?.permissions?.length > 0
+            ) {
               this._cacheService.saveInCache(
                 'permissions',
-                JSON.stringify(permissions)
+                JSON.stringify(response?.data?.permissions)
               );
             } else {
               this._cacheService.removeFromCache('permissions');
             }
           }
-        }),
-        catchError(() => {
-          this._cacheService.removeFromCache('permissions');
-          return of(); // continue the flow even if error occurs
-        })
-      );
+        },
+        error: (error) => {},
+      });
   }
 }

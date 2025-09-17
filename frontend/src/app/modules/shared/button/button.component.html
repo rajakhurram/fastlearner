@@ -17,7 +17,7 @@
     'font-size': config.fontSize,
     '--hover-bg-color': config.hoverConfig?.backgroundColor || '',
     '--hover-color': config.hoverConfig?.color || '',
-    'font-weight': config.fontWeight,
+    'font-weight': config.fontWeight
   }"
   [ngClass]="{ 'hover-enabled': config.hoverConfig }"
   (click)="callBackFn($event)"

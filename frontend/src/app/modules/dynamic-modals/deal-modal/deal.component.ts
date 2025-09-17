@@ -36,18 +36,15 @@ export class DealComponent implements OnInit {
     this._authService.cancelSubscription().subscribe({
       next: (response: any) => {
         if (
-          response?.status ===
+          response?.status ==
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
-          this._subscriptionService.loadSubscriptionPermissions().subscribe({
-            complete: () => {
-              this.openConfirmationModal();
-            },
-          });
+          this._subscriptionService.loadSubscriptionPermissions();
+          this.openConfirmationModal();
         }
       },
       error: (error: any) => {
-        this._messageService.error(error?.error?.message);
+        this._messageService.error(error.error.message);
       },
     });
   }

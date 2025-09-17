@@ -24,7 +24,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 export class SubscriptionPlanComponent implements OnInit, OnDestroy {
   @Input() fromSubscriptionPlan = false;
   @Input() showFreePlan?: boolean = true;
-  @Input() showStandardPlan?: boolean = true;
+  @Input() showStandardPlan?: boolean= true;
   @Input() currentPlanId?: string | null;
   _httpConstants: HttpConstants = new HttpConstants();
   _appConstants: AppConstants = new AppConstants();
@@ -53,17 +53,10 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (
-      !this.isPlanSelected &&
-      !this.fromSubscriptionPlan &&
-      !this.isFreePlanSelected
-    ) {
+    if (!this.isPlanSelected && !this.fromSubscriptionPlan && !this.isFreePlanSelected) {
       this._authService.verifyUserSubscription().subscribe({
         next: (response: any) => {
-          if (
-            !response?.data?.currentPlan ||
-            response?.data?.currentPlan !== 'Free Plan'
-          ) {
+          if (!response?.data?.currentPlan || response?.data?.currentPlan !== 'Free Plan') {            
             this.handleFreePlan();
           }
         },
@@ -73,6 +66,7 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
       });
     }
   }
+  
 
   togglePlanType(isAnnual: boolean): void {
     this.displayAnnual = isAnnual;
@@ -81,16 +75,12 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
   getSubscriptionPlanList() {
     this._authService.getSubscriptionPlans()?.subscribe({
       next: (response: any) => {
-        if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          this.subscriptionList = response?.data?.filter(
-            (plan: any) =>
-              (!this.currentPlanId || plan.id !== this.currentPlanId) &&
-              (this.showStandardPlan || plan.planType !== 'STANDARD')
+        if (response?.status === this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
+          this.subscriptionList = response?.data?.filter((plan: any) =>
+            (!this.currentPlanId || plan.id !== this.currentPlanId) &&
+            (this.showStandardPlan || plan.planType !== 'STANDARD')
           );
-
+  
           this.noSubscriptionPresent = false;
           this._changeDetectorRef.detectChanges();
         } else {
@@ -104,6 +94,8 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
       },
     });
   }
+  
+  
 
   onSelectPlan(
     subscriptionPlanType: any,
@@ -125,47 +117,40 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleFreePlan(): void {
-    this._authService.verifyUserSubscription().subscribe({
-      next: (response: any) => {
-        const isSubscribed = response?.data === true;
-        const currentPlan = response?.data?.currentPlan;
+ handleFreePlan(): void {
+  this._authService.verifyUserSubscription().subscribe({
+    next: (response: any) => {
+      const isSubscribed = response?.data === true;
+      const currentPlan = response?.data?.currentPlan;
 
-        if (!isSubscribed) {
-          this.isFreePlanSelected = true;
-          this._authService.newUserSubscription().subscribe({
-            next: () => {
-                this._subscriptionService.loadSubscriptionPermissions()
-                .subscribe({
-                  complete: () => {
-                    this.navigateToLandingPage();
-                  },
-                });
-            },
-            error: () =>
-              this._messageService.error('Error processing free subscription.'),
-          });
-        } else if (currentPlan && currentPlan !== 'Free Plan') {
-          this.isFreePlanSelected = true;
-          this._authService.cancelSubscription().subscribe({
-            next: (res: any) => {
-              if (
-                res?.status ===
-                this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-              ) {
-                this.navigateToLandingPage();
-              }
-            },
-          });
-        } else {
-          this.isFreePlanSelected = true;
-          this.modalRef?.close();
-        }
-      },
-      error: () =>
-        this._messageService.error('Failed to fetch subscription details.'),
-    });
-  }
+      if (!isSubscribed) {
+        this.isFreePlanSelected = true; 
+        this._authService.newUserSubscription().subscribe({
+          next: () => this.navigateToLandingPage(),
+          error: () => this._messageService.error('Error processing free subscription.'),
+        });
+      } else if (currentPlan && currentPlan !== 'Free Plan') {
+        this.isFreePlanSelected = true; 
+        this._authService.cancelSubscription().subscribe({
+          next: (res: any) => {
+            if (res?.status === this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
+              this.navigateToLandingPage();
+            }
+          },
+        });
+      } else {
+        this.isFreePlanSelected = true; 
+        this.modalRef?.close(); 
+      }
+    },
+    error: () => this._messageService.error('Failed to fetch subscription details.'),
+  });
+}
+
+  
+  
+  
+  
 
   // Helper method to handle navigation
   private navigateToLandingPage(): void {
@@ -184,56 +169,47 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
     ) {
       this.handleFreePlan();
     }
-
     this._authService.createSubscription(payLoad)?.subscribe({
       next: (response: any) => {
         if (
-          response?.status ===
+          response?.status ==
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
-          this._subscriptionService.loadSubscriptionPermissions().subscribe({
-            complete: () => {
-              switch (subscriptionPlanType) {
-                case this._appConstants.SUBSCRIPTION_PLAN_TYPE.FREE_PLAN:
-                  this._messageService.success(
-                    'You are Successfully Subscribed To Free Plan'
-                  );
-                  this._subscriptionService.updateUserSubscriptionCheck(true);
+          this._subscriptionService.loadSubscriptionPermissions();
+          switch (subscriptionPlanType) {
+            case this._appConstants.SUBSCRIPTION_PLAN_TYPE.FREE_PLAN:
+              this._messageService.success(
+                'You are Successfully Subscribed To Free Plan'
+              );
 
-                  const redirectUrl =
-                    this._cacheService.getDataFromCache('redirectUrl');
-                  if (redirectUrl) {
-                    this._cacheService.removeFromCache('redirectUrl');
-                    this._router.navigateByUrl(redirectUrl);
-                  } else {
-                    this._router.navigateByUrl(environment.basePath);
-                  }
-                  break;
-
-                case this._appConstants.SUBSCRIPTION_PLAN_TYPE.STANDARD_PLAN:
-                  this._messageService.success(
-                    'You are Successfully Subscribed To Standard Plan'
-                  );
-                  window.open(response?.data, '_self');
-                  break;
-
-                case this._appConstants.SUBSCRIPTION_PLAN_TYPE.ANNUAL_PLAN:
-                  this._messageService.success(
-                    'You are Successfully Subscribed To Annual Plan'
-                  );
-                  window.open(response?.data, '_self');
-                  break;
+              this._subscriptionService.updateUserSubscriptionCheck(true);
+              const redirectUrl =
+                this._cacheService.getDataFromCache('redirectUrl');
+              if (redirectUrl) {
+                this._router.navigateByUrl(environment.basePath);
               }
-
-              this.isPlanSelected = true;
-            },
-          });
+              return;
+            case this._appConstants.SUBSCRIPTION_PLAN_TYPE.STANDARD_PLAN:
+              this._messageService.success(
+                'You are Successfully Subscribed To Standard Plan'
+              );
+              window.open(response?.data, '_self');
+              break;
+            case this._appConstants.SUBSCRIPTION_PLAN_TYPE.ANNUAL_PLAN:
+              this._messageService.success(
+                'You are Successfully Subscribed To Annual Plan'
+              );
+              window.open(response?.data, '_self');
+              break;
+          }
         }
+
+        this.isPlanSelected = true;
       },
       error: (error: any) => {
         console.log(error);
         if (
-          error?.error?.status ===
+          error?.error?.status ==
           this._httpConstants.REQUEST_STATUS.BAD_REQUEST_400.CODE
         ) {
           this._messageService.error(error?.error?.message);
@@ -256,4 +232,5 @@ export class SubscriptionPlanComponent implements OnInit, OnDestroy {
   toggleSwitch(value: boolean) {
     this.displayAnnual = value;
   }
+
 }

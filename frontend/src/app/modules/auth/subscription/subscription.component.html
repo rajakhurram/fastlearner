@@ -182,7 +182,7 @@
                   <tr *ngFor="let history of transactionHistoryDetail">
                     <td>{{ history?.creationAt | date : "yyyy-MM-dd" }}</td>
                     <td>{{ history?.name }}</td>
-                    <td>${{ history?.subscriptionAmount.toFixed(2) }}</td>
+                    <td>${{ history?.subscriptionAmount }}</td>
                     <td>{{ history?.responseText }}</td>
                     <td>{{ history?.status }}</td>
                     <td (click)="openPurchasedInvoiceFromSubscription(history?.id)">
@@ -227,7 +227,7 @@
                 <tbody>
                   <tr *ngFor="let history of purchasedHistory">
                     <td>{{ history?.enrolledAt | date : "yyyy-MM-dd" }}</td>
-                    <td>${{ history?.price.toFixed(2) }}</td>
+                    <td>${{ history?.price }}</td>
                     <td>{{ "Purchased a premium course" }}</td>
                     <td (click)="openPurchasedInvoice(history?.courseId)">
                       <img

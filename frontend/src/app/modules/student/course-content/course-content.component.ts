@@ -294,7 +294,7 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
         topic: this.currentSelectedTopic,
       };
 
-      this._cacheService.saveJsonData('currentCourseData', currentCourseData);
+      this._cacheService.saveCourseData('currentCourseData', currentCourseData);
     }, 0);
   }
 

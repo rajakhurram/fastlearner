@@ -4,8 +4,6 @@ import { InstructorComponent } from './instructor.component';
 import { InstructorProfileComponent } from './instructor-profile/instructor-profile.component';
 import { AuthGuard } from 'src/app/core/guards/auth.guard';
 import { PermissionGuard } from 'src/app/core/guards/permission.guard';
-import { GraderResultsComponent } from './ai-grader/grader-results/grader-results.component';
-import { InstructorTabs } from 'src/app/core/enums/instructor_tabs';
 
 const routes: Routes = [
   {
@@ -27,7 +25,7 @@ const routes: Routes = [
         path: 'test',
         loadChildren: () =>
           // import('./test/test.module').then((m) => m.TestModule),
-          import('./course/course.module').then((m) => m.CourseModule),
+        import('./course/course.module').then((m) => m.CourseModule),
       },
       {
         path: 'performance',
@@ -59,9 +57,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('./affiliate/affiliate.module').then((m) => m.AffiliateModule),
         canLoad: [PermissionGuard],
-        data: {
-          requiredPermission: InstructorTabs.AFFILIATE,
-        },
       },
       {
         path: 'premium-student',
@@ -70,18 +65,6 @@ const routes: Routes = [
             (m) => m.Premium_StudentModule
           ),
         canLoad: [PermissionGuard],
-        data: {
-          requiredPermission: InstructorTabs.AFFILIATE,
-        },
-      },
-      {
-        path: 'ai-grader',
-        loadChildren: () =>
-          import('./ai-grader/ai-grader.module').then((m) => m.AiGraderModule),
-        canLoad: [AuthGuard, PermissionGuard],
-                data: {
-          requiredPermission: InstructorTabs.AI_GRADER,
-        },
       },
     ],
   },

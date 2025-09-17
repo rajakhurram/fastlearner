@@ -33,8 +33,31 @@ export class AuthGuard
     private _cacheService: CacheService
   ) {}
 
-  private alreadyChecked: Set<string> = new Set();
+  // canActivate(
+  //   route: ActivatedRouteSnapshot,
+  //   state: RouterStateSnapshot
+  // ):
+  //   | Observable<boolean | UrlTree>
+  //   | Promise<boolean | UrlTree>
+  //   | boolean
+  //   | UrlTree {
+  //   const isLoggedIn = this._authService.isLoggedIn();
 
+  //   if (isLoggedIn) {
+  //     // Prevent redirect if already on an auth page
+  //     if (state.url.startsWith('/auth')) {
+  //       return this._router.createUrlTree(['/']); // Redirect to home
+  //     }
+  //     return true; // Allow access
+  //   } else {
+  //     // Check if already on the sign-in page
+  //     if (state.url === '/auth/sign-in') {
+  //       return true; // Allow access to sign-in
+  //     }
+  //     this._cacheService.saveInCache('redirectUrl', state.url);
+  //     return this._router.createUrlTree(['/auth/sign-in']); // Redirect to sign-in
+  //   }
+  // }
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -126,8 +149,7 @@ export class AuthGuard
         segments[1]?.path == 'courses' ||
         segments[1]?.path == 'verify-certificate' ||
         segments[1]?.path == 'filter-courses' ||
-        segments[1]?.path == 'profile' ||
-        segments[1]?.path == 'ai-grader'
+        segments[1]?.path == 'profile'
       ) {
         return true;
       }

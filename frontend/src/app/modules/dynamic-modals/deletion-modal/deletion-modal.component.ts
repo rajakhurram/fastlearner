@@ -24,8 +24,8 @@ export class DeletionModalComponent {
     border: '1px solid',
   };
   buttonAddConfig: buttonConfig = {
-    paddingRight: '55px',
-    paddingLeft: '55px',
+    paddingRight: '60px',
+    paddingLeft: '60px',
   };
 
   ngOnInit(): void {

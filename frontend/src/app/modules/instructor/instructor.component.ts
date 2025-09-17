@@ -38,12 +38,8 @@ export class InstructorComponent implements OnInit {
   activePremiumCourses?: boolean;
   affiliateTabOpen?: boolean = false;
   activePremiumStudents?: boolean;
-  activeGraderClasses?: boolean;
-  activeGraderAssessment?: boolean;
   permissions?: any;
   hideAffiliate?: boolean = true;
-  hideGrader?: boolean = true;
-  
 
   constructor(
     private _authService: AuthService,
@@ -118,65 +114,55 @@ export class InstructorComponent implements OnInit {
 
   changeTabColor(value?: any) {
     if (value == InstructorTabs.DASHBOARD) {
-      this.activeTab(true, false, false, false, false, false, false, false, false, false);
+      this.activeTab(true, false, false, false, false, false, false, false);
       this.selectedRoute = InstructorTabs.DASHBOARD;
     } else if (value == InstructorTabs.COURSE) {
-      this.activeTab(false, true, false, false, false, false, false, false, false, false);
+      this.activeTab(false, true, false, false, false, false, false, false);
       this.selectedRoute = InstructorTabs.COURSE;
     } else if (value == InstructorTabs.PERFORMANCE) {
-      this.activeTab(false, false, true, false, false, false, false, false, false, false);
+      this.activeTab(false, false, true, false, false, false, false, false);
       this.selectedRoute = InstructorTabs.PERFORMANCE;
     } else if (value == InstructorTabs.NOTIFICATIONS) {
-      this.activeTab(false, false, false, true, false, false, false, false, false, false);
+      this.activeTab(false, false, false, true, false, false, false, false);
       this.selectedRoute = InstructorTabs.NOTIFICATIONS;
     } else if (value == InstructorTabs.PAYMENT) {
-      this.activeTab(false, false, false, false, true, false, false, false, false, false);
+      this.activeTab(false, false, false, false, true, false, false, false);
     } else if (value == InstructorTabs.AFFILIATE_PROFILES) {
-      this.activeTab(false, false, false, false, false, true, false, false, false, false);
+      this.activeTab(false, false, false, false, false, true, false, false);
     } else if (value == InstructorTabs.PREMIUM_COURSES) {
-      this.activeTab(false, false, false, false, false, false, false, true, false, false);
-    } else if (value == InstructorTabs.AI_GRADER_CLASSES) {
-      this.activeTab(false, false, false, false, false, false, false, false, true, false);
-    } else if (value == InstructorTabs.AI_GRADER_ASSESSMENTS) {
-      this.activeTab(false, false, false, false, false, false, false, false, false, true);
+      this.activeTab(false, false, false, false, false, false, false, true);
     }
   }
 
   changeTab(value?: any) {
     if (value == InstructorTabs.DASHBOARD) {
-      this.activeTab(true, false, false, false, false, false, false, false, false);
+      this.activeTab(true, false, false, false, false, false, false, false);
       this._router.navigate(['instructor/instructor-dashboard']);
     } else if (value == InstructorTabs.COURSE) {
       if (value != this.selectedRoute.split('?')[0]) {
-      this.activeTab(false, true, false, false, false, false, false, false, false, false);
+        this.activeTab(false, true, false, false, false, false, false, false);
         // this._router.navigate(['instructor/course']);
         this._router.navigate(['/content-type']);
       }
     } else if (value == InstructorTabs.PERFORMANCE) {
-      this.activeTab(false, false, true, false, false, false, false, false, false, false);
+      this.activeTab(false, false, true, false, false, false, false, false);
       this._router.navigate(['instructor/performance']);
     } else if (value == InstructorTabs.NOTIFICATIONS) {
       this.removeNotificationCount();
-      this.activeTab(false, false, false, true, false, false, false, false, false, false);
+      this.activeTab(false, false, false, true, false, false, false, false);
       this._router.navigate(['instructor/notifications']);
     } else if (value == InstructorTabs.PAYMENT) {
-      this.activeTab(false, false, false, false, true, false, false, false, false, false);
+      this.activeTab(false, false, false, false, true, false, false, false);
       this._router.navigate(['instructor/payment']);
     } else if (value == InstructorTabs.AFFILIATE_PROFILES) {
-      this.activeTab(false, false, false, false, false, true, false, false, false, false);
+      this.activeTab(false, false, false, false, false, true, false, false);
       this._router.navigate(['instructor/affiliate/profiles']);
     } else if (value == InstructorTabs.PREMIUM_COURSES) {
-      this.activeTab(false, false, false, false, false, false, true, false, false, false);
+      this.activeTab(false, false, false, false, false, false, true, false);
       this._router.navigate(['instructor/affiliate/premium-courses']);
     } else if (value == InstructorTabs.PREMIUM_STUDENTS) {
-      this.activeTab(false, false, false, false, false, false, false, true, false, false);
+      this.activeTab(false, false, false, false, false, false, false, true);
       this._router.navigate(['instructor/premium-student']);
-    } else if (value == InstructorTabs.AI_GRADER_CLASSES) {
-      this.activeTab(false, false, false, false, false, false, false, false, true, false);
-      this._router.navigate(['instructor/ai-grader/classes']);
-    } else if (value == InstructorTabs.AI_GRADER_ASSESSMENTS) {
-      this.activeTab(false, false, false, false, false, false, false, false, false, true);
-      this._router.navigate(['instructor/ai-grader/assessments']);
     }
   }
 
@@ -188,9 +174,7 @@ export class InstructorComponent implements OnInit {
     activePayment?: boolean,
     activeAffiliateProfiles?: boolean,
     activePremiumCourses?: boolean,
-    activePremiumStudents?: boolean,
-    activeGraderClasses?:boolean,
-    activeGraderAssessment?: boolean
+    activePremiumStudents?: boolean
   ) {
     this.activeDashboard = activeDashboard;
     this.activeCourse = activeCourse;
@@ -200,8 +184,6 @@ export class InstructorComponent implements OnInit {
     this.activeAffiliateProfiles = activeAffiliateProfiles;
     this.activePremiumCourses = activePremiumCourses;
     this.activePremiumStudents = activePremiumStudents;
-    this.activeGraderClasses = activeGraderClasses;
-    this.activeGraderAssessment = activeGraderAssessment;
   }
 
   openAffiliateTab() {
@@ -396,13 +378,10 @@ export class InstructorComponent implements OnInit {
       : null;
     if (
       this.permissions &&
-      this.permissions?.length > 0 &&
-      this.permissions?.includes(InstructorTabs.AFFILIATE) 
+      this.permissions.length > 0 &&
+      this.permissions.includes(InstructorTabs.AFFILIATE)
     ) {
       this.hideAffiliate = false;
-    }
-    if(this.permissions?.includes(InstructorTabs.AI_GRADER)){
-      this.hideGrader=false;
     }
   }
 
@@ -423,13 +402,6 @@ export class InstructorComponent implements OnInit {
     this.sideBarVisible = false;
     this._router.navigate(['/content-type']);
     // this._router.navigate(['instructor/course']);
-  }
-
-  routeToAiGrader() {
-    document.body.classList.remove('hide-scrollbar');
-    this.menuVisible = false;
-    this.sideBarVisible = false;
-    this._router.navigate(['instructor/ai-grader']);
   }
 
   routeToPremiumStudent() {

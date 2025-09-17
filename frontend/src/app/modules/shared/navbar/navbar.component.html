@@ -6,7 +6,7 @@
         class="inner-content"
       >
         <img
-          width="225px"
+          width="250px"
           class="logo-style"
           (click)="routeToLandingPage()"
           alt="Logo"
@@ -98,40 +98,6 @@
           </ng-template>
         </div>
       </div>
-      <div class="co-pilot">
-        <button
-          nz-button
-          class="btn-icon-only"
-          [nzType]="'primary'"
-          (click)="onButtonOnClick()"
-          (mouseenter)="hover = true"
-          (mouseleave)="hover = false"
-          aria-label="Ask AI"
-        >
-          <img
-            [src]="
-              hover
-                ? 'assets/icons/Ask AI (on-hover).svg'
-                : 'assets/icons/Ask AI.svg'
-            "
-            alt="Ask AI"
-            height="29px"
-          />
-        </button>
-      </div>
-
-      <div class="ai-grader">
-        <a href="/ai-grader" class="ai-grader-link">
-          <span style="color: #212189;     margin-left: 10px;">AI Grader</span>
-          <img
-            height="15px"
-            class="ml-5x"
-            alt="New"
-            src="assets/icons/ai-grader-new.svg"
-            loading="lazy"
-        /></a>
-      </div>
-
       <div class="inner-content-right" style="justify-content: end">
         <ul class="menu-items">
           <li>
@@ -518,12 +484,6 @@
             src="../../../../assets/icons/noti-menu.svg"
           />Notifications
         </li>
-        <li nz-menu-item (click)="routeToStudentResultPage()">
-          <img
-            style="margin-right: 20px; width: 15px"
-            src="../../../../assets/icons/Ai-grader.svg"
-          />AI Grader Results
-        </li>
         <li id="subscription" (click)="routeToSubscription()" nz-menu-item>
           <img
             style="margin-right: 20px; width: 15px"
@@ -749,33 +709,33 @@
      
     }"
   >
-    <div class="navLeft">
-      <div *ngIf="!navbarVisible && !showSearch" class="burger-icon">
-        <img
-          (click)="toggleBurgerMenu()"
-          src="./../../../../assets/icons/burger-menu.svg"
-          alt="Menu"
-          loading="lazy"
-        />
-      </div>
-      <div
-        *ngIf="!showSearch"
-        [ngStyle]="{
-          width: isLoggedIn ? '' : '85%',
-          'margin-left': navbarVisible ? '19%' : '0px'
-        }"
-        class="inner-content"
-      >
-        <img
-          [ngStyle]="{ width: logoWidth + 'px' }"
-          class="logo-style-mob"
-          (click)="routeToLandingPage()"
-          alt="Logo"
-          loading="lazy"
-          src="./../../../../assets/icons/FL-Logo (1).svg"
-        />
-      </div>
+  <div class="navLeft">
+    <div *ngIf="!navbarVisible && !showSearch" class="burger-icon">
+      <img
+        (click)="toggleBurgerMenu()"
+        src="./../../../../assets/icons/burger-menu.svg"
+        alt="Menu"
+        loading="lazy"
+      />
     </div>
+    <div
+      *ngIf="!showSearch"
+      [ngStyle]="{
+        width: isLoggedIn ? '' : '85%',
+        'margin-left': navbarVisible ? '19%' : '0px'
+      }"
+      class="inner-content"
+    >
+      <img
+        [ngStyle]="{ width: logoWidth + 'px' }"
+        class="logo-style-mob"
+        (click)="routeToLandingPage()"
+        alt="Logo"
+        loading="lazy"
+        src="./../../../../assets/icons/FL-Logo (1).svg"
+      />
+    </div>
+</div>
     <div style="display: flex; align-items: center">
 
       <div class="search-icon-mob" (click)="toggleSearch()">
@@ -880,19 +840,6 @@
             Teach on Fastlearner
           </p>
         </div>
-      </div>
-      <nz-divider class="divider"></nz-divider>
-
-      <div class="ai-grader">
-        <a href="/ai-grader" class="ai-grader-link">
-          <span style="color: #212189">AI Grader</span>
-          <img
-            height="15px"
-            class="ml-5x"
-            alt="New"
-            src="assets/icons/ai-grader-new.svg"
-            loading="lazy"
-        /></a>
       </div>
 
       <nz-divider class="divider"></nz-divider>

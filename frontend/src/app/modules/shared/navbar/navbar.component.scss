@@ -93,17 +93,17 @@
 // end
 
 .width-full {
-  width: 55%;
+  width: 60%;
 }
 
 .width-res {
-  width: 60%;
+  width: 65%;
 }
 
 .nav-top {
   display: flex;
   justify-content: center;
-  padding: 0.5rem 0rem;
+  padding: 0.5rem 1rem;
 
   .inner-content {
     display: flex;
@@ -754,16 +754,6 @@ nz-select {
     justify-content: center;
   }
 
-  .nav-top {
-    padding: 0.5rem 1rem !important;
-  }
-
-  .ml-5x {
-    margin-bottom: 4px !important;
-    margin-left: 8px !important;
-    margin-top: 1px !important;
-  }
-
   .search-bar-mobile {
     margin-top: 0px;
   }
@@ -825,10 +815,10 @@ nz-select {
   }
 
   .width-full {
-    width: 45% !important;
+    width: 50% !important;
   }
   .width-res {
-    width: 48% !important;
+    width: 55% !important;
   }
 
   .inner-content {
@@ -837,16 +827,7 @@ nz-select {
 }
 @media screen and (max-width: 1300px) {
   .width-full {
-    width: 42% !important;
-  }
-  .menu-items {
-    margin-left: -30px !important;
-  }
-  .logo-style {
-    margin-right: 20px !important;
-  }
-  .nav-top {
-    padding: 0.5rem 0rem;
+    width: 48% !important;
   }
 }
 
@@ -905,24 +886,9 @@ nz-select {
   }
 }
 
+
 .navLeft {
   display: flex;
   flex-direction: row;
   gap: 8px;
-}
-
-.ai-grader-link {
-  display: inline-flex;
-  align-items: center;
-  font-family: "Poppins-regular";
-  font-size: 15px;
-  text-decoration: none;
-  color: #000;
-}
-
-.ml-5x {
-  margin-bottom: 30px;
-  margin-left: -10px;
-  margin-right: -10px;
-  margin-top: 1px;
 }

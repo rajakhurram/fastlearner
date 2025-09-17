@@ -85,14 +85,7 @@ export class SignUpComponent implements OnInit {
     private _cookiesService: CookiesService
   ) {
     this.validateForm = this._fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50),
-          Validators.pattern(/^[A-Za-z\s]*$/),
-        ],
-      ],
+      name: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[A-Za-z\s]*$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: [
         '',
@@ -187,42 +180,33 @@ export class SignUpComponent implements OnInit {
       next: (response: any) => {
         if (response) {
           this.saveResponseInCache(response);
+          this._subscriptionService.loadSubscriptionPermissions();
           this._authService.changeNavState(true);
-
-          // Call loadSubscriptionPermissions and wait for it to complete
-          this._subscriptionService.loadSubscriptionPermissions().subscribe({
-            complete: () => {
-              const redirectUrl =
-                this._cacheService.getDataFromCache('redirectUrl');
-              const splittedUrl = redirectUrl?.split('?')[0];
-
-              if (
-                redirectUrl &&
-                response?.subscribed &&
-                splittedUrl !== '/auth/reset-password'
-              ) {
-                this._cacheService.removeFromCache('redirectUrl');
-                this._router.navigateByUrl(redirectUrl);
-              } else if (response?.role == null) {
-                this.saveUserRole();
-              } else {
-                if (response?.role === Role.Student && response?.subscribed) {
-                  this._router.navigate(['student']);
-                } else if (
-                  response?.role === Role.Student &&
-                  !response?.subscribed
-                ) {
-                  this._router.navigate(['subscription-plan']);
-                } else if (response?.role === Role.Instructor) {
-                  this._router.navigate(['instructor']);
-                }
-              }
-            },
-            error: (err) => {
-              // Optional: handle subscription permission load failure
-              console.error('Failed to load permissions:', err);
-            },
-          });
+          const redirectUrl =
+            this._cacheService.getDataFromCache('redirectUrl');
+          const splittedUrl = redirectUrl?.split('?')[0];
+          if (
+            redirectUrl &&
+            response?.subscribed &&
+            splittedUrl != '/auth/reset-password'
+          ) {
+            this._cacheService.removeFromCache('redirectUrl');
+            this._router.navigateByUrl(redirectUrl);
+          } else if (response?.role == null) {
+            // this._router.navigate(['auth/get-started']);
+            this.saveUserRole();
+          } else {
+            if (response?.role == Role.Student && response?.subscribed) {
+              this._router.navigate(['student']);
+            } else if (
+              response?.role == Role.Student &&
+              !response?.subscribed
+            ) {
+              this._router.navigate(['subscription-plan']);
+            } else if (response?.role == Role.Instructor) {
+              this._router.navigate(['instructor']);
+            }
+          }
         }
       },
       error: (error: any) => {
@@ -260,80 +244,67 @@ export class SignUpComponent implements OnInit {
   onSignUp(body: any) {
     this.disableSubmitButton = true;
     body.otpLength = 6;
-
     setTimeout(() => {
       this.disableSubmitButton = false;
     }, 2000);
-
     this._authService.signUp(body).subscribe({
       next: (response: any) => {
         if (response) {
           this._messageService.info(
             'Check your email for the OTP code to complete sign up.'
           );
-
           const modal = this._modal.create({
             nzContent: OtpModalComponent,
             nzViewContainerRef: this._viewContainerRef,
             nzComponentParams: {
               data: {
-                ...body,
-                isSignup: true,
+                ...body,       
+                isSignup: true 
               },
             },
             nzFooter: null,
             nzKeyboard: true,
             nzMaskClosable: false,
+            // nzCloseIcon: null,
+            // nzOnCancel: () => false,
           });
-
           modal?.afterClose.subscribe((event) => {
             if (!event) {
               this.disableSubmitButton = false;
               return;
             }
-
             this.disableSubmitButton = false;
             this.saveResponseInCache(event);
+            this._subscriptionService.loadSubscriptionPermissions();
             this._authService.changeNavState(true);
             this.getUserCompleteProfile();
-
-            this._subscriptionService.loadSubscriptionPermissions().subscribe({
-              complete: () => {
-                const redirectUrl =
-                  this._cacheService.getDataFromCache('redirectUrl');
-                const splittedUrl = redirectUrl?.split('?')[0];
-
-                if (
-                  redirectUrl &&
-                  event?.subscribed &&
-                  splittedUrl !== '/auth/reset-password'
-                ) {
-                  this._cacheService.removeFromCache('redirectUrl');
-                  this._router.navigateByUrl(redirectUrl);
-                } else if (event?.role == null) {
-                  this.saveUserRole();
-                } else {
-                  if (event?.role === Role.Student && event?.subscribed) {
-                    this._router.navigate(['student']);
-                  } else if (
-                    event?.role === Role.Student &&
-                    !event?.subscribed
-                  ) {
-                    this._router.navigate(['subscription-plan']);
-                  } else if (event?.role === Role.Instructor) {
-                    this._router.navigate(['instructor']);
-                  }
-                }
-              },
-            });
+            // const redirectUrl = this._cacheService.getDataFromCache('redirectUrl');
+            // if(redirectUrl){
+            //   this._cacheService.removeFromCache('redirectUrl')
+            //   this._router.navigateByUrl(redirectUrl);
+            // }
+            if (response?.role == null) {
+              this.saveUserRole();
+            } else {
+              if (response?.role == Role.Student && response?.subscribed) {
+                this._router.navigate(['student']);
+              } else if (
+                response?.role == Role.Student &&
+                !response?.subscribed
+              ) {
+                this._router.navigate(['subscription-plan']);
+              } else if (response?.role == Role.Instructor) {
+                this._router.navigate(['instructor']);
+              }
+            }
           });
         }
       },
       error: (error: any) => {
         if (
-          error?.error?.status ===
+          error?.error?.status ==
             this._httpConstants.REQUEST_STATUS.BAD_REQUEST_400.CODE ||
-          error?.error?.status ===
+          error?.error?.status ==
             this._httpConstants.REQUEST_STATUS.SERVER_ERROR_500.CODE
         ) {
           this._messageService.error(error?.error?.message);
@@ -499,4 +470,5 @@ export class SignUpComponent implements OnInit {
     }
     return true;
   }
+
 }

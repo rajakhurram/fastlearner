@@ -11,7 +11,6 @@ import { CertificateComponent } from './certificate/certificate.component';
 import { FilterCoursesComponent } from './filter-courses/filter-courses.component';
 import { AuthGuard } from 'src/app/core/guards/auth.guard';
 import { VerifyCertificateComponent } from './verify-certificate/verify-certificate.component';
-import { CoPilotComponent } from '../pages/co-pilot/co-pilot.component';
 
 const routes: Routes = [
   { path: '', component: StudentComponent,
@@ -26,16 +25,8 @@ const routes: Routes = [
       { path: 'generate-certificate', component : CertificateComponent, data: { title: 'Certificate' }},
       { path: 'filter-courses', component : FilterCoursesComponent, data: { title: 'Filter Courses' }},
       { path: 'verify-certificate/:uuid', component: VerifyCertificateComponent },
-      { path: 'co-pilot', component: CoPilotComponent },
     ]
-  },
-  {
-      path: 'grader-results',
-      loadChildren: () =>
-        import('./ai-grader-student/ai-grader-student.module').then((m) => m.AiGraderStudentModule),
-      canActivate: [AuthGuard],
-      canLoad: [AuthGuard],
-    },
+  }
 ];
 
 @NgModule({

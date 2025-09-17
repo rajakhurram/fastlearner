@@ -74,6 +74,8 @@ API keys are required for the application to function correctly. These keys shou
     # Add these lines to the end of the file
     export API_KEY="your_api_key_here" // This key is set because we want to get request only the registered fastlearner backend clients so you can set your own
     export OPENAI_API_KEY="your_openai_key_here"
+    export YOUTUBE_API_KEY="your_youtube_client_key_here"
+    export YOUTUBE_SECRET_KEY="your_youtube_secret_key_here" 
 
     # Save and exit, then reload your shell
     source ~/.bashrc

@@ -8,9 +8,10 @@ import { DataHolderConstants } from '../constants/dataHolder.constants';
 import { CommunicationService } from './communication.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class NotificationService implements OnDestroy {
+  
   _dataHolderConstants: DataHolderConstants = new DataHolderConstants();
   private notificationSubject = new Subject<any>();
   private eventSource: EventSource | undefined;
@@ -23,16 +24,17 @@ export class NotificationService implements OnDestroy {
     private _http: HttpClient,
     private _authService: AuthService,
     private _communicationService: CommunicationService,
-    private injector: Injector
-  ) {
+    private injector: Injector,
+  ) { 
     this._cacheService = this.injector.get(CacheService);
-    this.connectSSE();
-  }
+          this.connectSSE();
+        }
 
   notifications$ = this.notificationSubject.asObservable();
 
   connectSSE(): void {
-    if (this._cacheService.getDataFromCache('isLoggedIn')) {
+    if(this._cacheService.getDataFromCache('isLoggedIn')){
+
       if (this.eventSource) {
         this.eventSource.close();
       }
@@ -41,7 +43,7 @@ export class NotificationService implements OnDestroy {
 
       this.timestamp = uniqueId || this.generateTimeStamp();
 
-      this._cacheService.saveInCache('unique-id', this.timestamp);
+     this._cacheService.saveInCache('unique-id', this.timestamp);
 
       this.eventSource = new EventSource(
         `${environment.baseUrl}notification/register/` +
@@ -62,14 +64,9 @@ export class NotificationService implements OnDestroy {
           if (this.notifications.length > 4) {
             this.notifications.pop();
           }
-          this.notificationCount = Number(
-            this._cacheService.getDataFromCache('unclicked-noti-count')
-          );
+          this.notificationCount = Number(this._cacheService.getDataFromCache('unclicked-noti-count'));
           this.notificationCount += 1;
-          this._cacheService.saveInCache(
-            'unclicked-noti-count',
-            this.notificationCount
-          );
+          this._cacheService.saveInCache('unclicked-noti-count', this.notificationCount);
           this._cacheService.saveNotifications(
             this._dataHolderConstants.CACHE_KEYS.NOTIFICATION,
             this.notifications
@@ -82,10 +79,7 @@ export class NotificationService implements OnDestroy {
             this._dataHolderConstants.CACHE_KEYS.NOTIFICATION,
             response
           );
-          this._cacheService.saveInCache(
-            'unclicked-noti-count',
-            response.filter((noti: any) => !noti.read).length
-          );
+          this._cacheService.saveInCache('unclicked-noti-count', response.filter((noti: any) => !noti.read).length);
         }
         this._communicationService.showNotificationCountData();
         this.notifications = [];
@@ -106,7 +100,7 @@ export class NotificationService implements OnDestroy {
     }
   }
 
-  generateTimeStamp() {
+  generateTimeStamp(){
     return new Date().getTime();
   }
 

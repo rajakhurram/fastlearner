@@ -19,7 +19,6 @@ import { SubscriptionGuard } from './core/guards/subscription.guard';
 import { PremiumStudentComponent } from './modules/instructor/premium-student/premium-student.component';
 import { FastlearnerLoginComponent } from './fastlearner-login/fastlearner-login.component';
 import { ContentTypeComponent } from './modules/auth/content-type/content-type.component';
-import { AiGraderLandingPageComponent } from './modules/pages/ai-grader-landing-page/ai-grader-landing-page.component';
 import { PaymentMethodComponent } from './modules/auth/payment-method/payment-method.component';
 const routes: Routes = [
   {
@@ -102,11 +101,6 @@ const routes: Routes = [
     path: 'content-type',
     component: ContentTypeComponent,
     data: { title: 'Instructor' },
-  },
-
-  { path: 'ai-grader',
-    component: AiGraderLandingPageComponent,
-     data: { title: 'AI Grader' }, 
   },
 
   {

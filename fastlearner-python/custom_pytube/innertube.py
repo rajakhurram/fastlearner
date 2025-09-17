@@ -15,8 +15,8 @@ from urllib import parse
 from custom_pytube import request
 
 # YouTube on TV client secrets
-_client_id = '861556708454-d6dlm3lh05idd8npek18k6be8ba3oc68.apps.googleusercontent.com'
-_client_secret = 'SboVhoG9s0rNafixCSGGKXAT'
+_client_id = str(os.environ.get('YOUTUBE_API_KEY'))
+_client_secret =  str(os.environ.get('YOUTUBE_SECRET_KEY'))
 
 # Extracted API keys -- unclear what these are linked to.
 _api_keys = [

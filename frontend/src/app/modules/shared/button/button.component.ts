@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { buttonConfig } from 'src/app/core/models/button.model-config';
 
 @Component({
@@ -30,7 +24,8 @@ export class ButtonComponent {
     paddingLeft: '20px',
     fontSize: '14px',
     hoverConfig: null,
-    fontWeight: 'normal',
+    fontWeight: 'normal'
+
   };
 
   private _config: buttonConfig = { ...this.defaultConfig };
@@ -51,7 +46,7 @@ export class ButtonComponent {
 
   ngOnInit() {}
 
-  callBackFn(event?: any) {
+  callBackFn(event) {
     this.buttonCallBack.emit(event);
   }
 }

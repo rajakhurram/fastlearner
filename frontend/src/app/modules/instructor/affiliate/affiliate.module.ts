@@ -10,7 +10,6 @@ import { SearchFilterComponent } from "../../shared/search-filter/search-filter.
 import { ButtonComponent } from "../../shared/button/button.component";
 import { TableComponent } from "../../shared/table/table.component";
 import { AffliateDetailsComponent } from './affliate-details/affliate-details.component';
-import { AiGraderModule } from "../ai-grader/ai-grader.module";
 @NgModule({
     declarations: [
       AffiliateComponent,
@@ -22,7 +21,7 @@ import { AiGraderModule } from "../ai-grader/ai-grader.module";
       FormsModule,
       AffiliateRoutingModule,
       AntDesignModule,
-      SharedModule,
+      SharedModule
     ]
   })
   export class AffiliateModule { }

@@ -453,16 +453,6 @@ export class QuizPlayerComponent implements OnInit, OnChanges {
       return !userAnswer.answerId || userAnswer.answerId.length < 1;
   }
   
-  handleOptionClick(option: any): void {
-  if (this.quizQuestions[this.index].questionType === this.questionType.MULTIPLE_CHOICE) {
-    this.selectedMultipleAnswers(option);
-    this.selectedAnswer(option); // In case you want to track answerId too
-  } else {
-    this.selectedAnswerId = option.answerId;
-    this.selectedAnswer(option);
-  }
-}
-
   
 }
 

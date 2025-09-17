@@ -215,22 +215,11 @@
                   />
                 </td>
                 <td class="w-20" nz-tooltip="{{ data.title }}">
-                  <span
-                    class="clickable-title"
-                    (click)="routeToCoursePage(data)"
-                    [class.cursor-pointer]="
-                      canEditPremiumCourse || data?.courseType != 'PREMIUM'
-                    "
-                    [class.text-muted]="
-                      !canEditPremiumCourse && data?.courseType == 'PREMIUM'
-                    "
-                  >
-                    {{
-                      data?.title?.length > 55
-                        ? data?.title?.substring(0, 55) + "..."
-                        : data?.title
-                    }}
-                  </span>
+                  {{
+                    data?.title?.length > 55
+                      ? data?.title?.substring(0, 55) + "..."
+                      : data?.title
+                  }}
                   <nz-progress
                     [nzPercent]="data.courseProgress"
                     nzSize="small"
@@ -238,7 +227,6 @@
                     [nzShowInfo]="false"
                   ></nz-progress>
                 </td>
-
                 <td>{{ data?.duration }}</td>
                 <td>{{ data?.totalStudents }}</td>
                 <td>
@@ -291,10 +279,10 @@
                     <button
                       nz-tooltip="{{
                         data?.courseStatus === 'PUBLISHED'
-                          ? data?.contentType === 'TEST'
+                        ? (data?.contentType === 'TEST'
                             ? 'Please unpublish the test first'
-                            : 'Please unpublish the course first'
-                          : ''
+                            : 'Please unpublish the course first')
+                        : ''
                       }}"
                       (click)="deleteCourse(data?.id, CourseStatus.DELETE)"
                       class="action-delete border-radius cursor-pointer"
