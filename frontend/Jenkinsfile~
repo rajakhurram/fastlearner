@@ -6,11 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/qaximbalti/fastlearner-frontend.git'
-            }
-        }
 
         stage('Install Dependencies') {
             steps {
