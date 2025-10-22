@@ -9,13 +9,17 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('frontend') {
+                  sh 'npm install'
+                }
             }
         }
 
         stage('Build Angular App') {
             steps {
-                sh 'ng build --configuration=production'
+                dir('frontend') {
+                  sh 'ng build --configuration=development'
+                }
             }
         }
 
