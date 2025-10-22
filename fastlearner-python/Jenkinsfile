@@ -4,25 +4,41 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install -r requirements.txt
-                '''
+                withCredentials([
+                    string(credentialsId: 'TRANSCRIPT_AUTH_KEY', variable: 'API_KEY'),
+                    string(credentialsId: 'OPENAI_API_KEY', variable: 'OPENAI_API_KEY')
+                ]) {
+                dir('fastlearner-python') {
+                    sh '''
+                        python3.9 -m venv venv
+                        . venv/bin/activate
+                        pip install --upgrade pip
+                        pip install -r requirements.txt
+
+                        # Debug (masked in Jenkins logs)
+                        echo "API_KEY length: ${#API_KEY}"
+                        echo "OPENAI_API_KEY length: ${#OPENAI_API_KEY}"
+                    '''
+                    }
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'pm2 stop fastlearner-python || true'
-                sh 'pm2 start /usr/bin/python3 --name fastlearner-python -- app.py'
+                withCredentials([
+                    string(credentialsId: 'TRANSCRIPT_AUTH_KEY', variable: 'API_KEY'),
+                    string(credentialsId: 'OPENAI_API_KEY', variable: 'OPENAI_API_KEY')
+                ]) {
+                dir('fastlearner-python') {
+                    sh '''
+                        . venv/bin/activate
+                        pm2 stop fastlearner-python || true
+                        API_KEY=$API_KEY OPENAI_API_KEY=$OPENAI_API_KEY pm2 start venv/bin/python --name fastlearner-python -- app.py  --update-env
+                    '''
+                    }
+                }
             }
         }
-
-//         stage('Run') {
-//             steps {
-//                 sh 'python3 app.py'
-//             }
-//         }
     }
 }
