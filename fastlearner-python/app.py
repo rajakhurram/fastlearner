@@ -137,4 +137,6 @@ def authenticate(request):
 
 
 if __name__ == '__main__':
+    print("DEBUG: API_KEY length =", len(os.environ.get("API_KEY", "")))
+    print("DEBUG: OPEN_API_KEY length =", len(os.environ.get("OPEN_API_KEY", "")))
     app.run(host='0.0.0.0', port=5000, debug=False)
