@@ -113,6 +113,8 @@ def article_summary():
 
 @app.route(DOC_SUMMARY, methods=['POST'])
 def document_summary():
+    api_key = request.headers.get('Authorization')
+    print("DEBUG: API_KEY length =", api_key)
     try:
         authenticate(request=request)
         file = request.files['file']
