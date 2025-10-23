@@ -18,6 +18,10 @@ pipeline {
                         # Debug (masked in Jenkins logs)
                         echo "API_KEY length: ${#API_KEY}"
                         echo "OPENAI_API_KEY length: ${#OPENAI_API_KEY}"
+
+                        echo "API_KEY=$API_KEY" > .env
+                        echo "OPENAI_API_KEY=$OPENAI_API_KEY" >> .env
+                        cat .env
                     '''
                     }
                 }
