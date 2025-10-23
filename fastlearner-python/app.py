@@ -1,5 +1,7 @@
 import os
 import dto.ChatRequest as obj
+import logging
+import sys
 
 import Service.chatBot as chatService
 import Service.GenerateTranscript as script
@@ -27,6 +29,17 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
+
+# Configure root logger
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)  # ensures logs go to stdout
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 
 def create_app():
@@ -69,6 +82,8 @@ def download_video():
 @app.route(GENERATE_TRANSCRIPT, methods=['POST'])
 def generate_transcript():
     try:
+        api_key = request.headers.get('Authorization')
+        logger.info("DEBUG: API_KEY length =", api_key)
         authenticate(request=request)
         file = request.files['file']
         if not file.filename:
@@ -84,9 +99,9 @@ def generate_transcript():
 
 @app.route(CHAT, methods=['POST'])
 def chat():
-    api_key = request.headers.get('Authorization')
-    print("DEBUG: API_KEY length =", api_key)
     try:
+        api_key = request.headers.get('Authorization')
+        logger.info("DEBUG: API_KEY length =", api_key)
         authenticate(request=request)
         data = request.get_json()
     except Exception as e:
@@ -132,7 +147,7 @@ def document_summary():
 def authenticate(request):
     try:
         api_key = request.headers.get('Authorization')
-        print("DEBUG: API_KEY length =", api_key)
+        logger.info("DEBUG: API_KEY length =", api_key)
         if api_key is None or not api_key.__eq__(str(os.environ.get('API_KEY'))):
             abort(401)
     except:
