@@ -7,14 +7,14 @@
     format="jpeg"
     [resizeToHeight]="1080"
     [resizeToWidth]="1920"
-<!--    (imageCropped)="imageCropped($event)"-->
+    (imageCropped)="imageCropped($event)"
     (imageLoaded)="imageLoaded($event)"
     (cropperReady)="cropperReady()"
     (loadImageFailed)="loadImageFailed()"
   ></image-cropper>
-<!--  <p *ngIf="showMessage" class="note">-->
-<!--    Please upload an image with dimensions of 1920x1080 pixels.-->
-<!--  </p>-->
+  <p *ngIf="showMessage" class="note">
+    Please upload an image with dimensions of 1920x1080 pixels.
+  </p>
 
   <div
     class="uploader mt-4 ml-4 mr-4"
