@@ -130,6 +130,7 @@ def document_summary():
 def authenticate(request):
     try:
         api_key = request.headers.get('Authorization')
+        print("DEBUG: API_KEY length =", api_key)
         if api_key is None or not api_key.__eq__(str(os.environ.get('API_KEY'))):
             abort(401)
     except:
