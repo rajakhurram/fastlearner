@@ -53,7 +53,7 @@ export class ImageUploaderModalComponent {
     }
   }
 
-/*   imageCropped(event: ImageCroppedEvent) {
+  imageCropped(event: ImageCroppedEvent) {
     if (event.width >= 1920 && event.height >= 1080) {
       this.croppedImage = event.blob;
       this.uploading = false;
@@ -67,7 +67,7 @@ export class ImageUploaderModalComponent {
       return;
     }
   }
-  imageLoaded(image?: LoadedImage) {} */
+  imageLoaded(image?: LoadedImage) {}
 
   cropperReady() {}
 
