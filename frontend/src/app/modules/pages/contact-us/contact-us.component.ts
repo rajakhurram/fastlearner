@@ -26,10 +26,10 @@ export class ContactUsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('Get in Touch with Us | Fast Learner'); // Set the title of the page
+    this.titleService.setTitle('Get in Touch with Us | Quality Center'); // Set the title of the page
     this.metaService.updateTag({
       name: 'description',
-      content: `Have questions or need assistance? Contact Fast Learner today for support, queries, and collaboration. We're here to help you on your learning journey.`,
+      content: `Have questions or need assistance? Contact Quality Center today for support, queries, and collaboration. We're here to help you on your learning journey.`,
     });
     this.initializeForm();
   }

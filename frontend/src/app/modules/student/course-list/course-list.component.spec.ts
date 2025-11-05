@@ -94,11 +94,11 @@ describe('CourseListComponent', () => {
   it('should set the page title and meta tags on initialization', () => {
     component.ngOnInit();
     expect(mockTitleService.setTitle).toHaveBeenCalledWith(
-      'Courses | Fastlearner.ai'
+      'Courses | Quality Center.ai'
     );
     expect(mockMetaService.updateTag).toHaveBeenCalledWith({
       name: 'Courses',
-      content: 'Courses page of Fastlearner.ai',
+      content: 'Courses page of Quality Center.ai',
     });
   });
 

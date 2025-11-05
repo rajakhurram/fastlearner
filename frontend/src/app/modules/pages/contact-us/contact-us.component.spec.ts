@@ -54,11 +54,11 @@ describe('ContactUsComponent', () => {
   it('should set page title and meta tags on initialization', () => {
     component.ngOnInit();
     expect(titleService.setTitle).toHaveBeenCalledWith(
-      'Contact Us | Fastlearner.ai'
+      'Contact Us | Quality Center.ai'
     );
     expect(metaService.updateTag).toHaveBeenCalledWith({
       name: 'Contact us',
-      content: 'Contact Us page of Fastlearner.ai',
+      content: 'Contact Us page of Quality Center.ai',
     });
   });
 

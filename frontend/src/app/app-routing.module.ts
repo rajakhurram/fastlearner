@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: 'fl-login',
     component: FastlearnerLoginComponent,
-    data: { title: 'Fast Learner Sign In' },
+    data: { title: 'Quality Center Sign In' },
   },
   {
     path: 'about-us',

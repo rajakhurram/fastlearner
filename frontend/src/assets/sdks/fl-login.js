@@ -1,7 +1,7 @@
 // fastlearner-sdk.js
-const FastLearner = (() => {
-    const BASE_URL = 'https://staging.fastlearner.ai'; // FastLearner base URL
-    // const BASE_URL = 'http://localhost:4200'; // FastLearner base URL
+const Quality Center = (() => {
+    const BASE_URL = 'https://staging.fastlearner.ai'; // Quality Center base URL
+    // const BASE_URL = 'http://localhost:4200'; // Quality Center base URL
 
   
     const openLoginPopup = (clientId, callback) => {
@@ -13,11 +13,11 @@ const FastLearner = (() => {
       const loginUrl = `${BASE_URL}/fl-login?clientId=${clientId}`;
       const loginPopup = window.open(
         loginUrl,
-        'FastLearner Login',
+        'Quality Center Login',
         `width=${popupWidth},height=${popupHeight},top=${popupTop},left=${popupLeft}`
       );
   
-      // Listen for the token from FastLearner
+      // Listen for the token from Quality Center
       const messageListener = (event) => {
         if (event.origin === BASE_URL) {
           const token = event.data.token;
@@ -53,5 +53,5 @@ const FastLearner = (() => {
   })();
   
   // Export as a global object
-  window.FastLearner = FastLearner;
+  window.Quality Center = Quality Center;
   

@@ -66,7 +66,7 @@ export class SharedService {
       .subscribe((data) => {
         this.titleService.setTitle(
           data['title'] ||
-            'Fast Learner, AI-Enabled Learning Platform Transforming Education'
+            'Quality Center, AI-Enabled Learning Platform Transforming Education'
         );
       });
   }

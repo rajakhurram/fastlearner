@@ -177,7 +177,7 @@ export class CourseDetailsComponent
           this.titleService.setTitle(
             `${this.courseTitle?.replace(/\b\w/g, (char) =>
               char.toUpperCase()
-            )} | Overview | Fastlearner.ai`
+            )} | Overview | Quality Center.ai`
           );
           // Data is now loaded
           if (this.courseId) {

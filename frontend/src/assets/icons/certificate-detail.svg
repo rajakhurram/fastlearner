@@ -54,6 +54,6 @@
       <ellipse id="Ellipse_1090-2" data-name="Ellipse 1090" cx="0.612" cy="0.427" rx="0.612" ry="0.427" transform="translate(18.909 9.562) rotate(-18.439)" fill="#fff"/>
       <path id="Path_106462-2" data-name="Path 106462" d="M307.666,1546.87l-.406,2.139s-5.685,1.193-8.4,4.03a17.859,17.859,0,0,0-7.45-4.963l-.637-2.456,8.046,4.9Z" transform="translate(-285.67 -1537.011)" fill="#292929"/>
     </g>
-    <text id="FastLearner" transform="translate(935 2525)" fill="#707070" font-size="9" font-family="SegoeUI, Segoe UI" letter-spacing="0.01em"><tspan x="0" y="0">Fast</tspan><tspan y="0" letter-spacing="-0.05em">Learner</tspan></text>
+    <text id="Quality Center" transform="translate(935 2525)" fill="#707070" font-size="9" font-family="SegoeUI, Segoe UI" letter-spacing="0.01em"><tspan x="0" y="0">Fast</tspan><tspan y="0" letter-spacing="-0.05em">Learner</tspan></text>
   </g>
 </svg>

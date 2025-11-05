@@ -83,10 +83,10 @@ ngOnInit(): void {
     });
   }
 
-  this.titleService.setTitle('Courses | Fastlearner.ai');
+  this.titleService.setTitle('Courses | Quality Center.ai');
   this.metaService.updateTag({
     name: 'Courses',
-    content: 'Courses page of Fastlearner.ai',
+    content: 'Courses page of Quality Center.ai',
   });
 
   // Initialize default filter values

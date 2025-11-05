@@ -317,7 +317,7 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
     this.getCourseByUrl(this.courseUrl);
     this.metaService.updateTag({
       name: `${this.courseTitle}`,
-      content: 'Course Content page of Fastlearner.ai',
+      content: 'Course Content page of Quality Center.ai',
     });
   }
 
@@ -343,7 +343,7 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
             this.titleService.setTitle(
               `${response?.data?.course?.title?.replace(/\b\w/g, (char) =>
                 char.toUpperCase()
-              )} | Contents | FastLearner.ai`
+              )} | Contents | Quality Center.ai`
             );
             if (this.courseId) {
               this.enrolledInCourse();

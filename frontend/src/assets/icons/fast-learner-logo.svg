@@ -39,6 +39,6 @@
       <ellipse id="Ellipse_1090" data-name="Ellipse 1090" cx="1.589" cy="1.108" rx="1.589" ry="1.108" transform="translate(49.1 24.828) rotate(-18.439)" fill="#fff"/>
       <path id="Path_106462" data-name="Path 106462" d="M334.632,1548.865l-1.055,5.556s-14.762,3.1-21.8,10.464c0,0-8.152-9.566-19.345-12.886l-1.653-6.377,20.891,12.731Z" transform="translate(-277.516 -1523.264)" fill="url(#linear-gradient-4)"/>
     </g>
-    <text id="FastLearner" transform="translate(341.775 1528.912)" fill="#212189" font-size="32" font-family="Poppins-BoldItalic, Poppins" font-weight="700" font-style="italic" letter-spacing="0.01em"><tspan x="0" y="0">Fast</tspan><tspan y="0" font-family="Poppins-LightItalic, Poppins" font-weight="300" letter-spacing="-0.05em">Learner</tspan></text>
+    <text id="Quality Center" transform="translate(341.775 1528.912)" fill="#212189" font-size="32" font-family="Poppins-BoldItalic, Poppins" font-weight="700" font-style="italic" letter-spacing="0.01em"><tspan x="0" y="0">Fast</tspan><tspan y="0" font-family="Poppins-LightItalic, Poppins" font-weight="300" letter-spacing="-0.05em">Learner</tspan></text>
   </g>
 </svg>

@@ -14,7 +14,7 @@ export const cards = [
     imageUrl: '../../../../assets/images/static2-webp.webp',
     heading: 'Choose',
     content:
-      'Handpick the course that resonates with your dream, ensuring your AI learning platform bridges you to your goals and helps you understand how to become a fast learner.',
+      'Handpick the course that resonates with your dream, ensuring your AI learning platform bridges you to your goals and helps you understand how to become a Quality Center.',
   },
   {
     imageUrl: '../../../../assets/images/static3-webp.webp',
@@ -26,7 +26,7 @@ export const cards = [
     imageUrl: '../../../../assets/images/static4-webp.webp',
     heading: 'Grow',
     content:
-      'Witness your expertise flourish with fast learner techniques, quick to learn methods, and interactive lessons while collaborating with a vibrant community.',
+      'Witness your expertise flourish with Quality Center techniques, quick to learn methods, and interactive lessons while collaborating with a vibrant community.',
   },
   {
     imageUrl: '../../../../assets/images/static5-webp.webp',

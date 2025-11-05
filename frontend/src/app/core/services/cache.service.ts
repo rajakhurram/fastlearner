@@ -10,7 +10,7 @@ import { CookiesService } from './cookie.service';
 })
 export class CacheService {
 
-  private secretKey = 'Hello Fast Learner World';
+  private secretKey = 'Hello Quality Center World';
 
   public constantDataHolder: DataHolderConstants = new DataHolderConstants();
 

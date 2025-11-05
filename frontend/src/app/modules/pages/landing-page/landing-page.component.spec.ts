@@ -73,9 +73,9 @@ describe('LandingPageComponent', () => {
       metaHeading:
         'The Unsung Selldiers: Effective Sales Strategies to Improve Your Sales Game',
       metaTitle:
-        'The Unsung Selldiers Effective Sales Strategies | FastLearner',
+        'The Unsung Selldiers Effective Sales Strategies | Quality Center',
       metaDescription:
-        'Discover effective sales strategies with Selldiers. Learn from an experienced professional on our learning platform, FastLearner, to improve your sales skills',
+        'Discover effective sales strategies with Selldiers. Learn from an experienced professional on our learning platform, Quality Center, to improve your sales skills',
       enrolled: false,
       favourite: false,
     },
@@ -115,7 +115,7 @@ describe('LandingPageComponent', () => {
       hasCertificate: true,
       metaHeading:
         'Master Adobe Firefly: From Beginner to Expert Guide [Updated 2024]',
-      metaTitle: 'Master Adobe Firefly: Beginner to Expert Guide | FastLearner',
+      metaTitle: 'Master Adobe Firefly: Beginner to Expert Guide | Quality Center',
       metaDescription:
         'Master Adobe Firefly from scratch. Learn essential tips and techniques to create stunning visuals. Our AI-Based Learning platform takes you from beginner to expert.',
       enrolled: false,
@@ -223,7 +223,7 @@ describe('LandingPageComponent', () => {
       hasCertificate: true,
       metaHeading:
         'Full-Stack Developer Bootcamp: Build Web Applications from Scratch',
-      metaTitle: 'Full-Stack Developer Bootcamp | FastLearner',
+      metaTitle: 'Full-Stack Developer Bootcamp | Quality Center',
       metaDescription:
         'Join our Full-Stack Developer Bootcamp to learn web development skills. Build dynamic applications with HTML, CSS, JavaScript, and Node.js. Enroll now!',
       enrolled: false,
@@ -260,7 +260,7 @@ describe('LandingPageComponent', () => {
       hasCertificate: true,
       metaHeading:
         'Digital Marketing Essentials: Kickstart Your Marketing Career',
-      metaTitle: 'Digital Marketing Essentials | FastLearner',
+      metaTitle: 'Digital Marketing Essentials | Quality Center',
       metaDescription:
         'Learn digital marketing fundamentals to boost your career. From SEO to social media, master essential skills with our comprehensive course.',
       enrolled: false,
