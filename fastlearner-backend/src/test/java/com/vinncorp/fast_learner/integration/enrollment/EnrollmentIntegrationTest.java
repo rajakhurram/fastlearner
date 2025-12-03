@@ -1,4 +1,4 @@
-package com.vinncorp.fast_learner.integration.entrollment;
+package com.vinncorp.fast_learner.integration.enrollment;
 
 
 import com.vinncorp.fast_learner.integration.TokenUtils;
