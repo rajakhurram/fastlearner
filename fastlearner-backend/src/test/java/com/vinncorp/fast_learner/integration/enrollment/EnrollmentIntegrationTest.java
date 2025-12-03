@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Disabled("Temporarily disabled due to missing class issue")
 public class EnrollmentIntegrationTest {
 
     @Autowired
