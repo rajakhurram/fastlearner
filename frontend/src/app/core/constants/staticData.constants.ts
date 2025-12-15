@@ -40,7 +40,7 @@ export const instructorCards = [
   {
     imageUrl: '../../../../assets/images/inst4.png',
     heading: 'Hamza Farooq',
-    url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=hamza-farooq`,
+    url: `${'http://localhost:4200'}/user/profile?url=hamza-farooq`,
     content: 'Machine Learning',
     flipContent:
       'Hamza is an AI Lecturer at Stanford University and an Adjunct Faculty Member at UCLA. He is a Founder by day and a Professor by night, focusing on NLP and Multi-Modal Systems.',
@@ -49,7 +49,7 @@ export const instructorCards = [
   {
     imageUrl: '../../../../assets/images/inst5.png',
     heading: 'Joseph Labrecque',
-    url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=joseph-labrecque`,
+    url: `${'http://localhost:4200'}/user/profile?url=joseph-labrecque`,
     content: 'Creative Design',
     flipContent:
       'Joseph Labrecque is a creative developer, designer, and educator with nearly two decades of experience creating expressive web, desktop, and mobile solutions. He joined the University of Colorado Boulder College of Media, Communication and Information as faculty with the Department of Advertising, Public Relations and Media Design in Autumn 2019. His teaching focuses on creative software',
@@ -58,7 +58,7 @@ export const instructorCards = [
   {
     imageUrl: '../../../../assets/images/inst3.png',
     heading: 'Shewta Mogha',
-    url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=shweta-mogha`,
+    url: `${ 'http://localhost:4200'}/user/profile?url=shweta-mogha`,
     content: 'SPHR, ACC, CPCC',
     flipContent:
       'Global Human Resources and Talent Acquisition leader, passionate DEI expert, and ICF certified executive coach with extensive experience in leading people strategy at Meta, Amazon, and Airtel. Successfully spearheaded several high impact diversity & inclusion programs such as Return to Work for Women, Empowered Women of the World, Veterans hiring etc.',
@@ -67,7 +67,7 @@ export const instructorCards = [
   {
     imageUrl: '../../../../assets/images/inst2.png',
     heading: 'Khurram Kalimi',
-    url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=khurram-kalimi-40`,
+    url: `${'http://localhost:4200'}/user/profile?url=khurram-kalimi-40`,
     content: 'Sales',
     flipContent:
       'I am a computer science graduate and masters in business administration. After 4 years of software development experience I worked at different sales roles for 10 years in companies like Oracle, Microsoft and VMWare. After 14 years of my career I realised that Entrepreneurship is my forte and I ventured as Co-Founder at VinnCorp. Here we are trying to make people life easy.',
@@ -76,7 +76,7 @@ export const instructorCards = [
   {
     imageUrl: '../../../../assets/images/inst1.png',
     heading: 'Rashim Mogha',
-    url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=rashim-mogha`,
+    url: `${ 'http://localhost:4200'}/user/profile?url=rashim-mogha`,
     content: 'Career Development',
     flipContent:
       "I'm Rashim Mogha—Amazon #1 best-selling author, keynote speaker, and  Forbes Business Council member. My LinkedIn Learning courses have empowered over 250,000 professionals globally. I am a Gen X er and on this channel, you’ll find educational content on personal development, productivity, and career growth",

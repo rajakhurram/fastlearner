@@ -34,7 +34,6 @@ export class TestInformationComponent {
   editorConfig: AngularEditorConfig;
   imageSrc: string;
   videoSrc: string;
-  readonly baseURL = 'https://staging.fastlearner.ai/student/course-details/';
   testCenterConsts = new TestCenterConst();
   constructor(
     private iconService: NzIconService,
