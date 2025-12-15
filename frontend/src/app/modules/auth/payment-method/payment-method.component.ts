@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { forkJoin } from 'rxjs';
 import { AppConstants } from 'src/app/core/constants/app.constants';
 import { HttpConstants } from 'src/app/core/constants/http.constants';
-import { CourseType } from 'src/app/core/enums/course-status';
 import { PaymentProfile } from 'src/app/core/models/payment-profile.model';
 import { Subscription } from 'src/app/core/models/subscription.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -19,7 +19,8 @@ import { SubscriptionService } from 'src/app/core/services/subscription.service'
   styleUrls: ['./payment-method.component.scss'],
 })
 export class PaymentMethodComponent implements OnInit {
-  paymentMessage: string = 'Please choose a payment method and subscribe to a plan';
+  paymentMessage: string =
+    'Please choose a payment method and subscribe to a plan';
   subscriptionId?: any;
   paymentProfile?: PaymentProfile = {};
   subscription?: Subscription = {};
@@ -42,6 +43,137 @@ export class PaymentMethodComponent implements OnInit {
   isApplyingPromo: boolean = false;
   discountedPrice: any;
   discountInDollars: number;
+  countries = [
+  { name: "Afghanistan", iso2: "AF" },
+  { name: "Albania", iso2: "AL" },
+  { name: "Algeria", iso2: "DZ" },
+  { name: "Andorra", iso2: "AD" },
+  { name: "Angola", iso2: "AO" },
+  { name: "Argentina", iso2: "AR" },
+  { name: "Armenia", iso2: "AM" },
+  { name: "Australia", iso2: "AU" },
+  { name: "Austria", iso2: "AT" },
+  { name: "Azerbaijan", iso2: "AZ" },
+  { name: "Bahamas", iso2: "BS" },
+  { name: "Bahrain", iso2: "BH" },
+  { name: "Bangladesh", iso2: "BD" },
+  { name: "Belarus", iso2: "BY" },
+  { name: "Belgium", iso2: "BE" },
+  { name: "Belize", iso2: "BZ" },
+  { name: "Benin", iso2: "BJ" },
+  { name: "Bhutan", iso2: "BT" },
+  { name: "Bolivia", iso2: "BO" },
+  { name: "Bosnia and Herzegovina", iso2: "BA" },
+  { name: "Botswana", iso2: "BW" },
+  { name: "Brazil", iso2: "BR" },
+  { name: "Bulgaria", iso2: "BG" },
+  { name: "Cambodia", iso2: "KH" },
+  { name: "Cameroon", iso2: "CM" },
+  { name: "Canada", iso2: "CA" },
+  { name: "Chile", iso2: "CL" },
+  { name: "China", iso2: "CN" },
+  { name: "Colombia", iso2: "CO" },
+  { name: "Costa Rica", iso2: "CR" },
+  { name: "Croatia", iso2: "HR" },
+  { name: "Cuba", iso2: "CU" },
+  { name: "Cyprus", iso2: "CY" },
+  { name: "Czech Republic", iso2: "CZ" },
+  { name: "Denmark", iso2: "DK" },
+  { name: "Dominican Republic", iso2: "DO" },
+  { name: "Ecuador", iso2: "EC" },
+  { name: "Egypt", iso2: "EG" },
+  { name: "Estonia", iso2: "EE" },
+  { name: "Ethiopia", iso2: "ET" },
+  { name: "Finland", iso2: "FI" },
+  { name: "France", iso2: "FR" },
+  { name: "Germany", iso2: "DE" },
+  { name: "Ghana", iso2: "GH" },
+  { name: "Greece", iso2: "GR" },
+  { name: "Guatemala", iso2: "GT" },
+  { name: "Haiti", iso2: "HT" },
+  { name: "Honduras", iso2: "HN" },
+  { name: "Hungary", iso2: "HU" },
+  { name: "Iceland", iso2: "IS" },
+  { name: "India", iso2: "IN" },
+  { name: "Indonesia", iso2: "ID" },
+  { name: "Iran", iso2: "IR" },
+  { name: "Iraq", iso2: "IQ" },
+  { name: "Ireland", iso2: "IE" },
+  { name: "Israel", iso2: "IL" },
+  { name: "Italy", iso2: "IT" },
+  { name: "Japan", iso2: "JP" },
+  { name: "Jordan", iso2: "JO" },
+  { name: "Kazakhstan", iso2: "KZ" },
+  { name: "Kenya", iso2: "KE" },
+  { name: "Kuwait", iso2: "KW" },
+  { name: "Kyrgyzstan", iso2: "KG" },
+  { name: "Laos", iso2: "LA" },
+  { name: "Latvia", iso2: "LV" },
+  { name: "Lebanon", iso2: "LB" },
+  { name: "Libya", iso2: "LY" },
+  { name: "Lithuania", iso2: "LT" },
+  { name: "Luxembourg", iso2: "LU" },
+  { name: "Malaysia", iso2: "MY" },
+  { name: "Maldives", iso2: "MV" },
+  { name: "Mali", iso2: "ML" },
+  { name: "Malta", iso2: "MT" },
+  { name: "Mexico", iso2: "MX" },
+  { name: "Moldova", iso2: "MD" },
+  { name: "Mongolia", iso2: "MN" },
+  { name: "Morocco", iso2: "MA" },
+  { name: "Myanmar", iso2: "MM" },
+  { name: "Nepal", iso2: "NP" },
+  { name: "Netherlands", iso2: "NL" },
+  { name: "New Zealand", iso2: "NZ" },
+  { name: "Nigeria", iso2: "NG" },
+  { name: "North Korea", iso2: "KP" },
+  { name: "Norway", iso2: "NO" },
+  { name: "Oman", iso2: "OM" },
+  { name: "Pakistan", iso2: "PK" },
+  { name: "Panama", iso2: "PA" },
+  { name: "Paraguay", iso2: "PY" },
+  { name: "Peru", iso2: "PE" },
+  { name: "Philippines", iso2: "PH" },
+  { name: "Poland", iso2: "PL" },
+  { name: "Portugal", iso2: "PT" },
+  { name: "Qatar", iso2: "QA" },
+  { name: "Romania", iso2: "RO" },
+  { name: "Russia", iso2: "RU" },
+  { name: "Saudi Arabia", iso2: "SA" },
+  { name: "Serbia", iso2: "RS" },
+  { name: "Singapore", iso2: "SG" },
+  { name: "Slovakia", iso2: "SK" },
+  { name: "Slovenia", iso2: "SI" },
+  { name: "Somalia", iso2: "SO" },
+  { name: "South Africa", iso2: "ZA" },
+  { name: "South Korea", iso2: "KR" },
+  { name: "Spain", iso2: "ES" },
+  { name: "Sri Lanka", iso2: "LK" },
+  { name: "Sudan", iso2: "SD" },
+  { name: "Sweden", iso2: "SE" },
+  { name: "Switzerland", iso2: "CH" },
+  { name: "Syria", iso2: "SY" },
+  { name: "Taiwan", iso2: "TW" },
+  { name: "Tajikistan", iso2: "TJ" },
+  { name: "Tanzania", iso2: "TZ" },
+  { name: "Thailand", iso2: "TH" },
+  { name: "Tunisia", iso2: "TN" },
+  { name: "Turkey", iso2: "TR" },
+  { name: "Turkmenistan", iso2: "TM" },
+  { name: "Uganda", iso2: "UG" },
+  { name: "Ukraine", iso2: "UA" },
+  { name: "United Arab Emirates", iso2: "AE" },
+  { name: "United Kingdom", iso2: "GB" },
+  { name: "United States", iso2: "US" },
+  { name: "Uruguay", iso2: "UY" },
+  { name: "Uzbekistan", iso2: "UZ" },
+  { name: "Venezuela", iso2: "VE" },
+  { name: "Vietnam", iso2: "VN" },
+  { name: "Yemen", iso2: "YE" },
+  { name: "Zambia", iso2: "ZM" },
+  { name: "Zimbabwe", iso2: "ZW" }
+];
+
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -59,17 +191,24 @@ export class PaymentMethodComponent implements OnInit {
     this.sessionId = this._activatedRoute.snapshot.queryParams['sessionId'];
     this.isMobile = this._activatedRoute.snapshot.queryParams['isMobile'];
 
+    
+    // this._subscriptionService.getCountries().subscribe((res) => {
+    //   if (!res.error && res.data) {
+    //     this.countries = res.data;
+    //   }
+    // });
 
     if (this.sessionId && this.isMobile === 'true') {
       this.getTokenAgainstSessionId();
     } else {
       if (this._activatedRoute.snapshot.queryParams['premium']) {
         this.isPurchaseMode = true;
-        this.paymentMessage = "Please choose a payment method to buy a course";
+        this.paymentMessage = 'Please choose a payment method to buy a course';
         this.courseId = this._activatedRoute.snapshot.queryParams['courseId'];
         this.coursePrice = this._activatedRoute.snapshot.queryParams['price'];
         this.courseUrl = this._activatedRoute.snapshot.queryParams['courseUrl'];
-        this.affiliateUUID = this._activatedRoute.snapshot.queryParams['affiliate'];
+        this.affiliateUUID =
+          this._activatedRoute.snapshot.queryParams['affiliate'];
         this.getCourseDetails(this.courseId);
         return;
       }
@@ -78,6 +217,11 @@ export class PaymentMethodComponent implements OnInit {
       this.getSavedPaymentProfile();
       this.getSubscriptionById();
     }
+
+  }
+
+  onCountryChange(iso2: string) {
+    this.paymentProfile.countryCode = iso2;
   }
 
   getTokenAgainstSessionId() {
@@ -192,16 +336,15 @@ export class PaymentMethodComponent implements OnInit {
       courseId: parseInt(this.courseId.toString()),
       affiliateUUID: this.affiliateUUID,
       opaqueData: token,
-      coupon : this.discountApplied ? this.promoCode : null
+      coupon: this.discountApplied ? this.promoCode : null,
     };
     this._subscriptionService.courseCheckout(paymentDetails).subscribe(
       (res) => {
-        if(this.sessionId && this.isMobile === 'true'){
+        if (this.sessionId && this.isMobile === 'true') {
           this.onPaymentSuccess();
-        }else {
+        } else {
           this._router.navigate(['student/course-content', this.courseUrl], {});
         }
-        
       },
       (error) => {
         this._message.error(error?.error?.message);
@@ -292,76 +435,87 @@ export class PaymentMethodComponent implements OnInit {
 
   addDiscount() {
     this.promoCode = this.promoCode.trim();
-  
+
     if (this.isApplyingPromo) return;
-  
-    if (!this.promoCode || this.promoCode.length < 6 || this.promoCode.length > 12) {
+
+    if (
+      !this.promoCode ||
+      this.promoCode.length < 6 ||
+      this.promoCode.length > 12
+    ) {
       this._message.remove();
       this._message.error('Please enter a valid promo code (6–12 characters)');
       return;
     }
-  
+
     this.isApplyingPromo = true;
-  
+
     const queryParams = this._activatedRoute.snapshot.queryParams;
 
     let couponType = '';
     let id: number | null = null;
     let originalPrice = 0;
 
-  if (queryParams['subscriptionId']) {
-    couponType = 'SUBSCRIPTION';
-    id = +queryParams['subscriptionId'];
-    originalPrice = this.subscriptionData?.price || 0;
-  } else if (queryParams['courseId']) {
-    couponType = 'PREMIUM';
-    id = +queryParams['courseId'];
-    originalPrice = this.coursePrice || 0;
-  }else if(this.sessionId && this.isMobile === 'true' && this.courseId){
-    couponType = 'PREMIUM';
-    id = this.courseId;
-    originalPrice = this.coursePrice || 0;
-  }else if(this.sessionId && this.isMobile === 'true' && this.subscriptionId){
-    couponType = 'SUBSCRIPTION';
-    id = this.subscriptionId;
-    originalPrice = this.subscriptionData?.price || 0;
-  } else {
-    this.isApplyingPromo = false;
-    this._message.error('No valid course or subscription selected');
-    return;
-  }
+    if (queryParams['subscriptionId']) {
+      couponType = 'SUBSCRIPTION';
+      id = +queryParams['subscriptionId'];
+      originalPrice = this.subscriptionData?.price || 0;
+    } else if (queryParams['courseId']) {
+      couponType = 'PREMIUM';
+      id = +queryParams['courseId'];
+      originalPrice = this.coursePrice || 0;
+    } else if (this.sessionId && this.isMobile === 'true' && this.courseId) {
+      couponType = 'PREMIUM';
+      id = this.courseId;
+      originalPrice = this.coursePrice || 0;
+    } else if (
+      this.sessionId &&
+      this.isMobile === 'true' &&
+      this.subscriptionId
+    ) {
+      couponType = 'SUBSCRIPTION';
+      id = this.subscriptionId;
+      originalPrice = this.subscriptionData?.price || 0;
+    } else {
+      this.isApplyingPromo = false;
+      this._message.error('No valid course or subscription selected');
+      return;
+    }
 
-  this._subscriptionService.getDisscount(
-    this.promoCode,
-    couponType,
-    id
-  ).subscribe({
-      next: (response: any) => {
-        this.isApplyingPromo = false;
-  
-        if (response?.status === this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
-          const discountPercent = response.data?.discount || 0;          
-  
-          const discountInDollars = (originalPrice * discountPercent) / 100;
-          const discountedPrice = originalPrice - discountInDollars;
-  
-          this.discountApplied = true;
-          this.appliedCode = this.promoCode;
-  
-          this.discountInDollars = discountInDollars;
-          this.discountedPrice = discountedPrice;
-  
-          this._message.success(
-            `Promo code applied: You saved $${discountInDollars.toFixed(2)}!`
+    this._subscriptionService
+      .getDisscount(this.promoCode, couponType, id)
+      .subscribe({
+        next: (response: any) => {
+          this.isApplyingPromo = false;
+
+          if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            const discountPercent = response.data?.discount || 0;
+
+            const discountInDollars = (originalPrice * discountPercent) / 100;
+            const discountedPrice = originalPrice - discountInDollars;
+
+            this.discountApplied = true;
+            this.appliedCode = this.promoCode;
+
+            this.discountInDollars = discountInDollars;
+            this.discountedPrice = discountedPrice;
+
+            this._message.success(
+              `Promo code applied: You saved $${discountInDollars.toFixed(2)}!`
+            );
+          }
+        },
+        error: (error: any) => {
+          this.isApplyingPromo = false;
+          this._message.remove();
+          this._message.error(
+            error?.error?.message || 'Failed to apply promo code'
           );
-        }
-      },
-      error: (error: any) => {
-        this.isApplyingPromo = false;
-        this._message.remove();
-        this._message.error(error?.error?.message || 'Failed to apply promo code');
-      },
-    });
+        },
+      });
   }
 
   addSubscription() {
@@ -384,6 +538,10 @@ export class PaymentMethodComponent implements OnInit {
       } else {
         this.paymentProfile.cardNumber = this.paymentProfile.cardNumber;
       }
+      this.paymentProfile.zipCode = this.paymentProfile.zipCode;
+      this.paymentProfile.countryCode = this.paymentProfile.countryCode;
+      this.paymentProfile.city = this.paymentProfile.city;
+      this.paymentProfile.address = this.paymentProfile.address;
 
       this.subscription.paymentDetail = this.paymentProfile;
       if (this.isPurchaseMode) {
@@ -395,40 +553,44 @@ export class PaymentMethodComponent implements OnInit {
               response?.status ==
               this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
             ) {
-
-              this._subscriptionService.loadSubscriptionPermissions();
-
-              if(this.sessionId && this.isMobile === 'true'){
-                this.onPaymentSuccess();
-              }else {
-                this._subscriptionService.updateUserSubscriptionCheck(true);
-                this.isPlanSelected = true;
-                this.paymentProfile = response.data;
-                this._message.success(response?.data);
-                const redirectUrl =
-                  this._cacheService.getDataFromCache('redirectUrl');
-                if (redirectUrl?.includes('payment-method')) {
-                  this._router.navigate(['subscription']);
-                } else if (!redirectUrl?.includes('payment-method')) {
-                  this._cacheService.removeFromCache('redirectUrl');
-                  this._router.navigateByUrl(redirectUrl);
-                } else {
-                  this._router.navigate(['subscription']);
-                }
-              }
+              forkJoin([
+                this._subscriptionService.loadSubscriptionPermissions(),
+                this._subscriptionService.fetchCurrentSubscriptionPlanType(),
+              ]).subscribe({
+                next: () => {
+                  if (this.sessionId && this.isMobile === 'true') {
+                    this.onPaymentSuccess();
+                  } else {
+                    this._subscriptionService.updateUserSubscriptionCheck(true);
+                    this.isPlanSelected = true;
+                    this.paymentProfile = response.data;
+                    this._message.success(response?.data);
+                    const redirectUrl =
+                      this._cacheService.getDataFromCache('redirectUrl');
+                    if (redirectUrl?.includes('payment-method')) {
+                      this._router.navigate(['subscription']);
+                    } else if (!redirectUrl?.includes('payment-method')) {
+                      this._cacheService.removeFromCache('redirectUrl');
+                      this._router.navigateByUrl(redirectUrl);
+                    } else {
+                      this._router.navigate(['subscription']);
+                    }
+                  }
+                },
+              });
             }
           },
           error: (error: any) => {
             this._message.error(error?.error?.message);
             this.isPlanSelected = false;
-            if(this.sessionId && this.isMobile === 'true'){
+            if (this.sessionId && this.isMobile === 'true') {
               this.onPaymentFailure(error);
             }
           },
         });
       }
     } else {
-      this._message.remove(); 
+      this._message.remove();
       this._message.error('Please fill the fields');
     }
   }
@@ -465,6 +627,16 @@ export class PaymentMethodComponent implements OnInit {
   }
 
   validateData() {
+    const isZipValid =
+      this.paymentProfile?.zipCode !== undefined &&
+      this.paymentProfile?.zipCode !== null &&
+      this.paymentProfile?.zipCode.toString().trim().length > 0;
+
+    const countryCodeValid =
+      this.paymentProfile?.countryCode !== undefined &&
+      this.paymentProfile?.countryCode !== null &&
+      this.paymentProfile?.countryCode.toString().trim().length > 0;
+
     if (
       this.paymentProfile.firstName != '' &&
       this.paymentProfile.lastName != '' &&
@@ -475,7 +647,11 @@ export class PaymentMethodComponent implements OnInit {
       this.paymentProfile.date.split('/')[0].length == 2 &&
       this.paymentProfile.date.split('/')[1].length == 2 &&
       this.paymentProfile.date.split('/')[1] != '' &&
-      this.paymentProfile.cvv != ''
+      this.paymentProfile.cvv != '' &&
+      isZipValid &&
+      countryCodeValid &&
+      this.paymentProfile.city != '' &&
+      this.paymentProfile.address != '' 
     ) {
       return true;
     }
@@ -496,16 +672,19 @@ export class PaymentMethodComponent implements OnInit {
           error?.error?.status ==
           this._httpConstants.REQUEST_STATUS.BAD_REQUEST_400.CODE
         ) {
-          this._subscriptionService.updateUserSubscriptionCheck(true);
-          const redirectUrl =
-            this._cacheService.getDataFromCache('redirectUrl');
-          if (redirectUrl) {
-            this._cacheService.removeFromCache('redirectUrl');
-            this._router.navigateByUrl(redirectUrl);
-          } else {
-            this._router.navigate(['student']);
-          }
-          // this._message.error(error?.error?.message);
+          this._subscriptionService.loadSubscriptionPermissions().subscribe({
+            complete: () => {
+              this._subscriptionService.updateUserSubscriptionCheck(true);
+              const redirectUrl =
+                this._cacheService.getDataFromCache('redirectUrl');
+              if (redirectUrl) {
+                this._cacheService.removeFromCache('redirectUrl');
+                this._router.navigateByUrl(redirectUrl);
+              } else {
+                this._router.navigate(['student']);
+              }
+            },
+          });
         }
       },
     });
@@ -520,17 +699,16 @@ export class PaymentMethodComponent implements OnInit {
   allowOnlyLetters(event: KeyboardEvent): void {
     const char = String.fromCharCode(event.keyCode || event.which);
     const pattern = /^[a-zA-Z\s\-']$/;
-  
+
     if (!pattern.test(char)) {
       event.preventDefault();
     }
   }
-  
-  
+
   preventEmoji(event: KeyboardEvent) {
     const key = event.key;
     const emojiRegex = /\p{Extended_Pictographic}/u;
-  
+
     if (emojiRegex.test(key)) {
       event.preventDefault();
     }
@@ -539,21 +717,19 @@ export class PaymentMethodComponent implements OnInit {
   preventEmojiOnPaste(event: ClipboardEvent) {
     const pastedText = event.clipboardData?.getData('text') || '';
     const emojiRegex = /\p{Extended_Pictographic}/u;
-  
+
     if (emojiRegex.test(pastedText)) {
       event.preventDefault();
     }
   }
-  
+
   onPromoCodeChange(value: string) {
     // Remove all spaces and assign
     this.promoCode = value.replace(/\s/g, '');
   }
-  
 
   removeDiscount() {
     this.discountApplied = false;
     this.appliedCode = '';
   }
 }
-

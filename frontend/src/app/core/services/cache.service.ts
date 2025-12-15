@@ -75,4 +75,7 @@ export class CacheService {
     return JSON.parse(localStorage.getItem(key)) || "";
   }
 
+   public getJsonData(key: string): any {
+    return JSON.parse(localStorage.getItem(key)) || "";
+  }
 }

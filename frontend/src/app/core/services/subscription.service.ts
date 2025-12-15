@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment.development';
 import { PaymentProfile } from '../models/payment-profile.model';
 import { CheckoutData, Subscription } from '../models/subscription.model';
 import { CacheService } from './cache.service';
+import { catchError, map,  of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -145,26 +146,48 @@ export class SubscriptionService {
   //   );
   // }
 
-  public loadSubscriptionPermissions(): void {
-    this._http
+  public loadSubscriptionPermissions(): Observable<void> {
+    return this._http
       .get(`${environment.baseUrl}subscription/current-subscription`)
-      .subscribe({
-        next: (response: any) => {
+      .pipe(
+        map((response: any) => {
           if (response?.status === 200) {
-            if (
-              response?.data?.permissions &&
-              response?.data?.permissions?.length > 0
-            ) {
+            const permissions = response?.data?.permissions;
+            if (permissions?.length > 0) {
               this._cacheService.saveInCache(
                 'permissions',
-                JSON.stringify(response?.data?.permissions)
+                JSON.stringify(permissions)
               );
             } else {
               this._cacheService.removeFromCache('permissions');
             }
           }
-        },
-        error: (error) => {},
-      });
+        }),
+        catchError(() => {
+          this._cacheService.removeFromCache('permissions');
+          return of(); // continue the flow even if error occurs
+        })
+      );
+  }
+
+
+  public fetchCurrentSubscriptionPlanType(): Observable<any> {
+    return this._http.get(`${environment.baseUrl}subscription/plan-type`).pipe(
+      map((response: any) => {
+        if (response?.status === 200) {
+          let loggedInUserDetails = this._cacheService.getJsonData(
+            'loggedInUserDetails'
+          );
+          loggedInUserDetails.subscriptionPlanType = response?.data;
+          this._cacheService.saveInCache(
+            'loggedInUserDetails',
+            JSON.stringify(loggedInUserDetails)
+          );
+        }
+      }),
+      catchError(() => {
+        return of(); // continue the flow even if error occurs
+      })
+    );
   }
 }

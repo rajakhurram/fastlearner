@@ -137,6 +137,73 @@
 
                 <div class="w-100 justify-content-between align-items-center">
                   <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                    <div nz-row class="mt-1" nzGutter="16">
+                      <div nz-col nzXs="24" nzSm="12">
+                        <div class="zip-division">
+                          <p class="color-black">Zip Code</p>
+                          <input
+                            nz-input
+                            placeholder="Zip Code"
+                            [(ngModel)]="paymentProfile.zipCode"
+                            (paste)="onPaste($event)"
+                            (keypress)="allowNumericDigitsOnlyOnKeyUp($event)"
+                            minlength="3"
+                          />
+                        </div>
+                      </div>
+                        <div nz-col nzXs="24" nzSm="12">
+                      <div class="country-division ml-4">
+                        <p class="color-black">Country</p>
+                        <nz-select
+                          style="width: 200px"
+                          nzShowSearch
+                          nzPlaceHolder="Select Country"
+                          [(ngModel)]="paymentProfile.countryCode"
+                          (ngModelChange)="onCountryChange($event)"
+                        >
+                          <nz-option
+                            *ngFor="let c of countries"
+                            [nzValue]="c.iso2"
+                            [nzLabel]="c.name"
+                          ></nz-option>
+                        </nz-select>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-100 justify-content-between align-items-center">
+                  <div class="w-100 ml-2 mt-1 mb-1 mr-2">
+                    <div nz-row class="mt-1">
+                      <div class="date-division">
+                        <p class="color-black">City</p>
+                        <input
+                          nz-input
+                          placeholder="City"
+                          [(ngModel)]="paymentProfile.city"
+                          (paste)="onPaste($event)"
+                          (keypress)="allowOnlyLetters($event)"
+
+                        />
+                      </div>
+
+                      <div class="country-division ml-4">
+                        <p class="color-black">Address</p>
+                        <input
+                          nz-input
+                          placeholder="Address"
+                          [(ngModel)]="paymentProfile.address"
+                          (paste)="onPaste($event)"
+                          
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-100 justify-content-between align-items-center">
+                  <div class="w-100 ml-2 mt-1 mb-1 mr-2">
                     <label
                       nz-checkbox
                       [(ngModel)]="paymentProfile.isSave"
@@ -174,47 +241,45 @@
 
               <div class="disscount">
                 <ng-container *ngIf="!discountApplied">
-                <input
-                  type="text"
-                  [(ngModel)]="promoCode"
-                  (keydown)="preventEmoji($event)"
-                  (keydown.enter)="addDiscount()"
-                  (paste)="preventEmojiOnPaste($event)"
-                  nz-input
-                  placeholder="Enter promo code"
-                  style="border: none; box-shadow: none; flex: 1; margin:4px;"
-                  [maxlength]="12"
-                  [minlength]="6"
-                  (ngModelChange)="onPromoCodeChange($event)"
-                />
+                  <input
+                    type="text"
+                    [(ngModel)]="promoCode"
+                    (keydown)="preventEmoji($event)"
+                    (keydown.enter)="addDiscount()"
+                    (paste)="preventEmojiOnPaste($event)"
+                    nz-input
+                    placeholder="Enter promo code"
+                    style="border: none; box-shadow: none; flex: 1; margin: 4px"
+                    [maxlength]="12"
+                    [minlength]="6"
+                    (ngModelChange)="onPromoCodeChange($event)"
+                  />
 
-                <div class="separator"
-                ></div>
-                <button
-                  class="disscount-button"
-                  nz-button
-                  nzType="primary"
-                  ngGhost
-                  (click)="addDiscount()"
-                  [disabled]="!promoCode"
-                >
-                  Apply
-                </button>
-              </ng-container>
+                  <div class="separator"></div>
+                  <button
+                    class="disscount-button"
+                    nz-button
+                    nzType="primary"
+                    ngGhost
+                    (click)="addDiscount()"
+                    [disabled]="!promoCode"
+                  >
+                    Apply
+                  </button>
+                </ng-container>
 
                 <!-- This will be applied when disscount is added -->
-                 
+
                 <div *ngIf="discountApplied" class="success-message">
-                  <span class="checkmark"><img
-                    class="mr-2"
-                    src="../../../../assets/icons/Check-green.svg"
+                  <span class="checkmark"
+                    ><img
+                      class="mr-2"
+                      src="../../../../assets/icons/Check-green.svg"
                   /></span>
                   {{ appliedCode }}
                   <span class="close" (click)="removeDiscount()">×</span>
                 </div>
-
               </div>
-
 
               <div
                 *ngIf="!isPurchaseMode"
@@ -240,14 +305,14 @@
                 </p>
               </div>
 
-              <div *ngIf="discountApplied" nz-row class="display-flex justify-content-between mt-2">
-                <p class="color-black">Disscount</p>
-                <p class="color-black">
-                  -${{ discountInDollars?.toFixed(2) }}
-                </p>
+              <div
+                *ngIf="discountApplied"
+                nz-row
+                class="display-flex justify-content-between mt-2"
+              >
+                <p class="color-black">Discount</p>
+                <p class="color-black">-${{ discountInDollars?.toFixed(2) }}</p>
               </div>
-
-
 
               <div
                 nz-row
@@ -255,19 +320,22 @@
               ></div>
 
               <ng-container *ngIf="!discountApplied">
-
-              <div nz-row class="display-flex justify-content-between mt-4">
+                <div nz-row class="display-flex justify-content-between mt-4">
+                  <p class="color-black">Total</p>
+                  <p class="plan-color">
+                    ${{
+                      isPurchaseMode ? coursePrice : subscriptionData?.price
+                    }}
+                  </p>
+                </div>
+              </ng-container>
+              <div
+                *ngIf="discountApplied"
+                nz-row
+                class="display-flex justify-content-between mt-2"
+              >
                 <p class="color-black">Total</p>
-                <p class="plan-color">
-                  ${{ isPurchaseMode ? coursePrice : subscriptionData?.price }} 
-                </p>
-              </div>
-            </ng-container>
-              <div *ngIf="discountApplied" nz-row class="display-flex justify-content-between mt-2">
-                <p class="color-black">Total</p>
-                <p class="color-black">
-                  ${{ discountedPrice?.toFixed(2) }}
-                </p>
+                <p class="color-black">${{ discountedPrice?.toFixed(2) }}</p>
               </div>
 
               <div

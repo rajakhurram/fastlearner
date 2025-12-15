@@ -11,4 +11,8 @@ export class PaymentProfile {
     expiryDate?: string;
     cardType?: any;
     isSave?: boolean;
+    zipCode?: any;
+    countryCode?: any;
+    city?:any;
+    address?:any;
 }
