@@ -2,15 +2,14 @@ export const environment = {
   production: true,
   isProductionServer: true,
 
-  basePath: `http://34.46.43.246`,
-  loginUrl: `http://34.46.43.246:8443/auth`,
-  baseUrl: `http://34.46.43.246:8443/api/v1/`,
-  videoUrl: `http://34.46.43.246:8443`,
-  imageUrl: `http://34.46.43.246:8443`,
-  applicationCourseContentUrl: `http://34.46.43.246/student/course-content/`,
-  applicationCourseDetailsUrl: `http://34.46.43.246/student/course-details/`,
+  basePath: `http://qualitycenter.fastlearner.ai`,
+  loginUrl: `http://qualitycenter.fastlearner.ai/api/v1/auth`,
+  baseUrl: `http://qualitycenter.fastlearner.ai/api/v1/`,
+  videoUrl: `http://qualitycenter.fastlearner.ai`,
+  imageUrl: `http://qualitycenter.fastlearner.ai`,
+  applicationCourseContentUrl: `http://qualitycenter.fastlearner.ai/student/course-content/`,
+  applicationCourseDetailsUrl: `http://qualitycenter.fastlearner.ai/student/course-details/`,
 
-  // Goolge Login Credentials
   googleClientId: '{{google-client-id}}',
   googleSecretKey: '{{google-secret-key}}',
 };
