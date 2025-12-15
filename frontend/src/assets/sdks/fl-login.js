@@ -1,6 +1,6 @@
 // fastlearner-sdk.js
-const Quality Center = (() => {
-    const BASE_URL = 'https://staging.fastlearner.ai'; // Quality Center base URL
+const QualityCenter = (() => {
+    const BASE_URL = 'https://qualitycenter.fastlearner.ai/'; // Quality Center base URL
     // const BASE_URL = 'http://localhost:4200'; // Quality Center base URL
 
   
@@ -53,5 +53,5 @@ const Quality Center = (() => {
   })();
   
   // Export as a global object
-  window.Quality Center = Quality Center;
+  window.Quality.Center = QualityCenter;
   
