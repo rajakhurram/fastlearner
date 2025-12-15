@@ -25,7 +25,8 @@ public class ApiSecretFilter extends OncePerRequestFilter {
 
     private final Map<String, Bucket> buckets = new HashMap<>();
     private static final List<String> TRUSTED_ORIGINS = List.of(
-            "qualitycenter.fastlearner.ai",
+            "staging.fastlearner.ai",
+            "fastlearner.ai",
             "localhost"
     );
 
