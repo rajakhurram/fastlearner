@@ -3,7 +3,7 @@ export const environment = {
   isProductionServer: true,
 
   basePath: `http://qualitycenter.fastlearner.ai`,
-  loginUrl: `http://qualitycenter.fastlearner.ai:8443/api/v1/auth`,
+  loginUrl: `http://qualitycenter.fastlearner.ai:8443/auth`,
   baseUrl: `http://qualitycenter.fastlearner.ai:8443/api/v1/`,
   videoUrl: `http://qualitycenter.fastlearner.ai:8443`,
   imageUrl: `http://qualitycenter.fastlearner.ai:8443`,
