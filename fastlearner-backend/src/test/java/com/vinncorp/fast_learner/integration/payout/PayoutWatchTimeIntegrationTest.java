@@ -36,7 +36,7 @@ public class PayoutWatchTimeIntegrationTest {
     @Test
     public void testCreateWatchTime_whenProvidedCourseOrUserNotFound() throws Exception {
         mockMvc.perform(post(APIUrls.PAYOUT_WATCH_TIME + APIUrls.CREATE_PAYOUT_WATCH_TIME)
-                        .header(HttpHeaders.ORIGIN, "fastlearner.ai")
+                        .header(HttpHeaders.ORIGIN, "qualitycenter.fastlearner.ai")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + JWT_TOKEN)
                         .param("courseId", "22222")
                         .param("watchTime", "222")
@@ -49,7 +49,7 @@ public class PayoutWatchTimeIntegrationTest {
     @Test
     public void testCreateWatchTime_whenFreeOrPremiumCourseIsGiven() throws Exception {
         mockMvc.perform(post(APIUrls.PAYOUT_WATCH_TIME + APIUrls.CREATE_PAYOUT_WATCH_TIME)
-                        .header(HttpHeaders.ORIGIN, "fastlearner.ai")
+                        .header(HttpHeaders.ORIGIN, "qualitycenter.fastlearner.ai")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + JWT_TOKEN)
                         .param("courseId", "15")
                         .param("watchTime", "222")
@@ -68,7 +68,7 @@ public class PayoutWatchTimeIntegrationTest {
     @Test
     public void testCreateWatchTime_whenValidEmailWatchTimeAndStandardCourseIsGiven() throws Exception {
         mockMvc.perform(post(APIUrls.PAYOUT_WATCH_TIME + APIUrls.CREATE_PAYOUT_WATCH_TIME)
-                        .header(HttpHeaders.ORIGIN, "fastlearner.ai")
+                        .header(HttpHeaders.ORIGIN, "qualitycenter.fastlearner.ai")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + JWT_TOKEN)
                         .param("courseId", "54")
                         .param("watchTime", "500")
