@@ -44,7 +44,7 @@ dist/
 #src/main/resources/application.properties
 src/main/resources/application-test.properties
 src/main/resources/testing/application-local.properties
-src/main/resources/fastlearner-429d9c0edfed.json
+src/main/resources/gcp-key.json
 
 * IDE created temp files
 *~
