@@ -3,12 +3,12 @@ export const environment = {
   isProductionServer: true,
 
   basePath: `https://classroom.aqualitycenter.com`,
-  loginUrl: `https://classroom.aqualitycenter.com:8443/auth`,
-  baseUrl: `https://classroom.aqualitycenter.com:8443/api/v1/`,
-  videoUrl: `https://classroom.aqualitycenter.com:8443`,
-  imageUrl: `https://classroom.aqualitycenter.com:8443`,
-  applicationCourseContentUrl: `https://classroom.aqualitycenter.com:8443/student/course-content/`,
-  applicationCourseDetailsUrl: `https://classroom.aqualitycenter.com:8443/student/course-details/`,
+  loginUrl: `https://classroom.aqualitycenter.com/auth`,
+  baseUrl: `https://classroom.aqualitycenter.com/api/v1/`,
+  videoUrl: `https://classroom.aqualitycenter.com`,
+  imageUrl: `https://classroom.aqualitycenter.com`,
+  applicationCourseContentUrl: `https://classroom.aqualitycenter.com/student/course-content/`,
+  applicationCourseDetailsUrl: `https://classroom.aqualitycenter.com/student/course-details/`,
 
   // Goolge Login Credentials
   googleClientId: '{{google-client-id}}',
