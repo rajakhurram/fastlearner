@@ -1,0 +1,52 @@
+.affiliate-heading h3 {
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+.payment-heading span {
+  color: #212189;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.affiliate-empty-container {
+  margin: 0px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.earn {
+  font-family: "Poppins-bold";
+  font-size: 32px;
+  margin-bottom: 0px;
+}
+.earn-text {
+  font-family: "Poppins-regular";
+  font-size: 14px;
+  color: #292929;
+}
+
+.heading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-left: 10px;
+}
+
+.button-div {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

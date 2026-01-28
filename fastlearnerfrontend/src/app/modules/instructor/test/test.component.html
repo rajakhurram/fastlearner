@@ -1,0 +1,40 @@
+<div class="mt-2">
+  <h3 class="font-bold">Create Course</h3>
+</div>
+
+<div class="course">
+  <nz-card>
+    <div class="responsive-row" nz-row>
+      <div nz-col class="margin-class" nzXs="24" nzSm="20" nzMd="20" nzLg="20">
+        <nz-steps [nzCurrent]="currentStep">
+          <nz-step nzTitle="Test Information"></nz-step>
+          <nz-step nzTitle="Add Sections"></nz-step>
+          <nz-step nzTitle="'Preview'"></nz-step>
+        </nz-steps>
+      </div>
+    </div>
+
+    <ng-container *ngIf="currentStep == 0">
+      <app-test-information></app-test-information>
+    </ng-container>
+
+    <ng-container *ngIf="currentStep == 1">
+      <app-test-add-section
+        [courseId]="courseId"
+        [sectionsData]="sectionsData"
+        [courseInformationData]="courseInformationData"
+        (sectionsDataOutPut)="sectionData($event)"
+        (currentStep)="step($event)"
+      ></app-test-add-section>
+    </ng-container>
+
+    <ng-container *ngIf="currentStep == 2">
+      <app-test-preview
+        [courseId]="courseId"
+        [courseInformationData]="courseInformationData"
+        [sectionsData]="sectionsData"
+        (currentStep)="step($event)"
+      ></app-test-preview>
+    </ng-container>
+  </nz-card>
+</div>

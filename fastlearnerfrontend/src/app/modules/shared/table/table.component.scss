@@ -1,0 +1,113 @@
+.action-edit {
+  border: 1px solid;
+  border-color: #212189;
+  padding: 7px 10px;
+  background-color: white;
+  color: #212189;
+}
+
+.action-edit:hover {
+  border: 1px solid;
+  border-color: #212189;
+  padding: 7px 10px;
+  background-color: #212189;
+  color: white;
+}
+
+.action-copy {
+  border: 1px solid;
+  border-color: #212189;
+  padding: 7px 10px;
+  background-color: white;
+  color: #212189;
+}
+
+.action-copy:hover {
+  border: 1px solid;
+  border-color: #212189;
+  background-color: #212189;
+  color: white;
+}
+
+.action-delete {
+  border: 1px solid;
+  border-color: #ffd2d4;
+  padding: 7px 10px;
+  background-color: white;
+  color: red;
+}
+
+.action-delete:hover {
+  border: 1px solid;
+  border-color: #ffd2d4;
+  padding: 7px 10px;
+  background-color: red;
+  color: white;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.link-class {
+  text-decoration: underline !important;
+  font-size: 16px;
+  color: #0052f5 !important;
+}
+.column-text {
+  font-size: 16px;
+  font-family: "Poppins-medium";
+  // padding-left: 3px;
+  width: 15%;
+}
+
+:host ::ng-deep .ant-table .ant-table-expanded-row-fixed  {
+  width: 100% !important;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+// :host ::ng-deep .ant-table-tbody > tr > td {
+//   padding-left: 15px !important;
+//   padding-top: 15px;
+//   padding-bottom: 15px;
+//   padding-right: 0px;
+// }
+
+@media only screen and (max-width: 767px) {
+  :host ::ng-deep .ant-table-fixed {
+    table-layout: auto !important;
+  }
+}
+
+
+:host ::ng-deep .ant-table-header {
+  overflow: hidden !important;
+}
+
+// :host ::ng-deep .ant-table table {
+//   table-layout: auto !important;
+// }
+
+.action-view {
+  border: 0px solid;
+    border-color: #212189;
+    padding: 5px 8px;
+    background-color: gray;
+    color: white;
+}
+
+.action-view:hover {
+  border: 0px solid;
+  border-color: #212189;
+    padding: 5px 8px;
+  background-color: #212189;
+  color: white;
+}

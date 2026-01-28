@@ -1,0 +1,47 @@
+<div *ngIf="canWithdraw">
+    <h4 class="color-blue font-bold text-align-center m-0 font-20">How much amount </h4>
+    <h4 class="color-blue font-bold text-align-center font-20">do you want to withdraw?</h4>
+
+    <h4 style="color: #fe4a55;" class="font-bold text-align-center font-20 mt-4">Balance: $ {{availableBalance}}</h4>
+
+    <div class="display-flex justify-content-center mt-4">
+        <input class="amount-input border-radius mt-2" type="text" placeholder="Enter Amount" [(ngModel)]="withDrawAmount" (keydown)="onlyInputNumber($event)" (keyup)="validateAmount($event)">
+    </div>
+
+    <div class="display-flex justify-content-center mt-4">
+        <button
+        [disabled]="withdrawBtnDisable"
+        style="padding-left: 37px !important; padding-right: 37px !important;"
+        class="stripe-btn border-radius mr-4 mt-2"
+        nz-button
+        nzType="primary"
+        nzGhost
+        (click)="withdrawBalance()"
+      >
+        Withdraw
+      </button>
+    </div>
+
+</div>
+
+<div *ngIf="!canWithdraw">
+    <div class="display-flex justify-content-center mb-4">
+        <img src="../../../../assets/icons/warning.svg">
+    </div>
+    <h4 class="color-blue font-bold text-align-center m-0 font-20">Please withdraw your remaining balance </h4>
+    <h4 class="color-blue font-bold text-align-center font-20">before removing your wallet</h4>
+
+    <div class="display-flex justify-content-center mt-4">
+        <button
+        style="padding-left: 45px !important; padding-right: 45px !important;"
+        class="stripe-btn border-radius mt-2"
+        nz-button
+        nzType="primary"
+        nzGhost
+        (click)="close()"
+      >
+        OK
+      </button>
+    </div>
+
+</div>

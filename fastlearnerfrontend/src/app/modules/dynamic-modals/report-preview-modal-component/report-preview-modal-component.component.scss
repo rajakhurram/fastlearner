@@ -1,0 +1,59 @@
+.modal-header {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .report-content {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 6px;
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #d9d9d9;
+    }
+    .report-content ::ng-deep h1,
+    .report-content ::ng-deep h2,
+    .report-content ::ng-deep h3 {
+      color: #1890ff;
+      margin-top: 0;
+    }
+    .report-content ::ng-deep table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    .report-content ::ng-deep table, 
+    .report-content ::ng-deep th, 
+    .report-content ::ng-deep td {
+      border: 1px solid #d9d9d9;
+    }
+    .report-content ::ng-deep th,
+    .report-content ::ng-deep td {
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .report-content ::ng-deep th {
+      background-color: #fafafa;
+    }
+    .report-content ::ng-deep ul,
+    .report-content ::ng-deep ol {
+      padding-left: 20px;
+    }
+    .report-content ::ng-deep li {
+      margin-bottom: 4px;
+    }
+    .report-content ::ng-deep .correct {
+      color: #52c41a;
+    }
+    .report-content ::ng-deep .incorrect {
+      color: #ff4d4f;
+    }
+    .modal-footer {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #f0f0f0;
+      gap: 8px;
+    }
+    .modal-footer button {
+      margin-left: 8px;
+    }

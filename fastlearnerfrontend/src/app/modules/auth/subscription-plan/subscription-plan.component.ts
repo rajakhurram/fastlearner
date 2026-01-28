@@ -1,0 +1,288 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+} from '@angular/core';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { AppConstants } from 'src/app/core/constants/app.constants';
+import { HttpConstants } from 'src/app/core/constants/http.constants';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { MessageService } from 'src/app/core/services/message.service';
+import { SubscriptionService } from 'src/app/core/services/subscription.service';
+import { environment } from 'src/environments/environment.development';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { filter, forkJoin, Subject, takeUntil } from 'rxjs';
+
+@Component({
+  selector: 'app-subscription-plan',
+  templateUrl: './subscription-plan.component.html',
+  styleUrls: ['./subscription-plan.component.scss'],
+})
+export class SubscriptionPlanComponent implements OnInit, OnDestroy {
+  @Input() fromSubscriptionPlan = false;
+  @Input() showFreePlan?: boolean = true;
+  @Input() showStandardPlan?: boolean = true;
+  @Input() currentPlanId?: string | null;
+  _httpConstants: HttpConstants = new HttpConstants();
+  _appConstants: AppConstants = new AppConstants();
+
+  private readonly destroy$ = new Subject<void>();
+
+  subscriptionList: Array<any> = [];
+  noSubscriptionPresent: boolean = false;
+  isFreePlanSelected: boolean = false;
+  isPlanSelected?: boolean = false;
+  displayAnnual: boolean = true; // Track the plan type (Annual or Monthly)
+  // switchValue?: boolean = false;
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
+    @Optional() private modalRef: NzModalRef,
+    private _authService: AuthService,
+    private _messageService: MessageService,
+    private _cacheService: CacheService,
+    private _subscriptionService: SubscriptionService,
+    private _modal: NzModalService,
+    private readonly _activatedRoute: ActivatedRoute,
+  ) {}
+
+  ngOnInit(): void {
+    if (!this.subscriptionList?.length) {
+      this.getSubscriptionPlanList();
+    }
+    this._router.events
+    .pipe(
+      takeUntil(this.destroy$),
+      filter(event => event instanceof NavigationStart)
+    )
+    .subscribe((event: NavigationStart) => {
+      console.log('Route changed to:', event);
+      if (
+        !this.isPlanSelected &&
+        !this.fromSubscriptionPlan &&
+        !this.isFreePlanSelected &&
+        event.url !== '/'
+      ) {
+        this.handleFreePlan();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  togglePlanType(isAnnual: boolean): void {
+    this.displayAnnual = isAnnual;
+  }
+
+  getSubscriptionPlanList() {
+    this._authService.getSubscriptionPlans()?.subscribe({
+      next: (response: any) => {
+        if (
+          response?.status ===
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+        ) {
+          this.subscriptionList = response?.data?.filter(
+            (plan: any) =>
+              (!this.currentPlanId || plan.id !== this.currentPlanId) &&
+              (this.showStandardPlan || plan.planType !== 'STANDARD')
+          );
+
+          this.noSubscriptionPresent = false;
+          this._changeDetectorRef.detectChanges();
+        } else {
+          this.noSubscriptionPresent = true;
+          this.isPlanSelected = false;
+        }
+      },
+      error: (error: any) => {
+        this.noSubscriptionPresent = true;
+        console.error(error);
+      },
+    });
+  }
+
+  onSelectPlan(
+    subscriptionPlanType: any,
+    subscriptionId: any,
+    paypalPlanId: any
+  ) {
+    this.isPlanSelected = true;
+    if (subscriptionPlanType == 'Free Plan') {
+      this.isFreePlanSelected = true;
+      let payLoad = {
+        paypalPlanId: paypalPlanId,
+        subscriptionId: subscriptionId,
+      };
+      this.subscribeToPlan(payLoad, subscriptionPlanType);
+    } else {
+      this._router.navigate(['payment-method'], {
+        queryParams: { subscriptionId: subscriptionId },
+      });
+    }
+  }
+
+ handleFreePlan(): void {
+  this._authService.verifyUserSubscription().subscribe({
+    next: (response: any) => {
+      const isSubscribed = response?.data === true;
+      const currentPlan = response?.data?.currentPlan;
+
+      if (!isSubscribed) {
+        this.isFreePlanSelected = true;
+        this._authService.newUserSubscription().subscribe({
+          next: () => {
+            forkJoin([
+              this._subscriptionService.loadSubscriptionPermissions(),
+              this._subscriptionService.fetchCurrentSubscriptionPlanType(),
+            ]).subscribe({
+              next: () => {
+                this.navigateToLandingPage(); // only here
+              },
+              error: () => {
+                this._messageService.error('Error while processing APIs.');
+              },
+            });
+          },
+          error: () =>
+            this._messageService.error('Error processing free subscription.'),
+        });
+      } else if (currentPlan && currentPlan !== 'Free Plan') {
+        this.isFreePlanSelected = true;
+        this._authService.cancelSubscription().subscribe({
+          next: (res: any) => {
+            if (
+              res?.status ===
+              this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+            ) {
+              this.navigateToLandingPage(); // only here
+            }
+          },
+        });
+      } else {
+        this.isFreePlanSelected = true;
+        this.modalRef?.close();
+      }
+    },
+    error: () =>
+      this._messageService.error('Failed to fetch subscription details.'),
+  });
+
+  // ❌ Remove this line
+  // this.navigateToLandingPage();
+}
+
+
+  private navigateToLandingPage(): void {
+  const redirectUrl = this._cacheService.getDataFromCache('redirectUrl');
+
+  if (redirectUrl) {
+    this._cacheService.removeFromCache('redirectUrl'); // optional, clean up
+    this._router.navigateByUrl(redirectUrl); // preserves query params
+  } else {
+    // Fallback to base path or root
+    this._router.navigateByUrl(environment.basePath || '/');
+  }
+}
+
+  public skipForNow() {
+    const currentRoute = this._activatedRoute.snapshot.routeConfig?.path;
+    if (currentRoute === 'subscription-plan') {
+      this.navigateToLandingPage();
+      return;
+    }
+    this.modalRef?.close();
+  }
+
+  subscribeToPlan(payLoad: any, subscriptionPlanType: any) {
+    if (
+      subscriptionPlanType ===
+      this._appConstants.SUBSCRIPTION_PLAN_TYPE.FREE_PLAN
+    ) {
+      this.handleFreePlan();
+    }
+
+    this._authService.createSubscription(payLoad)?.subscribe({
+      next: (response: any) => {
+        if (
+          response?.status ===
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+        ) {
+          forkJoin([
+            this._subscriptionService.loadSubscriptionPermissions(),
+            this._subscriptionService.fetchCurrentSubscriptionPlanType(),
+          ]).subscribe({
+            next: () => {
+              switch (subscriptionPlanType) {
+                case this._appConstants.SUBSCRIPTION_PLAN_TYPE.FREE_PLAN:
+                  this._messageService.success(
+                    'You are Successfully Subscribed To Free Plan'
+                  );
+                  this._subscriptionService.updateUserSubscriptionCheck(true);
+
+                  const redirectUrl =
+                    this._cacheService.getDataFromCache('redirectUrl');
+                  if (redirectUrl) {
+                    this._cacheService.removeFromCache('redirectUrl');
+                    this._router.navigateByUrl(redirectUrl);
+                  } else {
+                    this._router.navigateByUrl(environment.basePath);
+                  }
+                  break;
+
+                case this._appConstants.SUBSCRIPTION_PLAN_TYPE.STANDARD_PLAN:
+                  this._messageService.success(
+                    'You are Successfully Subscribed To Standard Plan'
+                  );
+                  window.open(response?.data, '_self');
+                  break;
+
+                case this._appConstants.SUBSCRIPTION_PLAN_TYPE.ANNUAL_PLAN:
+                  this._messageService.success(
+                    'You are Successfully Subscribed To Annual Plan'
+                  );
+                  window.open(response?.data, '_self');
+                  break;
+              }
+
+              this.isPlanSelected = true;
+            },
+            error: () => {
+              this._messageService.error('Error while processing APIs.');
+            },
+          });
+        }
+      },
+      error: (error: any) => {
+        console.log(error);
+        if (
+          error?.error?.status ===
+          this._httpConstants.REQUEST_STATUS.BAD_REQUEST_400.CODE
+        ) {
+          this._messageService.error(error?.error?.message);
+        }
+      },
+    });
+  }
+
+  getSvgForCard(planType: string): string {
+    switch (planType) {
+      case 'PREMIUM':
+        return '../../../../assets/icons/premium-sparkle.svg';
+      case 'ULTIMATE':
+        return '../../../../assets/icons/ultimate-sparkle.svg';
+      default:
+        return '../../../../assets/icons/sparkle.svg';
+    }
+  }
+
+  toggleSwitch(value: boolean) {
+    this.displayAnnual = value;
+  }
+}

@@ -1,0 +1,158 @@
+<nz-table
+  style="overflow: auto"
+  [nzPageSizeOptions]="[10, 20, 30]"
+  [nzData]="tableConfig?.rowData"
+  [nzShowPagination]="false"
+  [nzTotal]="tableConfig.totalElements"
+  [nzPageSize]="tableConfig.pageSize"
+  [nzPageIndex]="tableConfig.pageNo"
+  [nzScroll]="{ y: '400px', x: '100%' }"
+>
+  <thead>
+    <tr>
+      <th
+        *ngFor="let col of tableConfig.columns"
+        class="column-text"
+        [ngStyle]="{
+          'background-color': col.backgroundColor,
+          color: col.color
+        }"
+      >
+        {{ col.header }}
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr
+      *ngFor="let row of tableConfig.rowData; let i = index"
+      (click)="onRowClickAction($event, row)"
+      [ngStyle]="{
+        'background-color': tableConfig.rowColor,
+        color: tableConfig?.rowTextColor
+      }"
+    >
+      <td *ngFor="let col of tableConfig.columns" class="data-text">
+        <!-- Serial Number -->
+        <span *ngIf="col.header === 'S.NO'">{{ row.serialNo }}</span>
+
+        <!-- Editable Input Field -->
+        <input
+          *ngIf="row.editableKey?.includes(col.field)"
+          #valueInput
+          nz-input
+          nzSize="large"
+          type="text"
+          [(ngModel)]="row[col.field]"
+          (focus)="onEditStart(row, col.field)"
+          (keydown.enter)="editValue(row, col.field, true)"
+          (click)="$event.stopPropagation()"
+          (blur)="editValue(row, col.field, false)"
+        />
+
+        <!-- Name Column (Clickable) -->
+        <a
+          *ngIf="!col.actions && col.header === 'Name' && !row.editableKey?.includes(col.field)"
+          class="link-class"
+          (click)="routeToAffiliateDetail($event, row)"
+        >
+          {{ row[col.field] }}
+        </a>
+
+        <!-- Email Column (Tooltip + Truncated) -->
+        <span
+          *ngIf="!col.actions && col.header === 'Email' && !row.editableKey?.includes(col.field)"
+          class="email-cell"
+          nz-tooltip
+          [nzTooltipTitle]="row[col.field]"
+        >
+          {{ row[col.field] | slice : 0 : 12 }}{{ row[col.field]?.length > 12 ? "..." : "" }}
+        </span>
+
+        <!-- Clickable Key Columns -->
+        <a
+          *ngIf="
+            tableConfig?.clickableKeys?.includes(col.field) &&
+            !row.editableKey?.includes(col.field) &&
+            col.header !== 'Name' &&
+            col.header !== 'Email'
+          "
+          class="link-class"
+          (click)="onAction($event, 'view', row)"
+        >
+          {{ row[col.field] }}
+        </a>
+
+        <!-- Default Non-editable Text -->
+        <span
+          *ngIf="
+            !row.editableKey?.includes(col.field) &&
+            !tableConfig?.clickableKeys?.includes(col.field) &&
+            col.header !== 'Name' &&
+            col.header !== 'Email'
+          "
+        >
+          {{ row[col.field] }}
+        </span>
+
+        <!-- Action Buttons Column -->
+        <div *ngIf="col.actions" class="action-buttons">
+          <button
+            *ngIf="row.showEditIcon"
+            class="action-edit border-radius cursor-pointer"
+            [disabled]="row.isSelf"
+            (click)="onAction($event, 'edit', row)"
+          >
+            <span nz-icon nzType="edit" nzTheme="outline" class="action-icon font-16"></span>
+          </button>
+
+          <button
+            *ngIf="row.showCopyIcon"
+            class="action-copy border-radius cursor-pointer"
+            (click)="onAction($event, 'copy', row)"
+          >
+            <span nz-icon nzType="copy" nzTheme="outline" class="action-icon font-16"></span>
+          </button>
+
+          <button
+            *ngIf="row.showDeleteIcon"
+            class="action-delete border-radius cursor-pointer"
+            [disabled]="row.isSelf"
+            (click)="onAction($event, 'delete', row)"
+          >
+            <span nz-icon nzType="delete" nzTheme="fill" class="action-icon font-16"></span>
+          </button>
+
+          <button
+            *ngIf="row.showViewIcon"
+            class="action-view border-radius cursor-pointer"
+            [disabled]="row.isSelf"
+            (click)="onAction($event, 'view', row, i + 1)"
+          >
+            <span nz-icon nzType="eye" nzTheme="outline" class="action-icon font-16"></span>
+          </button>
+
+          <nz-switch
+            *ngIf="row.showSwitchIcon"
+            [(ngModel)]="row.switchValue"
+            (ngModelChange)="onAction($event, 'switch', row)"
+            [disabled]="row.isSelf"
+            class="action-switch border-radius cursor-pointer"
+          ></nz-switch>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<!-- Pagination -->
+<div class="w-100 display-flex justify-content-end mt-1"></div>
+<nz-pagination
+  *ngIf="tableConfig.paginated"
+  [nzPageIndex]="tableConfig.pageNo + 1"
+  [nzTotal]="tableConfig.totalElements || 0"
+  [nzPageSize]="tableConfig.pageSize || 10"
+  (nzPageIndexChange)="onPageChange($event)"
+  style="float: right; margin-top: 8px"
+>
+</nz-pagination>

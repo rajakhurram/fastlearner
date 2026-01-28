@@ -1,0 +1,27 @@
+.card {
+  box-shadow: 2px 5px 17px #00000012;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+::ng-deep pdf-viewer {
+  width: 100%;
+  height: 440px;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+::ng-deep pdf-viewer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Hide scrollbars from the inner container that actually scrolls */
+::ng-deep pdf-viewer > div {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+::ng-deep pdf-viewer > div::-webkit-scrollbar {
+  display: none;
+}

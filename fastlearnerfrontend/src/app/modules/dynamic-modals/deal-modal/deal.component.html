@@ -1,0 +1,39 @@
+<div *ngIf="isDealAvailable" class="container">
+  <div class="deal">
+    <h4>A Special Gift Awaits Before You Leave!</h4>
+    <p>Do you know that we have an Annual Plan for you.</p>
+    <img
+      style="width: fit-content; align-self: center"
+      class="image-class"
+      src="../../../../assets/icons/deal.svg"
+    />
+  </div>
+  <div class="deal-actions">
+    <button
+      (click)="openSubscriptionPlan()"
+      nz-button
+      class="signup-form-button"
+      [nzType]="'primary'"
+    >
+      Accept this offer
+    </button>
+    <button
+      (click)="cancelSubscription()"
+      nz-button
+      class="button"
+      [nzType]="'primary'"
+    >
+      Cancel Subscription anyway
+    </button>
+  </div>
+</div>
+<!-- No deal available modal content -->
+<div *ngIf="!isDealAvailable" class="container no-deal">
+  <h3 class="font-color-black">Cancel subscription</h3>
+  <p>Are you sure, you want to cancel this subscription?</p>
+
+  <div class="d-flex gap-10 justify-content-end mt-4">
+    <button (click)="close()" nz-button nzType='default'>Cancel</button>
+    <button (click)="cancelSubscription()" nz-button nzType='primary' nzDanger>Cancel Subscription</button>
+  </div>
+</div>

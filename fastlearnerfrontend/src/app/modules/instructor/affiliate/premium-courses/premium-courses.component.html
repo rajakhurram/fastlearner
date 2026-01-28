@@ -1,0 +1,112 @@
+<div class="top-heading display-flex">
+  <h3>Premium Courses</h3>
+</div>
+
+<div class="container">
+  <nz-card class="card">
+    <div class="search-container">
+      <app-search-filter
+        (searchCallBack)="searchCallBack($event)"
+        [config]="searchFilter"
+        (clearCallBack)="onSearchClear()"
+      ></app-search-filter>
+    </div>
+    <div>
+      <div class="expand-container">
+        <!-- <p (click)="expandCoursesPanel()" class="expand-text">Expand All</p> -->
+      </div>
+      <nz-collapse id="top" *ngIf="premiumCourses?.length">
+        <ng-container
+          *ngFor="let premiumCourse of premiumCourses; let i = index"
+        >
+          <nz-collapse-panel
+            (nzActiveChange)="onPanelClick(premiumCourse)"
+            [nzActive]="premiumCourse.panelOpen"
+            [nzShowArrow]="false"
+            [nzHeader]="headerTemplate"
+          >
+            <app-table
+              (action)="handleTableAction($event)"
+              (routeAction)="routeToDetails($event)"
+              [tableConfig]="tableConfig"
+              (pageChange)="handleCourseAffiliatesPageChange($event)"
+            ></app-table>
+          </nz-collapse-panel>
+
+          <ng-template #expandIcon>
+            <div class="switch-container">
+              <img src="../../../../../assets/icons/Ellipse 1258.svg" />
+            </div>
+          </ng-template>
+          <ng-template #headerTemplate>
+            <div class="card-container">
+              <div class="card-container__card__container">
+                <div class="card-container__card__image">
+                  <img
+                    class="image-height"
+                    alt="example"
+                    [src]="premiumCourse?.thumbnailUrl"
+                  />
+                </div>
+                <div class="card-container__card__content">
+                  <div class="display-flex justify-content-space-between">
+                    <h4 class="card-container__card__content__heading">
+                      {{ premiumCourse?.courseTitle }}
+                    </h4>
+                  </div>
+                  <p
+                    [innerHTML]="premiumCourse?.courseDescription"
+                    class="card-container__card__content__description"
+                  ></p>
+                </div>
+              </div>
+              <div class="card-container__card__button-container">
+                <div class="button-div">
+                  <app-button
+                    [config]="buttonConfig"
+                    [buttonText]="'Assign Affiliate'"
+                    (buttonCallBack)="
+                      assignAffliate(
+                        $event,
+                        premiumCourse?.courseId,
+                        premiumCourse?.courseUrl
+                      )
+                    "
+                  >
+                  </app-button>
+                </div>
+
+                <img
+                  class="arrow-svg"
+                  *ngIf="premiumCourse.panelOpen"
+                  src="../../../../../assets/icons/prem-expanded.svg"
+                />
+                <img
+                  class="arrow-svg"
+                  *ngIf="!premiumCourse.panelOpen"
+                  src="../../../../../assets/icons/Group 66462.svg"
+                />
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </nz-collapse>
+
+      <nz-pagination
+        *ngIf="premiumCourses?.length"
+        [nzPageIndex]="instructorPremiumCoursesPayload.pageNo + 1"
+        [nzTotal]="instructorPremiumCoursesPayload.totalElements || 0"
+        [nzPageSize]="instructorPremiumCoursesPayload.pageSize || 10"
+        (nzPageIndexChange)="onInstructorPremiumCoursePageChange($event)"
+        style="float: right; margin-top: 8px"
+      >
+      </nz-pagination>
+
+      <div class="center" *ngIf="!premiumCourses?.length">
+        <div>
+          <nz-empty [nzNotFoundContent]="'No Course Found'"></nz-empty>
+        </div>
+      </div>
+    </div>
+  </nz-card>
+</div>

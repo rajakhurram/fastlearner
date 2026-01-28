@@ -1,0 +1,16 @@
+.input {
+  height: 50px;
+}
+
+.action-items {
+  gap: 40px;
+  margin-top: 15%;
+}
+
+:host ::ng-deep .ant-table-container table > thead > tr > th {
+  border: none !important;
+}
+
+::ng-deep .ant-modal-close-icon {
+  color: red !important;
+}

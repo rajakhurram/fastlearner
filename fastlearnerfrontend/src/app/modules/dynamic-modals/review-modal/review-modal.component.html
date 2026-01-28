@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="rate">
+    <h2>Tell others what you think</h2>
+    <nz-rate
+      class="rating-star"
+      ngDefaultControl
+      [(ngModel)]="courseReview.value"
+      [nzCharacter]="characterIcon"
+    ></nz-rate>
+    <ng-template #characterIcon let-index>
+      <ng-container>
+        <span class="star-icon" nz-icon nzType="star" nzTheme="fill"></span>
+      </ng-container>
+    </ng-template>
+
+    <!-- Textarea with min and max length validation -->
+    <textarea
+      name="review"
+      [(ngModel)]="courseReview.comment"
+      ngDefaultControl
+      rows="4"
+      nz-input
+      placeholder="Tell us about your personal experience taking this course. Was it a good match for you?"
+      maxlength="500"
+      (ngModelChange)="checkWordCount()"
+      #review="ngModel"
+      required
+    >
+    </textarea>
+
+    <div *ngIf="review.errors?.['maxlength'] && review.touched">
+      Maximum 500 characters allowed.
+    </div>
+
+    <!-- Submit button -->
+    <button
+      nz-button
+      (click)="submitReview()"
+      class="signup-form-button"
+      [nzType]="'primary'"
+      [disabled]="!courseReview.value || !courseReview.comment || !!review.errors || wordCount === 0"
+      >
+      Submit
+    </button>
+  </div>
+</div>

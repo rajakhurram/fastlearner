@@ -1,0 +1,115 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "porter_stem"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "dbId": {
+        "type": "long" // Corrected to "long" and removed analyzer
+      },
+      "title": {
+        "type": "text",
+        "analyzer": "my_custom_analyzer"
+      },
+      "outcome": {
+        "type": "text",
+        "analyzer": "my_custom_analyzer"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "my_custom_analyzer"
+      },
+      "creatorName": {
+        "type": "text",
+        "analyzer": "my_custom_analyzer"
+      },
+      "courseUrl": {
+        "type": "keyword",
+        "index": false
+      },
+      "thumbnailUrl": {
+        "type": "keyword",
+        "index": false
+      },
+      "userProfileUrl": {
+        "type": "keyword",
+        "index": false
+      },
+      "userPictureUrl": {
+        "type": "keyword",
+        "index": false
+      },
+      "createdBy": {
+        "type": "long",
+        "index": false
+      },
+      "status": {
+        "type": "keyword",
+        "index": false
+      },
+      "tags": {
+        "type": "text",
+        "analyzer": "my_custom_analyzer"
+      },
+      "sections": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "sectionId": {
+            "type": "keyword",
+            "index": false
+          },
+          "name": {
+            "type": "text",
+            "analyzer": "my_custom_analyzer"
+          },
+          "status": {
+            "type": "boolean",
+            "index": false
+          },
+          "topics": {
+            "type": "nested",
+            "properties": {
+              "id": {
+                "type": "keyword"
+              },
+              "topicId": {
+                "type": "keyword",
+                "index": false
+              },
+              "sectionId": {
+                "type": "keyword",
+                "index": false
+              },
+              "name": {
+                "type": "text",
+                "analyzer": "my_custom_analyzer"
+              },
+              "data": {
+                "type": "text",
+                "analyzer": "my_custom_analyzer"
+              },
+              "status": {
+                "type": "boolean",
+                "index": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

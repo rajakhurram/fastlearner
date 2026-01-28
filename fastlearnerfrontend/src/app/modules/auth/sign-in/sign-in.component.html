@@ -1,0 +1,104 @@
+<div class="sign-in-container">
+  <nz-card class="card">
+    <div class="card-header">
+      <h3 class="m-0">Sign In</h3>
+      <p>Sign In and start Learning</p>
+      <small>Continue With</small>
+      <div class="social-media-icons mt-2">
+        <!-- <img (click)="signInWithFacebook()" height="60px" width="60px"
+          src="../../../../assets/icons/facebook-colored.svg"> -->
+        <asl-google-signin-button
+          type="icon"
+          shape="circle"
+          size="large"
+          theme="filled_blue"
+          (click)="signInWithGoogle()"
+        ></asl-google-signin-button>
+        <!-- <img (click)="signInWithLinkedIn()" height="60px" width="60px"
+          src="../../../../assets/icons/linkedin-colored.svg"> -->
+      </div>
+    </div>
+    <div class="divider">
+      <nz-divider nzText="Or"></nz-divider>
+    </div>
+    <div class="sign-up-form">
+      <form
+        autocomplete="off"
+        [formGroup]="validateForm"
+        class="signup-form"
+        (ngSubmit)="submitForm()"
+      >
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your email">
+            <label>Email</label>
+            <nz-input-group nzSize="large" class="mt-1">
+              <input
+                class="input-field"
+                type="email"
+                nz-input
+                formControlName="email"
+                placeholder="Enter email address"
+                (input)="validateEmail($event)"
+              />
+            </nz-input-group>
+            <!-- <div *ngIf="!emailValid" class="error-message" style="color: red;">
+              Please enter a valid email address.
+          </div> -->
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="m-0">
+          <nz-form-control nzErrorTip="Please input your password!">
+            <label>Password</label>
+            <nz-input-group
+              nzSize="large"
+              [nzSuffix]="suffixTemplateEye"
+              class="mt-1"
+            >
+              <input
+                class="input-field"
+                [type]="passwordTextType ? 'text' : 'password'"
+                nz-input
+                formControlName="password"
+                placeholder="Enter password"
+              />
+            </nz-input-group>
+            <ng-template #suffixTemplateEye
+              ><span
+                nz-icon
+                (click)="togglePassword()"
+                class="password-field"
+                nzTheme="fill"
+                [nzType]="eyeType"
+              ></span
+            ></ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <div nz-row class="login-form-margin mt-2">
+          <div nz-col [nzSpan]="22">
+            <span class="forgot" (click)="routeToForgetPassword()"
+              >Forgot Password</span
+            >
+          </div>
+        </div>
+        <div class="button-sign-up">
+          <button
+            [disabled]="callInProgress"
+            nz-button
+            class="signup-form-button login-form-margin"
+            [nzType]="'primary'"
+          >
+            Sign In
+          </button>
+        </div>
+        <div class="login">
+          <p>
+            New to FastLearner?
+            <a style="text-decoration: underline" (click)="routeToSignUp()"
+              >Sign Up</a
+            >
+          </p>
+        </div>
+      </form>
+    </div>
+  </nz-card>
+</div>

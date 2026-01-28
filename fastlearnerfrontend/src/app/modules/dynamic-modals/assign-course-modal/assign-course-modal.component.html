@@ -1,0 +1,48 @@
+<div nz-row class="display-flex">
+  <h4 class="color-blue font-bold font-20">Assign Affiliate</h4>
+</div>
+
+<div>
+  <app-assign-course-affliate
+    [selectLabel]="'Select Affiliates'"
+    [rewardsWidth]="20"
+    [buttonText]="'Add Affiliate'"
+    [showBorder]="false"
+    [affiliateList]="affiliates"
+    [courseId]="courseId"
+    [selection]="selection"
+    [affiliateSearch]="true"
+    [selectPlaceholder]="'Search a Affiliate'"
+    (addCourseAffiliateEmitter)="onAffiliateAdd($event)"
+  ></app-assign-course-affliate>
+
+  <div *ngIf="affiliateLimitExceedMessage" class="error-message">
+    <span style="color: red;" [innerHTML]="affiliateLimitExceedMessage"></span>
+  </div>     
+
+  <app-table
+    (action)="handleTableAction($event)"
+    [tableConfig]="tableConfig"
+  ></app-table>
+
+  <div nz-row class="action-items justify-content-center mt-4">
+    <div class="mt-4">
+      <app-button
+        [config]="buttonCancel"
+        [buttonText]="'Cancel'"
+        (buttonCallBack)="cancel()"
+      >
+      </app-button>
+    </div>
+
+    <div class="mt-4">
+      <app-button
+        [config]="buttonAdd"
+        [buttonText]="'Save'"
+        (buttonCallBack)="assignAffiliates()"
+        [disabled]="!tableConfig?.rowData.length"
+      >
+      </app-button>
+    </div>
+  </div>
+</div>

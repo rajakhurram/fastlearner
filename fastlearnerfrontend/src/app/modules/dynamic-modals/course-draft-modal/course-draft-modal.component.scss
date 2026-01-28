@@ -1,0 +1,31 @@
+.backBtn {
+    border-color: #fe4a55 !important;
+    color: #fe4a55 !important;
+    height: 45px !important;
+    font-weight: bolder;
+  }
+  
+  .continueBtn {
+    border-color: #fe4a55 !important;
+    background-color: #fe4a55 !important;
+    color: white !important;
+    height: 45px !important;
+    font-weight: bolder;
+    margin-right: 25px;
+  }
+  
+  .message {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .justify-content {
+    justify-content: center;
+  }
+  

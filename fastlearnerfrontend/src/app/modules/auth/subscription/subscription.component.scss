@@ -1,0 +1,202 @@
+.subscription {
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  width: 90%;
+  margin: auto;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.bold {
+  font-weight: 600;
+  color: #212189;
+}
+
+.custom-header {
+  color: #212189 !important;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.black {
+  color: black;
+}
+
+.divider {
+  height: 4.9em !important;
+  display: block;
+}
+
+.button {
+  background: none;
+  color: #212189;
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.button-cancel {
+  background: none;
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
+  font-weight: 600;
+  color: #fe4a55;
+}
+
+.billing-history-table {
+  padding-top: 1%;
+  overflow: auto;
+}
+
+.plan-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.payment {
+  margin-left: 0px;
+}
+
+.payment-details {
+  display: flex;
+  justify-content: start;
+}
+
+.card-img {
+  margin-right: 20px;
+  margin-top: 10px;
+}
+
+.card-details {
+  margin-top: 10px;
+}
+
+.signup-form-button {
+  margin-bottom: 16px;
+  margin-top: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+}
+.signup-form-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.margin-offset {
+  margin-left: 8.33333333%;
+}
+.card-content-row {
+  justify-content: space-between;
+}
+.paymentMethod {
+  justify-content: space-between;
+  margin-right: 40px;
+}
+
+.card-payment {
+  display: flex;
+  /* background: aqua; */
+  justify-content: end;
+}
+.cancel-payment {
+  display: flex;
+  /* background: aqua; */
+  justify-content: end;
+}
+
+@media screen and (min-width: 1920px) {
+  ::ng-deep .subscription-modal {
+    width: 100% !important;
+    max-width: 1269px;
+    height: 886px;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .card-content {
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+  }
+
+  .margin-offset {
+    margin-left: 2.33333333%;
+  }
+}
+@media screen and (max-width: 820px) {
+  .card-content-row {
+    flex-direction: column;
+  }
+  
+
+  .margin-offset {
+    margin-left: 8.33333333%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .subscription-history-table {
+    overflow: auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  ::ng-deep .subscription-modal > div > div {
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .plan-actions {
+    flex-direction: column;
+    margin: auto;
+  }
+  .card-payment {
+    margin-left: 0%;
+    width: 100%;
+    flex: unset;
+    max-width: unset;
+  }
+
+  .paymentMethod {
+    margin-right: 0;
+  }
+
+  .signup-form-button {
+    width: max-content;
+  }
+  .divider {
+    display: none;
+  }
+}
+
+:host ::ng-deep .ant-radio-inner {
+  border: 2px solid #212189;
+}
+
+:host ::ng-deep .ant-radio-checked .ant-radio-inner::after {
+  background-color: #212189;
+}
+
+:host ::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #212189 !important;
+}
+
+:host ::ng-deep .ant-tabs-tab:hover {
+  color: #212189 !important;
+}
+
+:host ::ng-deep .ant-tabs-ink-bar {
+  background: #212189 !important;
+}

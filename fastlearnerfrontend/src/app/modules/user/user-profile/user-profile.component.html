@@ -1,0 +1,404 @@
+<div class="container">
+  <div class="user-profile">
+    <nz-card class="card">
+      <div class="profile-header">
+        <h3>Edit Profile</h3>
+        <div class="section">
+          <div class="user-section">
+            <div class="image-section">
+              <div
+                [nz-tooltip]="
+                  user?.profilePicture ? 'Change Photo' : 'Upload Photo'
+                "
+                class="user-avatar"
+                (click)="openImageUploaderModal()"
+                style="cursor: pointer"
+              >
+                <nz-avatar
+                  class="user-icon"
+                  nzIcon="user"
+                  [nzSrc]="user?.profilePicture ? user?.profilePicture : null"
+                  nzAlt="User"
+                ></nz-avatar>
+              </div>
+            </div>
+            <div class="user-info">
+              <h4 style="margin: 0px" nz-tooltip="{{ user?.fullName }}">
+                {{
+                  user?.fullName?.length > 50
+                    ? user?.fullName?.substring(0, 50) + "..."
+                    : user?.fullName
+                }}
+              </h4>
+
+              <small *ngIf="!socialUser" class="red"
+                ><a (click)="routeToChangePassword()">Change Password</a></small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="personals-details">
+        <h3>Personal details</h3>
+        <div nz-row [nzGutter]="16">
+          <div nz-col nzLg="12" nzMd="12" nzSm="24" nzXs="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>Full name</label>
+                <nz-input-group nzSize="large">
+                  <input
+                    class="input-field"
+                    type="text"
+                    name="fullname"
+                    [(ngModel)]="user.fullName"
+                    nz-input
+                    placeholder="Full Name"
+                    [disabled]="socialUser"
+                    (keypress)="checkLength($event)"
+                    (input)="checkInput($event)"
+                  />
+                  <div style="color: red">{{ userNameValidationMsg }}</div>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzLg="12" nzMd="12" nzSm="24" nzXs="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>Email</label>
+                <nz-input-group nzSize="large">
+                  <input
+                    [disabled]="true"
+                    class="input-field"
+                    type="text"
+                    name="email"
+                    [(ngModel)]="user.email"
+                    nz-input
+                    placeholder="Email"
+                  />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row [nzGutter]="16">
+          <div nz-col nzLg="12" nzMd="12" nzSm="24" nzXs="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>Specialization</label>
+                <nz-input-group nzSize="large">
+                  <input
+                    class="input-field"
+                    type="text"
+                    name="specialization"
+                    [(ngModel)]="user.specialization"
+                    nz-input
+                    placeholder="Specialization"
+                  />
+                  <div
+                    style="color: red"
+                    *ngIf="user?.specialization?.length > 500"
+                  >
+                    Specialization cannot be greater than 500 characters long.
+                  </div>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzLg="12" nzMd="12" nzSm="24" nzXs="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>Qualification</label>
+                <nz-input-group nzSize="large">
+                  <input
+                    class="input-field"
+                    type="text"
+                    name="qualification"
+                    [(ngModel)]="user.qualification"
+                    nz-input
+                    placeholder="Qualification"
+                  />
+                  <div
+                    style="color: red"
+                    *ngIf="user?.qualification?.length > 500"
+                  >
+                    Qualification cannot be greater than 500 characters long.
+                  </div>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row [nzGutter]="16">
+          <div nz-col nzLg="12" nzMd="12" nzSm="24" nzXs="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>Experience</label>
+                <nz-input-group nzSize="large">
+                  <input
+                    class="input-field"
+                    type="text"
+                    name="experience"
+                    [(ngModel)]="user.experience"
+                    nz-input
+                    placeholder="Experience"
+                  />
+                  <div
+                    style="color: red"
+                    *ngIf="user?.experience?.length > 500"
+                  >
+                    Experience cannot be greater than 500 characters long.
+                  </div>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzLg="12" nzMd="12" nzSm="24" nzXs="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>Headline</label>
+                <nz-input-group nzSize="large">
+                  <input
+                    class="input-field"
+                    type="text"
+                    name="headline"
+                    [(ngModel)]="user.headline"
+                    nz-input
+                    placeholder="Headline"
+                  />
+                  <div style="color: red" *ngIf="user?.headline?.length > 100">
+                    Headline cannot be greater than 100 characters long.
+                  </div>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-control>
+                <label>About me</label>
+
+                <angular-editor
+                  [(ngModel)]="user.aboutMe"
+                  [config]="editorConfig"
+                ></angular-editor>
+                <div style="color: red" *ngIf="user?.aboutMe?.length > 3000">
+                  About me cannot be greater than 3000 characters long.
+                </div>
+                <!-- </nz-input-group> -->
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div style="" nz-row>
+          <div nz-col nzSpan="24">
+            <label name="showProfile" [(ngModel)]="user.showProfile" nz-checkbox
+              >Show your profile to logged-in users</label
+            >
+          </div>
+          <div nz-col nzSpan="24">
+            <label
+              name="showCourses"
+              [(ngModel)]="user.showCourses"
+              nz-checkbox
+              class="showCourse"
+              >Show courses you are taking on your profile</label
+            >
+          </div>
+        </div>
+        <hr />
+
+        <div class="on-the-web">
+          <span>On The Web</span>
+        </div>
+        <div class="social-links">
+          <div class="row" nz-row>
+            <div class="label-container">
+              <div>
+                <img
+                  alt="Website"
+                  height="25px"
+                  width="25px"
+                  src="../../../../assets/icons/website.svg"
+                />
+              </div>
+              <div class="label-web">Website</div>
+            </div>
+            <div nz-col nzOffset="1" nzXs="24" nzMd="20" nzlg="20">
+              <nz-input-group [nzSuffix]="suffixIconSearchWebsite">
+                <input
+                  type="text"
+                  name="websiteUrl"
+                  [(ngModel)]="user.websiteUrl"
+                  nz-input
+                  placeholder="Website"
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearchWebsite>
+                <span
+                  *ngIf="user.websiteUrl"
+                  (click)="user.websiteUrl = null"
+                  class="red"
+                  nz-icon
+                  nzType="close"
+                ></span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="row" nz-row>
+            <div class="label-container">
+              <div>
+                <img
+                  alt="X"
+                  height="25px"
+                  width="25px"
+                  src="../../../../assets/icons/TWt.svg"
+                />
+              </div>
+              <div class="label-web">X</div>
+            </div>
+            <div nz-col nzOffset="1" nzXs="24" nzMd="20" nzlg="20">
+              <nz-input-group [nzSuffix]="suffixIconSearchTwitter">
+                <input
+                  type="text"
+                  name="twitterUrl"
+                  [(ngModel)]="user.twitterUrl"
+                  nz-input
+                  placeholder="X"
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearchTwitter>
+                <span
+                  *ngIf="user.twitterUrl"
+                  (click)="user.twitterUrl = null"
+                  class="red"
+                  nz-icon
+                  nzType="close"
+                ></span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="row" nz-row>
+            <div class="label-container">
+              <div>
+                <img
+                  alt="Facebook"
+                  height="25px"
+                  width="25px"
+                  src="../../../../assets/icons/facebook-link.svg"
+                />
+              </div>
+              <div class="label-web">Facebook</div>
+            </div>
+            <div nz-col nzOffset="1" nzXs="24" nzMd="20" nzlg="20">
+              <nz-input-group [nzSuffix]="suffixIconSearchFacebook">
+                <input
+                  type="text"
+                  name="facebookUrl"
+                  [(ngModel)]="user.facebookUrl"
+                  nz-input
+                  placeholder="Facebook"
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearchFacebook>
+                <span
+                  *ngIf="user.facebookUrl"
+                  (click)="user.facebookUrl = null"
+                  class="red"
+                  nz-icon
+                  nzType="close"
+                ></span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="row" nz-row>
+            <div class="label-container">
+              <div>
+                <img
+                  alt="LinkedIn"
+                  height="25px"
+                  width="25px"
+                  src="../../../../assets/icons/linkedin-link.svg"
+                />
+              </div>
+              <div class="label-web">Linkedin</div>
+            </div>
+            <div nz-col nzOffset="1" nzXs="24" nzMd="20" nzlg="20">
+              <nz-input-group [nzSuffix]="suffixIconSearchLinkedin">
+                <input
+                  type="text"
+                  name="linkedInUrl"
+                  [(ngModel)]="user.linkedInUrl"
+                  nz-input
+                  placeholder="Linkedin"
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearchLinkedin>
+                <span
+                  *ngIf="user.linkedInUrl"
+                  (click)="user.linkedInUrl = null"
+                  class="red"
+                  nz-icon
+                  nzType="close"
+                ></span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="row" nz-row>
+            <div class="label-container">
+              <div>
+                <img
+                  height="25px"
+                  width="25px"
+                  alt="Youtube"
+                  src="../../../../assets/icons/youtube-link.svg"
+                />
+              </div>
+              <div class="label-web">Youtube</div>
+            </div>
+            <div nz-col nzOffset="1" nzXs="24" nzMd="20" nzlg="20">
+              <nz-input-group [nzSuffix]="suffixIconSearchYoutube">
+                <input
+                  type="text"
+                  name="youtubeUrl"
+                  [(ngModel)]="user.youtubeUrl"
+                  nz-input
+                  placeholder="Youtube"
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearchYoutube>
+                <span
+                  *ngIf="user.youtubeUrl"
+                  (click)="user.youtubeUrl = null"
+                  class="red"
+                  nz-icon
+                  nzType="close"
+                ></span>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-style">
+        <button
+          class="sign-up-btn"
+          (click)="routeToStudentLandingPage()"
+          nz-button
+          nzType="default"
+        >
+          Cancel
+        </button>
+        <button
+          class="sign-in-btn"
+          (click)="updateUserProfile()"
+          nz-button
+          nzType="primary"
+        >
+          Update
+        </button>
+      </div>
+    </nz-card>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 18px;
+}
+
+.expand-all {
+  color: #0052f5;
+}
+
+:host ::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+  padding: 2% 3% 5% 1%;
+}
+
+:host
+  ::ng-deep
+  .ant-collapse
+  > .ant-collapse-item.ant-collapse-no-arrow
+  > .ant-collapse-header {
+  background: #F7F8FC;
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .ant-collapse {
+  border-right: none !important;
+  border-left: none !important;
+}
+
+.action-items-gap {
+  gap: 12px;
+}
+
+.border-top {
+  border: 1px solid;
+  border-color: #d9d9d9 white white white;
+}
+
+:host ::ng-deep .ant-card-body {
+  padding: 15px;
+}
+
+.container{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+@media screen and (max-width: 1200px) {
+  :host ::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+    padding: 2% 3% 12% 1%;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  :host ::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+    padding: 2% 3% 18% 1%;
+  }
+}
+
+@media screen and (max-width: 500px){
+  .details-class{
+    flex-direction: column;
+  }
+}

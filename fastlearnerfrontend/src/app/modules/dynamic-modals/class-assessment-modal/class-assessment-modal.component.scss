@@ -1,0 +1,102 @@
+::ng-deep .ant-modal-content {
+  border-radius: 4px;
+}
+
+::ng-deep .ant-result-title {
+  color: #212189;
+  font-family: "Poppins-medium";
+}
+
+.cancel-btn {
+  background-color: #fff;
+  border: 1px solid #f44336;
+  color: #f44336;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #ffeaea;
+}
+
+.send-btn {
+  background-color: #212189;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100px;
+}
+.send-btn:hover {
+  background-color: #1b1a75;
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h3 {
+    margin: 0;
+    color: #212189;
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .close-btn {
+    font-size: 16px;
+    color: #ff4d4f;
+    cursor: pointer;
+  }
+}
+
+.modal-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #f5f9ff;
+  font-size: 14px;
+  color: black;
+    margin-top: 5px;
+  &::placeholder {
+    color: #c1c4d6;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.modal-footer {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+::ng-deep .ant-modal-close-icon {
+  color: red;
+}
+
+
+.done{
+  background-color: #212189;
+  color: white;
+}

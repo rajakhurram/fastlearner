@@ -1,0 +1,10 @@
+{
+    "cSpell.words": [
+        "Favourite",
+        "noti",
+        "unclicked"
+    ],
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}

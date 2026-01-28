@@ -1,0 +1,49 @@
+.main-card {
+    width: 600px;
+    box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+    border-radius: 5px;
+    height: 300px;
+    padding: 10px;
+}
+
+.payment-confirmation{
+    display: flex;
+    justify-content: center;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.button {
+    width: 20%;
+    margin-bottom: 16px;
+    margin-top: 10px;
+    border: #FE4A55 1px solid;
+    background-color: #FE4A55;
+    border-radius: 4px;
+  
+  }
+  .button:hover{
+    background: linear-gradient(180deg, #FE4A55, #B20A14);
+    color: white;
+  }
+
+  .card-header h3{
+    display: flex;
+    justify-content: center;
+  }
+
+  .card-header p{
+    display: flex;
+    justify-content: center;
+  }
+
+  .actions{
+    display: flex;
+    justify-content: center;
+  }
+
+  .icon{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2%;
+  }
