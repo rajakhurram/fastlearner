@@ -9,7 +9,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-              dir('frontend') {
+              dir('fastlearnerfrontend') {
                 sh 'npm ci'  // faster and reliable than npm install
               }
             }
@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build Angular App') {
             steps {
-              dir('frontend') {
+              dir('fastlearnerfrontend') {
                 sh 'ng build --configuration=production'
               }
             }
