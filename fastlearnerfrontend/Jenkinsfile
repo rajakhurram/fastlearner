@@ -28,7 +28,7 @@ pipeline {
                 // Assuming Jenkins user has write access to /var/www/angular-app
                 sh '''
                     rm -rf /var/www/angular-app/*
-                    cp -r frontend/dist/fast-learner-app/* /var/www/angular-app/
+                    cp -r fastlearnerfrontend/dist/fast-learner-app/* /var/www/angular-app/
                 '''
             }
         }
