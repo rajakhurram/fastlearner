@@ -163,7 +163,7 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
   hasMoreComments = true;
   courseContentType = CourseContentType;
   selectedContentType?: any;
-comingFromReview: boolean;
+  comingFromReview: boolean;
 
   constructor(
     private _courseService: CourseService,
@@ -327,7 +327,7 @@ comingFromReview: boolean;
     this.getCourseByUrl(this.courseUrl);
     this.metaService.updateTag({
       name: `${this.courseTitle}`,
-      content: 'Course Content page of Fastlearner.ai',
+      content: 'Course Content page of QualityCenter.ai',
     });
   }
 
@@ -353,7 +353,7 @@ comingFromReview: boolean;
             this.titleService.setTitle(
               `${response?.data?.course?.title?.replace(/\b\w/g, (char) =>
                 char.toUpperCase()
-              )} | Contents | FastLearner.ai`
+              )} | Contents | QualityCenter.ai`
             );
             if (this.courseId) {
               this.enrolledInCourse();
@@ -468,84 +468,84 @@ comingFromReview: boolean;
   }
 
   skipQuiz(event: any) {
-  const currentSectionIndex = this.sectionPanelList.findIndex(
-    (section) => section.sectionId === this.currentSelectedSection?.sectionId
-  );
+    const currentSectionIndex = this.sectionPanelList.findIndex(
+      (section) => section.sectionId === this.currentSelectedSection?.sectionId
+    );
 
-  if (currentSectionIndex === -1) {
-    this._messageService.info('No active section found.');
-    return;
-  }
+    if (currentSectionIndex === -1) {
+      this._messageService.info('No active section found.');
+      return;
+    }
 
-  const currentSection = this.sectionPanelList[currentSectionIndex];
+    const currentSection = this.sectionPanelList[currentSectionIndex];
 
-  // Ensure topicList exists and current topic is valid
-  if (!currentSection.topicList?.length) {
-    this._messageService.info('No topics in the current section.');
-    return;
-  }
+    // Ensure topicList exists and current topic is valid
+    if (!currentSection.topicList?.length) {
+      this._messageService.info('No topics in the current section.');
+      return;
+    }
 
-  const currentTopicIndex = currentSection.topicList.findIndex(
-    (topic) => topic === this.currentSelectedTopic
-  );
+    const currentTopicIndex = currentSection.topicList.findIndex(
+      (topic) => topic === this.currentSelectedTopic
+    );
 
-  if (currentTopicIndex === -1) {
-    this._messageService.info('Current topic not found.');
-    return;
-  }
+    if (currentTopicIndex === -1) {
+      this._messageService.info('Current topic not found.');
+      return;
+    }
 
-  const nextTopicIndex = currentTopicIndex + 1;
+    const nextTopicIndex = currentTopicIndex + 1;
 
-  // Mark topic as completed
-  this.currentSelectedTopic.isCompleted = true;
-  this.completeTopic(
-    currentSection, // use the section from panelList
-    this.currentSelectedTopic,
-    true,
-    this.currentSelectedTopic?.topicId,
-    this.currentSelectedTopic?.seekTime,
-    this.currentSelectedTopic?.topicType
-  );
+    // Mark topic as completed
+    this.currentSelectedTopic.isCompleted = true;
+    this.completeTopic(
+      currentSection, // use the section from panelList
+      this.currentSelectedTopic,
+      true,
+      this.currentSelectedTopic?.topicId,
+      this.currentSelectedTopic?.seekTime,
+      this.currentSelectedTopic?.topicType
+    );
 
-  // Move to next topic/section after a short delay
-  setTimeout(() => {
-    if (nextTopicIndex < currentSection.topicList.length) {
-      const nextTopic = currentSection.topicList[nextTopicIndex];
-      this.setCurrentTopicAndSection(nextTopic, currentSection);
-    } else {
-      const nextSectionIndex = currentSectionIndex + 1;
-      if (nextSectionIndex < this.sectionPanelList.length) {
-        const nextSection = this.sectionPanelList[nextSectionIndex];
-        if (nextSection.free) {
-          this.isPanelActive(nextSection, true, nextSectionIndex);
-          setTimeout(() => {
-            this.setCurrentTopicAndSection(nextSection.topicList[0], nextSection);
-          }, 1000);
-        } else {
-          this._messageService.error(
-            'You have to get a subscription, next section is not free.'
-          );
-        }
+    // Move to next topic/section after a short delay
+    setTimeout(() => {
+      if (nextTopicIndex < currentSection.topicList.length) {
+        const nextTopic = currentSection.topicList[nextTopicIndex];
+        this.setCurrentTopicAndSection(nextTopic, currentSection);
       } else {
-        if (this.courseProgress === 100) {
-          this.getCertificateData();
+        const nextSectionIndex = currentSectionIndex + 1;
+        if (nextSectionIndex < this.sectionPanelList.length) {
+          const nextSection = this.sectionPanelList[nextSectionIndex];
+          if (nextSection.free) {
+            this.isPanelActive(nextSection, true, nextSectionIndex);
+            setTimeout(() => {
+              this.setCurrentTopicAndSection(nextSection.topicList[0], nextSection);
+            }, 1000);
+          } else {
+            this._messageService.error(
+              'You have to get a subscription, next section is not free.'
+            );
+          }
         } else {
-          this._messageService.info('No more sections.');
+          if (this.courseProgress === 100) {
+            this.getCertificateData();
+          } else {
+            this._messageService.info('No more sections.');
+          }
         }
       }
-    }
-  }, 500); // reduced delay to make UI snappier
-}
+    }, 500); // reduced delay to make UI snappier
+  }
 
-// Helper method to set current topic & section
-setCurrentTopicAndSection(topic: any, section: any) {
-  if (!topic || !section) return;
-  this.currentSelectedTopic = topic;
-  this.currentSelectedTopicType = topic.topicType;
-  this.currentSelectedTopicId = topic.topicId;
-  this.currentSelectedSection = section;
-  this.currentSelectedSectionId = section.sectionId;
-}
+  // Helper method to set current topic & section
+  setCurrentTopicAndSection(topic: any, section: any) {
+    if (!topic || !section) return;
+    this.currentSelectedTopic = topic;
+    this.currentSelectedTopicType = topic.topicType;
+    this.currentSelectedTopicId = topic.topicId;
+    this.currentSelectedSection = section;
+    this.currentSelectedSectionId = section.sectionId;
+  }
 
 
   getCourseSectionList(sectionId?: number | null, topicId?: string | null) {
@@ -647,33 +647,33 @@ setCurrentTopicAndSection(topic: any, section: any) {
   }
 
   videoCompleted(event) {
-  if (!this.currentSelectedTopic?.isCompleted) {
-    this.currentSelectedTopic.isCompleted = true;
-    this.manageWatchTime();
-    
-    const currentTopic = this.currentSelectedTopic;
-    const currentSection = this.currentSelectedSection;
-    
-    const completionSubscription = this.completeTopic(
-      currentSection,
-      currentTopic,
-      true,
-      currentTopic?.topicId,
-      currentTopic?.seekTime,
-      currentTopic?.topicType
-    );
+    if (!this.currentSelectedTopic?.isCompleted) {
+      this.currentSelectedTopic.isCompleted = true;
+      this.manageWatchTime();
 
-    setTimeout(() => {
+      const currentTopic = this.currentSelectedTopic;
+      const currentSection = this.currentSelectedSection;
+
+      const completionSubscription = this.completeTopic(
+        currentSection,
+        currentTopic,
+        true,
+        currentTopic?.topicId,
+        currentTopic?.seekTime,
+        currentTopic?.topicType
+      );
+
+      setTimeout(() => {
+        this.playNextVideo();
+        // Unsubscribe to prevent memory leaks
+        if (completionSubscription) {
+          completionSubscription.unsubscribe();
+        }
+      }, 800); // Increased delay to ensure progress update
+    } else {
       this.playNextVideo();
-      // Unsubscribe to prevent memory leaks
-      if (completionSubscription) {
-        completionSubscription.unsubscribe();
-      }
-    }, 800); // Increased delay to ensure progress update
-  } else {
-    this.playNextVideo();
+    }
   }
-}
 
   routeToNotificationPage() {
     this._router.navigate(['/user/notifications']);
@@ -774,8 +774,8 @@ setCurrentTopicAndSection(topic: any, section: any) {
             // If a specific topic is provided (from URL or passed in), select it; otherwise, use the first topic
             this.defaultTopic = topic
               ? this.sectionPanelList[i].topicList.find(
-                  (el: any) => el.topicId === topic?.topicId
-                )
+                (el: any) => el.topicId === topic?.topicId
+              )
               : this.sectionPanelList[i].topicList[0]; // Default to the first topic if no topic is provided
 
             // Proceed with selecting the topic if found
@@ -920,59 +920,59 @@ setCurrentTopicAndSection(topic: any, section: any) {
   }
 
   completeTopic(
-  section: any,
-  topic: any,
-  isComplete: boolean,
-  topicId: any,
-  seekTime: any,
-  topicType: any
-) {
-  if (section != null) {
-    if (isComplete) {
-      if (section.totalTopicCompleted < section.topicList.length) {
-        section.totalTopicCompleted += 1;
+    section: any,
+    topic: any,
+    isComplete: boolean,
+    topicId: any,
+    seekTime: any,
+    topicType: any
+  ) {
+    if (section != null) {
+      if (isComplete) {
+        if (section.totalTopicCompleted < section.topicList.length) {
+          section.totalTopicCompleted += 1;
+        }
+      } else {
+        section.totalTopicCompleted = Math.max(section.totalTopicCompleted - 1, 0);
       }
-    } else {
-      section.totalTopicCompleted = Math.max(section.totalTopicCompleted - 1, 0);
     }
-  }
 
-  let completePayLoad = {};
-  if (topicType == 'Video') {
-    completePayLoad = {
-      isCompleted: isComplete,
-      topicId: topicId,
-      seekTime:
-        isComplete || topicId != this.currentSelectedTopicId
-          ? 0
-          : this.getTimeInSec(this.currentVideoTime),
-    };
-  } else {
-    completePayLoad = {
-      isCompleted: isComplete,
-      topicId: topicId,
-      seekTime: 0,
-    };
-  }
+    let completePayLoad = {};
+    if (topicType == 'Video') {
+      completePayLoad = {
+        isCompleted: isComplete,
+        topicId: topicId,
+        seekTime:
+          isComplete || topicId != this.currentSelectedTopicId
+            ? 0
+            : this.getTimeInSec(this.currentVideoTime),
+      };
+    } else {
+      completePayLoad = {
+        isCompleted: isComplete,
+        topicId: topicId,
+        seekTime: 0,
+      };
+    }
 
-  // Return the observable so we can subscribe to it properly
-  return this._courseService.markTopicComplete(completePayLoad)?.subscribe({
-    next: (response: any) => {
-      if (
-        response?.status ==
-        this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-      ) {
-        console.log('Topic marked as complete successfully:', topicId);
-        this.getCourseProgress();
-      }
-    },
-    error: (error: any) => {
-      topic.isCompleted = !isComplete;
-      console.error('Error marking topic as complete:', error);
-      // this._messageService.error(error?.error?.message);
-    },
-  });
-}
+    // Return the observable so we can subscribe to it properly
+    return this._courseService.markTopicComplete(completePayLoad)?.subscribe({
+      next: (response: any) => {
+        if (
+          response?.status ==
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+        ) {
+          console.log('Topic marked as complete successfully:', topicId);
+          this.getCourseProgress();
+        }
+      },
+      error: (error: any) => {
+        topic.isCompleted = !isComplete;
+        console.error('Error marking topic as complete:', error);
+        // this._messageService.error(error?.error?.message);
+      },
+    });
+  }
 
   getVideoTime(eventData: {
     videoTime: any;
@@ -1244,7 +1244,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           });
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
@@ -1429,7 +1429,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
             this.questionAnswers &&
             this.questionAnswers.questionDetails &&
             this.questionAnswers.questionDetails[index].showQuestionAnswers ==
-              undefined
+            undefined
           ) {
             this.questionAnswers.questionDetails[index].showQuestionAnswers =
               this.questionAnswers.questionDetails[index]
@@ -1525,7 +1525,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
                 feedbackComments: response.data.feedback.feedbackComments || [],
               };
             }
-            
+
 
             this.hasMoreComments =
               this.courseReviewPayLoad.pageNo < this.courseReviewTotalPages - 1;
@@ -1629,7 +1629,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
     });
   }
 
-  openAlternateCollapseDropdown(sectionId?: any, index?: any) {}
+  openAlternateCollapseDropdown(sectionId?: any, index?: any) { }
 
   getAlternateInstructorSections(section?: any) {
     this._courseService
@@ -1792,7 +1792,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
     try {
       const containerElement = this.chatContainer.nativeElement;
       containerElement.scrollTop = containerElement.scrollHeight;
-    } catch (err) {}
+    } catch (err) { }
   }
 
   get getInitialOfLoggedInUser() {
@@ -1938,7 +1938,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
             this.getCourseProgress();
           }
         },
-        error: (error: any) => {},
+        error: (error: any) => { },
       });
     }
   }
@@ -1955,7 +1955,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           this.getCourseProgress();
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
@@ -2159,21 +2159,21 @@ setCurrentTopicAndSection(topic: any, section: any) {
           this.getSectionTopicsAndChatQuestion();
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
   toggleReplyAndScroll(question: any): void {
-  question.showReply = !question.showReply;
+    question.showReply = !question.showReply;
 
-  setTimeout(() => {
-    const element = document.getElementById('reply-input-' + question.questionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      (element as HTMLInputElement).focus();
-    }
-  }, 100);
-}
+    setTimeout(() => {
+      const element = document.getElementById('reply-input-' + question.questionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        (element as HTMLInputElement).focus();
+      }
+    }, 100);
+  }
 
   onAnswerSubmit(event: AnswerSubmitEvent) {
     this.quizAttemptId = event.quizAttemptId;

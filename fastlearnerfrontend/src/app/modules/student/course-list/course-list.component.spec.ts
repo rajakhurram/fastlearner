@@ -94,11 +94,11 @@ describe('CourseListComponent', () => {
   it('should set the page title and meta tags on initialization', () => {
     component.ngOnInit();
     expect(mockTitleService.setTitle).toHaveBeenCalledWith(
-      'Courses | Fastlearner.ai'
+      'Courses | QualityCenter.ai'
     );
     expect(mockMetaService.updateTag).toHaveBeenCalledWith({
       name: 'Courses',
-      content: 'Courses page of Fastlearner.ai',
+      content: 'Courses page of QualityCenter.ai',
     });
   });
 
@@ -174,7 +174,7 @@ describe('CourseListComponent', () => {
       },
     ] as Array<any>;
 
-    
+
     // Mock the getAllCourses response to prevent it from clearing courseList
     const mockResponse = {
       status: 200,
@@ -185,13 +185,13 @@ describe('CourseListComponent', () => {
       }
     };
     mockCourseService.getAllCourses.and.returnValue(of(mockResponse));
-    
+
     // Mock getCourseCategory to prevent errors
     mockCourseService.getCourseCategory.and.returnValue(of({
       status: 200,
       data: []
     }));
-    
+
     // Now set the courseList and detect changes
     component.courseList = mockCourses;
     fixture.detectChanges();

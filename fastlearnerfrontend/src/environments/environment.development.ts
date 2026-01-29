@@ -14,6 +14,7 @@ export const environment = {
   imageUrl: `${localApiBaseUrlPath}:8443`,
   applicationCourseContentUrl: `${localApiBaseUrlPath}/student/course-content/`,
   applicationCourseDetailsUrl: `${localApiBaseUrlPath}/student/course-details/`,
+  graderServiceBasePath: "",
 
   // Goolge Login Credentials
   googleClientId:

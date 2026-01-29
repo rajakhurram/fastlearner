@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataHolderConstants } from './../constants/dataHolder.constants';
-import  *  as CryptoJS from  'crypto-js';
+import *  as CryptoJS from 'crypto-js';
 import { CommunicationService } from './communication.service';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { NotificationService } from './notification.service';
@@ -10,12 +10,12 @@ import { CookiesService } from './cookie.service';
 })
 export class CacheService {
 
-  private secretKey = 'Hello Fast Learner World';
+  private secretKey = 'Hello Quality Center World';
 
   public constantDataHolder: DataHolderConstants = new DataHolderConstants();
 
   constructor(
-    private _communicateionService?: CommunicationService, 
+    private _communicateionService?: CommunicationService,
     private _socialAuthService?: SocialAuthService,
     private _cookiesService?: CookiesService
     // private _notificationService?: NotificationService
@@ -40,7 +40,7 @@ export class CacheService {
     window.localStorage.clear();
     this._cookiesService.removeAllData();
   }
-  
+
   cacheLoginData(data: any) {
     this.saveInCache(this.constantDataHolder.CACHE_KEYS.USER, JSON.stringify(data.user));
     this.saveInCache(this.constantDataHolder.CACHE_KEYS.ROLE, JSON.stringify(data?.user.role));
@@ -50,7 +50,7 @@ export class CacheService {
     this.saveInCache(this.constantDataHolder.CACHE_KEYS.USER_TYPE, data.user.userType);
   }
 
-  cacheUserDetails(data: any){
+  cacheUserDetails(data: any) {
     this.saveInCache(this.constantDataHolder.CACHE_KEYS.USER, JSON.stringify(data.user));
     this.saveInCache('Authorized Apps', data?.apps);
     this.saveInCache('Authorized Widgets', data.widgets);

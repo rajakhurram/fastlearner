@@ -18,11 +18,11 @@ import { WithdrawalSubscriptionComponent } from './modules/auth/withdrawal-subsc
 import { SubscriptionGuard } from './core/guards/subscription.guard';
 import { PremiumStudentComponent } from './modules/instructor/premium-student/premium-student.component';
 import { FastlearnerLoginComponent } from './fastlearner-login/fastlearner-login.component';
-import { ContentTypeComponent } from './modules/auth/content-type/content-type.component';
-import { AiGraderLandingPageComponent } from './modules/pages/ai-grader-landing-page/ai-grader-landing-page.component';
+// import { ContentTypeComponent } from './modules/auth/content-type/content-type.component';
+// import { AiGraderLandingPageComponent } from './modules/pages/ai-grader-landing-page/ai-grader-landing-page.component';
 import { PaymentMethodComponent } from './modules/auth/payment-method/payment-method.component';
 import { PricingPageComponent } from './modules/pages/pricing-page/pricing-page.component';
-import { Title } from '@angular/platform-browser';
+// import { Title } from '@angular/platform-browser';
 const routes: Routes = [
   {
     path: '',
@@ -31,7 +31,7 @@ const routes: Routes = [
   {
     path: 'fl-login',
     component: FastlearnerLoginComponent,
-    data: { title: 'Fast Learner Sign In' },
+    data: { title: 'Quality Center Sign In' },
   },
   {
     path: 'about-us',
@@ -103,18 +103,19 @@ const routes: Routes = [
   {
     path: 'pricing-page',
     component: PricingPageComponent,
-    data: {title: 'Pricing Page'}
+    data: { title: 'Pricing Page' }
   },
 
-  { path: 'ai-grader',
-    component: AiGraderLandingPageComponent,
-     data: { title: 'AI Grader' }, 
-  },
+  // {
+  //   path: 'ai-grader',
+  //   component: AiGraderLandingPageComponent,
+  //   data: { title: 'AI Grader' },
+  // },
 
   {
-    path:'maintanence',
+    path: 'maintanence',
     component: MaintenancePageComponent,
-    data: {title: 'Maintanence Page'},
+    data: { title: 'Maintanence Page' },
   },
 
   {
@@ -167,4 +168,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

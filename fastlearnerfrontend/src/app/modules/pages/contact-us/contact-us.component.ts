@@ -23,13 +23,13 @@ export class ContactUsComponent implements OnInit {
     private _authService: AuthService,
     private metaService: Meta,
     private titleService: Title
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Get in Touch with Us | Fast Learner'); // Set the title of the page
+    this.titleService.setTitle('Get in Touch with Us | Quality Center'); // Set the title of the page
     this.metaService.updateTag({
       name: 'description',
-      content: `Have questions or need assistance? Contact Fast Learner today for support, queries, and collaboration. We're here to help you on your learning journey.`,
+      content: `Have questions or need assistance? Contact Quality Center today for support, queries, and collaboration. We're here to help you on your learning journey.`,
     });
     this.initializeForm();
   }
@@ -52,7 +52,7 @@ export class ContactUsComponent implements OnInit {
       this._messageService.error('Complete all fields before submitting');
       return;
     }
-  
+
     this._authService.contactUs(this.contactUsForm.value).subscribe({
       next: (response: any) => {
         this._messageService.success('Form has been submitted');

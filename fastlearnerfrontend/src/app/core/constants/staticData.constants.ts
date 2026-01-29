@@ -221,12 +221,12 @@ export const assignpremium = [
   },
 ];
 
-export const aiGraderCards   = [
+export const aiGraderCards = [
   {
     imageUrl: '../../../../assets/images/static-1.webp',
     heading: 'Supports Handwriting & Scanned Copies',
     content:
-      'FastLearner’s AI grader recognizes typed and handwritten work, ensuring all students are included.',
+      'QualityCenter’s AI grader recognizes typed and handwritten work, ensuring all students are included.',
   },
   {
     imageUrl: '../../../../assets/images/static-2.png',
@@ -244,7 +244,7 @@ export const aiGraderCards   = [
     imageUrl: '../../../../assets/images/static-4.png',
     heading: 'Send Results Directly to Students Via Email',
     content:
-      'FastLearner’s AI grading software automatically emails grades and feedback to students, streamlining communication and reporting.',
+      'QualityCenter’s AI grading software automatically emails grades and feedback to students, streamlining communication and reporting.',
   },
   {
     imageUrl: '../../../../assets/images/static-5.webp',

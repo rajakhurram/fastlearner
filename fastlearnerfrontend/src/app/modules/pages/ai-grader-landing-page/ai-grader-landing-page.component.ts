@@ -80,13 +80,13 @@ export class AiGraderLandingPageComponent implements OnInit, OnDestroy {
   items: AccordionItems[] = [
     {
       title: 'What is an AI Grader?',
-      description: `An AI Grader is a tool that uses artificial intelligence to score student work, such as exams and assignments, automatically. Fast Learner’s AI grading tool helps teachers save time and ensures consistent results.
+      description: `An AI Grader is a tool that uses artificial intelligence to score student work, such as exams and assignments, automatically. Quality Center’s AI grading tool helps teachers save time and ensures consistent results.
       `,
       isExpanded: false,
     },
     {
       title: 'Which AI is best for grading?',
-      description: `The best AI grading tools combine accuracy, speed, and ease of use. Fast Learner’s AI Grader offers a seamless experience for teachers: simply upload your students’ work, and the AI grading system will analyze and score each paper using advanced algorithms.
+      description: `The best AI grading tools combine accuracy, speed, and ease of use. Quality Center’s AI Grader offers a seamless experience for teachers: simply upload your students’ work, and the AI grading system will analyze and score each paper using advanced algorithms.
       `,
       isExpanded: false,
     },
@@ -122,7 +122,7 @@ export class AiGraderLandingPageComponent implements OnInit, OnDestroy {
     },
     {
       title: 'How fast is AI grading compared to manual grading?',
-      description: `AI grading tools like Fast Learner can grade assignments in seconds, much faster than manual grading. This means teachers get results and feedback almost instantly.
+      description: `AI grading tools like Quality Center can grade assignments in seconds, much faster than manual grading. This means teachers get results and feedback almost instantly.
       `,
       isExpanded: false,
     },

@@ -35,8 +35,7 @@ import { CourseContentType } from 'src/app/core/enums/course-content-type.enum';
   styleUrls: ['./course-details.component.scss'],
 })
 export class CourseDetailsComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+  implements OnInit, OnDestroy, AfterViewInit {
   getCourseByTitle(getCourseByTitle: any) {
     throw new Error('Method not implemented.');
   }
@@ -76,9 +75,9 @@ export class CourseDetailsComponent
   affiliateUUID?: string;
   applicationCourseDetailsUrl?: string;
   activeCourseUrl?: string;
-  currentPage = 0; 
-  hasMoreComments = true; 
-  isLoadingComments = false; 
+  currentPage = 0;
+  hasMoreComments = true;
+  isLoadingComments = false;
   pageSize = 15;
   isFirstLoad = true;
   sectionPanel = [
@@ -141,8 +140,8 @@ export class CourseDetailsComponent
     this._activatedRoute.queryParamMap.subscribe(
       (queryParams: ParamMap) => {
         this.affiliateUUID = queryParams.get('affiliate');
-        if(this.affiliateUUID){
-        this._cacheService.saveInCache('affiliate', this.affiliateUUID);
+        if (this.affiliateUUID) {
+          this._cacheService.saveInCache('affiliate', this.affiliateUUID);
         }
       }
     );
@@ -167,17 +166,17 @@ export class CourseDetailsComponent
       next: (response: any) => {
         if (
           response?.status ==
-            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE &&
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE &&
           response?.data?.course
         ) {
-          this.isLoading = false;  
+          this.isLoading = false;
           this.courseId = response.data?.course?.id;
           this.courseTitle = response?.data?.course?.title;
           this.activeCourseUrl = response?.data?.activeUrl;
           this.titleService.setTitle(
             `${this.courseTitle?.replace(/\b\w/g, (char) =>
               char.toUpperCase()
-            )} | Overview | Fastlearner.ai`
+            )} | Overview | QualityCenter.ai`
           );
           // Data is now loaded
           if (this.courseId) {
@@ -188,7 +187,7 @@ export class CourseDetailsComponent
         }
       },
       error: (error: any) => {
-        if(error?.error?.status != this._httpConstants.REQUEST_STATUS.UNAUTHORIZED_401.CODE){
+        if (error?.error?.status != this._httpConstants.REQUEST_STATUS.UNAUTHORIZED_401.CODE) {
           this.isLoading = false;
           this._router.navigate(['']);
         }
@@ -260,16 +259,14 @@ export class CourseDetailsComponent
           }
           this.isLoading = false;
           this.titleService.setTitle(
-            `${
-              response?.data?.metaTitle ??
-              this.courseTitle?.replace(/\b\w/g, (char) => char.toUpperCase())
+            `${response?.data?.metaTitle ??
+            this.courseTitle?.replace(/\b\w/g, (char) => char.toUpperCase())
             } `
           );
           this.metaService.updateTag({
             name: 'description',
-            content: `${
-              response?.data?.metaDescription ?? response?.data?.about
-            }`,
+            content: `${response?.data?.metaDescription ?? response?.data?.about
+              }`,
           });
           this.courseDetails.courseDuration =
             this.convertSecondsToHoursAndMinutes(
@@ -309,18 +306,18 @@ export class CourseDetailsComponent
           this.fetchMoreComments();
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
-  
+
 
   fetchComments(currentPage: number, pageSize: number) {
-    this.isLoadingComments = true; 
+    this.isLoadingComments = true;
     this._courseService.getComments(this.courseId, currentPage, pageSize).subscribe({
       next: (response: any) => {
         this.isLoadingComments = false;
-  
+
         if (response?.data?.feedback?.feedbackComments?.length) {
           if (!this.courseDetails?.courseFeedback) {
             this.courseDetails.courseFeedback = {
@@ -332,7 +329,7 @@ export class CourseDetailsComponent
               rating5: 0,
             };
           }
-  
+
           this.courseDetails.courseFeedback = {
             ...this.courseDetails.courseFeedback,
             rating1: response.data.feedback.rating1,
@@ -341,16 +338,16 @@ export class CourseDetailsComponent
             rating4: response.data.feedback.rating4,
             rating5: response.data.feedback.rating5,
           };
-          if (this.isFirstLoad){
+          if (this.isFirstLoad) {
             this.courseDetails.courseFeedback.feedbackComments = [];
             this.isFirstLoad = false;
           }
           this.courseDetails.courseFeedback.feedbackComments.push(
             ...response.data.feedback.feedbackComments
           );
-  
-          this.hasMoreComments = response.data.totalPages > currentPage+1;
-      } 
+
+          this.hasMoreComments = response.data.totalPages > currentPage + 1;
+        }
       },
       error: (error: any) => {
         this.isLoadingComments = false;
@@ -432,7 +429,7 @@ export class CourseDetailsComponent
           }
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
@@ -482,7 +479,7 @@ export class CourseDetailsComponent
             this.courseReview = response?.data?.feedback;
           }
         },
-        error: (error: any) => {},
+        error: (error: any) => { },
       });
   }
 
@@ -523,9 +520,9 @@ export class CourseDetailsComponent
   isUserLoggedIn() {
     this.isLoggedIn = this._authService.isLoggedIn();
     this.courseButtonName = this.isLoggedIn
-    ? 'Start ' + (this.courseDetails?.contentType?.toLowerCase() === this.courseContentType.TEST ? 'Test' : 'Learning')
-    : 'Start Now';
-  
+      ? 'Start ' + (this.courseDetails?.contentType?.toLowerCase() === this.courseContentType.TEST ? 'Test' : 'Learning')
+      : 'Start Now';
+
   }
 
   toggleFavoriteCourse() {
@@ -539,7 +536,7 @@ export class CourseDetailsComponent
           this._sharedService.updateFavCourseMenu();
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 

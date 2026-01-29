@@ -54,11 +54,11 @@ describe('ContactUsComponent', () => {
   it('should set page title and meta tags on initialization', () => {
     component.ngOnInit();
     expect(titleService.setTitle).toHaveBeenCalledWith(
-      'Get in Touch with Us | Fast Learner'
+      'Get in Touch with Us | Quality Center'
     );
     expect(metaService.updateTag).toHaveBeenCalledWith({
       name: 'description',
-      content: `Have questions or need assistance? Contact Fast Learner today for support, queries, and collaboration. We're here to help you on your learning journey.`,
+      content: `Have questions or need assistance? Contact Quality Center today for support, queries, and collaboration. We're here to help you on your learning journey.`,
     });
   });
 

@@ -20,15 +20,15 @@ export class BecomeInstructorComponent {
     private _viewContainerRef: ViewContainerRef,
     private metaService: Meta,
     private titleService: Title
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.titleService.setTitle(
-      'Become an Instructor at Fast Learner – Share Your Knowledge'
+      'Become an Instructor at Quality Center – Share Your Knowledge'
     );
     this.metaService.updateTag({
       name: 'description',
-      content: `Become an instructor at Fast Learner. Share your expertise, design your courses, earn, and empower learners worldwide with AI-powered teaching tools.`,
+      content: `Become an instructor at Quality Center. Share your expertise, design your courses, earn, and empower learners worldwide with AI-powered teaching tools.`,
     });
     this.changeText();
   }

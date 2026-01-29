@@ -42,12 +42,12 @@ describe('BecomeInstructorComponent', () => {
     component.ngOnInit();
 
     expect(titleService.setTitle).toHaveBeenCalledWith(
-      'Become an Instructor at Fast Learner – Share Your Knowledge'
+      'Become an Instructor at Quality Center – Share Your Knowledge'
     );
     expect(metaService.updateTag).toHaveBeenCalledWith({
       name: 'description',
       content:
-        'Become an instructor at Fast Learner. Share your expertise, design your courses, earn, and empower learners worldwide with AI-powered teaching tools.',
+        'Become an instructor at Quality Center. Share your expertise, design your courses, earn, and empower learners worldwide with AI-powered teaching tools.',
     });
   });
 

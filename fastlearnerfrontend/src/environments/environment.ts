@@ -14,5 +14,5 @@ export const environment = {
   googleClientId: '{{google-client-id}}',
   googleSecretKey: '{{google-secret-key}}',
 
-  graderServiceBasePath: 'http://localhost:8081/grader-service' 
+  graderServiceBasePath: 'http://localhost:8081/grader-service'
 };

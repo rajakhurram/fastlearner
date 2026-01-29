@@ -2,9 +2,9 @@
   <nz-sider class="sidebar-main" *ngIf="!navbarVisible" nzWidth="250px">
     <div class="logo">
       <img
-        width="165px"
+        width="200px"
         (click)="routeToLandingPage()"
-        src="../../../assets/icons/FL-Logo (1).svg"
+        src="../../../assets/icons/logo-nav.png"
         alt="Logo"
       />
     </div>
@@ -83,7 +83,7 @@
           >Performance</span
         >
       </li>
-      <li
+      <!-- <li
         class="menu-item"
         [class.instructor-menu]="activeGraderClasses || activeGraderAssessment"
         nz-submenu
@@ -151,7 +151,7 @@
             >Classes</span
           >
         </ng-template>
-      </li>
+      </li> -->
       <li
         [class.instructor-menu]="
           activeAffiliateProfiles ||
@@ -728,7 +728,7 @@
         <img
           (click)="routeToLandingPage()"
           width="250px"
-          src="../../../assets/icons/FL-Logo (1).svg"
+          src="../../../assets/icons/logo-nav.png"
         />
       </div>
 

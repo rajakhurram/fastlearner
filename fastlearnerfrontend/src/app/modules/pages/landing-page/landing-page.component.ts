@@ -75,44 +75,44 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   items: AccordionItems[] = [
     {
       title:
-        'What makes Fast Learner different from the other online learning platforms?',
-      description: `FastLearner differs from other online learning platforms due to its innovative features, such as AI-powered Q&A for swift answers, customizable learning paths for a tailored experience, and video summaries for quick review.
+        'What makes Quality Center different from the other online learning platforms?',
+      description: `QualityCenter differs from other online learning platforms due to its innovative features, such as AI-powered Q&A for swift answers, customizable learning paths for a tailored experience, and video summaries for quick review.
       `,
       isExpanded: false,
     },
     {
-      title: 'Is Fast Learner boring like traditional textbook learning?',
-      description: `Not at all! Fast Learner provides bite-sized lessons, remote education prospects, interactive content (think videos and quizzes!), and customizing courses by mixing and matching instructors to make the learning experience engaging. So you can improve your skills without feeling stuck at any point.
+      title: 'Is Quality Center boring like traditional textbook learning?',
+      description: `Not at all! Quality Center provides bite-sized lessons, remote education prospects, interactive content (think videos and quizzes!), and customizing courses by mixing and matching instructors to make the learning experience engaging. So you can improve your skills without feeling stuck at any point.
       `,
       isExpanded: false,
     },
     {
-      title: 'How much does Fast Learner cost?',
-      description: `Fast Learner's digital AI learning platform operates on a subscription model. For a single monthly fee, you can enjoy personalized learning and unlimited access to our complete course library.
+      title: 'How much does Quality Center cost?',
+      description: `Quality Center's digital AI learning platform operates on a subscription model. For a single monthly fee, you can enjoy personalized learning and unlimited access to our complete course library.
       `,
       isExpanded: false,
     },
     {
-      title: 'Can I learn at my own pace with Fast Learner?',
-      description: `Yes! Fast Learner prioritizes personal and professional development with flexible learning. You can take courses anytime, anywhere, and alter the speed to suit your schedule.
+      title: 'Can I learn at my own pace with Quality Center?',
+      description: `Yes! Quality Center prioritizes personal and professional development with flexible learning. You can take courses anytime, anywhere, and alter the speed to suit your schedule.
       `,
       isExpanded: false,
     },
     {
       title: 'Do I get any certification upon finishing a course?',
-      description: `Absolutely! Fast Learner awards certificates upon successful course completion. These certificates display your accomplishments of skill development and devotion to professional growth.
+      description: `Absolutely! Quality Center awards certificates upon successful course completion. These certificates display your accomplishments of skill development and devotion to professional growth.
       `,
       isExpanded: false,
     },
     {
-      title: 'How do I start with Fast Learner?',
+      title: 'How do I start with Quality Center?',
       description: `Simply create an account on our digital learning platform and discover a vast course library! Many courses provide free previews, and you can subscribe whenever you are ready to unlock the complete learning experience.
       `,
       isExpanded: false,
     },
     {
       title: 'What is a quick learning ability?',
-      description: `A quick learner is a person who can understand new information in a short amount of time. When someone learns quickly, they typically have excellent communication and listening abilities. FastLearner.ai will help you learn quickly by providing innovative AI-based learning tools.
+      description: `A quick learner is a person who can understand new information in a short amount of time. When someone learns quickly, they typically have excellent communication and listening abilities. QualityCenter.ai will help you learn quickly by providing innovative AI-based learning tools.
       `,
       isExpanded: false,
     },
@@ -176,7 +176,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('new_courses') new_courses!: ElementRef;
   @ViewChild('student_pick') student_pick!: ElementRef;
   @ViewChild('faq_container') faq_container!: ElementRef;
-  @ViewChild('test_center') test_center!:ElementRef;
+  @ViewChild('test_center') test_center!: ElementRef;
 
   sectionsLoaded: { [key: string]: boolean } = {
     banner_container: false,
@@ -189,7 +189,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     new_courses: false,
     student_pick: false,
     faq_container: false,
-    test_center:false,
+    test_center: false,
   };
 
   sectionData: { [key: string]: any } = {};
@@ -222,11 +222,12 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  routeToLink(link) {
-    window.open(link, '_blank');
+  routeToLink(link: string) {
+    const url = new URL(window.location.href);
+    window.open(`${url.origin}${link}`, '_blank');
   }
 
-  
+
   routeToLinkInstructor(path: string) {
     window.location.href = `${this.baseUrl}${path}`;
   }
@@ -301,46 +302,46 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (sectionId === 'new_courses') {
       this.getNewCourses(this.directionEnum.INITIAL);
     } else if (sectionId === 'test_center') {
-        this.getTest(this.directionEnum.INITIAL)
-      }
+      this.getTest(this.directionEnum.INITIAL)
+    }
   }
 
   loadBannerContent() {
     this.bannerLoaded = true;
   }
-  
+
   loadPremiumCourses() {
     this.premiumCoursesLoaded = true;
   }
-  
+
   loadAboutUs() {
     this.aboutUsSectionsLoaded = true;
   }
-  
+
   loadFreeCourses() {
     this.freeCourseSectionsLoaded = true;
   }
-  
+
   loadAboutUsLight() {
     this.aboutUsLightSectionsLoaded = true;
   }
-  
+
   loadCourseSection() {
     this.courseSectionsLoaded = true;
   }
-  
+
   loadAboutUsEmpowering() {
     this.aboutUsEmpwoeringSectionsLoaded = true;
   }
-  
+
   loadNewCourses() {
     this.newCourseSectionsLoaded = true;
   }
-  
+
   loadStudentPick() {
     this.studentPickSectionsLoaded = true;
   }
-  
+
 
   loadFAQContainer() {
     this.faqContainerSectionsLoaded = true;
@@ -433,7 +434,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       content: `Join Fast Learner’s AI based learning platform for quick learning. Access top courses from experts, boost your skills with AI assistance & become a fast learner`,
     });
     this.titleService.setTitle(
-      'AI based Learning Platform Transforming Education | Fast Learner'
+      'AI based Learning Platform Transforming Education | Quality Center'
     );
     this.setScreenWidth(window.innerWidth);
     this.loggedInStatic = this.staticCards.slice(0, -1);
@@ -477,20 +478,20 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   routeToCourseList(selection?: string) {
-  if (selection === 'TEST') {
-  this._router.navigate(['student/courses'], {
-    queryParams: { contentType: 'TEST' }
-  });
-  return;
-}
+    if (selection === 'TEST') {
+      this._router.navigate(['student/courses'], {
+        queryParams: { contentType: 'TEST' }
+      });
+      return;
+    }
 
 
-  this._router.navigate(['student/courses'], {
-    queryParams: {
-      selection: selection,
-    },
-  });
-}
+    this._router.navigate(['student/courses'], {
+      queryParams: {
+        selection: selection,
+      },
+    });
+  }
 
 
   routeToInsructorProfile(profileUrl?: any) {
@@ -506,7 +507,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.routeToSignUpScreen();
     }
   }
-  
+
 
   getCategoryList() {
     this._courseService.getCourseCategory().subscribe({
@@ -519,7 +520,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.updateVisibleCourses();
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
@@ -581,7 +582,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
           );
 
           this.courseList = [...prioritizedCourses, ...otherCourses];
-          
+
           this.courseList?.forEach((element) => {
             element.courseDuration = this.convertSecondsToHoursAndMinutes(
               element.courseDuration
@@ -1096,7 +1097,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
           // this._messageService.success(response?.message);
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 

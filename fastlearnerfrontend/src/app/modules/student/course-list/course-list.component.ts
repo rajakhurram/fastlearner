@@ -47,7 +47,7 @@ export class CourseListComponent implements OnInit, OnDestroy {
   selectedContentType?: string;
   selectedFeatureType?: string;
   filterPayload?: Filter;
-searchSubject: Subject<string> = new Subject<string>();
+  searchSubject: Subject<string> = new Subject<string>();
 
   payLoad = {
     categoryId: null,
@@ -78,40 +78,40 @@ searchSubject: Subject<string> = new Subject<string>();
     this.filterPayload = new Filter();
   }
 
-ngOnInit(): void {
-  for (let i = 5; i > 0; i--) {
-    this.filterRating.push({
-      value: i,
+  ngOnInit(): void {
+    for (let i = 5; i > 0; i--) {
+      this.filterRating.push({
+        value: i,
+      });
+    }
+    this.searchSubject
+      .pipe(debounceTime(400))   // 400ms delay
+      .subscribe((value) => {
+        this.applyFilter(true, value);
+      });
+    this.titleService.setTitle('Courses | QualityCenter.ai');
+    this.metaService.updateTag({
+      name: 'Courses',
+      content: 'Courses page of QualityCenter.ai',
     });
+
+    // Initialize default filter values
+    this.selectedCourseType = 'ALL_COURSE';
+    this.filterPayload = {
+      pageNo: 0,
+      pageSize: 9,
+      categoriesId: [],
+      courseType: null,
+      feature: null,
+      rating: null,
+      contentType: null,
+      search: null
+    };
+
+    this.getCategoryList();
+    this.onResize(window);
+    this.getRouteQueryParam(); // Uncomment this
   }
-this.searchSubject
-    .pipe(debounceTime(400))   // 400ms delay
-    .subscribe((value) => {
-      this.applyFilter(true, value);
-    });
-  this.titleService.setTitle('Courses | Fastlearner.ai');
-  this.metaService.updateTag({
-    name: 'Courses',
-    content: 'Courses page of Fastlearner.ai',
-  });
-
-  // Initialize default filter values
-  this.selectedCourseType = 'ALL_COURSE';
-  this.filterPayload = {
-    pageNo: 0,
-    pageSize: 9,
-    categoriesId: [],
-    courseType: null,
-    feature: null,
-    rating: null,
-    contentType: null,
-    search: null
-  };
-
-  this.getCategoryList();
-  this.onResize(window);
-  this.getRouteQueryParam(); // Uncomment this
-}
 
   ngOnDestroy(): void {
     if (this.queryParamSubscription) {
@@ -155,70 +155,70 @@ this.searchSubject
     }
   }
 
-getRouteQueryParam() {
-  this.queryParamSubscription = this._activatedRoute.queryParams.subscribe(
-    (params) => {
-      // Handle category/selection params (existing logic)
-      this.category = params['category'];
-      this.selection = params['selection'];
-      
-      if (this.selection) {
-        this.courseList = [];
-        this.getCourses(this.selection);
-        return;
-      }
+  getRouteQueryParam() {
+    this.queryParamSubscription = this._activatedRoute.queryParams.subscribe(
+      (params) => {
+        // Handle category/selection params (existing logic)
+        this.category = params['category'];
+        this.selection = params['selection'];
 
-      // Restore filter state from query params
-      if (Object.keys(params).length > 0) {
-        // Page number
-        if (params['pageNo']) {
-          this.filterPayload.pageNo = +params['pageNo'];
+        if (this.selection) {
+          this.courseList = [];
+          this.getCourses(this.selection);
+          return;
         }
 
-        // Categories
-        if (params['categoriesId']) {
-          const categoryIds = Array.isArray(params['categoriesId']) 
-            ? params['categoriesId'] 
-            : [params['categoriesId']];
-          
-          this.categoryList.forEach((category: any) => {
-            category.selected = categoryIds.includes(category.id.toString());
-          });
-          this.filterPayload.categoriesId = categoryIds.map(id => +id);
-        }
+        // Restore filter state from query params
+        if (Object.keys(params).length > 0) {
+          // Page number
+          if (params['pageNo']) {
+            this.filterPayload.pageNo = +params['pageNo'];
+          }
 
-        // Course type
-        if (params['courseType']) {
-          this.selectedCourseType = params['courseType'];
-          this.filterPayload.courseType = this.selectedCourseType === 'ALL_COURSE' 
-            ? null 
-            : this.selectedCourseType;
-        }
+          // Categories
+          if (params['categoriesId']) {
+            const categoryIds = Array.isArray(params['categoriesId'])
+              ? params['categoriesId']
+              : [params['categoriesId']];
 
-        // Other filters
-        this.filterPayload.feature = params['feature'] || null;
-        this.filterPayload.rating = params['rating'] ? +params['rating'] : null;
-        this.filterPayload.contentType = params['contentType'] || null;
-        this.filterPayload.search = params['search'] || null;
+            this.categoryList.forEach((category: any) => {
+              category.selected = categoryIds.includes(category.id.toString());
+            });
+            this.filterPayload.categoriesId = categoryIds.map(id => +id);
+          }
 
-        // Update UI selections
-        this.selectedFeatureType = this.filterPayload.feature;
-        this.selectedRating = this.filterPayload.rating;
-        this.selectedContentType = this.filterPayload.contentType;
+          // Course type
+          if (params['courseType']) {
+            this.selectedCourseType = params['courseType'];
+            this.filterPayload.courseType = this.selectedCourseType === 'ALL_COURSE'
+              ? null
+              : this.selectedCourseType;
+          }
 
-        // Get category by name if specified
-        if (this.category) {
-          this.getCategoryByName(this.category);
+          // Other filters
+          this.filterPayload.feature = params['feature'] || null;
+          this.filterPayload.rating = params['rating'] ? +params['rating'] : null;
+          this.filterPayload.contentType = params['contentType'] || null;
+          this.filterPayload.search = params['search'] || null;
+
+          // Update UI selections
+          this.selectedFeatureType = this.filterPayload.feature;
+          this.selectedRating = this.filterPayload.rating;
+          this.selectedContentType = this.filterPayload.contentType;
+
+          // Get category by name if specified
+          if (this.category) {
+            this.getCategoryByName(this.category);
+          } else {
+            this.getAllCourses();
+          }
         } else {
+          // No params - load default courses
           this.getAllCourses();
         }
-      } else {
-        // No params - load default courses
-        this.getAllCourses();
       }
-    }
-  );
-}
+    );
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event?: any) {
@@ -254,38 +254,38 @@ getRouteQueryParam() {
     this.applyFilter();
   }
 
-getCategoryList() {
-  this._courseService?.getCourseCategory()?.subscribe({
-    next: (response: any) => {
-      if (response?.status == this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
-        this.categoryList = response?.data.map((category: any) => ({
-          ...category,
-          selected: false,
-        }));
-        
-        // After loading categories, check for category filter in URL
-        this._activatedRoute.queryParams.pipe(take(1)).subscribe(params => {
-          if (params['categoriesId']) {
-            const categoryIds = Array.isArray(params['categoriesId']) 
-              ? params['categoriesId'] 
-              : [params['categoriesId']];
-            
-            this.categoryList.forEach((category: any) => {
-              category.selected = categoryIds.includes(category.id.toString());
-            });
-          }
-          
-          // Now get courses with proper filters
-          this.getRouteQueryParam();
-        });
-      }
-    },
-    error: (error: any) => {
-      this.categoryList = [];
-      this.getRouteQueryParam();
-    },
-  });
-}
+  getCategoryList() {
+    this._courseService?.getCourseCategory()?.subscribe({
+      next: (response: any) => {
+        if (response?.status == this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
+          this.categoryList = response?.data.map((category: any) => ({
+            ...category,
+            selected: false,
+          }));
+
+          // After loading categories, check for category filter in URL
+          this._activatedRoute.queryParams.pipe(take(1)).subscribe(params => {
+            if (params['categoriesId']) {
+              const categoryIds = Array.isArray(params['categoriesId'])
+                ? params['categoriesId']
+                : [params['categoriesId']];
+
+              this.categoryList.forEach((category: any) => {
+                category.selected = categoryIds.includes(category.id.toString());
+              });
+            }
+
+            // Now get courses with proper filters
+            this.getRouteQueryParam();
+          });
+        }
+      },
+      error: (error: any) => {
+        this.categoryList = [];
+        this.getRouteQueryParam();
+      },
+    });
+  }
 
   getCourseListByCategory(flag?: boolean) {
     this.ngxUiLoaderService.start();
@@ -400,142 +400,142 @@ getCategoryList() {
       ? (this.selectedFeatureType = null)
       : (this.selectedFeatureType = featureType);
   }
-applyFilter(fromFilter?: any, searchTerm?: string) {
-  if (fromFilter) {
-    this.filterPayload.pageNo = 0;
-    this.courseList = [];
-  }
+  applyFilter(fromFilter?: any, searchTerm?: string) {
+    if (fromFilter) {
+      this.filterPayload.pageNo = 0;
+      this.courseList = [];
+    }
 
-  this.filterClose();
+    this.filterClose();
 
-  // Update filter payload from current selections
-  this.filterPayload.categoriesId = this.categoryList
-    .filter((category: any) => category?.selected)
-    .map((category: any) => category.id);
+    // Update filter payload from current selections
+    this.filterPayload.categoriesId = this.categoryList
+      .filter((category: any) => category?.selected)
+      .map((category: any) => category.id);
 
-  this.filterPayload.courseType = this.selectedCourseType === 'ALL_COURSE' 
-    ? null 
-    : this.selectedCourseType;
-  this.filterPayload.feature = this.selectedFeatureType;
-  this.filterPayload.rating = this.selectedRating;
-  this.filterPayload.contentType = this.selectedContentType;
-  this.filterPayload.search = searchTerm?.trim() || null;
+    this.filterPayload.courseType = this.selectedCourseType === 'ALL_COURSE'
+      ? null
+      : this.selectedCourseType;
+    this.filterPayload.feature = this.selectedFeatureType;
+    this.filterPayload.rating = this.selectedRating;
+    this.filterPayload.contentType = this.selectedContentType;
+    this.filterPayload.search = searchTerm?.trim() || null;
 
-  // Build query params
-  const queryParams: any = {};
-  
-  // Only include parameters that have values
-  if (this.filterPayload.categoriesId?.length) {
-    queryParams.categoriesId = this.filterPayload.categoriesId;
-  }
-  if (this.filterPayload.courseType) {
-    queryParams.courseType = this.filterPayload.courseType;
-  }
-  if (this.filterPayload.feature) {
-    queryParams.feature = this.filterPayload.feature;
-  }
-  if (this.filterPayload.rating) {
-    queryParams.rating = this.filterPayload.rating;
-  }
-  if (this.filterPayload.contentType) {
-    queryParams.contentType = this.filterPayload.contentType;
-  }
-  if (this.filterPayload.search) {
-    queryParams.search = this.filterPayload.search;
-  }
+    // Build query params
+    const queryParams: any = {};
 
-  // Navigate with new query params
-  this._router.navigate([], {
-    relativeTo: this._activatedRoute,
-    queryParams,
-    replaceUrl: true
-  });
+    // Only include parameters that have values
+    if (this.filterPayload.categoriesId?.length) {
+      queryParams.categoriesId = this.filterPayload.categoriesId;
+    }
+    if (this.filterPayload.courseType) {
+      queryParams.courseType = this.filterPayload.courseType;
+    }
+    if (this.filterPayload.feature) {
+      queryParams.feature = this.filterPayload.feature;
+    }
+    if (this.filterPayload.rating) {
+      queryParams.rating = this.filterPayload.rating;
+    }
+    if (this.filterPayload.contentType) {
+      queryParams.contentType = this.filterPayload.contentType;
+    }
+    if (this.filterPayload.search) {
+      queryParams.search = this.filterPayload.search;
+    }
 
-  // Get courses with current filters - SINGLE CALL
-  this.getAllCourses();
-}
+    // Navigate with new query params
+    this._router.navigate([], {
+      relativeTo: this._activatedRoute,
+      queryParams,
+      replaceUrl: true
+    });
+
+    // Get courses with current filters - SINGLE CALL
+    this.getAllCourses();
+  }
 
   getAllCourses() {
-  // Clear the array when starting a new fetch (pageNo = 0)
-  if (this.filterPayload.pageNo === 0) {
-    this.courseList = [];
-  }
+    // Clear the array when starting a new fetch (pageNo = 0)
+    if (this.filterPayload.pageNo === 0) {
+      this.courseList = [];
+    }
 
-  this._courseService?.getAllCourses(this.filterPayload)?.subscribe({
-    next: (response: any) => {
-      if (response?.status === this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
-        this.totalElements = response?.data?.totalElements;
-        this.totalCoursePages = response?.data?.pages;
+    this._courseService?.getAllCourses(this.filterPayload)?.subscribe({
+      next: (response: any) => {
+        if (response?.status === this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
+          this.totalElements = response?.data?.totalElements;
+          this.totalCoursePages = response?.data?.pages;
 
-        // Create new array items with converted duration
-        const newCourses = response?.data?.data.map(element => ({
-          ...element,
-          courseDuration: this.convertSecondsToHoursAndMinutes(element.courseDuration)
-        }));
+          // Create new array items with converted duration
+          const newCourses = response?.data?.data.map(element => ({
+            ...element,
+            courseDuration: this.convertSecondsToHoursAndMinutes(element.courseDuration)
+          }));
 
-        // Either replace or append based on pagination
-        if (this.filterPayload.pageNo === 0) {
-          this.courseList = newCourses;
-        } else {
-          this.courseList = [...this.courseList, ...newCourses];
+          // Either replace or append based on pagination
+          if (this.filterPayload.pageNo === 0) {
+            this.courseList = newCourses;
+          } else {
+            this.courseList = [...this.courseList, ...newCourses];
+          }
+        } else if (
+          response?.status ===
+          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+        ) {
+          this.courseList = [];
+          this.totalCoursePages = 0;
+          this.moveToCourseCards();
         }
-      } else if (
-        response?.status === 
-        this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-      ) {
-        this.courseList = [];
-        this.totalCoursePages = 0;
-        this.moveToCourseCards();
-      }
-    },
-    error: (error: any) => {
-      if (
-        error?.error?.status === 
-        this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-      ) {
-        this.courseList = [];
-        this.totalCoursePages = 0;
-        this.moveToCourseCards();
-      }
-    },
-  });
-}
-clearFilter() {
-  // Reset all filter selections
-  this.categoryList?.forEach((el) => {
-    el.selected = false;
-  });
-  
-  this.selectedCourseType = 'ALL_COURSE';
-  this.selectedContentType = null;
-  this.selectedFeatureType = null;
-  this.selectedRating = null;
-  
-  // Reset filter payload
-  this.filterPayload = {
-    pageNo: 0,  // Reset to first page
-    pageSize: 9,
-    categoriesId: [],
-    courseType: null,
-    feature: null,
-    rating: null,
-    contentType: null,
-    search: null
-  };
+      },
+      error: (error: any) => {
+        if (
+          error?.error?.status ===
+          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+        ) {
+          this.courseList = [];
+          this.totalCoursePages = 0;
+          this.moveToCourseCards();
+        }
+      },
+    });
+  }
+  clearFilter() {
+    // Reset all filter selections
+    this.categoryList?.forEach((el) => {
+      el.selected = false;
+    });
 
-  // Clear the course list before fetching new results
-  this.courseList = [];
+    this.selectedCourseType = 'ALL_COURSE';
+    this.selectedContentType = null;
+    this.selectedFeatureType = null;
+    this.selectedRating = null;
 
-  // Clear all query parameters
-  this._router.navigate([], {
-    relativeTo: this._activatedRoute,
-    queryParams: {},
-    replaceUrl: true
-  });
-  this.filterClose();
-  // Apply the cleared filters
-  this.getAllCourses();
-}
+    // Reset filter payload
+    this.filterPayload = {
+      pageNo: 0,  // Reset to first page
+      pageSize: 9,
+      categoriesId: [],
+      courseType: null,
+      feature: null,
+      rating: null,
+      contentType: null,
+      search: null
+    };
+
+    // Clear the course list before fetching new results
+    this.courseList = [];
+
+    // Clear all query parameters
+    this._router.navigate([], {
+      relativeTo: this._activatedRoute,
+      queryParams: {},
+      replaceUrl: true
+    });
+    this.filterClose();
+    // Apply the cleared filters
+    this.getAllCourses();
+  }
   moveToCourseCards() {
     const targetDiv = document.getElementById(`top-container`);
     if (targetDiv) {
