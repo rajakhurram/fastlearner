@@ -25,14 +25,14 @@ public class OpenAIService implements IOpenAIService {
     private final WebClient webClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-//    public OpenAIService(
-//            @Value("${openai}") String apiKey) {
-//        this.webClient = WebClient.builder()
-//                .baseUrl("https://api.openai.com/v1")
-//                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey) // ✅ apiKey available
-//                .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-//                .build();
-//    }
+    public OpenAIService(
+            @Value("${openai}") String apiKey) {
+        this.webClient = WebClient.builder()
+                .baseUrl("https://api.openai.com/v1")
+                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey) // ✅ apiKey available
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .build();
+    }
 
     public Boolean validateAnswer(String correctAnswer, String userAnswer) {
         String prompt = "Correct Answer: " + correctAnswer + "\n" +
