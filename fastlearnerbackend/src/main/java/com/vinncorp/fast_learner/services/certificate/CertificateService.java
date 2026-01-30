@@ -181,9 +181,9 @@ public class CertificateService implements ICertificateService{
         String name = certificate.getStudentName();
         String imageUrl;
         if (name.length() > 25) {
-            imageUrl = "https://storage.googleapis.com/fastlearner-bucket/PROFILE_IMAGE/fBAxWZFs_profile_image.jpeg";
+            imageUrl = "https://storage.googleapis.com/fastlearner-bucket/PROFILE_IMAGE/FL-Certificate-05%20(2).jpg";
         } else {
-            imageUrl = "https://storage.googleapis.com/fastlearner-bucket/PROFILE_IMAGE/1z1ztRTr_profile_image.jpeg";
+            imageUrl = "https://storage.googleapis.com/fastlearner-bucket/PROFILE_IMAGE/FL-Certificate-05%20(2).jpg";
         }
 
         Date date = certificate.getCertifiedAt();
