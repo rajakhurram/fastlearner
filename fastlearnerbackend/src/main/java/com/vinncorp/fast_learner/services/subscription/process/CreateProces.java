@@ -197,8 +197,8 @@ public class CreateProces implements SubscriptionStrategyService {
         userService.save(user);
 
         var transactionHistory = saveTransactionHistoryForFree(nextSubscription, user);
-        transactionHistory.setAuthSubscriptionId("FREE");
-        transactionHistory.setResponseText(PlanType.FREE.name());
+        transactionHistory.setAuthSubscriptionId("PREMIUM");
+        transactionHistory.setResponseText(PlanType.PREMIUM.name());
 
         transactionHistoryRepository.save(transactionHistory);
 
