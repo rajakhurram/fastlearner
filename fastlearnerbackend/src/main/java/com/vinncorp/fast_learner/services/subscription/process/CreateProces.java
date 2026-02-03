@@ -180,6 +180,7 @@ public class CreateProces implements SubscriptionStrategyService {
 
     public Message<String> createFreeSubscription(Subscription nextSubscription, User user) throws InternalServerException, EntityNotFoundException {
         SubscribedUser subscribedUser=subscribedUserService.findBySubscribedUser(user.getEmail());
+
         log.info(subscribedUser==null?"subscribed user is empty":"Email :" +subscribedUser.getUser().getEmail());
         if (subscribedUser==null) {
              subscribedUser = SubscribedUser.builder()
