@@ -50,7 +50,7 @@ pipeline {
                         sudo cp "${GOOGLE_APPLICATION_CREDENTIALS}" "${WORKSPACE}/gcp-key.json"
 
                         echo "🔑 Setting GOOGLE_APPLICATION_CREDENTIALS env..."
-                        export GOOGLE_APPLICATION_CREDENTIALS="${WORKSPACE}/fastlearner-backend/gcp-key.json"
+                        export GOOGLE_APPLICATION_CREDENTIALS="${WORKSPACE}/fastlearnerbackend/gcp-key.json"
                         export DB_USERNAME="${DB_USERNAME}"
                         export DB_PASSWORD="${DB_PASSWORD}"
                         export RABBITMQ_USERNAME="${RABBITMQ_USERNAME}"
