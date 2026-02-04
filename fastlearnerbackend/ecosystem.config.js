@@ -5,7 +5,7 @@ module.exports = {
     script : "/usr/lib/jvm/java-17-openjdk-amd64/bin/java", // Path to your Java executable
     args   : [
         "-jar",
-        "/var/lib/jenkins/workspace/fastlearner-proj/fastlearner-backend/target/FastLearner-0.0.1-SNAPSHOT.jar"
+        "/var/lib/jenkins/workspace/fastlearner-proj/fastlearnerbackend/target/FastLearner-0.0.1-SNAPSHOT.jar"
     ],
     // Define the environment variables here.
     // PM2 will pick these up from the shell it was launched from.
