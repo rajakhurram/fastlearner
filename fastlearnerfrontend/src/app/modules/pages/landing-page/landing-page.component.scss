@@ -131,6 +131,8 @@
 
 .landing-page-button-container {
   padding-top: 2%;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .landing-page-button {
@@ -229,13 +231,24 @@
   background-color: #e4eeff !important;
 }
 
-.faq-heading h2 {
-  color: #212189;
-  font-family: "Poppins-bold";
-  font-weight: 900;
-  font-size: 36px;
-  line-height: 50px;
-  margin: 40px 115px 0px 0px;
+div#faq_container::ng-deep {
+  .centet-align-container.custom-container-content-center {
+    width: 80vw;
+  }
+}
+
+.faq-heading {
+  max-width: 400px;
+  width: 100%;
+
+  h2 {
+    color: #212189;
+    font-family: "Poppins-bold";
+    font-weight: 900;
+    font-size: 36px;
+    line-height: 50px;
+    margin: 40px 0px 0px 0px;
+  }
 }
 
 .title {
@@ -2092,3 +2105,53 @@ p {
   }
 }
 
+#learning_path {
+  .learning-path-wrapper {
+    max-width: 77rem;
+    margin: auto;
+    padding: 60px 15px;
+  }
+
+  .learning-path-wrapper .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .test-center-title {
+    margin-bottom: 35px;
+    text-align: center;
+  }
+
+  .test-center-title h2 {
+    margin-bottom: 0;
+    font-weight: bold;
+    line-height: 1.1;
+  }
+
+  .grid-card {
+    background: white;
+    border: 1px solid #ebebeb;
+    padding: 25px 30px;
+    border-radius: 11px;
+
+    h4 {
+      font-weight: 700;
+    }
+
+    ul {
+      margin-bottom: 25px;
+    }
+  }
+
+  .grid-card button,
+  .grid-card a {
+    font-size: 14px;
+    background: #fc3e53;
+    border: 1px solid #fc3e53;
+    color: white;
+    cursor: pointer;
+    padding: 4px 14px;
+    border-radius: 4px;
+  }
+}

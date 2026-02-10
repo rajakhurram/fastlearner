@@ -74,52 +74,38 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isAcrdionExpanded: boolean = false;
   items: AccordionItems[] = [
     {
-      title:
-        'What makes Quality Center different from the other online learning platforms?',
-      description: `QualityCenter differs from other online learning platforms due to its innovative features, such as AI-powered Q&A for swift answers, customizable learning paths for a tailored experience, and video summaries for quick review.
-      `,
+      title: 'What makes someone a “community expert”?',
+      description: `Lived experience`,
       isExpanded: false,
     },
     {
-      title: 'Is Quality Center boring like traditional textbook learning?',
-      description: `Not at all! Quality Center provides bite-sized lessons, remote education prospects, interactive content (think videos and quizzes!), and customizing courses by mixing and matching instructors to make the learning experience engaging. So you can improve your skills without feeling stuck at any point.
-      `,
+      title: 'How do experts get paid?',
+      description: `Instructors can easily withdraw payments via Stipe.`,
       isExpanded: false,
     },
     {
-      title: 'How much does Quality Center cost?',
-      description: `Quality Center's digital AI learning platform operates on a subscription model. For a single monthly fee, you can enjoy personalized learning and unlimited access to our complete course library.
-      `,
+      title: 'Are classes live, recorded, or both?',
+      description: `Recorded with the option to schedule a live session directly with experts`,
       isExpanded: false,
     },
     {
-      title: 'Can I learn at my own pace with Quality Center?',
-      description: `Yes! Quality Center prioritizes personal and professional development with flexible learning. You can take courses anytime, anywhere, and alter the speed to suit your schedule.
-      `,
+      title: 'Do I get future classes with All-Access?',
+      description: `(Yes—any class added during your annual term)`,
       isExpanded: false,
     },
     {
-      title: 'Do I get any certification upon finishing a course?',
-      description: `Absolutely! Quality Center awards certificates upon successful course completion. These certificates display your accomplishments of skill development and devotion to professional growth.
-      `,
+      title: 'Is All-Access monthly or annual?',
+      description: `Monthly`,
       isExpanded: false,
     },
     {
-      title: 'How do I start with Quality Center?',
-      description: `Simply create an account on our digital learning platform and discover a vast course library! Many courses provide free previews, and you can subscribe whenever you are ready to unlock the complete learning experience.
-      `,
+      title: 'If I buy a class, do I keep it?',
+      description: `Yes—lifetime access to that class`,
       isExpanded: false,
     },
     {
-      title: 'What is a quick learning ability?',
-      description: `A quick learner is a person who can understand new information in a short amount of time. When someone learns quickly, they typically have excellent communication and listening abilities. QualityCenter.ai will help you learn quickly by providing innovative AI-based learning tools.
-      `,
-      isExpanded: false,
-    },
-    {
-      title: 'What are the benefits of fast learning?',
-      description: `Quick learning benefits professional development, and professionals who learn quickly tend to be more productive. This is because they can adapt to new situations faster and successfully. The key to learning quickly is having a high level of curiosity and enthusiasm to ask questions when required.
-      `,
+      title: 'Can I upgrade from per-class to All-Access later?',
+      description: `Yes`,
       isExpanded: false,
     },
   ];
@@ -493,6 +479,10 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  routeToBecomeAnInstructor() {
+    this._router.navigate(['/become-instructor']);
+  }
+
 
   routeToInsructorProfile(profileUrl?: any) {
     this._router.navigate(['user/profile'], {
@@ -501,13 +491,8 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleStartNowClick() {
-    if (this.isLoggedIn) {
-      this.routeToCourseList(this.viewAllMap.CATEGORY);
-    } else {
-      this.routeToSignUpScreen();
-    }
+    this.routeToCourseList();
   }
-
 
   getCategoryList() {
     this._courseService.getCourseCategory().subscribe({

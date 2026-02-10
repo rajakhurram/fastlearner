@@ -16,27 +16,35 @@
             <div class="landing-page-banner">
               <div class="landing-page-heading">
                 <h1>
-                  Welcome to the <br />
-                  Future of AI Based Learning!
+                  Welcome to <br /> Community College
                 </h1>
                 <h3>
-                  Human-Centric - Machine Accelerated
-                  <br />
-                  Quick Learning
+                  Learn real-life skills from people who've <br> lived them.
                 </h3>
               </div>
               <div class="landing-page-text">
-                <small class="label-text"
-                  >Stay engaged, stay ahead—become a fast learner by mastering
-                  concepts with human expertise on our innovative AI based
-                  learning platform designed for quick learning and efficient
-                  skill development.
+                <small class="label-text">
+                  Community College is a platform where community experts share practical 
+                  knowledge—and get paid for it. Learn the skills that help you handle daily 
+                  challenges at work, at home, and in your community.
                 </small>
               </div>
               <div class="landing-page-button-container">
                 <app-button
-                  [buttonText]="'Start Now'"
+                  [buttonText]="'Explore Classes'"
                   (buttonCallBack)="handleStartNowClick()"
+                  ><img
+                    class="view-all-img"
+                    height="25px"
+                    width="25px"
+                    alt="Arrow"
+                    src="./../../../assets/icons/Start-Now.svg"
+                    style="margin-left: 1px; display: inline-block"
+                  />
+                </app-button>
+                <app-button
+                  [buttonText]="'Teach & Earn'"
+                  (buttonCallBack)="routeToBecomeAnInstructor()"
                   ><img
                     class="view-all-img"
                     height="25px"
@@ -73,27 +81,13 @@
             <div class="free-courses-section">
               <div class="adventure-padding">
                 <div class="free-courses-heading">
-                  <h2>Premium Courses from Leading Experts</h2>
+                  <h2>Community is your trusted place for practical expertise</h2>
                 </div>
                 <div class="free-courses-text">
-                  <small class="text-width"
-                    >Learn the secrets of
-                    <!-- <a
-                      class="link-white"
-                      (click)="
-                        routeToLink(
-                          'https://blog.fastlearner.ai/beyond-talent-how-to-become-a-fast-learner/'
-                        )
-                      "
-                      >
-                    </a> -->
-                    how to be a fast learner
-                    with our top courses designed to enhance your fast learning
-                    skills and quick learning ability with assistance from
-                    Generative AI. Learn from top professors, teachers, and
-                    industry leaders from prestigious universities like
-                    Stanford, UCLA, UC Berkeley, and the University of Colorado
-                    Boulder, and start learning quickly with expert training.
+                  <small class="text-width">
+                    Search engines are increasingly dominated by AI-generated “experts” and bots. 
+                    Community College brings learning back to real people—local experts you'd trust in your 
+                    own community—and connects you with proven community experts from around the world.
                   </small>
                 </div>
               </div>
@@ -219,6 +213,36 @@
                 (leftClickEmitter)="getTest(directionEnum.LEFT)"
                 (rightClickEmitter)="getTest(directionEnum.RIGHT)"
               ></app-card-slider>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+    <div class="learning-path" id="learning_path" #learning_path>
+      <app-container>
+        <div class="learning-path-wrapper">
+          <div class="test-center-title">
+            <small>Choose your path</small>
+            <h2>How it works</h2>
+          </div>
+          <div class="grid">
+            <div class="grid-card learners">
+              <h4>For Learners</h4>
+              <ul>
+                <li>Browse topics that match real-life needs</li>
+                <li>Learn in short, practical lessons</li>
+                <li>Apply with templates, checklists, and examples</li>
+              </ul>
+              <a role="button" routerLink="/student/courses">Start Learning</a>
+            </div>
+            <div class="grid-card experts">
+              <h4>For Community Experts</h4>
+              <ul>
+                <li>Create a class from what you already know</li>
+                <li>Publish and reach learners who need it</li>
+                <li>Get paid for your expertise</li>
+              </ul>
+              <a role="button" routerLink="/auth/sign-up">Become an Expert</a>
             </div>
           </div>
         </div>
