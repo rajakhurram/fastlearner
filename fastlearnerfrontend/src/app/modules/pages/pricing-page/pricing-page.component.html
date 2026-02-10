@@ -185,16 +185,19 @@
                       let line of (subscription?.content || '').split('\\n')
                     "
                   >
-                    <img src="../../../../assets/icons/tick.svg" />
-                     <span
+                    <ng-container *ngIf="line.trim() !== 'Unlimited AI Grading'">
+                      <img src="../../../../assets/icons/tick.svg" />
+                      <span>{{ line }}</span>
+                    </ng-container>
+                     <!-- <span
                         *ngIf="line.trim() === 'Unlimited AI Grading'; else normalFeature"
                         class="clickable-feature"
                         (click)="goToAiGrader()"
-                      >{{ line }}</span>
+                      >{{ line }}</span> -->
                       <!-- Normal feature -->
-                      <ng-template #normalFeature>
+                      <!-- <ng-template #normalFeature>
                         <span>{{ line }}</span>
-                      </ng-template>
+                      </ng-template> -->
                   </small>
                 </div>
                 <div class="card-actions display-flex justify-content-center">

@@ -115,7 +115,7 @@ describe('CertificateComponent', () => {
       nzViewContainerRef: component['_viewContainerRef'],
       nzComponentParams: {
         data: null,
-        url: `https://fastlearner.ai/student/verify-certificate/${component.uuid}`,
+        url: `https://classroom.aqualitycenter.com/student/verify-certificate/${component.uuid}`,
         title: 'Share Certificate',
         label: 'Share Certificate URL',
       },

@@ -121,7 +121,7 @@ export class CertificateComponent implements OnInit {
       nzViewContainerRef: this._viewContainerRef,
       nzComponentParams: {
         data: null,
-        url: `https://fastlearner.ai/student/verify-certificate/${this.uuid}`,
+        url: `https://classroom.aqualitycenter.com/student/verify-certificate/${this.uuid}`,
         title: 'Share Certificate',
         label: 'Share Certificate URL',
       },

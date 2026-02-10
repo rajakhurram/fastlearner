@@ -178,8 +178,10 @@
                     let line of (subscription?.content || '').split('\\n')
                   "
                 >
-                  <img src="../../../../assets/icons/tick.svg" />
-                  <span>{{ line }}</span>
+                  <ng-container *ngIf="line.trim() !== 'Unlimited AI Grading'">
+                    <img src="../../../../assets/icons/tick.svg" />
+                    <span>{{ line }}</span>
+                  </ng-container>
                 </small>
               </div>
               <div class="card-actions display-flex justify-content-center">

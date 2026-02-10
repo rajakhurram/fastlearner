@@ -48,5 +48,6 @@ export class HttpConstants {
 
 export const localApiBaseUrlPath = 'http://localhost';
 export const stagingApiBaseUrlPath = 'https://staging.fastlearner.ai';
+export const productionApiBaseUrlPath = 'https://classroom.aqualitycenter.com'
 export const googleTrackingId = '{{google-tracking-id}}';
 export const googleTagId = '{{google-tag-id}}';
