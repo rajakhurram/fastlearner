@@ -158,14 +158,19 @@ public class UserService implements IUserService, UserDetailsService {
         if (UserRole.INSTRUCTOR == valueOf) {
             // then subscribe for free subscription
             Subscription freeSubscription = subscriptionService.findBySubscriptionId(1L).getData();
-            SubscribedUser subscribedUser = SubscribedUser.builder()
-                    .subscription(freeSubscription)
-                    .user(user)
-                    .paymentStatus(PaymentStatus.PAID)
-                    .startDate(new Date())
-                    .isActive(true)
-                    .build();
-            subscribedUserService.save(subscribedUser);
+            SubscribedUser subscribedUser=subscribedUserService.findBySubscribedUser(user.getEmail());
+
+            log.info(subscribedUser==null?"subscribed user is empty":"Email :" +subscribedUser.getUser().getEmail());
+            if (subscribedUser==null) {
+                subscribedUser = SubscribedUser.builder()
+                        .subscription(freeSubscription)
+                        .user(user)
+                        .paymentStatus(PaymentStatus.PAID)
+                        .startDate(new Date())
+                        .isActive(true)
+                        .build();
+                subscribedUserService.save(subscribedUser);
+            }
             user.setSubscribed(true);
         }
         user.setRole(role);
