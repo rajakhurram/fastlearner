@@ -214,6 +214,7 @@
                   (answerSubmit)="onAnswerSubmit($event)"
                   [showQuizAttempt]="showQuizAttempt"
                   [welcomeQuizScreen]="showQuizPlayerWelcomeScreen"
+                  (quizStartedEmitter)="updateQuizStartedStatus($event)"
                 ></app-quiz-player>
               </div>
               <div

@@ -164,6 +164,7 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
   courseContentType = CourseContentType;
   selectedContentType?: any;
   comingFromReview: boolean;
+  isQuizOrSurveyStarted: boolean = false;
 
   constructor(
     private _courseService: CourseService,
@@ -858,6 +859,13 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
   }
 
   onSelectTopicFromPlayList(section: any, topic: any) {
+    try {
+      this.checkCurrectSelectedTopicIsQuizOrSurvey();
+    } catch (error: any) {
+      this._messageService.error(error.message);
+      return;
+    }
+    
     const targetDiv = document.getElementById(`topic-selected`);
     if (targetDiv) {
       // Scroll smoothly to the target div
@@ -2178,5 +2186,24 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
   onAnswerSubmit(event: AnswerSubmitEvent) {
     this.quizAttemptId = event.quizAttemptId;
     this.isAllowedToRetake = event.isAllowedToRetake;
+  }
+
+  checkCurrectSelectedTopicIsQuizOrSurvey() {
+    const testTypes = ["TEST", "SURVEY"];
+    if (!this.currentSelectedTopic) return false;
+
+    const { testType } = this.currentSelectedTopic;
+
+    if (testTypes.includes(testType)) {
+      if (this.isQuizOrSurveyStarted) {
+        throw new Error("Cannot switch to another topic until the current quiz or survey is completed!");
+      }
+    }
+
+    return true;
+  }
+
+  updateQuizStartedStatus(status: boolean) {
+    this.isQuizOrSurveyStarted = status;
   }
 }
