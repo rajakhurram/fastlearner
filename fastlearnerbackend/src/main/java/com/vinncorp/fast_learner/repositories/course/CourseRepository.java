@@ -1184,8 +1184,6 @@ SELECT DISTINCT
                              LEFT JOIN user_profile AS up ON up.created_by = us.id
                              LEFT JOIN section AS s ON s.course_id = c.id
                              INNER JOIN topic as t ON t.section_id = s.id
-                             INNER JOIN quiz as q ON q.topic_id = t.id
-                             
                                          LEFT JOIN (
                  SELECT topic_id, SUM(random_question) AS total_random_questions
                    FROM quiz
@@ -1260,7 +1258,6 @@ SELECT DISTINCT
                              LEFT JOIN user_profile AS up ON up.created_by = us.id
                              LEFT JOIN section AS s ON s.course_id = c.id
                              INNER JOIN topic as t ON t.section_id = s.id
-                             INNER JOIN quiz as q ON q.topic_id = t.id
                              
                                          LEFT JOIN (
                  SELECT topic_id, SUM(random_question) AS total_random_questions
