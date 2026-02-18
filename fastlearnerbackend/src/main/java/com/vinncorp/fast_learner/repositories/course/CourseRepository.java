@@ -1138,77 +1138,136 @@ SELECT DISTINCT
 
     @Query(value = """
             SELECT
-                        COUNT(DISTINCT e.student_id) AS total_students,
-                        us.full_name,
-                        c.id AS course_id,
-                        c.title,
-                        c.created_date,
-                        c.description,
-                        c.thumbnail AS course_thumbnail,
-                        c.content_type,                        
-                        (SELECT SUM(t1.duration_in_sec)
-                         FROM topic AS t1
-                                  INNER JOIN section AS s1 ON s1.id = t1.section_id
-                                  INNER JOIN course AS c1 ON c1.id = s1.course_id
-                         WHERE c1.id = c.id) AS duration,
-                        cu.url AS course_url,
-                        cl.name AS course_level,
-                        cc.name AS category_name,
-                        COALESCE(mcr.max_rating, 0) AS max_rating,
-                        COALESCE(mcr.total_review, 0) AS total_reviews,
-                        us.id AS user_id,
-                        up.profile_picture,
-                        up.about_me,
-                        up.headline,
-                        up.profile_url,
-                        c.course_type,
-                        c.price,
-                        COALESCE(SUM(CASE WHEN c.content_type = 'TEST' THEN q_summary.total_random_questions ELSE 0 END), 0) AS test_total_question,
-                        CASE
-                            WHEN :studentId IS NULL THEN 'FALSE' 
-                            WHEN c.course_type = 'PREMIUM_COURSE'
-                                AND EXISTS (SELECT 1 FROM enrollment e2 WHERE e2.course_id = c.id AND e2.student_id = :studentId)
-                                THEN 'TRUE'
-                            ELSE 'FALSE'
-                            END AS already_bought
-                    FROM course AS c
-                             LEFT JOIN enrollment AS e ON e.course_id = c.id
-                             LEFT JOIN (SELECT cr.course_id,
-                                               COUNT(cr.course_id) AS total_review,
-                                               AVG(cr.rating) AS max_rating
-                                        FROM course_review AS cr
-                                        GROUP BY cr.course_id) AS mcr ON c.id = mcr.course_id
-                             INNER JOIN course_level AS cl ON c.course_level = cl.id
-                             INNER JOIN course_category AS cc ON c.course_category_id = cc.id
-                             INNER JOIN users AS us ON us.id = c.created_by
-                             LEFT JOIN user_profile AS up ON up.created_by = us.id
-                             LEFT JOIN section AS s ON s.course_id = c.id
-                             INNER JOIN topic as t ON t.section_id = s.id
-                                         LEFT JOIN (
-                 SELECT topic_id, SUM(random_question) AS total_random_questions
-                   FROM quiz
-                   GROUP BY topic_id
-            ) AS q_summary ON q_summary.topic_id = t.id
-                             
-                             INNER JOIN course_url AS cu ON cu.course_id = c.id AND cu.status = 'ACTIVE'
-                    WHERE c.course_status = 'PUBLISHED'
-                    GROUP BY c.id,
-                             c.title,
-                             c.created_date,
-                             c.description,
-                             c.thumbnail,
-                             cl.name,
-                             cc.name,
-                             us.full_name,
-                             us.id,
-                             up.profile_picture,
-                             up.about_me,
-                             up.headline,
-                             up.profile_url,
-                             mcr.max_rating,
-                             mcr.total_review,
-                             cu.url
-                    ORDER BY total_students DESC; 
+                COUNT(DISTINCT e.student_id) AS total_students,
+                us.full_name,
+                c.id AS course_id,
+                c.title,
+                c.created_date,
+                c.description,
+                c.thumbnail AS course_thumbnail,
+                c.content_type,
+            
+                /* Duration per course */
+                COALESCE(d.total_duration, 0) AS duration,
+            
+                cu.url AS course_url,
+                cl.name AS course_level,
+                cc.name AS category_name,
+            
+                COALESCE(mcr.max_rating, 0) AS max_rating,
+                COALESCE(mcr.total_review, 0) AS total_reviews,
+            
+                us.id AS user_id,
+                up.profile_picture,
+                up.about_me,
+                up.headline,
+                up.profile_url,
+            
+                c.course_type,
+                c.price,
+            
+                /* Total test questions per course */
+                COALESCE(
+                    CASE\s
+                        WHEN c.content_type = 'TEST'
+                        THEN q_course.total_random_questions
+                        ELSE 0
+                    END
+                , 0) AS test_total_question,
+            
+                CASE
+                    WHEN 25 IS NULL THEN 'FALSE'
+                    WHEN c.course_type = 'PREMIUM_COURSE'
+                         AND EXISTS (
+                             SELECT 1
+                             FROM enrollment e2
+                             WHERE e2.course_id = c.id
+                               AND e2.student_id = 25
+                         )
+                    THEN 'TRUE'
+                    ELSE 'FALSE'
+                END AS already_bought
+            
+            FROM course c
+            
+            /* Enrollment (for student count only) */
+            LEFT JOIN enrollment e\s
+                   ON e.course_id = c.id
+            
+            /* Reviews aggregated per course */
+            LEFT JOIN (
+                SELECT\s
+                    cr.course_id,
+                    COUNT(*) AS total_review,
+                    AVG(cr.rating) AS max_rating
+                FROM course_review cr
+                GROUP BY cr.course_id
+            ) mcr ON mcr.course_id = c.id
+            
+            /* Duration aggregated per course */
+            LEFT JOIN (
+                SELECT\s
+                    s.course_id,
+                    SUM(t.duration_in_sec) AS total_duration
+                FROM section s
+                JOIN topic t ON t.section_id = s.id
+                GROUP BY s.course_id
+            ) d ON d.course_id = c.id
+            
+            /* Questions aggregated per course */
+            LEFT JOIN (
+                SELECT\s
+                    s.course_id,
+                    SUM(q.random_question) AS total_random_questions
+                FROM quiz q
+                JOIN topic t ON t.id = q.topic_id
+                JOIN section s ON s.id = t.section_id
+                GROUP BY s.course_id
+            ) q_course ON q_course.course_id = c.id
+            
+            /* Other joins (1-to-1 or safe joins) */
+            INNER JOIN course_level cl\s
+                    ON cl.id = c.course_level
+            
+            INNER JOIN course_category cc\s
+                    ON cc.id = c.course_category_id
+            
+            INNER JOIN users us\s
+                    ON us.id = c.created_by
+            
+            LEFT JOIN user_profile up\s
+                   ON up.created_by = us.id
+            
+            INNER JOIN course_url cu\s
+                    ON cu.course_id = c.id
+                   AND cu.status = 'ACTIVE'
+            
+            WHERE c.course_status = 'PUBLISHED'
+            
+            GROUP BY
+                c.id,
+                us.full_name,
+                c.title,
+                c.created_date,
+                c.description,
+                c.thumbnail,
+                c.content_type,
+                d.total_duration,
+                cu.url,
+                cl.name,
+                cc.name,
+                mcr.max_rating,
+                mcr.total_review,
+                us.id,
+                up.profile_picture,
+                up.about_me,
+                up.headline,
+                up.profile_url,
+                c.course_type,
+                c.price,
+                q_course.total_random_questions
+            
+            ORDER BY total_students DESC;
                 """, nativeQuery = true,
             countQuery = """
                     SELECT
@@ -1220,70 +1279,128 @@ SELECT DISTINCT
                         c.description,
                         c.thumbnail AS course_thumbnail,
                         c.content_type,
-                        (SELECT SUM(t1.duration_in_sec)
-                         FROM topic AS t1
-                                  INNER JOIN section AS s1 ON s1.id = t1.section_id
-                                  INNER JOIN course AS c1 ON c1.id = s1.course_id
-                         WHERE c1.id = c.id) AS duration,
+                    
+                        /* Duration per course */
+                        COALESCE(d.total_duration, 0) AS duration,
+                    
                         cu.url AS course_url,
                         cl.name AS course_level,
                         cc.name AS category_name,
+                    
                         COALESCE(mcr.max_rating, 0) AS max_rating,
                         COALESCE(mcr.total_review, 0) AS total_reviews,
+                    
                         us.id AS user_id,
+                        up.profile_picture,
+                        up.about_me,
+                        up.headline,
+                        up.profile_url,
+                    
+                        c.course_type,
+                        c.price,
+                    
+                        /* Total test questions per course */
+                        COALESCE(
+                            CASE\s
+                                WHEN c.content_type = 'TEST'
+                                THEN q_course.total_random_questions
+                                ELSE 0
+                            END
+                        , 0) AS test_total_question,
+                    
+                        CASE
+                            WHEN 25 IS NULL THEN 'FALSE'
+                            WHEN c.course_type = 'PREMIUM_COURSE'
+                                 AND EXISTS (
+                                     SELECT 1
+                                     FROM enrollment e2
+                                     WHERE e2.course_id = c.id
+                                       AND e2.student_id = 25
+                                 )
+                            THEN 'TRUE'
+                            ELSE 'FALSE'
+                        END AS already_bought
+                    
+                    FROM course c
+                    
+                    /* Enrollment (for student count only) */
+                    LEFT JOIN enrollment e\s
+                           ON e.course_id = c.id
+                    
+                    /* Reviews aggregated per course */
+                    LEFT JOIN (
+                        SELECT\s
+                            cr.course_id,
+                            COUNT(*) AS total_review,
+                            AVG(cr.rating) AS max_rating
+                        FROM course_review cr
+                        GROUP BY cr.course_id
+                    ) mcr ON mcr.course_id = c.id
+                    
+                    /* Duration aggregated per course */
+                    LEFT JOIN (
+                        SELECT\s
+                            s.course_id,
+                            SUM(t.duration_in_sec) AS total_duration
+                        FROM section s
+                        JOIN topic t ON t.section_id = s.id
+                        GROUP BY s.course_id
+                    ) d ON d.course_id = c.id
+                    
+                    /* Questions aggregated per course */
+                    LEFT JOIN (
+                        SELECT\s
+                            s.course_id,
+                            SUM(q.random_question) AS total_random_questions
+                        FROM quiz q
+                        JOIN topic t ON t.id = q.topic_id
+                        JOIN section s ON s.id = t.section_id
+                        GROUP BY s.course_id
+                    ) q_course ON q_course.course_id = c.id
+                    
+                    /* Other joins (1-to-1 or safe joins) */
+                    INNER JOIN course_level cl\s
+                            ON cl.id = c.course_level
+                    
+                    INNER JOIN course_category cc\s
+                            ON cc.id = c.course_category_id
+                    
+                    INNER JOIN users us\s
+                            ON us.id = c.created_by
+                    
+                    LEFT JOIN user_profile up\s
+                           ON up.created_by = us.id
+                    
+                    INNER JOIN course_url cu\s
+                            ON cu.course_id = c.id
+                           AND cu.status = 'ACTIVE'
+                    
+                    WHERE c.course_status = 'PUBLISHED'
+                    
+                    GROUP BY
+                        c.id,
+                        us.full_name,
+                        c.title,
+                        c.created_date,
+                        c.description,
+                        c.thumbnail,
+                        c.content_type,
+                        d.total_duration,
+                        cu.url,
+                        cl.name,
+                        cc.name,
+                        mcr.max_rating,
+                        mcr.total_review,
+                        us.id,
                         up.profile_picture,
                         up.about_me,
                         up.headline,
                         up.profile_url,
                         c.course_type,
                         c.price,
-                        COALESCE(SUM(CASE WHEN c.content_type = 'TEST' THEN q_summary.total_random_questions ELSE 0 END), 0) AS test_total_question,
-                        CASE
-                            WHEN :studentId IS NULL THEN 'FALSE' 
-                            WHEN c.course_type = 'PREMIUM_COURSE'
-                                AND EXISTS (SELECT 1 FROM enrollment e2 WHERE e2.course_id = c.id AND e2.student_id = :studentId)
-                                THEN 'TRUE'
-                            ELSE 'FALSE'
-                            END AS already_bought
-                    FROM course AS c
-                             LEFT JOIN enrollment AS e ON e.course_id = c.id
-                             LEFT JOIN (SELECT cr.course_id,
-                                               COUNT(cr.course_id) AS total_review,
-                                               AVG(cr.rating) AS max_rating
-                                        FROM course_review AS cr
-                                        GROUP BY cr.course_id) AS mcr ON c.id = mcr.course_id
-                             INNER JOIN course_level AS cl ON c.course_level = cl.id
-                             INNER JOIN course_category AS cc ON c.course_category_id = cc.id
-                             INNER JOIN users AS us ON us.id = c.created_by
-                             LEFT JOIN user_profile AS up ON up.created_by = us.id
-                             LEFT JOIN section AS s ON s.course_id = c.id
-                             INNER JOIN topic as t ON t.section_id = s.id
-                             
-                                         LEFT JOIN (
-                 SELECT topic_id, SUM(random_question) AS total_random_questions
-                   FROM quiz
-                   GROUP BY topic_id
-            ) AS q_summary ON q_summary.topic_id = t.id
-                             
-                             INNER JOIN course_url AS cu ON cu.course_id = c.id AND cu.status = 'ACTIVE'
-                    WHERE c.course_status = 'PUBLISHED'
-                    GROUP BY c.id,
-                             c.title,
-                             c.created_date,
-                             c.description,
-                             c.thumbnail,
-                             cl.name,
-                             cc.name,
-                             us.full_name,
-                             us.id,
-                             up.profile_picture,
-                             up.about_me,
-                             up.headline,
-                             up.profile_url,
-                             mcr.max_rating,
-                             mcr.total_review,
-                             cu.url
-                    ORDER BY total_students DESC; 
+                        q_course.total_random_questions
+                    
+                    ORDER BY total_students DESC;
                             """)
     Page<Tuple> findAllTrendingCourses(@Param("studentId") Long studentId, Pageable pageable);
 
@@ -1335,7 +1452,7 @@ SELECT DISTINCT
              LEFT JOIN section AS s ON s.course_id = c.id
              INNER JOIN topic as t ON t.section_id = s.id
              LEFT JOIN quiz as q ON q.topic_id = t.id
-             
+            
                          LEFT JOIN (
                  SELECT topic_id, SUM(random_question) AS total_random_questions
                    FROM quiz
