@@ -1985,5 +1985,6 @@ LEFT JOIN (
             select count(*) from course where instructor_id=:instructorId and course_status=:courseStatus
             """,nativeQuery = true)
     Long findByInstructorAndPublished(@Param("instructorId") Long instructorId, @Param("courseStatus") String courseStatus);
+
 }
 
