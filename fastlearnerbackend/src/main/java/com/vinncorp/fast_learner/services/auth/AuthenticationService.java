@@ -208,7 +208,7 @@ public class AuthenticationService implements IAuthenticationService{
         userProfile.setCreationDate(new Date());
 
         userProfileService.createProfile(userProfile, savedUser);
-        authorizeNetSubscriptionService.freeSignUpSubscriptionNew(5L, savedUser);
+        authorizeNetSubscriptionService.freeSignUpSubscriptionNew(1L, savedUser);
 
 //        if (savedUser.getDob()!=null) {
 //            userService.addRoleForUser(UserRole.INSTRUCTOR, savedUser.getEmail());

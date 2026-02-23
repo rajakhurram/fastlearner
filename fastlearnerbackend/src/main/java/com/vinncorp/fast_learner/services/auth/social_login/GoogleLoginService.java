@@ -72,7 +72,7 @@ public class GoogleLoginService implements ISocialLoginService {
             // Generate JWT tokens
             String jwtToken = jwtUtils.generateJwtToken(savedUser.getEmail(), savedUser);
             String refreshToken = jwtUtils.doGenerateRefreshToken(savedUser.getEmail(), savedUser);
-            Message<String> freeSignup=authorizeNetSubscriptionService.freeSignUpSubscriptionNew(5L, savedUser);
+            Message<String> freeSignup=authorizeNetSubscriptionService.freeSignUpSubscriptionNew(1L, savedUser);
             log.info("free sign up successfully created");
 
             return TokenResponse.builder()
