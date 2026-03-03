@@ -197,7 +197,7 @@ public class CertificateService implements ICertificateService{
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Color myColor = new Color(33, 33, 137);
         g.setColor(myColor);
-        g.setFont(new Font("Poppins", Font.BOLD, 40));
+        g.setFont(new Font("Poppins", Font.BOLD, 180));
 
 
         if (name.length() > 25) {
@@ -217,21 +217,21 @@ public class CertificateService implements ICertificateService{
             String line2 = name.substring(splitPosition).trim();
 
             // Draw the two lines of text
-            g.drawString(line1, 66, 260);
-            g.drawString(line2, 66, 310);
+            g.drawString(line1, 280, 1100);
+            g.drawString(line2, 280, 1350);
         } else {
             // Draw the single line of text
-            g.drawString(name, 66, 280);
+            g.drawString(name, 280, 1350);
         }
         g.setColor(Color.BLACK);
 
         // Add course name below the name
         String courseName = certificate.getCourseTitle(); // You need to implement this method in your service
-        Font font = new Font("Montserrat", Font.BOLD, 15);
+        Font font = new Font("Montserrat", Font.BOLD, 92);
         g.setFont(font);
-        g.drawString(courseName, 66, 370);
+        g.drawString(courseName, 280, 1800);
 
-        Font font1 = new Font("Poppins ", Font.PLAIN, 13);
+        Font font1 = new Font("Poppins ", Font.PLAIN, 64);
         g.setFont(font1);
         Color myColor1 = new Color(33, 33, 137, 255);
         g.setColor(myColor1);
@@ -245,10 +245,10 @@ public class CertificateService implements ICertificateService{
         String part1 = fullUrl.substring(0, splitPosition);
         String part2 = fullUrl.substring(splitPosition);
 
-        g.drawString(part1, 760, 622); // First part
-        g.drawString(part2, 700, 640);
+        g.drawString(part1, 3180, 2590); // First part
+        g.drawString(part2, 2950, 2670);
 
-        g.drawString(formattedDate, 66, 210);
+        g.drawString(formattedDate, 280, 1000);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);
