@@ -47,7 +47,7 @@ pipeline {
                     // Export all environment variables so PM2 picks them up
                     sh '''
                         # Copy the secret file to a permanent location
-                        sudo cp "${GOOGLE_APPLICATION_CREDENTIALS}" "${WORKSPACE}/gcp-key.json"
+                        cp -f /var/lib/jenkins/workspace/fastlearner-proj/fastlearnerbackend/gcp-key.json ${WORKSPACE}/gcp-key.json
 
                         echo "🔑 Setting GOOGLE_APPLICATION_CREDENTIALS env..."
                         export GOOGLE_APPLICATION_CREDENTIALS="${WORKSPACE}/fastlearner-backend/gcp-key.json"
