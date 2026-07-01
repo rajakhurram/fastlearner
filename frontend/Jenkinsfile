@@ -1,3 +1,44 @@
+// pipeline {
+//     agent any
+
+//     environment {
+//         PATH = "/usr/local/bin:/usr/bin:/bin:$HOME/.npm-global/bin"
+//     }
+
+//     stages {
+
+//         stage('Install Dependencies') {
+//             steps {
+//                 sh 'npm ci'
+//             }
+//         }
+
+//         stage('Build Angular App') {
+//             steps {
+//                 sh 'npm run build -- --configuration production'
+//             }
+//         }
+
+//         stage('Deploy to Nginx') {
+//             steps {
+//                 sh '''
+//                     sudo rm -rf /var/www/angular-app/*
+//                     sudo cp -r dist/fast-learner-app/* /var/www/angular-app/
+//                 '''
+//             }
+//         }
+//     }
+
+//     post {
+//         success {
+//             echo '✅ Angular app deployed successfully!'
+//         }
+//         failure {
+//             echo '❌ Deployment failed.'
+//         }
+//     }
+// }
+
 pipeline {
     agent any
 
@@ -34,7 +75,7 @@ pipeline {
             echo '✅ Angular app deployed successfully!'
         }
         failure {
-            echo '❌ Deployment failed.'
+            echo '❌ Deployment failed. Check console output.'
         }
     }
 }
