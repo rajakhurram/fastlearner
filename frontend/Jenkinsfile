@@ -1,44 +1,3 @@
-// pipeline {
-//     agent any
-
-//     environment {
-//         PATH = "/usr/local/bin:/usr/bin:/bin:$HOME/.npm-global/bin"
-//     }
-
-//     stages {
-
-//         stage('Install Dependencies') {
-//             steps {
-//                 sh 'npm ci'
-//             }
-//         }
-
-//         stage('Build Angular App') {
-//             steps {
-//                 sh 'npm run build -- --configuration production'
-//             }
-//         }
-
-//         stage('Deploy to Nginx') {
-//             steps {
-//                 sh '''
-//                     sudo rm -rf /var/www/angular-app/*
-//                     sudo cp -r dist/fast-learner-app/* /var/www/angular-app/
-//                 '''
-//             }
-//         }
-//     }
-
-//     post {
-//         success {
-//             echo '✅ Angular app deployed successfully!'
-//         }
-//         failure {
-//             echo '❌ Deployment failed.'
-//         }
-//     }
-// }
-
 pipeline {
     agent any
 
@@ -50,21 +9,26 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+              dir('frontend') {
+                sh 'npm ci'  // faster and reliable than npm install
+              }
             }
         }
 
         stage('Build Angular App') {
             steps {
-                sh 'npm run build -- --configuration production'
+              dir('frontend') {
+                sh 'ng build --configuration=production'
+              }
             }
         }
 
         stage('Deploy to Nginx') {
             steps {
+                // Assuming Jenkins user has write access to /var/www/angular-app
                 sh '''
-                    sudo rm -rf /var/www/angular-app/*
-                    sudo cp -r dist/fast-learner-app/* /var/www/angular-app/
+                    rm -rf /var/www/angular-app/*
+                    cp -r frontend/dist/fast-learner-app/* /var/www/angular-app/
                 '''
             }
         }
