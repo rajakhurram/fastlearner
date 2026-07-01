@@ -10,6 +10,7 @@ export const environment = {
   applicationCourseContentUrl: `http://34.134.191.51:8443/student/course-content/`,
   applicationCourseDetailsUrl: `http://34.134.191.51:8443/student/course-details/`,
 
+  
   // Goolge Login Credentials
   googleClientId: '{{google-client-id}}',
   googleSecretKey: '{{google-secret-key}}',
