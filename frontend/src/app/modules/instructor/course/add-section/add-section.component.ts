@@ -1329,41 +1329,118 @@ export class AddSectionComponent implements OnInit {
     return d;
   }
 
-  openArticlePrompt(article?: any) {
+  openArticlePrompt(article?: any, section?: any, topicIndex?: number) {
     article.generateArticleBtn = false;
     article.articlePrompt = true;
+    article.showChatBox = false;
+    if (section != null && topicIndex != null) {
+      this.scrollToArticlePrompt(section, topicIndex);
+    }
   }
 
   articleInputChange(article?: any) {
     article.articlePromptInput = article.articlePromptInput.trim();
   }
 
-  generateArticles(article?: any) {
+  generateArticles(
+    article?: any,
+    topic?: any,
+    section?: any,
+    topicIndex?: number
+  ) {
+    const prompt = article?.articlePromptInput?.trim();
+    if (!prompt) {
+      return;
+    }
+
     article.articlePrompt = false;
-    article.questionAnswers.question = article.articlePromptInput;
+    article.questionAnswers.question = prompt;
     article.articlePromptInput = '';
-    article.showChatBox = true;
+    article.showChatBox = false;
     article.questionAnswers.answers = [];
     article.showSpinner = true;
 
-    this._instructorService
-      .generator(article.questionAnswers.question)
-      ?.subscribe({
-        next: (response: any) => {
-          if (
-            response?.status ==
-            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-          ) {
-            article.showSpinner = false;
-            const points = response?.data.split('\n').map((point: any) => {
-              article.questionAnswers.answers.push(point);
-            });
+    this._instructorService.generator(prompt)?.subscribe({
+      next: (response: any) => {
+        article.showSpinner = false;
+        if (
+          response?.status ==
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+        ) {
+          article.content = this.formatGeneratedArticleHtml(response?.data ?? '');
+          article.uploadArticleDocument = true;
+          if (topic) {
+            this.articleValidation(topic);
           }
-        },
-        error: (error: any) => {
-          article.showSpinner = false;
-        },
+          if (section != null && topicIndex != null) {
+            this.scrollToArticleEditor(section, topicIndex);
+          }
+        }
+      },
+      error: () => {
+        article.showSpinner = false;
+        article.articlePrompt = true;
+        this._messageService.error('Failed to generate article. Please try again.');
+      },
+    });
+  }
+
+  private formatGeneratedArticleHtml(text: string): string {
+    const lines = text
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    const parts: string[] = [];
+    let inList = false;
+
+    for (const line of lines) {
+      const bulletMatch = line.match(/^[-*•]\s+(.+)$/);
+      if (bulletMatch) {
+        if (!inList) {
+          parts.push('<ul>');
+          inList = true;
+        }
+        parts.push(`<li>${bulletMatch[1]}</li>`);
+      } else {
+        if (inList) {
+          parts.push('</ul>');
+          inList = false;
+        }
+        parts.push(`<p>${line}</p>`);
+      }
+    }
+
+    if (inList) {
+      parts.push('</ul>');
+    }
+
+    return parts.join('');
+  }
+
+  private articleEditorElementId(section: any, topicIndex: number): string {
+    return `article-editor-${section.level}-${topicIndex}`;
+  }
+
+  private articlePromptElementId(section: any, topicIndex: number): string {
+    return `article-prompt-${section.level}-${topicIndex}`;
+  }
+
+  private scrollToArticleEditor(section: any, topicIndex: number): void {
+    this.scrollToElement(this.articleEditorElementId(section, topicIndex));
+  }
+
+  private scrollToArticlePrompt(section: any, topicIndex: number): void {
+    this.scrollToElement(this.articlePromptElementId(section, topicIndex));
+  }
+
+  private scrollToElement(elementId: string): void {
+    setTimeout(() => {
+      document.getElementById(elementId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
       });
+    }, 150);
   }
 
   clearArticleChat(article?: any) {
@@ -1399,8 +1476,15 @@ export class AddSectionComponent implements OnInit {
     });
   }
 
-  openUploadArticleScreen(article?: any) {
+  openUploadArticleScreen(
+    article?: any,
+    section?: any,
+    topicIndex?: number
+  ) {
     article.uploadArticleDocument = true;
+    if (section != null && topicIndex != null) {
+      this.scrollToArticleEditor(section, topicIndex);
+    }
   }
 
   sectionActive(event?: any) {

@@ -356,6 +356,13 @@
   border: none !important;
 }
 
+.article-generating {
+  display: flex;
+  align-items: center;
+  color: #4a5568;
+  font-size: 14px;
+}
+
 .topic-input::placeholder {
   /* Your placeholder styling here */
   font-weight: 100 !important;

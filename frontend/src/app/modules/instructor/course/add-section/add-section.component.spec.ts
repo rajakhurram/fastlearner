@@ -807,12 +807,14 @@ describe('AddSectionComponent', () => {
       const article = {
         generateArticleBtn: true,
         articlePrompt: false,
+        showChatBox: true,
       };
 
       component.openArticlePrompt(article);
 
       expect(article.generateArticleBtn).toBe(false);
       expect(article.articlePrompt).toBe(true);
+      expect(article.showChatBox).toBe(false);
     });
   });
   describe('articleInputChange', () => {
