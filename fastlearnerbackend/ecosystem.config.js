@@ -1,19 +1,25 @@
-// ecosystem.config.js
 module.exports = {
-  apps : [{
-    name   : "fastlearner",
-    script : "/usr/lib/jvm/java-17-openjdk-amd64/bin/java", // Path to your Java executable
-    args   : [
-        "-jar",
-        "/var/lib/jenkins/workspace/fastlearner-proj/fastlearner-backend/target/FastLearner-0.0.1-SNAPSHOT.jar"
+  apps: [{
+    name: "fastlearner",
+
+    script: "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+
+    args: [
+      "-jar",
+      "/var/lib/jenkins/workspace/fl-opensource-backend/fastlearner-backend/target/FastLearner-0.0.1-SNAPSHOT.jar"
     ],
-    // Define the environment variables here.
-    // PM2 will pick these up from the shell it was launched from.
+
+    cwd: "/var/lib/jenkins/workspace/fl-opensource-backend/fastlearner-backend",
+
+    autorestart: true,
+
     env: {
-      NODE_ENV: "test", // Example other env var
+      NODE_ENV: "test",
+
       GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-      DB_USERNAME: process.env.DB_USERNAME, // This tells PM2 to take the value from its launching environment
-      DB_PASSWORD: process.env.DB_PASSWORD, // Same here
+
+      DB_USERNAME: process.env.DB_USERNAME,
+      DB_PASSWORD: process.env.DB_PASSWORD,
 
       JWT_SECRET: process.env.JWT_SECRET,
       JWT_EXPIRATION: process.env.JWT_EXPIRATION,
@@ -48,8 +54,7 @@ module.exports = {
 
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
 
-      PAYMENT_API_KEY: process.env.PAYMENT_API_KEY,
-
-    },
+      PAYMENT_API_KEY: process.env.PAYMENT_API_KEY
+    }
   }]
 };
