@@ -2,13 +2,14 @@ export const environment = {
   production: true,
   isProductionServer: true,
 
-  basePath: `https://classroom.aqualitycenter.com`,
-  loginUrl: `https://classroom.aqualitycenter.com/auth`,
-  baseUrl: `https://classroom.aqualitycenter.com/api/v1/`,
-  videoUrl: `https://classroom.aqualitycenter.com`,
-  imageUrl: `https://classroom.aqualitycenter.com`,
-  applicationCourseContentUrl: `https://classroom.aqualitycenter.com/student/course-content/`,
-  applicationCourseDetailsUrl: `https://classroom.aqualitycenter.com/student/course-details/`,
+  basePath: `http://34.134.191.51`,
+  loginUrl: `http://34.134.191.51:8443/auth`,
+  baseUrl: `http://34.134.191.51:8443/api/v1/`,
+  videoUrl: `http://34.134.191.51:8443`,
+  imageUrl: `http://34.134.191.51:8443`,
+  graderServiceBasePath: `http://34.134.191.51:8443`,
+  applicationCourseContentUrl: `http://34.134.191.51:8443/student/course-content/`,
+  applicationCourseDetailsUrl: `http://34.134.191.51:8443/student/course-details/`,
 
   // Goolge Login Credentials
   googleClientId: '{{google-client-id}}',
