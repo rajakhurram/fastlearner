@@ -186,15 +186,7 @@
                     "
                   >
                     <img src="../../../../assets/icons/tick.svg" />
-                     <span
-                        *ngIf="line.trim() === 'Unlimited AI Grading'; else normalFeature"
-                        class="clickable-feature"
-                        (click)="goToAiGrader()"
-                      >{{ line }}</span>
-                      <!-- Normal feature -->
-                      <ng-template #normalFeature>
-                        <span>{{ line }}</span>
-                      </ng-template>
+                    <span>{{ line }}</span>
                   </small>
                 </div>
                 <div class="card-actions display-flex justify-content-center">
@@ -596,36 +588,6 @@
                 <td>Off-Page SEO (Backlinks, Directories)</td>
                 <td>—</td>
                 <td>—</td>
-                <td>
-                  <img
-                    width="20px"
-                    height="20px"
-                    src="../../../../assets/icons/tick-compare.svg"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a (click)="goToAiGrader()" class="ai-grader-link cursor-pointer">
-                    <span style="color: #212189; text-decoration: underline"
-                      >Unlimited AI Grader</span
-                    >
-                    <img
-                      height="15px"
-                      class="ml-5x"
-                      alt="New"
-                      src="assets/icons/ai-grader-new.svg"
-                      loading="lazy"
-                  /></a>
-                </td>
-                <td>—</td>
-                <td>
-                  <img
-                    width="20px"
-                    height="20px"
-                    src="../../../../assets/icons/tick-compare.svg"
-                  />
-                </td>
                 <td>
                   <img
                     width="20px"

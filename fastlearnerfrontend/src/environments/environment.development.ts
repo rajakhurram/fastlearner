@@ -7,13 +7,14 @@ export const environment = {
   isProductionServer: false,
 
   // Local server IP
-  basePath: `${localApiBaseUrlPath}/`,
-  loginUrl: `${localApiBaseUrlPath}:8443/auth`,
-  baseUrl: `${localApiBaseUrlPath}:8443/api/v1/`,
-  videoUrl: `${localApiBaseUrlPath}:8443`,
-  imageUrl: `${localApiBaseUrlPath}:8443`,
-  applicationCourseContentUrl: `${localApiBaseUrlPath}/student/course-content/`,
-  applicationCourseDetailsUrl: `${localApiBaseUrlPath}/student/course-details/`,
+  basePath: `http://34.134.191.51`,
+  loginUrl: `http://34.134.191.51:8443/auth`,
+  baseUrl: `http://34.134.191.51:8443/api/v1/`,
+  videoUrl: `http://34.134.191.51:8443`,
+  imageUrl: `http://34.134.191.51:8443`,
+  graderServiceBasePath: `http://34.134.191.51:8443`,
+  applicationCourseContentUrl: `http://34.134.191.51:8443/student/course-content/`,
+  applicationCourseDetailsUrl: `http://34.134.191.51:8443/student/course-details/`,
 
   // Goolge Login Credentials
   googleClientId:

@@ -455,10 +455,4 @@ export class PricingPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  goToAiGrader() {
-    this.isPlanSelected = true;
-    this._router.navigate(['/ai-grader']);
-  }
-
-
 }
