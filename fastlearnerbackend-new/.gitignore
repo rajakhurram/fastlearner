@@ -41,7 +41,6 @@ node_modules/
 dist/
 
 
-src/main/resources/application.properties
 src/main/resources/application-wassey.properties
 src/main/resources/application-qasim.properties
 src/main/resources/application-local.properties
