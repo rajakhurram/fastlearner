@@ -8,6 +8,8 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { StateService } from 'src/app/core/services/state.service';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -33,8 +35,19 @@ describe('FooterComponent', () => {
         { provide: Router, useValue: routerSpy },
         { provide: SharedService, useValue: sharedServiceSpy },
         { provide: MessageService, useValue: messageServiceSpy },
-        { provide: ActivatedRoute, useValue: {} }, // Provide a stub for ActivatedRoute
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { _routerState: { url: '' } } },
+        },
         { provide: AuthService, useValue: {} },
+        {
+          provide: CacheService,
+          useValue: jasmine.createSpyObj('CacheService', [
+            'saveInCache',
+            'getDataFromCache',
+          ]),
+        },
+        { provide: StateService, useValue: {} },
       ],
       schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();

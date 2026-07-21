@@ -1,4 +1,4 @@
-import { QuizType } from "../enums/quiz-type";
+import { QuizType } from '../enums/quiz-type';
 
 export class CreateCourse {
   courseId?: any;
@@ -9,6 +9,8 @@ export class CreateCourse {
   categoryId?: number;
   courseLevelId?: number;
   courseType?: string;
+  pricingLocked?: boolean;
+  premiumConversionUsed?: boolean;
   about?: string;
   thumbnailUrl?: string;
   previewVideoURL?: string;
@@ -41,6 +43,7 @@ export class Topic {
   level?: number;
   topicTypeId?: number;
   duration?: number;
+  topicComprehensive?: string;
   video?: Video;
   quiz?: Quiz;
   article?: Article;
@@ -66,17 +69,21 @@ export class Question {
   id?: any;
   delete?: boolean;
   questionText?: string;
+  questionImageUrl?: string;
   questionType?: string;
   explanation?: string;
   surveyQuestionCount?: number;
-  surveyAnswers?: Array<{count: number; answer: string}>;
+  surveyAnswers?: Array<{ count: number; answer: string }>;
   answers?: Answer[];
+  mediaType?: string;
+  // questionAudioUrl?: string;
 }
 
 export class Answer {
   id?: any;
   delete?: boolean;
   answerText?: string;
+  answerImageUrl?: string;
   isCorrectAnswer?: boolean;
 }
 

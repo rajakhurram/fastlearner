@@ -1,0 +1,113 @@
+<div  class="quiz-attempt-container" *ngIf="quizData && !isReviewing">
+  <div class="chart-section">
+    <div class="donut-chart">
+      <svg viewBox="0 0 36 36" class="circular-chart">
+        <!-- Skipped -->
+        <path
+          class="circle skip"
+          [attr.stroke-dasharray]="skippedPercent + ', 100'"
+          stroke-dashoffset="0"
+          d="M18 2.0845
+       a 15.9155 15.9155 0 0 1 0 31.831
+       a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+
+        <!-- Incorrect -->
+        <path
+          class="circle incorrect"
+          [attr.stroke-dasharray]="incorrectPercent + ', 100'"
+          [attr.stroke-dashoffset]="-skippedPercent"
+          d="M18 2.0845
+       a 15.9155 15.9155 0 0 1 0 31.831
+       a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+
+        <!-- Correct -->
+        <path
+          class="circle correct"
+          [attr.stroke-dasharray]="correctPercent + ', 100'"
+          [attr.stroke-dashoffset]="-(skippedPercent + incorrectPercent)"
+          d="M18 2.0845
+       a 15.9155 15.9155 0 0 1 0 31.831
+       a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+      </svg>
+    </div>
+
+    <div class="legend">
+      <span><span class="dot correct"></span>Correct</span>
+      <span><span class="dot incorrect"></span>Incorrect</span>
+      <span><span class="dot skip"></span>Skipped/unanswered</span>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h2 *ngIf="isAllowedToRetake">A few things before you start</h2>
+
+    <p *ngIf="isAllowedToRetake">
+      The test has <b>{{ quizData.totalQuestion }}</b> questions and needs to be
+      finished within <b>{{ quizData.quiz.durationInMinutes }} minutes</b>. The
+      Passing Criteria is <b>{{ quizData.quiz.passingCriteria }}%</b>.
+    </p>
+
+    <div class="attempt-status">
+      <h3 *ngIf="isAllowedToRetake">
+        Attempt {{ attemptNumber }}:
+        <span
+          [ngClass]="{
+            failed: quizData.obtainedPercentage < quizData.quiz.passingCriteria,
+            passed: quizData.obtainedPercentage >= quizData.quiz.passingCriteria
+          }"
+        >
+          {{
+            quizData.obtainedPercentage >= quizData.quiz.passingCriteria
+              ? "Passed"
+              : "Failed"
+          }}
+          ({{ quizData.quiz.passingCriteria }}% required to pass)
+        </span>
+      </h3>
+
+      <div class="percentage">
+        {{ quizData.obtainedPercentage === 100
+            ? '100'
+            : (quizData.obtainedPercentage | number:'1.2-2') }}%
+        <span *ngIf="!isSurvey">Correct ({{ correct }} / {{ quizData.totalQuestion }})</span>
+        </div>
+
+
+      <p><b>Duration:</b> {{ quizData.quiz.durationInMinutes }} minutes</p>
+      <p><b>Date:</b> {{ formattedDate }}</p>
+    </div>
+
+    <div class="btn-wrapper">
+            <button
+              class="retry-btn"
+              nz-button
+              (click)="reviewQuiz()"
+              nzType="default"
+              
+            >
+              Review Questions
+            </button>
+            <button
+              class="retake-btn"
+              nz-button
+              (click)="retakeQuiz($event)"
+              nzType="primary"
+              *ngIf="isAllowedToRetake"
+            >
+              Retake Quiz
+            </button>
+          </div>
+  </div>
+</div>
+<ng-container *ngIf="isReviewing">
+  <app-quiz-review-attempt-questions
+    [quizData]="quizData"
+    [currentSelectedTopic]="currentSelectedTopic"
+    (retakeQuizEvent)="retakeQuiz($event)"
+    [isAllowedToRetake]="isAllowedToRetake"
+    (backToQuizEvent)="backToQuiz($event)"
+  ></app-quiz-review-attempt-questions>
+</ng-container>

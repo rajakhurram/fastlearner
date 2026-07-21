@@ -37,12 +37,14 @@
                 <app-button
                   [buttonText]="'Start Now'"
                   (buttonCallBack)="handleStartNowClick()"
-                  ><img
+                >
+                  <img
                     class="view-all-img"
-                    height="25px"
-                    width="25px"
+                    height="25"
+                    width="25"
                     alt="Arrow"
                     src="./../../../assets/icons/Start-Now.svg"
+                    loading="lazy"
                     style="margin-left: 1px; display: inline-block"
                   />
                 </app-button>
@@ -51,19 +53,274 @@
           </div>
           <div nz-col>
             <div class="banner-image hero-image">
-              <app-banner-animation></app-banner-animation>
+              <img
+                *ngIf="mobileView"
+                class="hero-lcp-image"
+                src="assets/images/banner-animation.webp"
+                alt="AI Based Learning Platform"
+                fetchpriority="high"
+                loading="eager"
+              />
+              <app-banner-animation *ngIf="!mobileView"></app-banner-animation>
             </div>
           </div>
         </div>
       </app-container>
     </div>
+
+    <!-- meet our instructors -->
+
+    <div
+      class="about-us empowering"
+      id="about_us_empowering"
+      #about_us_empowering
+    >
+      <app-container>
+        <div class="about-us-card-content content-styling">
+          <div class="about-us-heading">
+            <h2>Meet Our Expert Instructors</h2>
+          </div>
+          <div class="about-us-text fit-width width-res">
+            <small class="text-width"
+              >At FastLearner, we take pride in our diverse team of instructors
+              who bring real-world experience and academic excellence to the
+              classroom. Our educators are dedicated to promoting a quick
+              learning environment where you can develop your fast learner
+              skills and achieve your goals. You can also
+              <a
+                (click)="
+                  routeToLink('https://fastlearner.ai/become-instructor')
+                "
+                class="link"
+                >become an instructor</a
+              >
+              on this platform and join a thriving community of educators
+              transforming education. Gain insights from leading professors and
+              industry experts from prestigious universities like Stanford,
+              UCLA, and UC Berkeley, ensuring you receive top-notch training
+              customized to your needs.
+            </small>
+          </div>
+        </div>
+        <div style="margin-top: 20px; justify-content: center" nz-row>
+          <app-static-card
+            [staticCards]="instructorCards"
+            [showButton]="true"
+            [showButtonWhenLoggedIn]="true"
+            [instructorView]="true"
+          ></app-static-card>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="test-center" id="test_center" #test_center>
+      <app-container>
+        <p
+          (click)="routeToCourseList(viewAllMap.TEST, 'test_center')"
+          *ngIf="tests.length"
+          class="view-all-para"
+        >
+          View All
+          <img
+            class="view-all-img"
+            height="15px"
+            width="15px"
+            alt="Arrow"
+            src="./../../../assets/icons/arrow-dark.svg"
+          />
+        </p>
+        <div
+          style="justify-content: center; display: flex"
+          class="justify-alignment"
+        >
+          <div class="width-container">
+            <div class="test-center-section">
+              <div class="adventure-padding">
+                <div class="test-center-heading">
+                  <h2>Test Center</h2>
+                </div>
+                <div class="test-center-text">
+                  <small class="text-width"
+                    >Our Test Center provides practice and mock tests that
+                    sharpen your skills and build confidence. Attend exam-like
+                    questions, get quick feedback, and track your progress
+                    easily.
+                  </small>
+                </div>
+              </div>
+              <app-card-slider
+                [loading]="sliderLoading['test_center']"
+                [sectionId]="'test_center'"
+                [courses]="tests"
+                [isLoggedIn]="isLoggedIn"
+                [courseButtonName]="courseButtonName"
+                [heartFilled]="heartFilled"
+                [heartUnFilled]="heartUnFilled"
+                [buttonTheme]="'light'"
+                [cardsToShow]="cardsToShow"
+                [count]="totalTestElements"
+                [applyMargin]="true"
+                (leftClickEmitter)="getTest(directionEnum.LEFT)"
+                (rightClickEmitter)="getTest(directionEnum.RIGHT)"
+              ></app-card-slider>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="about-us" id="about_us" #about_us>
+      <app-container>
+        <p
+          (click)="routeToCourseList(viewAllMap.TRENDING, 'about_us')"
+          *ngIf="trendingCourses.length"
+          class="view-all-para"
+        >
+          View All
+          <img
+            class="view-all-img"
+            height="15px"
+            width="15px"
+            alt="Arrow"
+            src="./../../../assets/icons/arrow-dark.svg"
+          />
+        </p>
+        <div
+          style="justify-content: center; display: flex"
+          class="justify-alignment"
+        >
+          <div class="width-container">
+            <div class="about-us-section">
+              <div class="adventure-padding">
+                <div class="about-us-heading">
+                  <h2>Discover Top Trending Courses</h2>
+                </div>
+                <div class="about-us-text">
+                  <small class="text-width"
+                    >Our top trending courses are the go-to choice for learners
+                    who value innovative knowledge and practical skills. These
+                    courses offer a fast track to success and help you build
+                    fast learner skills. Join a community of curious minds on
+                    our AI learning platform, where fast learning meets
+                    real-world relevance.
+                  </small>
+                </div>
+              </div>
+              <app-card-slider
+                [loading]="sliderLoading['about_us']"
+                [sectionId]="'about_us'"
+                [courses]="trendingCourses"
+                [isLoggedIn]="isLoggedIn"
+                [courseButtonName]="courseButtonName"
+                [heartFilled]="heartFilled"
+                [heartUnFilled]="heartUnFilled"
+                [buttonTheme]="'light'"
+                [cardsToShow]="cardsToShow"
+                [count]="totalTrendingCoursesElements"
+                [applyMargin]="true"
+                (leftClickEmitter)="getTrendingCourses(directionEnum.LEFT)"
+                (rightClickEmitter)="getTrendingCourses(directionEnum.RIGHT)"
+              ></app-card-slider>
+            </div>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
+    <div class="course-card-section" id="courses_section" #courses_section>
+      <app-container>
+        <p
+          (click)="routeToCourseList(viewAllMap.CATEGORY, 'courses_section')"
+          *ngIf="courseList?.length"
+          class="view-all-p"
+        >
+          View All
+          <img
+            class="view-all-img"
+            height="15px"
+            width="15px"
+            alt="Arrow"
+            src="./../../../assets/icons/arrow-dark.svg"
+          />
+        </p>
+        <div class="course-card-title">
+          <h2>Explore Our Vast Course Library</h2>
+
+          <div class="course-card-text fit-width">
+            <small class="text-width"
+              >Learn from top online video courses to help you develop fast
+              learner skills. With regular new additions, FastLearner offers a
+              comprehensive AI learning platform for continuous skill
+              development. Discover endless possibilities and start learning
+              quickly in your chosen field.
+            </small>
+          </div>
+        </div>
+        <div class="categories-div">
+          <div class="scroll-container">
+            <button class="nav-button left" (click)="scrollLeft()">
+              &#10094;
+            </button>
+            <div class="scroller">
+              <div class="scroller-content" #scrollerContent>
+                <li
+                  class="menu-tabs-items all-list"
+                  (click)="onSelectCategory(null)"
+                >
+                  <span
+                    class="all-tag"
+                    [class.selected]="selectedCategory === null"
+                    >All</span
+                  >
+                </li>
+                <span
+                  class="category menu-tabs-items"
+                  *ngFor="let category of categoryList"
+                >
+                  <li (click)="onSelectCategory(category?.id)">
+                    <span
+                      [class.selected]="selectedCategory === category?.id"
+                      >{{ category?.name }}</span
+                    >
+                  </li></span
+                >
+              </div>
+            </div>
+            <button class="nav-button right" (click)="scrollRight()">
+              &#10095;
+            </button>
+          </div>
+        </div>
+
+        <div style="justify-content: center; display: flex">
+          <div class="width-container">
+            <app-card-slider
+              [loading]="sliderLoading['courses_section']"
+              [sectionId]="'courses_section'"
+              [courses]="courseList"
+              [isLoggedIn]="isLoggedIn"
+              [courseButtonName]="courseButtonName"
+              [heartFilled]="heartFilled"
+              [heartUnFilled]="heartUnFilled"
+              [buttonTheme]="'light'"
+              [cardsToShow]="cardsToShow"
+              [count]="5"
+              [applyMargin]="true"
+            ></app-card-slider>
+          </div>
+        </div>
+      </app-container>
+    </div>
+
     <div class="premium-courses" id="premium_courses" #premium_courses>
       <app-container>
         <app-view-all-button
           [theme]="'dark'"
           *ngIf="premiumCourses?.length"
           [isFromPremium]="true"
-          (viewAllButtonClickEmitter)="routeToCourseList(viewAllMap.PREMIUM)"
+          (viewAllButtonClickEmitter)="
+            routeToCourseList(viewAllMap.PREMIUM, 'premium_courses')
+          "
         ></app-view-all-button>
         <div
           style="justify-content: center; display: flex"
@@ -97,6 +354,8 @@
                 </div>
               </div>
               <app-card-slider
+                [loading]="sliderLoading['premium_courses']"
+                [sectionId]="'premium_courses'"
                 [courses]="premiumCourses"
                 [isLoggedIn]="isLoggedIn"
                 [courseButtonName]="courseButtonName"
@@ -115,7 +374,8 @@
         </div>
       </app-container>
     </div>
-    <div class="about-us" id="about_us" #about_us>
+
+    <!-- <div class="about-us" id="about_us" #about_us>
       <app-container>
         <p
           (click)="routeToCourseList(viewAllMap.TRENDING)"
@@ -169,8 +429,9 @@
           </div>
         </div>
       </app-container>
-    </div>
-    <div class="test-center" id="test_center" #test_center>
+    </div> -->
+
+    <!-- <div class="test-center" id="test_center" #test_center>
       <app-container>
         <p
           (click)="routeToCourseList(viewAllMap.TEST)"
@@ -222,13 +483,16 @@
           </div>
         </div>
       </app-container>
-    </div>
+    </div> -->
+
     <div class="free-courses" id="free_courses" #free_courses>
       <app-container>
         <app-view-all-button
           [theme]="'dark'"
           *ngIf="freeCourses?.length"
-          (viewAllButtonClickEmitter)="routeToCourseList(viewAllMap.FREE)"
+          (viewAllButtonClickEmitter)="
+            routeToCourseList(viewAllMap.FREE, 'free_courses')
+          "
         ></app-view-all-button>
         <div nz-row style="justify-content: center" class="justify-alignment">
           <div class="width-container">
@@ -249,6 +513,8 @@
                 </div>
               </div>
               <app-card-slider
+                [loading]="sliderLoading['free_courses']"
+                [sectionId]="'free_courses'"
                 [courses]="freeCourses"
                 [isLoggedIn]="isLoggedIn"
                 [courseButtonName]="courseButtonName"
@@ -268,6 +534,7 @@
         </div>
       </app-container>
     </div>
+
     <div class="about-us bg-light" id="about_us_bg_light" #about_us_bg_light>
       <app-container>
         <div nz-row style="justify-content: center" class="justify-alignment">
@@ -309,7 +576,8 @@
     <!-- About us section ends -->
 
     <!-- Courses card section starts -->
-    <div
+
+    <!-- <div
       id="courses-section"
       class="course-card-section"
       id="courses_section"
@@ -395,7 +663,10 @@
           </div>
         </div>
       </app-container>
-    </div>
+    </div> -->
+
+    <!-- meet our instructor
+
     <div
       class="about-us empowering"
       id="about_us_empowering"
@@ -437,7 +708,8 @@
           ></app-static-card>
         </div>
       </app-container>
-    </div>
+    </div> -->
+
     <div class="new-courses" id="new_courses" #new_courses>
       <app-container>
         <div class="new-courses-content">
@@ -472,6 +744,8 @@
 
           <div style="justify-content: center" nz-row>
             <app-card-slider
+              [loading]="sliderLoading['new_courses']"
+              [sectionId]="'new_courses'"
               [courses]="newCourses"
               [isLoggedIn]="isLoggedIn"
               [courseButtonName]="courseButtonName"

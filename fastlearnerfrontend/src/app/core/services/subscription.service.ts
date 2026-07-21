@@ -10,9 +10,11 @@ import { CacheService } from './cache.service';
   providedIn: 'root',
 })
 export class SubscriptionService {
-  constructor(private _http: HttpClient, private _cacheService: CacheService) {}
+  constructor(
+    private _http: HttpClient,
+    private _cacheService: CacheService,
+  ) {}
   private apiUrl = 'https://countriesnow.space/api/v0.1/countries/iso';
-
 
   getCountries(): Observable<any> {
     return this._http.get<any>(this.apiUrl);
@@ -23,21 +25,21 @@ export class SubscriptionService {
 
   public getSavedPaymentProfile(): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}authorizenet/payment-profile/saved`
+      `${environment.baseUrl}authorizenet/payment-profile/saved`,
     );
   }
 
   public savePaymentProfile(paymentProfile?: PaymentProfile): Observable<any> {
-    return this._http.post(
-      `${environment.baseUrl}authorizenet/payment-profile/create`,
-      paymentProfile
-    );
+    const url = paymentProfile?.id
+      ? `${environment.baseUrl}authorizenet/payment-profile/update`
+      : `${environment.baseUrl}authorizenet/payment-profile/create`;
+    return this._http.post(url, paymentProfile);
   }
 
   public addSubscription(subscription?: Subscription): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}authorizenet/create-subscription`,
-      subscription
+      subscription,
     );
   }
 
@@ -63,33 +65,33 @@ export class SubscriptionService {
 
   public getAllPaymentProfiles(): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}authorizenet/payment-profile/`
+      `${environment.baseUrl}authorizenet/payment-profile/`,
     );
   }
 
   public paymentDefault(id?: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}authorizenet/update-subscription?paymentProfileId=${id}`,
-      null
+      null,
     );
   }
 
   public removePaymentProfile(id?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}authorizenet/payment-profile/${id}`
+      `${environment.baseUrl}authorizenet/payment-profile/${id}`,
     );
   }
 
   public getBillingHistory(payLoad?: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}authorizenet/history/`,
-      payLoad
+      payLoad,
     );
   }
 
   public getPurchasedHistory(payLoad?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}purhcased-course/?pageNo=${payLoad?.pageNo}&pageSize=${payLoad?.pageSize}`
+      `${environment.baseUrl}purhcased-course/?pageNo=${payLoad?.pageNo}&pageSize=${payLoad?.pageSize}`,
     );
   }
 
@@ -98,13 +100,13 @@ export class SubscriptionService {
       `${environment.baseUrl}purhcased-course/download?courseId=${courseId}`,
       {
         responseType: 'blob',
-      }
+      },
     );
   }
 
   public getBillingHistoryByUser(payLoad?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}transaction-history/get?pageNo=${payLoad?.pageNo}&pageSize=${payLoad?.pageSize}`
+      `${environment.baseUrl}transaction-history/get?pageNo=${payLoad?.pageNo}&pageSize=${payLoad?.pageSize}`,
     );
   }
 
@@ -114,7 +116,7 @@ export class SubscriptionService {
 
   public getInvoiceByTransId(transId?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}authorizenet/history/detail?transactionId=${transId}`
+      `${environment.baseUrl}authorizenet/history/detail?transactionId=${transId}`,
     );
   }
 
@@ -123,23 +125,23 @@ export class SubscriptionService {
       `${environment.baseUrl}transaction-history/get-by-id?transactionId=${transId}`,
       {
         responseType: 'blob',
-      }
+      },
     );
   }
   public updateUserSubscriptionCheck(isSubscribe?: boolean) {
     let loggedInUserDetails = JSON.parse(
-      this._cacheService.getDataFromCache('loggedInUserDetails') ?? ''
+      this._cacheService.getDataFromCache('loggedInUserDetails') ?? '',
     );
     loggedInUserDetails.subscribed = isSubscribe;
     this._cacheService.saveInCache(
       'loggedInUserDetails',
-      JSON.stringify(loggedInUserDetails)
+      JSON.stringify(loggedInUserDetails),
     );
   }
 
   public getTokenAgainstSessionId(sessionId?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}user-session/generate-token?sessionId=${sessionId}`
+      `${environment.baseUrl}user-session/generate-token?sessionId=${sessionId}`,
     );
   }
 
@@ -159,7 +161,7 @@ export class SubscriptionService {
             if (permissions?.length > 0) {
               this._cacheService.saveInCache(
                 'permissions',
-                JSON.stringify(permissions)
+                JSON.stringify(permissions),
               );
             } else {
               this._cacheService.removeFromCache('permissions');
@@ -169,7 +171,7 @@ export class SubscriptionService {
         catchError(() => {
           this._cacheService.removeFromCache('permissions');
           return of(); // continue the flow even if error occurs
-        })
+        }),
       );
   }
 
@@ -178,18 +180,18 @@ export class SubscriptionService {
       map((response: any) => {
         if (response?.status === 200) {
           let loggedInUserDetails = this._cacheService.getJsonData(
-            'loggedInUserDetails'
+            'loggedInUserDetails',
           );
           loggedInUserDetails.subscriptionPlanType = response?.data;
           this._cacheService.saveInCache(
             'loggedInUserDetails',
-            JSON.stringify(loggedInUserDetails)
+            JSON.stringify(loggedInUserDetails),
           );
         }
       }),
       catchError(() => {
         return of(); // continue the flow even if error occurs
-      })
+      }),
     );
   }
 }

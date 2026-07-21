@@ -1,0 +1,697 @@
+.premium-students-container {
+  // padding: 16px;
+}
+
+.filter-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+h2 {
+  margin-bottom: 24px;
+}
+
+.search-bar {
+  width: 100%;
+  min-width: 15rem;
+  color: #292929;
+  position: relative;
+}
+
+.input-group-container {
+  width: 70%;
+  padding: 8px 10px 8px 10px;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+  outline: none;
+}
+
+.search-input-container {
+  width: 90%;
+  border: none;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-results-container {
+  background-color: white;
+  position: absolute;
+  top: 36.5px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.sub-main {
+  background-color: white;
+  padding: inherit;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.upper-row {
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .daterangepicker {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.export-button {
+  margin-top: 5px;
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+::ng-deep .daterangepicker .ranges ul {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+::ng-deep .daterangepicker .ranges ul li {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+::ng-deep .daterangepicker .ranges ul li:hover,
+::ng-deep .daterangepicker .ranges ul li.active {
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .ant-table-thead > tr > th {
+  background: #edf6ff;
+  color: #212189;
+}
+
+:host ::ng-deep .ant-table-container {
+  overflow: auto;
+}
+
+.export-btn {
+  width: 13%;
+  margin-bottom: 16px;
+  margin-top: 10px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+}
+.export-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.signup-form-button {
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  color: #fff;
+  margin-top: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 6px;
+  padding-bottom: 28px;
+}
+
+.signup-form-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+@media screen and (max-width: 1200px) {
+  .search-bar {
+    padding-bottom: 10px !important;
+  }
+}
+
+.excel-icon {
+  padding-right: 5px;
+}
+
+::ng-deep .calendar.left.ng-star-inserted {
+  width: 100%;
+}
+
+::ng-deep .daterangepicker.ltr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+::ng-deep.daterangepicker .ranges ul li button.active {
+  background-color: #212189 !important;
+}
+
+::ng-deep.daterangepicker td.active,
+.daterangepicker td.active:hover {
+  background-color: #212189 !important;
+}
+
+/* Add this to your global styles.css or styles.scss file */
+::ng-deep.daterangepicker .card-footer button {
+  color: blue !important;
+  background-color: white !important;
+  border: none !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+}
+
+::ng-deep .daterangepicker .card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+::ng-deep .daterangepicker.ltr .ranges {
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+::ng-deep .daterangepicker.ltr .calendar.left {
+  // grid-column-start: 2;
+  // grid-row-start: 2;
+  // margin-top: -216% !important;
+}
+
+::ng-deep .daterangepicker.ltr .calendar.right {
+  // grid-column-start: 2;
+  // grid-row-start: 1;
+  // margin-top: 110% !important;
+}
+
+.students-courses-wrapper {
+  display: flex;
+  height: 100%;
+  background: #fff;
+}
+
+/* LEFT PANEL */
+.students-panel {
+  width: 300px;
+  border-right: 1px solid #eee;
+}
+
+.students-header {
+  font-weight: 600;
+  padding: 16px;
+  font-size: 16px;
+  color: #212189;
+}
+
+.students-header .count {
+    color: #212189;
+    font-weight: normal;
+    padding: 6px 12px 5px 12px;
+    background-color: #edf6ff;
+    border-radius: 16px;
+    font-size: 14px;
+}
+
+.student-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.student-item:hover {
+  background: #f5f9ff;
+}
+
+.student-item.active {
+  background: #eef4ff;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-info {
+  margin-left: 12px;
+  flex: 1;
+}
+
+.student-info .name {
+  font-weight: 500;
+}
+
+.student-info .email {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.arrow {
+  font-size: 18px;
+  color: #9ca3af;
+}
+
+/* RIGHT PANEL */
+.courses-panel {
+  flex: 1;
+  padding: 24px;
+}
+
+.panel-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* COURSE CARD */
+.course-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.course-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.course-info {
+  margin-left: 16px;
+  flex: 1;
+}
+
+.enroll-badge {
+  display: inline-block;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.course-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.expand-btn {
+  background: #f3f4f6;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.expand-btn span {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.expand-btn span.rotate {
+  transform: rotate(180deg);
+}
+
+/* SECTIONS */
+.sections {
+  background: #f8fbff;
+}
+
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.view-results {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.view-results:hover {
+  text-decoration: underline;
+}
+
+.empty-text {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+/* Main container */
+.premium-students-container {
+  padding: 0;
+}
+
+/* Match design title */
+.premium-students-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #1f2937;
+}
+
+.sub-main {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+/* Top controls row */
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+.date-range-container {
+  flex: 1;
+  max-width: 250px;
+}
+
+.date-range-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.date-range-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.export-container {
+  flex-shrink: 0;
+}
+
+
+/* Two panel layout */
+.students-courses-wrapper {
+  display: flex;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 600px;
+}
+
+/* LEFT PANEL - Students */
+.students-panel {
+  width: 320px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.students-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
+}
+
+.students-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #212189;
+}
+
+.student-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.student-item:hover {
+  background-color: #f3f4f6;
+}
+
+.student-item.active {
+  background-color: #edf6ff;
+}
+
+.avatar-container {
+  margin-right: 12px;
+}
+
+.student-details {
+  flex: 1;
+}
+
+.student-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.student-email {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.student-arrow {
+  color: #9ca3af;
+  font-size: 30px;
+}
+
+.student-arrow.active {
+  color: #212189;
+}
+
+/* RIGHT PANEL - Courses */
+.courses-panel {
+  flex: 1;
+  padding: 24px;
+  background: white;
+  margin-left: 15px;
+  border: 1px solid #e5e7eb;
+}
+
+.panel-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #1f2937;
+}
+
+.course-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.course-header {
+  padding: 16px;
+  background: white;
+}
+
+.course-main-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+    width: 100%;
+}
+
+.date-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.course-title {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.4;
+}
+
+.expand-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #6b7280;
+}
+
+.expand-icon {
+  display: inline-block;
+  transition: transform 0.2s;
+  font-size: 16px;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+/* Sections */
+.course-sections {
+  background: #e4eeff;
+  border-top: 0px solid #e5e7eb;
+  padding: 8px 0;
+}
+
+.section-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.section-item:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.view-results-btn {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.view-results-btn:hover {
+  text-decoration: underline;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 950px) {
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .controls-left {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .search-container,
+  .date-range-container {
+    max-width: 100%;
+  }
+  
+  .students-courses-wrapper {
+    flex-direction: column;
+  }
+  
+  .students-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+  }
+
+  .courses-panel{
+    margin-left: 0px;
+  }
+}
+
+.enroll-name {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-right: 20px;
+}
+
+.arrow-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.panel-head{ 
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.students-list-wrapper {
+  max-height: 500px; // adjust based on your layout
+  overflow-y: auto;
+  padding-right: 5px; // optional, avoids cutting off scrollbar
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: #cbd5e1 transparent; // Firefox
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+  }
+}

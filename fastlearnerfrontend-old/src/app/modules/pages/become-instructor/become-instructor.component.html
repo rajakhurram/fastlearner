@@ -1,0 +1,434 @@
+<div class="container">
+  <div class="landing-page">
+    <!-- Banner container Start -->
+    <div class="banner">
+      <div style="justify-content: center" class="banner-row" nz-row>
+        <!-- Text Section -->
+        <div class="banner-row-container" nzOffset="1">
+          <div class="landing-page-banner">
+            <div class="landing-page-heading">
+              <h1>
+                Become
+                <!-- <span id="transitionText">{{ currentText }}</span> -->
+                <span>an Instructor</span>
+                <br />at FastLearner
+              </h1>
+            </div>
+            <div class="landing-page-text">
+              <small>
+                Share your knowledge and empower learners by becoming an
+                instructor at FastLearner. Shape the future of education by
+                sharing your expertise on this learning platform. Make a
+                difference now!
+              </small>
+            </div>
+            <button (click)="routeToInstructorWelcomePage()" class="button-cta">
+              Teach on Fast Learner
+            </button>
+          </div>
+        </div>
+        <!-- Image Section -->
+        <div nzOffset="1" class="banner-image-style">
+          <div class="banner-image">
+            <img
+              class="banner-img"
+              style="align-self: center"
+              height="420px"
+              src="../../../../assets/images/become-instructor.png"
+              alt="Become an Instructor Banner"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner Container End -->
+    <div class="about-us">
+      <div style="display: flex; justify-content: center">
+        <div class="adjust-width">
+          <div class="about-us-heading">
+            <h2>Let’s Achieve More Together</h2>
+          </div>
+          <div class="about-us-text">
+            <small
+              >Share your knowledge and empower learners by becoming an
+              instructor at FastLearner. Shape the future of education by
+              sharing your expertise on our AI-Powered Learning Platform. Make a
+              difference now!</small
+            ><br />
+          </div>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col class="about-us-cards-style">
+          <div class="about-us-section">
+            <div class="about-us-cards">
+              <div class="detail-cards" nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" nzSpan="8">
+                  <nz-card
+                    class="card-text-align"
+                    style="
+                      background-color: transparent;
+                      width: 280px;
+                      margin-bottom: 25px;
+                    "
+                    [nzCover]="coverTemplate"
+                  >
+                    <nz-card-meta
+                      nzTitle="Teach on your terms"
+                      nzDescription="Design and publish your course exactly how you envision it.
+                      "
+                    ></nz-card-meta>
+                  </nz-card>
+                  <ng-template #coverTemplate>
+                    <img
+                      class="img-style"
+                      src="./../../../../assets/icons/exam.svg"
+                    />
+                  </ng-template>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="8">
+                  <nz-card
+                    class="card-text-align"
+                    style="width: 280px; margin-bottom: 25px"
+                    [nzCover]="coverTemplate2"
+                  >
+                    <nz-card-meta
+                      nzTitle="Spark Learning Journey"
+                      nzDescription="Help students explore interests and build new skills.
+                      "
+                    ></nz-card-meta>
+                  </nz-card>
+                  <ng-template #coverTemplate2>
+                    <img
+                      class="img-style"
+                      src="./../../../../assets/icons/rocket.svg"
+                    />
+                  </ng-template>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="8">
+                  <nz-card
+                    class="card-text-align"
+                    style="width: 280px; margin-bottom: 25px"
+                    [nzCover]="coverTemplateAltIns"
+                  >
+                    <nz-card-meta
+                      nzTitle="Earn with Every Enrollment"
+                      nzDescription="Share your knowledge and build a sustainable income stream.
+                      "
+                    ></nz-card-meta>
+                  </nz-card>
+                  <ng-template #coverTemplateAltIns>
+                    <img
+                      class="img-style"
+                      src="./../../../../assets/icons/online-income.svg"
+                    />
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+    <!-- Student pick Start -->
+    <div class="student-pick">
+      <div style="display: flex; justify-content: center">
+        <div class="adjust-width">
+          <div class="about-us-heading">
+            <h2>
+              Why Become A <br />
+              Fastlearner Instructor
+            </h2>
+          </div>
+          <div class="about-us-text">
+            <small
+              >Turn your passion into impact! FastLearner offers flexible
+              teaching and exclusive features to assist your teaching.
+              <a
+                href="https://fastlearner.ai/"
+                target="_blank"
+                class="link-white"
+                >Learner AI
+              </a>
+              helps you personalize the learning experience for each student,
+              ensuring that they receive targeted support based on their
+              individual needs. The platform provides income potential and a
+              supportive community to empower learners worldwide. </small
+            ><br />
+          </div>
+        </div>
+      </div>
+      <div class="justify-alignment" nz-row>
+        <div
+          class="text-align-responsive"
+          style="display: flex; justify-content: center"
+          nz-col
+          nzXs="22"
+          nzLg="12"
+          nzXXl="12"
+          nzOffset="1"
+        >
+          <div class="student-pick-content">
+            <div class="landing-page-heading">
+              <h2>Top Benefits & Platform Features</h2>
+            </div>
+
+            <div class="student-pick-points">
+              <div class="student-pick-point-1">
+                <span
+                  ><img
+                    height="20px"
+                    src="../../../assets/icons/Check-Mark.svg"
+                    alt="Check Mark"
+                /></span>
+                <p class="">
+                  Earn up to 45% share of course earnings and turn your passion
+                  into profit.
+                </p>
+              </div>
+              <div class="student-pick-point-1">
+                <span
+                  ><img
+                    height="20px"
+                    src="../../../assets/icons/Check-Mark.svg"
+                    alt="Check Mark"
+                /></span>
+                <p class="">
+                  Connect with the learning community and build your reputation.
+                </p>
+              </div>
+              <div class="student-pick-point-1">
+                <span
+                  ><img
+                    height="20px"
+                    src="../../../assets/icons/Check-Mark.svg"
+                    alt="Check Mark"
+                /></span>
+                <p class="">
+                  Develop high-quality, engaging courses with our exclusive
+                  features.
+                </p>
+              </div>
+              <div class="student-pick-point-1">
+                <span
+                  ><img
+                    height="20px"
+                    src="../../../assets/icons/Check-Mark.svg"
+                    alt="Check Mark"
+                /></span>
+                <p class="">Build Your Network, refer others & get rewarded.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="" style="align-self: center" nz-col nzMd="10" nzXs="22">
+          <div class="banner-image">
+            <img
+              style="margin-top: 5%; width: -webkit-fill-available"
+              class=""
+              src="./../../../assets/images/banner-image.png"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fastlearner Standout Section Start-->
+    <div class="about-us">
+      <div style="display: flex; justify-content: center">
+        <div class="adjust-width">
+          <div class="about-us-heading">
+            <h2>How do I get enrolled</h2>
+          </div>
+          <div class="about-us-text">
+            <small
+              >Ready to share your knowledge and empower learners? Your
+              FastLearner instructor journey starts here. It's easy:</small
+            ><br />
+          </div>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col class="about-us-cards-style">
+          <div class="about-us-section">
+            <div class="about-us-cards">
+              <div class="detail-cards" nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" nzSpan="8">
+                  <nz-card
+                    class="card-text-align"
+                    style="
+                      background-color: transparent;
+                      width: 260px;
+                      margin-bottom: 25px;
+                      box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+                    "
+                    [nzCover]="coverTemplateAcc"
+                  >
+                    <nz-card-meta
+                      nzTitle="Create an account"
+                      nzDescription="Create your instructor account easily and quickly
+                      "
+                    ></nz-card-meta>
+                  </nz-card>
+                  <ng-template #coverTemplateAcc>
+                    <img
+                      src="./../../../../assets/icons/create-account.svg"
+                      alt="Create Account"
+                    />
+                  </ng-template>
+                </div>
+
+                <div nz-col class="gutter-row" nzSpan="8">
+                  <nz-card
+                    class="card-text-align"
+                    style="
+                      background-color: transparent;
+                      width: 260px;
+                      margin-bottom: 25px;
+                      box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+                    "
+                    [nzCover]="coverTemplateUpload"
+                  >
+                    <nz-card-meta
+                      nzTitle="Upload your courses"
+                      nzDescription="Share your expertise and knowledge with students
+                      "
+                    ></nz-card-meta>
+                  </nz-card>
+                  <ng-template #coverTemplateUpload>
+                    <img
+                      src="./../../../../assets/icons/upload.svg"
+                      alt="Upload"
+                    />
+                  </ng-template>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="8">
+                  <nz-card
+                    class="card-text-align"
+                    style="
+                      background-color: transparent;
+                      width: 260px;
+                      margin-bottom: 25px;
+                      box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+                    "
+                    [nzCover]="coverTemplateStarts"
+                  >
+                    <nz-card-meta
+                      nzTitle="Start earning"
+                      nzDescription="Get paid to teach and positively influence students
+                      "
+                    ></nz-card-meta>
+                  </nz-card>
+                  <ng-template #coverTemplateStarts>
+                    <img
+                      src="./../../../../assets/icons/earning.svg"
+                      alt="Earning"
+                    />
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+    <div class="banner">
+      <div class="banner-row-youtube" nz-row>
+        <!-- Text Section -->
+        <div class="banner-row-container-youtube" nzOffset="1">
+          <div class="landing-page-banner-youtube">
+            <div class="about-us-heading" style="text-align: left !important">
+              <h2>Take the first step today! <br /></h2>
+            </div>
+            <div class="landing-page-text">
+              <small>
+                Ready to share your skills and knowledge? Our comprehensive
+                guide will help you become a FastLearner instructor and
+                <a
+                  href="https://blog.fastlearner.ai/how-can-instructors-create-a-course-with-ai-on-fastlearner/"
+                  target="_blank"
+                  >create courses with AI assistance.</a
+                >
+              </small>
+            </div>
+          </div>
+        </div>
+        <!-- Image Section -->
+        <div nzOffset="1" style="width: 55%" class="">
+          <div class="banner-image">
+            <img
+              class=""
+              style="align-self: center; width: 100%"
+              src="../../../../assets/images/preview-banner.png"
+              alt="Become an Instructor Banner"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="support-container">
+      <div class="support-row">
+        <!-- Text Section -->
+        <div class="support-banner-image-container">
+          <img
+            class="support-banner-img"
+            style="align-self: center"
+            src="../../../../assets/images/become-instructor-banner-2.png"
+            alt="Become an Instructor Banner"
+          />
+        </div>
+
+        <div class="support-banner">
+          <div class="support-heading">
+            <h2>
+              Exclusive Features to Support
+              <br />
+              Your Success
+            </h2>
+          </div>
+          <div class="support-text">
+            <small>
+              FastLearner equips you with the tools you need to thrive. Our
+              exclusive features, like AI powered course creation and Ask AI,
+              empower you to create engaging courses, cover a wider audience,
+              keep engagement high, and maximize your earning potential. Join
+              the FastLearner Advantage and experience the difference!
+            </small>
+          </div>
+        </div>
+
+        <!-- Image Section -->
+      </div>
+    </div>
+    <div class="expertise-container">
+      <div class="support-row">
+        <!-- Text Section -->
+        <div class="expertise-banner">
+          <div class="support-heading">
+            <h2>
+              Share Your Expertise &
+              <br />
+              Make a Difference
+            </h2>
+          </div>
+          <div class="support-text">
+            <small>
+              Empower others with your skills! Join FastLearner's vibrant
+              instructor community and make a real impact.
+            </small>
+          </div>
+
+          <button (click)="routeToInstructorWelcomePage()" class="button-cta">
+            Get Started Today!
+          </button>
+        </div>
+
+        <!-- Image Section -->
+      </div>
+    </div>
+
+    <!-- Fastlearner Standout Section End -->
+  </div>
+</div>

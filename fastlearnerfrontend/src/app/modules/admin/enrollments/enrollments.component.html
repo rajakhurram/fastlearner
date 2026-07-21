@@ -1,0 +1,132 @@
+<section class="enrollments-page">
+  <div class="page-header">
+    <h2>Enrollments</h2>
+  </div>
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <div class="filter-row">
+      <!-- <input nz-input placeholder="Search by user, course, or ID..." /> -->
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Search by name, email, or ID..."
+          name="title"
+          [(ngModel)]="queryParams.search"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span style="color: #212189" nz-icon nzType="search"></span>
+      </ng-template>
+
+      <nz-select
+        nzPlaceHolder="All Statuses"
+        [(ngModel)]="queryParams.status"
+        (ngModelChange)="onSelectFilterChange('status', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Statuses"></nz-option>
+        <nz-option nzValue="enrolled" nzLabel="Enrolled"></nz-option>
+        <nz-option nzValue="Completed" nzLabel="Completed"></nz-option>
+        <nz-option nzValue="inprogress" nzLabel="In Progress"></nz-option>
+        <!-- <nz-option nzValue="Inactive" nzLabel="Inactive"></nz-option> -->
+      </nz-select>
+      <nz-select
+        nzPlaceHolder="All Courses"
+        [(ngModel)]="queryParams.courseId"
+        (ngModelChange)="onSelectFilterChange('courseId', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Courses"></nz-option>
+        <nz-option
+          *ngFor="let course of courses"
+          [nzValue]="course.rawId || course.id"
+          [nzLabel]="course.title || course.name"
+        ></nz-option>
+      </nz-select>
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="clear-filter-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filter
+      </button>
+      <!-- <nz-select
+        nzPlaceHolder="Any Progress"
+        [(ngModel)]="queryParams.progress"
+        (ngModelChange)="onSelectFilterChange('progress', $event)"
+      >
+        <nz-option nzValue="" nzLabel="Any Progress"></nz-option>
+        <nz-option nzValue="Not Started" nzLabel="Not Started"></nz-option>
+        <nz-option nzValue="In Progress" nzLabel="In Progress"></nz-option>
+        <nz-option nzValue="Completed" nzLabel="Completed"></nz-option>
+      </nz-select> -->
+    </div>
+
+    <nz-table
+      #enrollmentTable
+      [nzData]="enrollments"
+      [nzLoading]="isTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+      class="enrollment-table"
+    >
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Enrolled Date</th>
+          <th>Progress</th>
+          <th>Course Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let enrollment of enrollmentTable.data">
+          <td>{{ enrollment.rawId }}</td>
+          <td class="student-name">{{ enrollment.studentName }}</td>
+          <td>{{ enrollment.courseTitle }}</td>
+          <td>{{ enrollment.enrolledDate | date: "mediumDate" }}</td>
+          <td>
+            <div class="progress-cell">
+              <div class="progress-track">
+                <div
+                  class="progress-fill"
+                  [style.width.%]="enrollment.progressPercent"
+                ></div>
+              </div>
+              <span>{{ enrollment.progressPercent }}%</span>
+            </div>
+          </td>
+          <td>
+            <span
+              class="status-pill"
+              [ngClass]="{
+                enrolled: enrollment.status === 'Enrolled',
+                completed: enrollment.status === 'Completed',
+                inprogress: enrollment.status === 'In Progress',
+                inactive: enrollment.status === 'Inactive',
+              }"
+            >
+              {{ enrollment.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <div class="table-footer">
+      <nz-pagination
+        *ngIf="totalElements > 0"
+        style="margin-left: auto"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="queryParams.page + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="queryParams.size"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </nz-card>
+</section>

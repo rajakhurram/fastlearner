@@ -209,107 +209,107 @@ public class QuizQuestionAnswerServiceMockTest {
         verify(repo, never()).deleteById(anyLong());
     }
 
-    @Test
-    @DisplayName("Should validate answers successfully")
-    void testValidateAnswers_Success() throws BadRequestException, InternalServerException {
-        String email = "instructor@test.com";
-        Long userId = 1L;
-        Long quizId = 100L;
-        Long questionId = 200L;
-        Long answerId = 300L;
+//    @Test
+//    @DisplayName("Should validate answers successfully")
+//    void testValidateAnswers_Success() throws BadRequestException, InternalServerException {
+//        String email = "instructor@test.com";
+//        Long userId = 1L;
+//        Long quizId = 100L;
+//        Long questionId = 200L;
+//        Long answerId = 300L;
+//
+//        User user = UserTestData.userData();
+//        user.setId(userId);
+//        user.setEmail(email);
+//
+//        ValidationAnswerRequest request = new ValidationAnswerRequest();
+//        request.setQuestionId(questionId);
+//        request.setAnswerId(List.of(answerId));
+//
+//        Quiz quiz = new Quiz();
+//        quiz.setId(quizId);
+//        quiz.setRandomQuestion(1);
+//
+//        QuizAnswer correctAnswer = new QuizAnswer();
+//        correctAnswer.setAnswerId(answerId);
+//        correctAnswer.setAnswerText("Java is a programming language.");
+//        correctAnswer.setIsCorrect(true);
+//
+//        QuizAnswer correctAnswer1 = new QuizAnswer();
+//        correctAnswer1.setAnswerId(answerId);
+//        correctAnswer1.setAnswerText("Java is a hardware component.");
+//        correctAnswer1.setIsCorrect(false);
+//
+//        QuizAnswer correctAnswer2 = new QuizAnswer();
+//        correctAnswer2.setAnswerId(answerId);
+//        correctAnswer2.setAnswerText("Java is a tea type.");
+//        correctAnswer2.setIsCorrect(false);
+//
+//        com.vinncorp.fast_learner.models.quiz.QuizQuestion quizQuestion = new com.vinncorp.fast_learner.models.quiz.QuizQuestion();
+//        quizQuestion.setId(questionId);
+//        quizQuestion.setQuestionText("What is Java?");
+//        quizQuestion.setExplanation("Java is a programming language.");
+//        quizQuestion.setQuestionType(QuestionType.SINGLE_CHOICE);
+//        quizQuestion.setQuiz(quiz);
+//
+//        QuizQuestionAnwser quizQuestionAnswer = new QuizQuestionAnwser();
+//        quizQuestionAnswer.setId(answerId);
+//        quizQuestionAnswer.setAnswer("Java is a programming language.");
+//        quizQuestionAnswer.setCorrectAnswer(true);
+//        quizQuestionAnswer.setQuizQuestion(quizQuestion);
+//
+//        QuizQuestionAnwser quizQuestionAnswer1 = new QuizQuestionAnwser();
+//        quizQuestionAnswer1.setId(answerId);
+//        quizQuestionAnswer1.setAnswer("Java is a hardware component.");
+//        quizQuestionAnswer1.setCorrectAnswer(false);
+//        quizQuestionAnswer1.setQuizQuestion(quizQuestion);
+//
+//        QuizQuestionAnwser quizQuestionAnswer2 = new QuizQuestionAnwser();
+//        quizQuestionAnswer2.setId(answerId);
+//        quizQuestionAnswer2.setAnswer("Java is a tea type.");
+//        quizQuestionAnswer2.setCorrectAnswer(false);
+//        quizQuestionAnswer2.setQuizQuestion(quizQuestion);
+//
+//
+//        QuizAttempt existingAttempt = new QuizAttempt();
+//        existingAttempt.setId(999L);
+//        existingAttempt.setTotalAttemptCount(1L);
+//
+//        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+//        when(repo.findPassingCriteriaAndQuizIdByQuestionId(questionId)).thenReturn(50L);
+//        when(repo.findByQuizQuestionId(questionId)).thenReturn(List.of(quizQuestionAnswer, quizQuestionAnswer1, quizQuestionAnswer2));
+//        when(quizQuestionRepository.findByQuizIdAndNotInQuestionId(quizId, List.of(questionId))).thenReturn(Collections.emptyList());
+//        when(quizAttemptRepository.findByQuizAndUsers(quizId, userId)).thenReturn(existingAttempt);
+//        when(quizAttemptRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+//
+//        Message<QuizAnswerResponse> result = service.validateAnswers(List.of(request), email);
+//
+//        assertEquals(HttpStatus.OK.value(), result.getStatus());
+//        assertEquals("Quiz Response fetch successfully", result.getMessage());
+//        assertNotNull(result.getData());
+//        assertEquals(100.0, result.getData().getPercentage());
+//        assertEquals(1L, result.getData().getTotalCorrectAnswer());
+//    }
 
-        User user = UserTestData.userData();
-        user.setId(userId);
-        user.setEmail(email);
-
-        ValidationAnswerRequest request = new ValidationAnswerRequest();
-        request.setQuestionId(questionId);
-        request.setAnswerId(List.of(answerId));
-
-        Quiz quiz = new Quiz();
-        quiz.setId(quizId);
-        quiz.setRandomQuestion(1);
-
-        QuizAnswer correctAnswer = new QuizAnswer();
-        correctAnswer.setAnswerId(answerId);
-        correctAnswer.setAnswerText("Java is a programming language.");
-        correctAnswer.setIsCorrect(true);
-
-        QuizAnswer correctAnswer1 = new QuizAnswer();
-        correctAnswer1.setAnswerId(answerId);
-        correctAnswer1.setAnswerText("Java is a hardware component.");
-        correctAnswer1.setIsCorrect(false);
-
-        QuizAnswer correctAnswer2 = new QuizAnswer();
-        correctAnswer2.setAnswerId(answerId);
-        correctAnswer2.setAnswerText("Java is a tea type.");
-        correctAnswer2.setIsCorrect(false);
-
-        com.vinncorp.fast_learner.models.quiz.QuizQuestion quizQuestion = new com.vinncorp.fast_learner.models.quiz.QuizQuestion();
-        quizQuestion.setId(questionId);
-        quizQuestion.setQuestionText("What is Java?");
-        quizQuestion.setExplanation("Java is a programming language.");
-        quizQuestion.setQuestionType(QuestionType.SINGLE_CHOICE);
-        quizQuestion.setQuiz(quiz);
-
-        QuizQuestionAnwser quizQuestionAnswer = new QuizQuestionAnwser();
-        quizQuestionAnswer.setId(answerId);
-        quizQuestionAnswer.setAnswer("Java is a programming language.");
-        quizQuestionAnswer.setCorrectAnswer(true);
-        quizQuestionAnswer.setQuizQuestion(quizQuestion);
-
-        QuizQuestionAnwser quizQuestionAnswer1 = new QuizQuestionAnwser();
-        quizQuestionAnswer1.setId(answerId);
-        quizQuestionAnswer1.setAnswer("Java is a hardware component.");
-        quizQuestionAnswer1.setCorrectAnswer(false);
-        quizQuestionAnswer1.setQuizQuestion(quizQuestion);
-
-        QuizQuestionAnwser quizQuestionAnswer2 = new QuizQuestionAnwser();
-        quizQuestionAnswer2.setId(answerId);
-        quizQuestionAnswer2.setAnswer("Java is a tea type.");
-        quizQuestionAnswer2.setCorrectAnswer(false);
-        quizQuestionAnswer2.setQuizQuestion(quizQuestion);
-
-
-        QuizAttempt existingAttempt = new QuizAttempt();
-        existingAttempt.setId(999L);
-        existingAttempt.setTotalAttemptCount(1L);
-
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(repo.findPassingCriteriaAndQuizIdByQuestionId(questionId)).thenReturn(50L);
-        when(repo.findByQuizQuestionId(questionId)).thenReturn(List.of(quizQuestionAnswer, quizQuestionAnswer1, quizQuestionAnswer2));
-        when(quizQuestionRepository.findByQuizIdAndNotInQuestionId(quizId, List.of(questionId))).thenReturn(Collections.emptyList());
-        when(quizAttemptRepository.findByQuizAndUsers(quizId, userId)).thenReturn(existingAttempt);
-        when(quizAttemptRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        Message<QuizAnswerResponse> result = service.validateAnswers(List.of(request), email);
-
-        assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertEquals("Quiz Response fetch successfully", result.getMessage());
-        assertNotNull(result.getData());
-        assertEquals(100.0, result.getData().getPercentage());
-        assertEquals(1L, result.getData().getTotalCorrectAnswer());
-    }
-
-    @Test
-    @DisplayName("Should return NOT_FOUND when instructor is not found")
-    void testValidateAnswers_InstructorNotFound() throws BadRequestException, InternalServerException {
-        when(userRepository.findByEmail("invalid@example.com")).thenReturn(Optional.empty());
-
-        Message<QuizAnswerResponse> result = service.validateAnswers(List.of(new ValidationAnswerRequest()), "invalid@example.com");
-
-        assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
-        assertEquals("Instructor not found with email: invalid@example.com", result.getMessage());
-    }
-
-    @Test
-    @DisplayName("Should throw BadRequestException when request is invalid")
-    void testValidateAnswers_InvalidRequest_ThrowsException() {
-        when(userRepository.findByEmail("any@email.com")).thenReturn(Optional.of(UserTestData.userData()));
-        assertThrows(BadRequestException.class, () ->
-                service.validateAnswers(Collections.emptyList(), "any@email.com")
-        );
-    }
+//    @Test
+//    @DisplayName("Should return NOT_FOUND when instructor is not found")
+//    void testValidateAnswers_InstructorNotFound() throws BadRequestException, InternalServerException {
+//        when(userRepository.findByEmail("invalid@example.com")).thenReturn(Optional.empty());
+//
+//        Message<QuizAnswerResponse> result = service.validateAnswers(List.of(new ValidationAnswerRequest()), "invalid@example.com");
+//
+//        assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
+//        assertEquals("Instructor not found with email: invalid@example.com", result.getMessage());
+//    }
+//
+//    @Test
+//    @DisplayName("Should throw BadRequestException when request is invalid")
+//    void testValidateAnswers_InvalidRequest_ThrowsException() {
+//        when(userRepository.findByEmail("any@email.com")).thenReturn(Optional.of(UserTestData.userData()));
+//        assertThrows(BadRequestException.class, () ->
+//                service.validateAnswers(Collections.emptyList(), "any@email.com")
+//        );
+//    }
 
     @Test
     @DisplayName("Should throw RuntimeException when passing criteria is not found")

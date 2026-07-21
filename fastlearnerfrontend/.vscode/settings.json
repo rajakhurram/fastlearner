@@ -1,10 +1,9 @@
 {
-    "cSpell.words": [
-        "Favourite",
-        "noti",
-        "unclicked"
-    ],
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+  "cSpell.words": ["Favourite", "noti", "unclicked"],
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on"
 }

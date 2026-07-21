@@ -276,14 +276,20 @@ loading = false;
   fetchPremiumStudents(): void {
     this._premiumStudentsService.getPremiumStudents(this.payLoad)?.subscribe(
       (response: any) => {
-        this.students = response?.data?.content;
-        this.totalElements = response?.data?.totalElements;
-        this.groupByStudents = this.groupBy(this.students, item => item.studentId);
-        console.log(this.groupByStudents);
+        this.students = response?.data?.content || [];
+        this.totalElements = response?.data?.totalElements || 0;
+        this.groupByStudents = this.groupBy(this.students, (item) => item.studentId);
+        // Clear selection if data is empty so UI doesn't show stale state
+        if (!this.students.length) {
+          this.selectedStudent = null;
+          this.selectedStudentCourses = [];
+        }
       },
       (error: any) => {
         this.students = [];
         this.totalElements = 0;
+        this.selectedStudent = null;
+        this.selectedStudentCourses = [];
       }
     );
   }

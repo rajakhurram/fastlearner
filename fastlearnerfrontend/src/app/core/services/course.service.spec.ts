@@ -3,10 +3,13 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CourseService } from './course.service';
 import { AuthService } from './auth.service';
 import { InstructorService } from './instructor.service';
 import { environment } from 'src/environments/environment.development';
+import { CourseType } from '../enums/course-status';
+import { QuestionType } from '../enums/question-type';
 import { of, throwError } from 'rxjs';
 
 describe('CourseService', () => {
@@ -2188,6 +2191,1071 @@ describe('CourseService', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('Phase 1 coverage batch', () => {
+    const mockResponse = { data: [] };
+
+    it('getNewCourses should GET new courses with pagination', () => {
+      const body = { pageNo: 0, pageSize: 10 };
+      authService.isLoggedIn.and.returnValue(true);
+
+      service.getNewCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/new-courses?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getTest should GET test endpoint with pagination', () => {
+      const body = { pageNo: 1, pageSize: 5 };
+      authService.isLoggedIn.and.returnValue(false);
+
+      service.getTest(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/test?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getInstructors should GET top instructors', () => {
+      const body = { pageNo: 0, pageSize: 5 };
+
+      service.getInstructors(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/top-instructor?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getTrendingCourses should GET trending courses', () => {
+      const body = { pageNo: 0, pageSize: 8 };
+      authService.isLoggedIn.and.returnValue(true);
+
+      service.getTrendingCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/trending-courses?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getAllCourses should POST view-all body', () => {
+      const body = { pageNo: 0, pageSize: 20 };
+      authService.isLoggedIn.and.returnValue(false);
+
+      service.getAllCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/view-all`
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(body);
+      req.flush(mockResponse);
+    });
+
+    it('getFreeCourses should GET when logged in', () => {
+      const body = { pageNo: 0, pageSize: 10 };
+      authService.isLoggedIn.and.returnValue(true);
+
+      service.getFreeCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/free-courses?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getFreeCourses should GET via HttpBackend when not logged in', () => {
+      const body = { pageNo: 0, pageSize: 10 };
+      authService.isLoggedIn.and.returnValue(false);
+
+      service.getFreeCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/free-courses?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getPremiumCourses should GET when logged in', () => {
+      const body = { pageNo: 1, pageSize: 10 };
+      authService.isLoggedIn.and.returnValue(true);
+
+      service.getPremiumCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/premium-courses?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getPremiumCourses should GET via HttpBackend when not logged in', () => {
+      const body = { pageNo: 1, pageSize: 10 };
+      authService.isLoggedIn.and.returnValue(false);
+
+      service.getPremiumCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}home-page/premium-courses?pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getMyCourses should GET without title filter', () => {
+      const body = { pageNo: 0, pageSize: 10, sortBy: 'date' };
+
+      service.getMyCourses(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}enrollment/?pageNo=${body.pageNo}&pageSize=${body.pageSize}&sortBy=${body.sortBy}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('sendCoPilotMessage should POST to copilot chat', () => {
+      const body = { message: 'Help me learn Angular' };
+      const copilotResponse = { reply: 'Sure!' };
+
+      service.sendCoPilotMessage(body).subscribe((response) => {
+        expect(response).toEqual(copilotResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.basePath}copilot/chat/`
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(body);
+      req.flush(copilotResponse);
+    });
+
+    it('submitQuizAnswers should POST validate-answering payload', () => {
+      const answers = [
+        { questionId: 1, answerId: 10 },
+        { questionId: 2, answerId: 20 },
+      ];
+
+      service.submitQuizAnswers(answers).subscribe((response) => {
+        expect(response).toEqual({ valid: true });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}quiz/validate-answering`
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(answers);
+      req.flush({ valid: true });
+    });
+
+    it('manageWatchTime should POST watch-time query params', () => {
+      const courseId = 42;
+      const watchTime = 3600;
+
+      service.manageWatchTime(courseId, watchTime).subscribe((response) => {
+        expect(response).toEqual({ success: true });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}watch-time/?courseId=${courseId}&watchTime=${watchTime}`
+      );
+      expect(req.request.method).toBe('POST');
+      req.flush({ success: true });
+    });
+
+    it('searchCourse should GET course-search with query params', () => {
+      const body = { searchValue: 'angular', pageNo: 0, pageSize: 10 };
+
+      service.searchCourse(body).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}course/course-search?query=${body.searchValue}&pageNo=${body.pageNo}&pageSize=${body.pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getAlternateInstructorSections should GET alternate-section', () => {
+      const courseId = 10;
+      const sectionId = 20;
+
+      service
+        .getAlternateInstructorSections(courseId, sectionId)
+        .subscribe((response) => {
+          expect(response).toEqual(mockResponse);
+        });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}alternate-section/?courseId=${courseId}&sectionId=${sectionId}&pageNo=0&pageSize=100`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('parseBulkTestQuestionsFromExcel should POST FormData', () => {
+      const file = new File(['excel'], 'questions.xlsx', {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+
+      service.parseBulkTestQuestionsFromExcel(file).subscribe((response) => {
+        expect(response).toEqual({ parsed: true });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}course/test/bulk-questions/parse`
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body instanceof FormData).toBeTrue();
+      req.flush({ parsed: true });
+    });
+
+    it('getQuizAttempt should GET quiz attempt by id', () => {
+      const quizId = 99;
+
+      service.getQuizAttempt(quizId).subscribe((response) => {
+        expect(response).toEqual({ attemptId: 1 });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}quiz/attempt/${quizId}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush({ attemptId: 1 });
+    });
+
+    it('getInstructorQuizAttempt should GET with email param', () => {
+      const quizId = 55;
+      const email = 'instructor@example.com';
+
+      service.getInstructorQuizAttempt(quizId, email).subscribe((response) => {
+        expect(response).toEqual({ score: 90 });
+      });
+
+      const req = httpTestingController.expectOne(
+        (request) =>
+          request.url === `${environment.baseUrl}quiz/attempt/instructor/${quizId}`
+      );
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('email')).toBe(email);
+      req.flush({ score: 90 });
+    });
+
+    it('courseUrlExist should GET unique-course-url', () => {
+      const url = 'my-course';
+      const courseId = 7;
+
+      service.courseUrlExist(url, courseId).subscribe((response) => {
+        expect(response).toEqual({ exists: false });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}course/unique-course-url?url=${url}&courseId=${courseId}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush({ exists: false });
+    });
+
+    it('getCourseByUrl should POST course-url body', () => {
+      const url = 'intro-to-angular';
+
+      service.getCourseByUrl(url).subscribe((response) => {
+        expect(response).toEqual({ id: 1 });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}course/course-url`
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ courseUrl: url });
+      req.flush({ id: 1 });
+    });
+
+    it('premiumCourseAvailable should GET premium-course-available', () => {
+      service.premiumCourseAvailable().subscribe((response) => {
+        expect(response).toEqual({ available: true });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}course/premium-course-available`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush({ available: true });
+    });
+
+    it('deleteChat should DELETE chat by courseId and chatId', () => {
+      const courseId = 3;
+      const chatId = 8;
+
+      service.deleteChat(courseId, chatId).subscribe((response) => {
+        expect(response).toEqual({ deleted: true });
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}chat/delete?courseId=${courseId}&chatId=${chatId}`
+      );
+      expect(req.request.method).toBe('DELETE');
+      req.flush({ deleted: true });
+    });
+
+    it('previewAIReport should POST and return text response', () => {
+      const body = {
+        quizQuestions: [
+          {
+            ques: 'What is Angular?',
+            explanation: 'A framework',
+            answers: [{ ans: 'Framework', isCorrectAnswer: true }],
+          },
+        ],
+        reportPrompt: 'Summarize performance',
+        topicTitle: 'Intro',
+        timeZone: 'UTC',
+        durationInMinutes: 30,
+      };
+
+      service.previewAIReport(body).subscribe((response) => {
+        expect(response).toBe('AI report preview');
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}quiz/preview-report`
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.responseType).toBe('text');
+      expect(req.request.body.quizQuestionDtos.length).toBe(1);
+      req.flush('AI report preview');
+    });
+
+    it('getComments should GET course feedback with pagination', () => {
+      const courseId = 12;
+      const currentPage = 0;
+      const pageSize = 5;
+
+      service.getComments(courseId, currentPage, pageSize).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}course/get/feedback/${courseId}?pageNo=${currentPage}&pageSize=${pageSize}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('getCourseTags should GET tags and assign service.tags', () => {
+      const courseId = 101;
+      const tagResponse = { data: [{ id: 1, name: 'Angular', active: true }] };
+
+      service.getCourseTags(courseId).subscribe((response) => {
+        expect(response).toEqual(tagResponse);
+        expect(service.tags).toEqual(tagResponse.data);
+      });
+
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}tag/${courseId}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(tagResponse);
+    });
+
+    it('getTopicTypes should POST course create after loading topic types', () => {
+      const courseInformationData = new FormGroup({
+        titleExist: new FormControl(false),
+        courseTitle: new FormControl('Phase 1 Course'),
+        urlExist: new FormControl(false),
+        courseUrl: new FormControl('phase-1-course'),
+        description: new FormControl('Description'),
+        courseType: new FormControl(CourseType.FREE),
+        price: new FormControl(null),
+        courseCategory: new FormControl({ id: 1 }),
+        courseLevel: new FormControl({ id: 2 }),
+        courseHeadline: new FormControl('Headline'),
+        thumbnailPath: new FormControl('thumb.jpg'),
+        previewPath: new FormControl('preview.mp4'),
+        previewVideoVttContent: new FormControl('vtt'),
+        tagsArray: new FormControl([{ id: 1, name: 'Tag' }]),
+        prerequisite: new FormControl('None'),
+        courseSummaries: new FormControl([{ courseSummaryInfo: 'Outcome' }]),
+      });
+
+      instructorService.getTopicTypes.and.returnValue(
+        of({ status: 200, data: [{ name: 'Video', id: 1 }] })
+      );
+      service.topicTypes = [{ name: 'Video', id: 1 }];
+
+      service
+        .getTopicTypes(courseInformationData, [], null, true, false, 'video')
+        .subscribe((response) => {
+          expect(response).toEqual({ courseId: 500 });
+        });
+
+      const createReq = httpTestingController.expectOne(
+        `${environment.baseUrl}course/create`
+      );
+      expect(createReq.request.method).toBe('POST');
+      createReq.flush({ courseId: 500 });
+    });
+
+    it('validateQuestion should return true for valid multiple choice question', () => {
+      const question = {
+        ques: 'Pick one',
+        delete: false,
+        questionType: { key: QuestionType.MULTIPLE_CHOICE },
+        answers: [
+          { delete: false, isCorrectAnswer: true, ans: 'A' },
+          { delete: false, isCorrectAnswer: false, ans: 'B' },
+        ],
+      };
+
+      expect(service.validateQuestion(question)).toBeTrue();
+    });
+
+    it('validateQuestion should return true for survey with question text', () => {
+      const question = { ques: '  Rate this  ', delete: false, answers: [] };
+
+      expect(service.validateQuestion(question, true)).toBeTrue();
+    });
+
+    it('validateQuestion should return true for deleted question with id', () => {
+      const question = { delete: true, questionId: 5, ques: '', answers: [] };
+
+      expect(service.validateQuestion(question)).toBeTrue();
+    });
+
+    it('getQuestionAnswers should map answers and skip deleted without id', () => {
+      const answers = [
+        { answerId: 1, delete: false, ans: 'Yes', isCorrectAnswer: true },
+        { delete: true, ans: 'Skip me' },
+        { answerId: 2, delete: true, ans: 'Removed', isCorrectAnswer: false },
+      ];
+
+      const result = service.getQuestionAnswers(answers);
+
+      expect(result).toEqual([
+        {
+          id: 1,
+          delete: false,
+          answerText: 'Yes',
+          answerImageUrl: undefined,
+          isCorrectAnswer: true,
+        },
+        {
+          id: 2,
+          delete: true,
+          answerText: 'Removed',
+          answerImageUrl: undefined,
+          isCorrectAnswer: false,
+        },
+      ]);
+    });
+
+    it('getDocuments should map document array', () => {
+      const documents = [
+        {
+          id: 10,
+          delete: false,
+          summary: 'Summary',
+          documentFileName: 'notes.pdf',
+          documentUrl: 'https://example.com/notes.pdf',
+        },
+      ];
+
+      expect(service.getDocuments(documents)).toEqual([
+        {
+          id: 10,
+          delete: false,
+          summary: 'Summary',
+          docName: 'notes.pdf',
+          docUrl: 'https://example.com/notes.pdf',
+        },
+      ]);
+    });
+
+    it('getQuizQuestions should include only validated questions', () => {
+      spyOn(service, 'validateQuestion').and.callFake((question: any) => {
+        return question.ques === 'Valid question';
+      });
+      spyOn(service, 'getQuestionAnswers').and.returnValue([
+        { id: 1, answerText: 'A', isCorrectAnswer: true, delete: false },
+      ]);
+
+      const questions = [
+        {
+          questionId: 1,
+          delete: false,
+          ques: 'Valid question',
+          questionType: { key: QuestionType.SINGLE_CHOICE },
+          answers: [],
+          correctAnswer: null,
+        },
+        {
+          questionId: 2,
+          delete: false,
+          ques: 'Invalid question',
+          questionType: { key: QuestionType.SINGLE_CHOICE },
+          answers: [],
+          correctAnswer: null,
+        },
+      ];
+
+      const result = service.getQuizQuestions(questions, 'QUIZ');
+
+      expect(result.length).toBe(1);
+      expect(result[0].questionText).toBe('Valid question');
+    });
+
+    it('createSections should build section DTOs from sections data', () => {
+      spyOn(service, 'createTopics').and.returnValue([
+        { id: 1, title: 'Topic 1', level: 1 },
+      ]);
+
+      const sectionsData = [
+        {
+          sectionId: 100,
+          delete: false,
+          name: 'Section 1',
+          switchValue: true,
+          topics: [],
+        },
+      ];
+
+      const result = service.createSections(sectionsData, CourseType.FREE);
+
+      expect(result.length).toBe(1);
+      expect(result[0]).toEqual(
+        jasmine.objectContaining({
+          id: 100,
+          delete: false,
+          title: 'Section 1',
+          isFree: true,
+          level: 1,
+        })
+      );
+    });
+
+    it('setSearchResults should append results when fromShowMore is true', () => {
+      service.filteredCourses = [{ id: 1, title: 'Existing' }];
+      const newCourses = [{ id: 2, title: 'New' }];
+      const nlpCourses = [{ id: 3, title: 'NLP' }];
+
+      service.setSearchResults(newCourses, nlpCourses, true);
+
+      expect(service.filteredCourses.length).toBe(3);
+      service.searchResults$.subscribe((value) => {
+        expect(value).toEqual(service.filteredCourses);
+      });
+    });
+
+    it('passFavoriteCoursesFromLandingPageToNavbar should emit on $favoriteCourses', () => {
+      const courseList = [{ id: 99, title: 'Landing Favorite' }];
+      let emitted: any;
+
+      service.$favoriteCourses.subscribe((value) => {
+        emitted = value;
+      });
+
+      service.passFavoriteCoursesFromLandingPageToNavbar(courseList);
+
+      expect(emitted).toEqual(courseList);
+    });
+
+    it('calculateSectionProgress should return zero when no valid sections exist', () => {
+      service.course = {
+        sections: [{ delete: true, title: '', topics: [] }],
+      };
+
+      expect(service.calculateSectionProgress()).toBe(0);
+    });
+  });
+
+  describe('Phase 2 coverage batch: createCourseDto and DTO mapping', () => {
+    const successStatus = 200;
+
+    function buildCourseForm(overrides: Record<string, unknown> = {}): FormGroup {
+      return new FormGroup({
+        titleExist: new FormControl(overrides['titleExist'] ?? false),
+        courseTitle: new FormControl(overrides['courseTitle'] ?? 'New Course'),
+        urlExist: new FormControl(overrides['urlExist'] ?? false),
+        courseUrl: new FormControl(overrides['courseUrl'] ?? 'new-course'),
+        description: new FormControl('Course description'),
+        courseType: new FormControl(overrides['courseType'] ?? CourseType.FREE),
+        price: new FormControl(overrides['price'] ?? 49),
+        courseCategory: new FormControl({ id: 1 }),
+        courseLevel: new FormControl({ id: 2 }),
+        courseHeadline: new FormControl('Headline'),
+        thumbnailPath: new FormControl('thumb.jpg'),
+        previewPath: new FormControl('preview.mp4'),
+        previewVideoVttContent: new FormControl('vtt'),
+        tagsArray: new FormControl([{ id: 1, name: 'Tag' }]),
+        prerequisite: new FormControl('None'),
+        courseSummaries: new FormControl([{ courseSummaryInfo: 'Outcome' }]),
+      });
+    }
+
+    function stubTopicTypes(): void {
+      instructorService.getTopicTypes.and.returnValue(
+        of({
+          status: successStatus,
+          data: [
+            { name: 'Video', id: 1 },
+            { name: 'Article', id: 2 },
+            { name: 'Quiz', id: 3 },
+          ],
+        }),
+      );
+    }
+
+    it('createCourseDto without courseId should POST create payload', () => {
+      stubTopicTypes();
+      const form = buildCourseForm();
+
+      service
+        .createCourseDto(form, [], null, true, false, 'video')
+        .subscribe((response) => {
+          expect(response).toEqual({ courseId: 900 });
+        });
+
+      const createReq = httpTestingController.expectOne(
+        `${environment.baseUrl}course/create`,
+      );
+      expect(createReq.request.method).toBe('POST');
+      expect(createReq.request.body.title).toBe('New Course');
+      expect(createReq.request.body.contentType).toBe('VIDEO');
+      createReq.flush({ courseId: 900 });
+    });
+
+    it('createCourseDto with courseId should load tags then POST create', () => {
+      stubTopicTypes();
+      const form = buildCourseForm();
+
+      service
+        .createCourseDto(form, [], 'course-42', true, true, 'video')
+        .subscribe((response) => {
+          expect(response).toEqual({ courseId: 901 });
+          expect(service.tags).toEqual([{ id: 1, name: 'Angular', active: true }]);
+        });
+
+      const tagsReq = httpTestingController.expectOne(
+        `${environment.baseUrl}tag/course-42`,
+      );
+      tagsReq.flush({ data: [{ id: 1, name: 'Angular', active: true }] });
+
+      const createReq = httpTestingController.expectOne(
+        `${environment.baseUrl}course/create`,
+      );
+      expect(createReq.request.body.courseId).toBe('course-42');
+      expect(createReq.request.body.certificateEnabled).toBeTrue();
+      createReq.flush({ courseId: 901 });
+    });
+
+    it('createCourseDto should continue when getCourseTags fails', () => {
+      stubTopicTypes();
+      const form = buildCourseForm();
+      service.course = { tags: [{ id: 9, active: true }] } as any;
+
+      service
+        .createCourseDto(form, [], 'course-err', false, null, 'video')
+        .subscribe((response) => {
+          expect(response).toEqual({ courseId: 902 });
+        });
+
+      const tagsReq = httpTestingController.expectOne(
+        `${environment.baseUrl}tag/course-err`,
+      );
+      tagsReq.flush('Server error', { status: 500, statusText: 'Server Error' });
+
+      expect(service.tags).toEqual([]);
+      expect(service.course.tags).toEqual([]);
+
+      const createReq = httpTestingController.expectOne(
+        `${environment.baseUrl}course/create`,
+      );
+      createReq.flush({ courseId: 902 });
+    });
+
+    it('getTopicTypes should set null title and url when already exist', () => {
+      stubTopicTypes();
+      const form = buildCourseForm({
+        titleExist: true,
+        urlExist: true,
+        courseTitle: 'Ignored title',
+        courseUrl: 'ignored-url',
+      });
+
+      service
+        .getTopicTypes(form, [], 'c1', false, null, 'video')
+        .subscribe();
+
+      const createReq = httpTestingController.expectOne(
+        `${environment.baseUrl}course/create`,
+      );
+      expect(createReq.request.body.title).toBeNull();
+      expect(createReq.request.body.courseUrl).toBeNull();
+      createReq.flush({});
+    });
+
+    it('getTopicTypes should set price for premium courses', () => {
+      stubTopicTypes();
+      const form = buildCourseForm({
+        courseType: CourseType.PREMIUM,
+        price: 199,
+      });
+
+      service
+        .getTopicTypes(form, [], null, false, null, 'video')
+        .subscribe();
+
+      const createReq = httpTestingController.expectOne(
+        `${environment.baseUrl}course/create`,
+      );
+      expect(createReq.request.body.price).toBe(199);
+      expect(createReq.request.body.courseType).toBe(CourseType.PREMIUM);
+      createReq.flush({});
+    });
+
+    it('getTopicTypes should return null when topic types API is non-success', () => {
+      instructorService.getTopicTypes.and.returnValue(
+        of({ status: 400, data: [] }),
+      );
+
+      service
+        .getTopicTypes(buildCourseForm(), [], null, false, null, 'video')
+        .subscribe((response) => {
+          expect(response).toBeNull();
+        });
+    });
+
+    it('getTopicTypes should return null when topic types API errors', () => {
+      instructorService.getTopicTypes.and.returnValue(
+        throwError(() => new Error('topic types failed')),
+      );
+
+      service
+        .getTopicTypes(buildCourseForm(), [], null, false, null, 'video')
+        .subscribe((response) => {
+          expect(response).toBeNull();
+        });
+    });
+
+    it('validateQuestion should return false when question text is empty', () => {
+      const question = {
+        ques: '   ',
+        delete: false,
+        questionType: { key: QuestionType.MULTIPLE_CHOICE },
+        answers: [
+          { delete: false, isCorrectAnswer: true, ans: 'A' },
+          { delete: false, isCorrectAnswer: false, ans: 'B' },
+        ],
+      };
+
+      expect(service.validateQuestion(question)).toBeFalse();
+    });
+
+    it('validateQuestion should return false when no correct answer exists', () => {
+      const question = {
+        ques: 'Pick one',
+        delete: false,
+        questionType: { key: QuestionType.MULTIPLE_CHOICE },
+        answers: [
+          { delete: false, isCorrectAnswer: false, ans: 'A' },
+          { delete: false, isCorrectAnswer: false, ans: 'B' },
+        ],
+      };
+
+      expect(service.validateQuestion(question)).toBeFalse();
+    });
+
+    it('validateQuestion should return false for text field without answers', () => {
+      const question = {
+        ques: 'Explain',
+        delete: false,
+        questionType: { key: QuestionType.TEXT_FIELD },
+        answers: [],
+      };
+
+      expect(service.validateQuestion(question)).toBeFalse();
+    });
+
+    it('validateQuestion should return false for deleted question without id', () => {
+      expect(
+        service.validateQuestion({ delete: true, ques: '', answers: [] }),
+      ).toBeFalse();
+    });
+
+    it('validateQuestion should return false for survey without question text', () => {
+      expect(
+        service.validateQuestion({ ques: '', delete: false, answers: [] }, true),
+      ).toBeFalse();
+    });
+
+    it('getQuizQuestions should map survey answers for SURVEY quiz type', () => {
+      const questions = [
+        {
+          questionId: 1,
+          delete: false,
+          ques: 'Rate quality',
+          surveyQuestionCount: 2,
+          surveyAnswers: [
+            { answerId: 10, answer: 'Poor', delete: false, count: 1 },
+            { answerId: 11, answer: 'Good', delete: false, count: 2 },
+          ],
+          questionType: { key: QuestionType.SINGLE_CHOICE },
+        },
+      ];
+
+      const result = service.getQuizQuestions(questions, 'SURVEY');
+
+      expect(result.length).toBe(1);
+      expect(result[0].answers).toEqual([
+        { id: 10, answerText: 'Poor', isCorrectAnswer: true, delete: false },
+        { id: 11, answerText: 'Good', isCorrectAnswer: true, delete: false },
+      ]);
+      expect(result[0].surveyAnswers).toEqual(questions[0].surveyAnswers);
+    });
+
+    it('createSections should force isFree false for premium courses', () => {
+      spyOn(service, 'createTopics').and.returnValue([]);
+
+      const result = service.createSections(
+        [
+          {
+            sectionId: 1,
+            delete: false,
+            name: 'Premium Section',
+            switchValue: true,
+            topics: [],
+          },
+        ],
+        CourseType.PREMIUM,
+      );
+
+      expect(result[0].isFree).toBeFalse();
+    });
+
+    it('createSections should skip deleted sections without sectionId', () => {
+      spyOn(service, 'createTopics').and.returnValue([]);
+
+      const result = service.createSections(
+        [{ sectionId: '', delete: true, name: 'Removed', topics: [] }],
+        CourseType.FREE,
+      );
+
+      expect(result.length).toBe(0);
+    });
+
+    it('createTopics should build article topic payload', () => {
+      service.topicTypes = [
+        { name: 'Article', id: 2 },
+        { name: 'Video', id: 1 },
+        { name: 'Quiz', id: 3 },
+      ];
+
+      const section = {
+        topics: [
+          {
+            topicId: 't-article',
+            validate: true,
+            name: 'Read me',
+            selectedContentType: service.typeArticle,
+            topicDuration: 0,
+            article: {
+              articleId: 'a1',
+              delete: false,
+              content: '<p>Body</p>',
+              articleDocumnetUrl: '',
+            },
+            video: { videoData: { videoId: '' } },
+            quiz: { quizId: '' },
+          },
+        ],
+      };
+
+      const topics = service.createTopics(section);
+
+      expect(topics.length).toBe(1);
+      expect(topics[0].article?.article).toBe('<p>Body</p>');
+      expect(topics[0].video).toBeNull();
+      expect(topics[0].quiz).toBeNull();
+    });
+
+    it('createTopics should build quiz topic payload', () => {
+      service.topicTypes = [
+        { name: 'Quiz', id: 3 },
+        { name: 'Video', id: 1 },
+        { name: 'Article', id: 2 },
+      ];
+
+      const section = {
+        topics: [
+          {
+            topicId: 't-quiz',
+            validate: true,
+            name: 'Quiz topic',
+            selectedContentType: service.typeQuiz,
+            quiz: {
+              quizId: 'qz1',
+              delete: false,
+              title: 'Chapter quiz',
+              durationInMinutes: 10,
+              passingCriteria: 50,
+              type: 'TEST',
+              questions: [
+                {
+                  questionId: 'q1',
+                  delete: false,
+                  ques: '2+2?',
+                  questionType: { key: QuestionType.MULTIPLE_CHOICE },
+                  answers: [
+                    { delete: false, ans: '4', isCorrectAnswer: true },
+                    { delete: false, ans: '5', isCorrectAnswer: false },
+                  ],
+                },
+              ],
+            },
+            article: { articleId: '' },
+            video: { videoData: { videoId: '' } },
+          },
+        ],
+      };
+
+      const topics = service.createTopics(section);
+
+      expect(topics.length).toBe(1);
+      expect(topics[0].quiz?.title).toBe('Chapter quiz');
+      expect(topics[0].quiz?.questions?.length).toBe(1);
+    });
+
+    it('createTopics should skip topics without id and validate flag', () => {
+      service.topicTypes = [{ name: 'Video', id: 1 }];
+
+      const section = {
+        topics: [
+          {
+            topicId: '',
+            validate: false,
+            name: 'Draft',
+            selectedContentType: service.typeVideo,
+            video: {
+              videoData: { videoUrl: 'https://cdn/v.mp4', videoId: '' },
+              documentData: { documents: [] },
+            },
+            article: { articleId: '' },
+            quiz: { quizId: '' },
+          },
+        ],
+      };
+
+      expect(service.createTopics(section).length).toBe(0);
+    });
+
+    it('createTopics should omit video when no video or youtube url exists', () => {
+      service.topicTypes = [{ name: 'Video', id: 1 }];
+
+      const section = {
+        topics: [
+          {
+            topicId: 't-v-empty',
+            validate: true,
+            name: 'Empty video',
+            selectedContentType: service.typeVideo,
+            video: {
+              videoData: { videoUrl: '  ', youtubeVideoUrl: '', videoId: '' },
+              documentData: { documents: [] },
+            },
+            article: { articleId: '' },
+            quiz: { quizId: '' },
+          },
+        ],
+      };
+
+      const topics = service.createTopics(section);
+
+      expect(topics[0].video).toBeNull();
+    });
+
+    it('getArticleData should return null documents when no article document url', () => {
+      const result = service.getArticleData({
+        articleId: 'a1',
+        delete: false,
+        content: 'Text only',
+        articleDocumnetUrl: '',
+      });
+
+      expect(result.documents).toBeNull();
+    });
+
+    it('calculateCourseInformationProgress should penalize empty required fields', () => {
+      service.course = {
+        title: '',
+        description: 'Has description',
+        categoryId: null,
+        courseLevelId: 1,
+        about: '',
+        thumbnailUrl: '',
+        previewVideoURL: '',
+        tags: [],
+        prerequisite: [''],
+        courseOutcomes: [],
+      };
+
+      const progress = service.calculateCourseInformationProgress();
+
+      expect(progress).toBeLessThan(33);
+      expect(progress).toBeGreaterThan(0);
+    });
+
+    it('fetchTopicTypeId should return undefined for unknown content type', () => {
+      service.topicTypes = [{ id: 1, name: 'Video' }];
+
+      expect(service.fetchTopicTypeId('Unknown')).toBeUndefined();
+    });
+
+    it('setSearchResults without fromShowMore should emit structured results', () => {
+      const courses = [{ id: 1 }];
+      const nlpCourses = [{ id: 2 }];
+      let emitted: any;
+
+      service.searchResults$.subscribe((value) => {
+        emitted = value;
+      });
+
+      service.setSearchResults(courses, nlpCourses);
+
+      expect(emitted).toEqual([{ courses }, { nlpCourses }]);
+      expect(service.filteredCourses).toEqual([...courses, ...nlpCourses]);
     });
   });
 });

@@ -129,6 +129,7 @@ export class ResetPasswordComponent implements OnInit {
           response?.status ==
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
+          localStorage.setItem('redirectUrl', '/');
           this._messageService.success('Password Reset Successfully');
           this._router.navigate(['auth/sign-in']);
         }

@@ -17,6 +17,7 @@ import { DeletionModalComponent } from '../../dynamic-modals/deletion-modal/dele
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Permission } from 'src/app/core/enums/permission.enum';
 import { CourseContentType } from 'src/app/core/enums/course-content-type.enum';
+import { isPremiumCourseEditBlocked } from 'src/app/core/utils/course-edit.util';
 
 @Component({
   selector: 'app-dashboard',
@@ -122,13 +123,28 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  private isPremiumCourseType(courseType: unknown): boolean {
+    const t = (courseType ?? '').toString().toUpperCase();
+    return t === 'PREMIUM' || t === 'PREMIUM_COURSE';
+  }
+
+  isPremiumCourseEditBlocked(course?: {
+    courseType?: unknown;
+    courseStatus?: unknown;
+  }): boolean {
+    return isPremiumCourseEditBlocked(course);
+  }
+
   routeToCoursePage(data?: any) {
-    if(data?.courseType != 'PREMIUM' || this.canEditPremiumCourse){
-      if(data?.contentType.toUpperCase() == this.courseContentType.COURSE.toUpperCase()){
-        this._router.navigate(['instructor/course'], { queryParams: { id: data?.id } });
-      }else if(data?.contentType.toUpperCase() == this.courseContentType.TEST.toUpperCase()){
-        this._router.navigate(['instructor/test'], { queryParams: { id: data?.id } });
-      }
+    if (this.isPremiumCourseEditBlocked(data)) {
+      this._messageService.error('Premium courses cannot be edited.');
+      return;
+    }
+    const contentType = (data?.contentType || this.courseContentType.COURSE).toString().toUpperCase();
+    if (contentType === this.courseContentType.COURSE.toUpperCase()) {
+      this._router.navigate(['instructor/course'], { queryParams: { id: data?.id } });
+    } else if (contentType === this.courseContentType.TEST.toUpperCase()) {
+      this._router.navigate(['instructor/test'], { queryParams: { id: data?.id } });
     }
   }
 

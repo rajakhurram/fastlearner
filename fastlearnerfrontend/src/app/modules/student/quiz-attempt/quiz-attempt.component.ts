@@ -4,14 +4,14 @@ import {
   Input,
   Output,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { QuizReviewAttemptQuestionsComponent } from '../quiz-review-attempt-questions/quiz-review-attempt-questions.component';
 
 @Component({
   selector: 'app-quiz-attempt',
   templateUrl: './quiz-attempt.component.html',
-  styleUrls: ['./quiz-attempt.component.scss']
+  styleUrls: ['./quiz-attempt.component.scss'],
 })
 export class QuizAttemptComponent {
   @Input() quizData: any;
@@ -40,35 +40,37 @@ export class QuizAttemptComponent {
     const correct = this.quizData.totalCorrectAnswer || 0;
 
     this.correct = correct;
-    this.incorrect = this.quizData.totalIncorrectAnswer ?? (total - correct);
+    this.incorrect = this.quizData.totalIncorrectAnswer ?? total - correct;
     this.skipped = total - (this.correct + this.incorrect);
 
     this.correctPercent = (this.correct / total) * 100;
     this.incorrectPercent = (this.incorrect / total) * 100;
     this.skippedPercent = (this.skipped / total) * 100;
-    this.isSurvey = this.quizData.quiz.testType === "SURVEY";
+    this.isSurvey = this.quizData.quiz.testType === 'SURVEY';
 
     this.duration = this.quizData.durationInMinutes
       ? `${this.quizData.durationInMinutes} minutes`
       : '';
-    this.formattedDate = new Date(this.quizData.attemptDate).toLocaleDateString();
+    this.formattedDate = new Date(
+      this.quizData.attemptDate,
+    ).toLocaleDateString();
   }
 
-  retakeQuiz(event:any) {
+  retakeQuiz(event: any) {
     this.isReviewing = false;
+    console.log(this.currentSelectedTopic);
     this.retakeQuizEvent.emit(this.currentSelectedTopic);
   }
 
   reviewQuiz() {
-  this.isReviewing = true;
-}
+    this.isReviewing = true;
+  }
 
- backToPrevousState(){
+  backToPrevousState() {
     this.backToQuizEvent.emit(false);
   }
 
   backToQuiz(flag: boolean) {
-  this.isReviewing = flag; 
-}
-
+    this.isReviewing = flag;
+  }
 }

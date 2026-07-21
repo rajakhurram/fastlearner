@@ -1,6 +1,7 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, of, throwError } from 'rxjs';
+import { createActivatedRouteMock } from 'src/app/testing/router.testing';
 import { SubscriptionPlanComponent } from './subscription-plan.component';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -40,10 +41,13 @@ describe('SubscriptionPlanComponent', () => {
       'loadSubscriptionPermissions',
       'fetchCurrentSubscriptionPlanType'
     ]);
+    const routerEvents = new Subject();
     const routerSpy = jasmine.createSpyObj('Router', [
       'navigate',
       'navigateByUrl',
-    ]);
+    ], {
+      events: routerEvents.asObservable(),
+    });
     const nzModalServiceSpy = jasmine.createSpyObj<NzModalService>('NzModalService', [
       'create',
     ]);
@@ -60,6 +64,7 @@ describe('SubscriptionPlanComponent', () => {
         { provide: SubscriptionService, useValue: subscriptionSpy },
         { provide: Router, useValue: routerSpy },
         { provide: NzModalService, useValue: nzModalServiceSpy },
+        { provide: ActivatedRoute, useValue: createActivatedRouteMock() },
       ],
     }).compileComponents();
 
@@ -91,27 +96,19 @@ describe('SubscriptionPlanComponent', () => {
   });
 
   describe('ngOnDestroy', () => {
-    it('should subscribe to Free Plan if no plan is selected', () => {
-      spyOn(component, 'subscribeToPlan');
-      component.isPlanSelected = false;
-      component.fromSubscriptionPlan = false;
-      authService.verifyUserSubscription.and.returnValue(of({
-        data: {currentPlan: 'Free Plan'}
-      }))
-      authService.newUserSubscription.and.returnValue(of());
+    it('should complete the destroy$ subject', () => {
+      const destroy$ = (component as any).destroy$;
+      spyOn(destroy$, 'next');
+      spyOn(destroy$, 'complete');
 
       component.ngOnDestroy();
 
-      expect(authService.verifyUserSubscription).toHaveBeenCalledWith();
+      expect(destroy$.next).toHaveBeenCalled();
+      expect(destroy$.complete).toHaveBeenCalled();
     });
 
-    it('should not subscribe to Free Plan if a plan is selected', () => {
-      spyOn(component, 'subscribeToPlan');
-      component.isPlanSelected = true;
-
-      component.ngOnDestroy();
-
-      expect(component.subscribeToPlan).not.toHaveBeenCalled();
+    it('should not throw when destroyed', () => {
+      expect(() => component.ngOnDestroy()).not.toThrow();
     });
   });
 

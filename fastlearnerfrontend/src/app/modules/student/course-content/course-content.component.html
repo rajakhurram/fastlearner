@@ -1,119 +1,125 @@
-
-  <ng-container *ngIf="!isLoading; else loadingTemplate">
-    <div class="container">
-      <div class="course-content">
-        <div class="course-content-header">
-          <div class="header-row" nz-row>
-            <div class="inner-content">
-              <div class="logo cursor-pointer">
-                <img
-                  (click)="routeToLandingPage()"
-                  width="250px"
-                  src="../../../../assets/icons/FL_White logo.svg"
-                  alt="Logo"
-                />
-              </div>
-              <nz-divider class="divider" nzType="vertical"></nz-divider>
-              <div class="course-title">
-                <h4 class="break-word">
-                  {{ currentCourse }}
-                  <img
-                    *ngIf="currentCourseType === courseType.PREMIUM"
-                    width="15"
-                    height="15"
-                    style="margin-top: -2px"
-                    src="../../../../assets/icons/premium.svg"
-                  />
-                </h4>
-              </div>
-              <nz-divider class="divider" nzType="vertical"></nz-divider>
-              <div class="course-completion">
-                <h4>{{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}} Completion</h4>
-                <div class="text-row">
-                  <small>
-                        {{
-                          courseProgress % 1 === 0
-                            ? courseProgress
-                            : courseProgress.toFixed(1)
-                        }}% completed
-                      </small>
-                  <ng-container *ngIf="showCertificate">
-                    <img
-                      alt="Incomplete"
-                      *ngIf="!generateCertificateEnable"
-                      src="../../../../assets/icons/incompletion.svg"
-                    />
-                    <img
-                      alt="Incomplete"
-                      *ngIf="generateCertificateEnable"
-                      nz-tooltip
-                      nzTooltipTitle="Generate Certificate"
-                      (click)="getCertificateData()"
-                      nzTooltipPlacement="top"
-                      src="../../../../assets/icons/incompletion.svg"
-                    />
-                  </ng-container>
-                </div>
-                <nz-progress
-                  [nzPercent]="courseProgress"
-                  [nzShowInfo]="false"
-                  [nzStrokeColor]="'#00BA00'"
-                ></nz-progress>
-              </div>
+<ng-container *ngIf="!isLoading; else loadingTemplate">
+  <div class="container">
+    <div class="course-content">
+      <div class="course-content-header">
+        <div class="header-row" nz-row>
+          <div class="inner-content">
+            <div class="logo cursor-pointer">
+              <img
+                (click)="routeToLandingPage()"
+                width="250px"
+                src="../../../../assets/icons/FL_White logo.svg"
+                alt="Logo"
+              />
             </div>
-            <div class="menu-actions">
-              <button
-                (click)="openShareCourseModal()"
-                class="course-hover-default-btn"
-                nz-button
-                nzType="default"
-              >
-                <span nz-icon nzType="share-alt" nzTheme="outline"></span>
-              </button>
-              <button
-                class="course-hover-default-btn"
-                nz-dropdown
-                nzTrigger="click"
-                [nzVisible]="isDropdownVisible"
-                (nzVisibleChange)="onDropdownVisibilityChange($event)"
-                [nzDropdownMenu]="menuMore"
-                nz-button
-                nzType="default"
-              >
-                <span nz-icon nzType="more" nzTheme="outline"></span>
-              </button>
-              <button
-                *ngIf="!loggedInUser?.profilePicture"
-                nz-dropdown
-                nzTrigger="click"
-                [nzDropdownMenu]="menuUser"
-                [nzVisible]="isDropdownProfileVisible"
-                (nzVisibleChange)="onDropdownProfileVisibilityChange($event)"
-                class="side-nav-button-menu"
-                nz-button
-                nzType="primary"
-                nzShape="circle"
-              >
-                {{ getInitialOfLoggedInUser | initialCharactor }}
-              </button>
-              <nz-avatar
-                *ngIf="loggedInUser?.profilePicture"
-                [nzSize]="46"
-                nz-dropdown
-                style="cursor: pointer"
-                nzTrigger="click"
-                nzIcon="user"
-                [nzDropdownMenu]="menuUser"
-                [nzVisible]="isDropdownProfileVisible"
-                (nzVisibleChange)="onDropdownProfileVisibilityChange($event)"
-                [nzDropdownMenu]="menuUser"
-                nzAlt="Profile"
-                [nzSrc]="loggedInUser?.profilePicture"
-              ></nz-avatar>
+            <nz-divider class="divider" nzType="vertical"></nz-divider>
+            <div class="course-title">
+              <h4 class="break-word">
+                {{ currentCourse }}
+                <img
+                  *ngIf="currentCourseType === courseType.PREMIUM"
+                  width="15"
+                  height="15"
+                  style="margin-top: -2px"
+                  src="../../../../assets/icons/premium.svg"
+                />
+              </h4>
+            </div>
+            <nz-divider class="divider" nzType="vertical"></nz-divider>
+            <div class="course-completion">
+              <h4>
+                {{
+                  selectedContentType?.toLowerCase() == courseContentType.COURSE
+                    ? "Course"
+                    : "Test"
+                }}
+                Completion
+              </h4>
+              <div class="text-row">
+                <small>
+                  {{
+                    courseProgress % 1 === 0
+                      ? courseProgress
+                      : courseProgress.toFixed(1)
+                  }}% completed
+                </small>
+                <ng-container *ngIf="showCertificate">
+                  <img
+                    alt="Incomplete"
+                    *ngIf="!generateCertificateEnable"
+                    src="../../../../assets/icons/incompletion.svg"
+                  />
+                  <img
+                    alt="Incomplete"
+                    *ngIf="generateCertificateEnable"
+                    nz-tooltip
+                    nzTooltipTitle="Generate Certificate"
+                    (click)="getCertificateData()"
+                    nzTooltipPlacement="top"
+                    src="../../../../assets/icons/incompletion.svg"
+                  />
+                </ng-container>
+              </div>
+              <nz-progress
+                [nzPercent]="courseProgress"
+                [nzShowInfo]="false"
+                [nzStrokeColor]="'#00BA00'"
+              ></nz-progress>
             </div>
           </div>
+          <div class="menu-actions">
+            <button
+              (click)="openShareCourseModal()"
+              class="course-hover-default-btn"
+              nz-button
+              nzType="default"
+            >
+              <span nz-icon nzType="share-alt" nzTheme="outline"></span>
+            </button>
+            <button
+              class="course-hover-default-btn"
+              nz-dropdown
+              nzTrigger="click"
+              [nzVisible]="isDropdownVisible"
+              (nzVisibleChange)="onDropdownVisibilityChange($event)"
+              [nzDropdownMenu]="menuMore"
+              nz-button
+              nzType="default"
+            >
+              <span nz-icon nzType="more" nzTheme="outline"></span>
+            </button>
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="menuUser"
+              [nzVisible]="isDropdownProfileVisible"
+              (nzVisibleChange)="onDropdownProfileVisibilityChange($event)"
+              class="side-nav-button-menu"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="46"
+              nz-dropdown
+              style="cursor: pointer"
+              nzTrigger="click"
+              nzIcon="user"
+              [nzDropdownMenu]="menuUser"
+              [nzVisible]="isDropdownProfileVisible"
+              (nzVisibleChange)="onDropdownProfileVisibilityChange($event)"
+              [nzDropdownMenu]="menuUser"
+              nzAlt="Profile"
+              [nzSrc]="loggedInUser?.profilePicture"
+            ></nz-avatar>
+          </div>
         </div>
-        <ng-container *ngIf="!isReviewing">
+      </div>
+      <ng-container *ngIf="!isReviewing">
         <div class="course-main-content">
           <div class="breadcrums">
             <nz-breadcrumb [nzSeparator]="'>'">
@@ -201,7 +207,8 @@
                 *ngIf="currentSelectedTopicType == 'Quiz'"
                 class="quiz-player"
               >
-                <app-quiz-player class="w-100"
+                <app-quiz-player
+                  class="w-100"
                   (continueQuizEmitter)="skipQuiz($event)"
                   (skipQuizEmitter)="skipQuiz($event)"
                   [currentSelectedTopic]="currentSelectedTopic"
@@ -214,6 +221,7 @@
                   (answerSubmit)="onAnswerSubmit($event)"
                   [showQuizAttempt]="showQuizAttempt"
                   [welcomeQuizScreen]="showQuizPlayerWelcomeScreen"
+                  (quizStartedEmitter)="updateQuizStartedStatus($event)"
                 ></app-quiz-player>
               </div>
               <div
@@ -222,6 +230,7 @@
               >
                 <app-article
                   [currentSelectedTopic]="currentSelectedTopic"
+                  (continueArticleEmitter)="articleCompleted()"
                 ></app-article>
               </div>
               <div class="tabs" id="tabs">
@@ -235,7 +244,15 @@
                       <div nz-col nzXs="24" nzMd="24" nzLg="7">
                         <nz-card class="card">
                           <div class="card-header">
-                            <h4>{{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}} Contents</h4>
+                            <h4>
+                              {{
+                                selectedContentType?.toLowerCase() ==
+                                courseContentType.COURSE
+                                  ? "Course"
+                                  : "Test"
+                              }}
+                              Contents
+                            </h4>
                           </div>
                           <div class="sections">
                             <nz-collapse class="collapse">
@@ -691,7 +708,7 @@
                                               'unpin-alternate-section-button-height1':
                                                 !alternateSection.active,
                                               'unpin-alternate-section-button-height2':
-                                                alternateSection.active
+                                                alternateSection.active,
                                             }"
                                           >
                                             <img
@@ -747,7 +764,7 @@
                                       [ngStyle]="{
                                         'background-color': !section?.free
                                           ? '#C2C7D2'
-                                          : '#212189'
+                                          : '#212189',
                                       }"
                                       nz-button
                                       nzType="dashed"
@@ -862,7 +879,7 @@
                                           class="inner-questions"
                                           [ngClass]="{
                                             selected:
-                                              chat?.chatId === selectedChatId
+                                              chat?.chatId === selectedChatId,
                                           }"
                                           (click)="
                                             getCourseChatHistory(
@@ -880,15 +897,34 @@
                                             >
                                           </div>
                                           <div class="question-topic">
-                                            <span style="word-break: break-word">{{ chat?.title }}</span>
+                                            <span
+                                              style="word-break: break-word"
+                                              >{{ chat?.title }}</span
+                                            >
                                           </div>
                                           <div class="chat-more-option">
-                                            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" class="chat-more-option">
-                                              <span nz-icon nzType="more" ></span>
+                                            <a
+                                              nz-dropdown
+                                              nzTrigger="click"
+                                              [nzDropdownMenu]="menu"
+                                              class="chat-more-option"
+                                            >
+                                              <span
+                                                nz-icon
+                                                nzType="more"
+                                              ></span>
                                             </a>
-                                            <nz-dropdown-menu #menu="nzDropdownMenu" nzPlacement="'bottomRight'">
+                                            <nz-dropdown-menu
+                                              #menu="nzDropdownMenu"
+                                              nzPlacement="'bottomRight'"
+                                            >
                                               <ul nz-menu>
-                                                <li nz-menu-item (click)="deleteChat(chat)">Delete</li>
+                                                <li
+                                                  nz-menu-item
+                                                  (click)="deleteChat(chat)"
+                                                >
+                                                  Delete
+                                                </li>
                                               </ul>
                                             </nz-dropdown-menu>
                                           </div>
@@ -1078,6 +1114,7 @@
                                       nz-button
                                       class="chat-button"
                                       [nzType]="'primary'"
+                                      [disabled]="!askQuestion?.trim()"
                                     >
                                       Send
                                     </button>
@@ -1226,7 +1263,14 @@
                     <div class="QandA" id="QandA">
                       <div class="qa-header" id="qa-header">
                         <h3>
-                          All questions in this {{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}}  ({{ totalQuestions }})
+                          All questions in this
+                          {{
+                            selectedContentType?.toLowerCase() ==
+                            courseContentType.COURSE
+                              ? "course"
+                              : "test"
+                          }}
+                          ({{ totalQuestions }})
                         </h3>
                       </div>
                       <div class="qa-content">
@@ -1308,7 +1352,7 @@
                                     <ng-template
                                       [ngTemplateOutlet]="commentTemplateRef"
                                       [ngTemplateOutletContext]="{
-                                        question: answer
+                                        question: answer,
                                       }"
                                     ></ng-template>
                                   </ng-template>
@@ -1335,7 +1379,9 @@
                                       [nzBorderless]="true"
                                       [nzSize]="'large'"
                                       (keydown.enter)="replyQuestion(question)"
-                                      [attr.id]="'reply-input-' + question.questionId"
+                                      [attr.id]="
+                                        'reply-input-' + question.questionId
+                                      "
                                     />
                                     <ng-template #sendSuffix>
                                       <img
@@ -1352,7 +1398,7 @@
                               [ngTemplateOutlet]="commentTemplateRef"
                               [ngTemplateOutletContext]="{
                                 question: question,
-                                index: index
+                                index: index,
                               }"
                             >
                             </ng-template>
@@ -1399,6 +1445,7 @@
                         >
                           <div nz-col>
                             <button
+                              [disabled]="questionText == ''"
                               nz-button
                               class="question-button"
                               (click)="addQuestion()"
@@ -1423,7 +1470,15 @@
                   <nz-tab nzTitle="Reviews" (nzClick)="onToggleTabs(4)">
                     <div class="review">
                       <div class="review-header">
-                        <h3>Rate this {{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}} </h3>
+                        <h3>
+                          Rate this
+                          {{
+                            selectedContentType?.toLowerCase() ==
+                            courseContentType.COURSE
+                              ? "course"
+                              : "test"
+                          }}
+                        </h3>
                         <small class="review-rate"
                           >Tell others what you think.</small
                         >
@@ -1464,8 +1519,16 @@
                                   ></nz-rate>
                                   <p class="rating-text">
                                     Based on
-                                      {{ completeReview?.totalUsers ? completeReview.totalUsers : 0 }}
-                                      {{ completeReview?.totalUsers === 1 ? 'review' : 'reviews' }}
+                                    {{
+                                      completeReview?.totalUsers
+                                        ? completeReview.totalUsers
+                                        : 0
+                                    }}
+                                    {{
+                                      completeReview?.totalUsers === 1
+                                        ? "review"
+                                        : "reviews"
+                                    }}
                                   </p>
                                 </div>
                               </div>
@@ -1571,82 +1634,82 @@
                             </div>
                           </div>
                           <hr />
-                          
-                            <div
-                              *ngFor="
-                                let comment of completeReview?.feedbackComments;
-                                let i = index
-                              "
-                              class="comment-feedback"
-                            >
-                              <div class="comment">
-                                <button
-                                  *ngIf="comment?.profileImage == null"
-                                  class="side-nav-button-review"
-                                  nz-button
-                                  nzType="primary"
-                                  nzShape="circle"
-                                >
-                                  {{ comment?.userName | initialCharactor }}
-                                </button>
-                                <nz-avatar
-                                  *ngIf="comment?.profileImage != null"
-                                  [nzSize]="32"
-                                  nzIcon="user"
-                                  nzAlt="Preview"
-                                  class="sidebar-nav-button"
-                                  [nzSrc]="comment?.profileImage"
-                                ></nz-avatar>
-                                <span class="commentator">
-                                  {{ comment?.userName }}</span
-                                >
-                              </div>
-                              <div class="comment pt-2 pb-4">
-                                <nz-rate
-                                  [ngModel]="comment?.rating"
-                                  nzAllowHalf
-                                  nzDisabled
-                                ></nz-rate>
-                                <small class="date">{{
-                                  comment?.createdAt | date : "longDate"
-                                }}</small>
-                              </div>
-                              <span class="comment-text">{{
-                                comment?.comment
-                              }}</span>
-                              <div class="comment-like-dislike pt-4">
-                                <small>Did you find this helpful?</small>
-                                <small
-                                  >{{ comment?.likes
-                                  }}<img
-                                    class="cursor-pointer"
-                                    (click)="
-                                      commentActions('LIKED', comment?.reviewId)
-                                    "
-                                    height="20px"
-                                    width="20px"
-                                    src="../../../../assets/icons/like.svg"
-                                    alt="Like"
-                                /></small>
-                                <small
-                                  >{{ comment?.dislikes
-                                  }}<img
-                                    class="cursor-pointer"
-                                    (click)="
-                                      commentActions(
-                                        'DISLIKED',
-                                        comment?.reviewId
-                                      )
-                                    "
-                                    height="20px"
-                                    width="20px"
-                                    src="../../../../assets/icons/dislike.svg"
-                                    alt="Dislike"
-                                /></small>
-                              </div>
-                              <hr />
-                              
-                              <!-- <div class="comment pt-2 pb-4">
+
+                          <div
+                            *ngFor="
+                              let comment of completeReview?.feedbackComments;
+                              let i = index
+                            "
+                            class="comment-feedback"
+                          >
+                            <div class="comment">
+                              <button
+                                *ngIf="comment?.profileImage == null"
+                                class="side-nav-button-review"
+                                nz-button
+                                nzType="primary"
+                                nzShape="circle"
+                              >
+                                {{ comment?.userName | initialCharactor }}
+                              </button>
+                              <nz-avatar
+                                *ngIf="comment?.profileImage != null"
+                                [nzSize]="32"
+                                nzIcon="user"
+                                nzAlt="Preview"
+                                class="sidebar-nav-button"
+                                [nzSrc]="comment?.profileImage"
+                              ></nz-avatar>
+                              <span class="commentator">
+                                {{ comment?.userName }}</span
+                              >
+                            </div>
+                            <div class="comment pt-2 pb-4">
+                              <nz-rate
+                                [ngModel]="comment?.rating"
+                                nzAllowHalf
+                                nzDisabled
+                              ></nz-rate>
+                              <small class="date">{{
+                                comment?.createdAt | date: "longDate"
+                              }}</small>
+                            </div>
+                            <span class="comment-text">{{
+                              comment?.comment
+                            }}</span>
+                            <div class="comment-like-dislike pt-4">
+                              <small>Did you find this helpful?</small>
+                              <small
+                                >{{ comment?.likes
+                                }}<img
+                                  class="cursor-pointer"
+                                  (click)="
+                                    commentActions('LIKED', comment?.reviewId)
+                                  "
+                                  height="20px"
+                                  width="20px"
+                                  src="../../../../assets/icons/like.svg"
+                                  alt="Like"
+                              /></small>
+                              <small
+                                >{{ comment?.dislikes
+                                }}<img
+                                  class="cursor-pointer"
+                                  (click)="
+                                    commentActions(
+                                      'DISLIKED',
+                                      comment?.reviewId
+                                    )
+                                  "
+                                  height="20px"
+                                  width="20px"
+                                  src="../../../../assets/icons/dislike.svg"
+                                  alt="Dislike"
+                              /></small>
+                            </div>
+                            <hr />
+
+                            <!-- <div class="comment pt-2 pb-4">
                           <nz-rate
                             [ngModel]="comment?.rating"
                             nzAllowHalf
@@ -1683,20 +1746,20 @@
                           /></small>
                         </div> 
                         <hr /> -->
-                            </div>
-                            <button
-                              nz-button
-                              nzType="primary"
-                              nzGhost
-                              class="show-more-button"
-                              (click)="onReviewScroll($event)"
-                              [disabled]="!hasMoreComments"
-                              >
-                              Show More
-                            </button>
                           </div>
+                          <button
+                            nz-button
+                            nzType="primary"
+                            nzGhost
+                            class="show-more-button"
+                            (click)="onReviewScroll($event)"
+                            [disabled]="!hasMoreComments"
+                          >
+                            Show More
+                          </button>
                         </div>
                       </div>
+                    </div>
                   </nz-tab>
                 </nz-tabset>
               </div>
@@ -1704,7 +1767,15 @@
             <div class="hide-class" nz-col nzXs="24" nzMd="24" nzLg="7">
               <nz-card class="card">
                 <div class="card-header">
-                  <h4>{{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}} Contents</h4>
+                  <h4>
+                    {{
+                      selectedContentType?.toLowerCase() ==
+                      courseContentType.COURSE
+                        ? "Course"
+                        : "Test"
+                    }}
+                    Contents
+                  </h4>
                 </div>
                 <div class="sections">
                   <nz-collapse class="collapse">
@@ -2098,7 +2169,7 @@
                                     'unpin-alternate-section-button-height1':
                                       !alternateSection.active,
                                     'unpin-alternate-section-button-height2':
-                                      alternateSection.active
+                                      alternateSection.active,
                                   }"
                                 >
                                   <img
@@ -2146,7 +2217,7 @@
                             [ngStyle]="{
                               'background-color': !section?.free
                                 ? '#C2C7D2'
-                                : '#212189'
+                                : '#212189',
                             }"
                             nz-button
                             nzType="dashed"
@@ -2192,116 +2263,120 @@
             </div>
           </div>
         </div>
-        </ng-container>
-        <ng-container *ngIf="isReviewing">
-          <app-quiz-review-questions
-            *ngIf="isReviewing"
-            [quizData]="questionAnswersQuiz"
-            [currentSelectedTopic]="currentSelectedTopic"
-            (backToQuizEvent)="reviewCallBack($event)"
-            (retakeQuizEvent)="retakeQuiz($event)"
-            [quizAttemptId]="quizAttemptId"
-            [isAllowedToRetake]="isAllowedToRetake"
-          ></app-quiz-review-questions>
-        </ng-container>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="isReviewing">
+        <app-quiz-review-questions
+          *ngIf="isReviewing"
+          [quizData]="questionAnswersQuiz"
+          [currentSelectedTopic]="currentSelectedTopic"
+          (backToQuizEvent)="reviewCallBack($event)"
+          (retakeQuizEvent)="retakeQuiz($event)"
+          [quizAttemptId]="quizAttemptId"
+          [isAllowedToRetake]="isAllowedToRetake"
+        ></app-quiz-review-questions>
+      </ng-container>
     </div>
-  </ng-container>
-  <nz-dropdown-menu #menuUser="nzDropdownMenu">
-    <div id="user-profile-menu">
-      <ul nz-menu>
-        <li class="blue-divider" nz-menu-divider></li>
-        <div>
-          <div class="user-profile">
-            <div>
-              <button
-                *ngIf="!loggedInUser?.profilePicture"
-                class="side-nav-button1"
-                nz-button
-                nzType="primary"
-                nzShape="circle"
-              >
-                {{ getInitialOfLoggedInUser | initialCharactor }}
-              </button>
-              <nz-avatar
-                *ngIf="loggedInUser?.profilePicture"
-                [nzSize]="44"
-                nzIcon="user"
-                class="sidebar-nav-button1"
-                nzAlt="Preview"
-                [nzSrc]="loggedInUser?.profilePicture"
-              ></nz-avatar>
-            </div>
-            <div class="user-profile-text">
-              <p>{{ loggedInUser?.fullName }}</p>
-              <p>{{ loggedInUser?.email }}</p>
-              <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
-            </div>
+  </div>
+</ng-container>
+<nz-dropdown-menu #menuUser="nzDropdownMenu">
+  <div id="user-profile-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="user-profile">
+          <div>
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              class="side-nav-button1"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="44"
+              nzIcon="user"
+              class="sidebar-nav-button1"
+              nzAlt="Preview"
+              [nzSrc]="loggedInUser?.profilePicture"
+            ></nz-avatar>
           </div>
-          <li nz-menu-divider></li>
-          <li (click)="routeToMyCourses()" nz-menu-item>
-            <img
-              style="margin-right: 25px; width: 15px"
-              src="../../../../assets/icons/courses-menu.svg"
-            />
-            My Courses
-          </li>
-          <li (click)="routeToFavoriteCourses()" nz-menu-item>
-            <img
-              style="margin-right: 25px; width: 15px"
-              src="../../../../assets/icons/heart-menu.svg"
-            />
-            Favorites
-          </li>
-          <li nz-menu-item (click)="routeToNotificationPage()">
-            <img
-              style="margin-right: 25px; width: 15px"
-              src="../../../../assets/icons/noti-menu.svg"
-            />Notifications
-          </li>
-          <li (click)="routeToSubscription()" nz-menu-item>
-            <img
-              style="margin-right: 25px; width: 15px"
-              src="../../../../assets/icons/subscription-menu.svg"
-            />Subscriptions
-          </li>
-          <li (click)="routeToInstructorDashboard()" nz-menu-item>
-            <img
-              style="margin-right: 25px; width: 15px"
-              src="../../../../assets/icons/dashboard-menu.svg"
-            />
-            Teacher's Dashboard
-          </li>
-          <li nz-menu-item (click)="signOut()">
-            <img
-              style="margin-right: 25px; width: 15px"
-              src="../../../../assets/icons/logout.svg"
-            />Logout
-          </li>
+          <div class="user-profile-text">
+            <p>{{ loggedInUser?.fullName }}</p>
+            <p>{{ loggedInUser?.email }}</p>
+            <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+          </div>
         </div>
-      </ul>
-    </div>
-  </nz-dropdown-menu>
+        <li nz-menu-divider></li>
+        <li (click)="routeToMyCourses()" nz-menu-item>
+          <img
+            style="margin-right: 25px; width: 15px"
+            src="../../../../assets/icons/courses-menu.svg"
+          />
+          My Courses
+        </li>
+        <li (click)="routeToFavoriteCourses()" nz-menu-item>
+          <img
+            style="margin-right: 25px; width: 15px"
+            src="../../../../assets/icons/heart-menu.svg"
+          />
+          Favorites
+        </li>
+        <li nz-menu-item (click)="routeToNotificationPage()">
+          <img
+            style="margin-right: 25px; width: 15px"
+            src="../../../../assets/icons/noti-menu.svg"
+          />Notifications
+        </li>
+        <li (click)="routeToSubscription()" nz-menu-item>
+          <img
+            style="margin-right: 25px; width: 15px"
+            src="../../../../assets/icons/subscription-menu.svg"
+          />Subscriptions
+        </li>
+        <li (click)="routeToInstructorDashboard()" nz-menu-item>
+          <img
+            style="margin-right: 25px; width: 15px"
+            src="../../../../assets/icons/dashboard-menu.svg"
+          />
+          Instructor's Portal
+        </li>
+        <li nz-menu-item (click)="signOut()">
+          <img
+            style="margin-right: 25px; width: 15px"
+            src="../../../../assets/icons/logout.svg"
+          />Logout
+        </li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
 
-  <nz-dropdown-menu #menuMore="nzDropdownMenu">
-    <div id="more-menu">
-      <ul nz-menu>
-        <li class="blue-divider" nz-menu-divider></li>
-        <div>
-          <li (click)="openReviewModal()" nz-menu-item>Edit {{selectedContentType?.toLowerCase() == courseContentType.COURSE ? 'Course' : 'Test'}}  Rating</li>
-          <li nz-menu-divider></li>
-          <li (click)="toggleFavoriteCourse()" nz-menu-item>
-            Add to Favorites
-          </li>
-        </div>
-      </ul>
-    </div>
-  </nz-dropdown-menu>
+<nz-dropdown-menu #menuMore="nzDropdownMenu">
+  <div id="more-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <li (click)="openReviewModal()" nz-menu-item>
+          Edit
+          {{
+            selectedContentType?.toLowerCase() == courseContentType.COURSE
+              ? "Course"
+              : "Test"
+          }}
+          Rating
+        </li>
+        <li nz-menu-divider></li>
+        <li (click)="toggleFavoriteCourse()" nz-menu-item>Add to Favorites</li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
 
-  <ng-template #loadingTemplate>
-    <div class="spinner-container">
-      <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
-    </div>
-  </ng-template>
-
-
+<ng-template #loadingTemplate>
+  <div class="spinner-container">
+    <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
+  </div>
+</ng-template>

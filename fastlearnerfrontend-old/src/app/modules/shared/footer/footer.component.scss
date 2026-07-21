@@ -1,0 +1,268 @@
+.footer {
+  width: 100%;
+
+  background: linear-gradient(to right, #262261, #212189)}
+
+.logo-img {
+  height: 50px;
+}
+
+.logo {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.image-section {
+  align-self: center;
+}
+
+.info-section {
+  margin-left: 10px;
+  line-height: 6px;
+  margin-top: 10px;
+}
+
+.footerlink::before {
+  content: attr(data-content);
+  opacity: 1;
+  transform: translateX(-10px); /* Initial position slightly to the left */
+  display: inline-block;
+  margin-left: 10px; /* Adjust spacing as necessary */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+}
+
+.footerlink:hover::before {
+  opacity: 1;
+  content: "-" attr(data-content);
+  margin-left: 0px;
+  transform: translateX(0); /* Move to the original position */
+}
+.active span {
+  text-decoration: underline;
+}
+
+.para {
+  color: white;
+  padding-bottom: 10px;
+  font-size: 18px;
+}
+
+.align {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.custom-placeholder::placeholder {
+  color: #292929;
+}
+
+.about-section {
+  margin-top: 50px;
+}
+
+.quick-link-section {
+  margin-top: 50px;
+  line-height: 32px;
+}
+
+.heading {
+  color: white;
+}
+
+.footer-about-list {
+  list-style: none;
+}
+
+.footerlink.active {
+  border-bottom: 1px solid;
+}
+
+.footer-about-list-heading {
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+.footer-about-list-heading span {
+  color: white;
+  font-weight: 800;
+  font-size: 20;
+}
+
+.footer-about-list span {
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.footer-about-list-heading span {
+  font-weight: 600;
+}
+
+.first-section {
+  margin-left: 6%;
+}
+
+.lower-footer {
+  width: 90%;
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  margin-left: 6%;
+  margin-top: 50px;
+
+  border-radius: 5px;
+}
+
+.copy-right {
+  display: block;
+
+  color: white;
+  font-size: 18px;
+}
+
+.query-section {
+  display: flex;
+
+  color: white;
+  font-size: 18px;
+}
+
+.email-section {
+  flex: 1;
+}
+
+.divider {
+  background-color: white;
+  height: 55px;
+  width: 1px;
+}
+
+.subscribe-btn {
+  height: 42.5px;
+  font-size: 18px;
+  margin-right: 4px;
+  border-radius: 5px;
+  background-color: #262261;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+@media screen and (max-width: 1199px) {
+  .first-section {
+    margin-left: 0px;
+  }
+  .justify-alignment {
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footerlink::before {
+    margin-left: 25px; /* Adjust spacing as necessary */
+  }
+
+  .logo-img {
+    width: 100%;
+  }
+
+  .lower-footer {
+    margin-top: 0px !important;
+  }
+  .about-section ul {
+    padding: 0px;
+  }
+  .about-list {
+    padding: 0px;
+  }
+  .quick-link-section {
+    margin-top: 32px;
+  }
+  .about-section {
+    margin-left: 0px !important;
+  }
+
+  .second-section {
+    margin-left: 0px !important;
+    max-width: 100% !important;
+  }
+}
+@media screen and (max-width: 1199px) {
+  .justify-alignment-reverse {
+    justify-content: center;
+    text-align: center;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .ant-col-offset {
+    margin-left: 0px !important;
+  }
+
+  .email-section {
+    margin: 15px;
+  }
+
+  .divider {
+    transform: rotate(90deg);
+  }
+}
+@media screen and (max-width: 500px) {
+  .first-section {
+    margin-left: 0px;
+  }
+}
+@media screen and (max-width: 1600px) {
+  .para {
+    font-size: 14px;
+  }
+
+  .subscribe-btn {
+    font-size: 14px;
+  }
+  .copy-right {
+    font-size: 14px;
+  }
+
+  .query-section {
+    font-size: 14px;
+  }
+
+  .footer-about-list-heading span {
+    font-size: 18px;
+  }
+
+  .footer-about-list span {
+    font-size: 14px;
+  }
+}
+
+.second-section {
+  max-width: 17%;
+  margin-left: 70px;
+  line-height: 32px;
+}
+
+.ant-col-offset {
+  margin-left: 4.16666667%;
+}
+:host ::ng-deep .ant-input-group-wrapper {
+  width: 95% !important;
+}
+
+:host ::ng-deep .ant-input-search .ant-input-lg {
+  line-height: 2 !important;
+}
+:host
+  ::ng-deep
+  .ant-input-search
+  > .ant-input-group
+  > .ant-input-group-addon:last-child
+  .ant-input-search-button {
+  border-radius: 5px;
+}

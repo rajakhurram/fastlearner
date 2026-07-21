@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
-  SimpleChanges,
 } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -26,7 +26,8 @@ import { CourseService } from 'src/app/core/services/course.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { environment } from 'src/environments/environment.development';
-import { LazyLoadDirective } from '../../directives/lazy-load.directive';
+import { StateService } from 'src/app/core/services/state.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-landing-page',
@@ -152,6 +153,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     pageNo: 0,
     pageSize: 9,
   };
+  private sectionObserver?: IntersectionObserver;
   bannerLoaded = true;
   premiumCoursesLoaded = true;
   aboutUsSectionsLoaded = true;
@@ -163,7 +165,15 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   studentPickSectionsLoaded = true;
   faqContainerSectionsLoaded = true;
   baseUrl = environment.basePath;
-
+  sectionId: string = '';
+  sliderLoading: Record<string, boolean> = {
+    test_center: false,
+    about_us: false,
+    courses_section: false,
+    premium_courses: false,
+    free_courses: false,
+    new_courses: false,
+  };
   @ViewChild('scrollerContent', { static: true }) scrollerContent: ElementRef;
 
   @ViewChild('banner_container') banner_container!: ElementRef;
@@ -176,7 +186,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('new_courses') new_courses!: ElementRef;
   @ViewChild('student_pick') student_pick!: ElementRef;
   @ViewChild('faq_container') faq_container!: ElementRef;
-  @ViewChild('test_center') test_center!:ElementRef;
+  @ViewChild('test_center') test_center!: ElementRef;
 
   sectionsLoaded: { [key: string]: boolean } = {
     banner_container: false,
@@ -189,8 +199,34 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     new_courses: false,
     student_pick: false,
     faq_container: false,
-    test_center:false,
+    test_center: false,
   };
+
+  private readonly sectionDomOrder = [
+    'banner_container',
+    'about_us_empowering',
+    'test_center',
+    'about_us',
+    'courses_section',
+    'premium_courses',
+    'free_courses',
+    'about_us_bg_light',
+    'new_courses',
+    'student_pick',
+    'faq_container',
+  ];
+
+  private readonly apiSections = new Set([
+    'test_center',
+    'about_us',
+    'courses_section',
+    'premium_courses',
+    'free_courses',
+    'new_courses',
+  ]);
+
+  private sectionsPendingForScroll = new Set<string>();
+  private scrollRetryTimers: ReturnType<typeof setTimeout>[] = [];
 
   sectionData: { [key: string]: any } = {};
 
@@ -211,7 +247,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   updateVisibleCourses() {
     this.visibleCourses = this.categoryList.slice(
       this.currentIndex,
-      this.currentIndex + this.visibleCount
+      this.currentIndex + this.visibleCount,
     );
   }
 
@@ -226,11 +262,9 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     window.open(link, '_blank');
   }
 
-  
   routeToLinkInstructor(path: string) {
     window.location.href = `${this.baseUrl}${path}`;
   }
-
 
   slideRight() {
     if (this.currentIndex < this.categoryList.length - this.visibleCount) {
@@ -251,10 +285,11 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private _messageService: MessageService,
     private _sharedService: SharedService,
     private _cacheService: CacheService,
+    private stateService: StateService,
     private metaService: Meta,
     private titleService: Title,
     private http: HttpClient,
-    private el: ElementRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.isUserLoggedIn();
     this.listenNavbarState();
@@ -262,89 +297,202 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // const directive = new LazyLoadDirective(this.el);
-    // directive.ngAfterViewInit();
+    this.setupSectionObserver();
+  }
 
-    const observer = new IntersectionObserver(
+  private setupSectionObserver(): void {
+    this.sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const sectionId = entry.target.id;
-            if (!this.sectionsLoaded[sectionId]) {
+            if (sectionId && !this.sectionsLoaded[sectionId]) {
               this.loadSection(sectionId);
+              this.cdr.markForCheck();
             }
           }
         });
       },
-      { threshold: 0.5 }
+      { rootMargin: '300px 0px', threshold: 0.01 },
     );
 
-    // Observe all sections dynamically
     Object.keys(this.sectionsLoaded).forEach((sectionId) => {
       const sectionRef = this[sectionId as keyof this] as ElementRef;
-      if (sectionRef) {
-        observer.observe(sectionRef.nativeElement);
+      if (sectionRef?.nativeElement) {
+        this.sectionObserver?.observe(sectionRef.nativeElement);
       }
     });
   }
 
-  loadSection(sectionId: string) {
-    this.sectionsLoaded[sectionId] = true;
-    if (sectionId === 'premium_courses') {
-      this.getPremiumCourses(this.directionEnum.INITIAL);
-    } else if (sectionId === 'about_us') {
-      this.getTrendingCourses(this.directionEnum.INITIAL);
-    } else if (sectionId === 'free_courses') {
-      this.getFreeCourses(this.directionEnum.INITIAL);
-    } else if (sectionId === 'courses_section') {
-      this.getCourseListByCategory();
-    } else if (sectionId === 'new_courses') {
-      this.getNewCourses(this.directionEnum.INITIAL);
-    } else if (sectionId === 'test_center') {
-        this.getTest(this.directionEnum.INITIAL)
+  private scrollDone = false;
+  private pendingScrollSectionId: string | null = null;
+
+  private tryScrollToPendingSection(): void {
+    const targetSectionId = this.pendingScrollSectionId;
+    if (!targetSectionId || this.scrollDone) {
+      return;
+    }
+
+    if (this.sectionsPendingForScroll.size > 0) {
+      return;
+    }
+
+    this.scrollDone = true;
+    this.pendingScrollSectionId = null;
+    sessionStorage.removeItem('sectionId');
+    this.scheduleScrollToSection(targetSectionId);
+  }
+
+  private setSliderLoading(sectionId: string, loading: boolean): void {
+    this.sliderLoading[sectionId] = loading;
+  }
+
+  private completeSliderLoad(sectionId: string): void {
+    this.setSliderLoading(sectionId, false);
+    this.markApiSectionReady(sectionId);
+  }
+
+  private markApiSectionReady(sectionId: string): void {
+    this.sectionsPendingForScroll.delete(sectionId);
+    this.tryScrollToPendingSection();
+  }
+
+  private scheduleScrollToSection(sectionId: string): void {
+    this.clearScrollRetryTimers();
+
+    const scroll = () => this.scrollToSpecificSection(sectionId);
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(scroll);
+    } else {
+      scroll();
+    }
+
+    [300, 800].forEach((delay) => {
+      this.scrollRetryTimers.push(setTimeout(scroll, delay));
+    });
+  }
+
+  private clearScrollRetryTimers(): void {
+    this.scrollRetryTimers.forEach((timer) => clearTimeout(timer));
+    this.scrollRetryTimers = [];
+  }
+
+  private getScrollOffset(): number {
+    const navbar = document.querySelector('.navbar') as HTMLElement | null;
+    return navbar?.offsetHeight ?? 80;
+  }
+
+  scrollToSpecificSection(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (!element) {
+      return;
+    }
+
+    const top =
+      element.getBoundingClientRect().top +
+      window.scrollY -
+      this.getScrollOffset();
+    window.scrollTo({ top, behavior: 'auto' });
+  }
+
+  private initPendingScroll(targetSectionId: string): void {
+    const targetIndex = this.sectionDomOrder.indexOf(targetSectionId);
+    if (targetIndex < 0) {
+      return;
+    }
+
+    for (let i = 0; i <= targetIndex; i++) {
+      const sectionId = this.sectionDomOrder[i];
+      if (this.apiSections.has(sectionId)) {
+        this.sectionsPendingForScroll.add(sectionId);
       }
+      this.loadSection(sectionId);
+    }
   }
 
-  loadBannerContent() {
-    this.bannerLoaded = true;
+  loadSection(sectionId: string) {
+    if (this.sectionsLoaded[sectionId]) {
+      return;
+    }
+    this.sectionsLoaded[sectionId] = true;
+    this.fetchSectionData(sectionId);
   }
-  
-  loadPremiumCourses() {
-    this.premiumCoursesLoaded = true;
-  }
-  
-  loadAboutUs() {
-    this.aboutUsSectionsLoaded = true;
-  }
-  
-  loadFreeCourses() {
-    this.freeCourseSectionsLoaded = true;
-  }
-  
-  loadAboutUsLight() {
-    this.aboutUsLightSectionsLoaded = true;
-  }
-  
-  loadCourseSection() {
-    this.courseSectionsLoaded = true;
-  }
-  
-  loadAboutUsEmpowering() {
-    this.aboutUsEmpwoeringSectionsLoaded = true;
-  }
-  
-  loadNewCourses() {
-    this.newCourseSectionsLoaded = true;
-  }
-  
-  loadStudentPick() {
-    this.studentPickSectionsLoaded = true;
-  }
-  
 
-  loadFAQContainer() {
-    this.faqContainerSectionsLoaded = true;
+  private fetchSectionData(sectionId: string) {
+    switch (sectionId) {
+      case 'premium_courses':
+        this.getPremiumCourses(this.directionEnum.INITIAL);
+        break;
+      case 'about_us':
+        this.getTrendingCourses(this.directionEnum.INITIAL);
+        break;
+      case 'free_courses':
+        this.getFreeCourses(this.directionEnum.INITIAL);
+        break;
+      case 'courses_section':
+        if (!this.categoryList.length) {
+          this.getCategoryList();
+        }
+        this.getCourseListByCategory();
+        break;
+      case 'new_courses':
+        this.getNewCourses(this.directionEnum.INITIAL);
+        break;
+      case 'test_center':
+        this.getTest(this.directionEnum.INITIAL);
+        break;
+      default:
+        break;
+    }
   }
+
+  private refreshLoadedSections() {
+    Object.entries(this.sectionsLoaded).forEach(([sectionId, loaded]) => {
+      if (loaded) {
+        this.fetchSectionData(sectionId);
+      }
+    });
+  }
+
+  // loadBannerContent() {
+  //   this.bannerLoaded = true;
+  // }
+
+  // loadPremiumCourses() {
+  //   this.premiumCoursesLoaded = true;
+  // }
+
+  // loadAboutUs() {
+  //   this.aboutUsSectionsLoaded = true;
+  // }
+
+  // loadFreeCourses() {
+  //   this.freeCourseSectionsLoaded = true;
+  // }
+
+  // loadAboutUsLight() {
+  //   this.aboutUsLightSectionsLoaded = true;
+  // }
+
+  // loadCourseSection() {
+  //   this.courseSectionsLoaded = true;
+  // }
+
+  // loadAboutUsEmpowering() {
+  //   this.aboutUsEmpwoeringSectionsLoaded = true;
+  // }
+
+  // loadNewCourses() {
+  //   this.newCourseSectionsLoaded = true;
+  // }
+
+  // loadStudentPick() {
+  //   this.studentPickSectionsLoaded = true;
+  // }
+
+  // loadFAQContainer() {
+  //   this.faqContainerSectionsLoaded = true;
+  // }
 
   checkStateManagement() {
     const redirectUrl = this._cacheService.getDataFromCache('redirectUrl');
@@ -381,42 +529,18 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   listenNavbarState() {
-    this._authService.$changeNavbarSate.subscribe((state: any) => {
+    this._authService.$changeNavbarSate.subscribe(() => {
       this.isLoggedIn = this._authService.isLoggedIn();
+      this.courseButtonName = this.isLoggedIn ? 'Start Learning' : 'Start Now';
     });
-
-    // this.staticCards = this.isLoggedIn ? this.loggedInStatic : this.staticCards;
-    setTimeout(() => {
-      this._authService.$getCategoriesAndCourse.subscribe((state: any) => {
-        this.fetchAllCourses();
-      });
-    }, 2000);
   }
+
   listenRefreshToken() {
     this._authService.$getCategoriesAndCourse.subscribe((state: any) => {
-      if (state) {
-        this.fetchAllCourses();
-      } else {
-        this.fetchAllCourses();
+      if (state !== null && state !== undefined) {
+        this.refreshLoadedSections();
       }
     });
-  }
-
-  fetchAllCourses() {
-    this.getPremiumCourses(this.directionEnum.INITIAL);
-    this.getTrendingCourses(this.directionEnum.INITIAL);
-    this.getFreeCourses(this.directionEnum.INITIAL);
-    this.getCategoryList();
-    this.getCourseListByCategory();
-    this.getInstructors(this.directionEnum.INITIAL);
-    this.getNewCourses(this.directionEnum.INITIAL);
-  }
-
-  scrollToSection() {
-    const element = document.getElementById('courses-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   }
 
   scrollToBottom() {
@@ -433,18 +557,23 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       content: `Join Fast Learner’s AI based learning platform for quick learning. Access top courses from experts, boost your skills with AI assistance & become a fast learner`,
     });
     this.titleService.setTitle(
-      'AI based Learning Platform Transforming Education | Fast Learner'
+      'AI based Learning Platform Transforming Education | Fast Learner',
     );
     this.setScreenWidth(window.innerWidth);
     this.loggedInStatic = this.staticCards.slice(0, -1);
-    this.getCategoryList();
 
-    this.fetchAllCourses();
-
-    // this.fetchAllCourses();
+    this.pendingScrollSectionId = sessionStorage.getItem('sectionId');
+    if (
+      this.pendingScrollSectionId &&
+      this.pendingScrollSectionId in this.sectionsLoaded
+    ) {
+      this.initPendingScroll(this.pendingScrollSectionId);
+    }
   }
 
   ngOnDestroy(): void {
+    this.clearScrollRetryTimers();
+    this.sectionObserver?.disconnect();
     this.metaService.removeTag("name='Home'");
   }
 
@@ -460,7 +589,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this._cacheService.saveInCache(
         'redirectUrl',
-        'student/course-details/' + courseUrl
+        'student/course-details/' + courseUrl,
       );
       this._router.navigate(['auth/sign-in']);
     }
@@ -476,22 +605,23 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  routeToCourseList(selection?: string) {
-  if (selection === 'TEST') {
-  this._router.navigate(['student/courses'], {
-    queryParams: { contentType: 'TEST' }
-  });
-  return;
-}
+  routeToCourseList(selection?: string, sectionId?: string) {
+    if (sectionId) {
+      sessionStorage.setItem('sectionId', sectionId);
+    }
+    if (selection === 'TEST') {
+      this._router.navigate(['student/courses'], {
+        queryParams: { contentType: 'TEST' },
+      });
+      return;
+    }
 
-
-  this._router.navigate(['student/courses'], {
-    queryParams: {
-      selection: selection,
-    },
-  });
-}
-
+    this._router.navigate(['student/courses'], {
+      queryParams: {
+        selection: selection,
+      },
+    });
+  }
 
   routeToInsructorProfile(profileUrl?: any) {
     this._router.navigate(['user/profile'], {
@@ -503,10 +633,10 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isLoggedIn) {
       this.routeToCourseList(this.viewAllMap.CATEGORY);
     } else {
+      this._cacheService.saveInCache('redirectUrl', '/student/courses');
       this.routeToSignUpScreen();
     }
   }
-  
 
   getCategoryList() {
     this._courseService.getCourseCategory().subscribe({
@@ -557,52 +687,56 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getCourseListByCategory() {
     const prioritizedCreatorIds = [40, 271, 165, 137];
-    this._courseService.getCoursesByCategory(this.payLoad).subscribe({
-      next: (response: any) => {
-        if (
-          response?.status ==
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          this.totalPages = response?.data?.pages;
-          this.courseList = response?.data?.data;
+    this.setSliderLoading('courses_section', true);
+    this._courseService
+      .getCoursesByCategory(this.payLoad)
+      .pipe(finalize(() => this.completeSliderLoad('courses_section')))
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response?.status ==
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            this.totalPages = response?.data?.pages;
+            this.courseList = response?.data?.data;
 
-          const prioritizedCourses = response.data.data.filter((e) =>
-            prioritizedCreatorIds.includes(e.creatorId)
-          );
-
-          prioritizedCourses.sort((a, b) => {
-            if (a.creatorId === 40) return -1;
-            if (b.creatorId === 40) return 1;
-            return 0;
-          });
-
-          const otherCourses = response.data.data.filter(
-            (e) => !prioritizedCreatorIds.includes(e.creatorId)
-          );
-
-          this.courseList = [...prioritizedCourses, ...otherCourses];
-          
-          this.courseList?.forEach((element) => {
-            element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
+            const prioritizedCourses = response.data.data.filter((e) =>
+              prioritizedCreatorIds.includes(e.creatorId),
             );
-          });
-        } else if (
-          response?.status ==
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.courseList = [];
-        }
-      },
-      error: (error: any) => {
-        if (
-          error?.error?.status ==
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.courseList = [];
-        }
-      },
-    });
+
+            prioritizedCourses.sort((a, b) => {
+              if (a.creatorId === 40) return -1;
+              if (b.creatorId === 40) return 1;
+              return 0;
+            });
+
+            const otherCourses = response.data.data.filter(
+              (e) => !prioritizedCreatorIds.includes(e.creatorId),
+            );
+
+            this.courseList = [...prioritizedCourses, ...otherCourses];
+
+            this.courseList?.forEach((element) => {
+              element.courseDuration = this.convertSecondsToHoursAndMinutes(
+                element.courseDuration,
+              );
+            });
+          } else if (
+            response?.status ==
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.courseList = [];
+          }
+        },
+        error: (error: any) => {
+          if (
+            error?.error?.status ==
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.courseList = [];
+          }
+        },
+      });
   }
 
   getNewCourses(direction?: string) {
@@ -634,51 +768,52 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       pageSize: 16,
     };
 
-    this._courseService.getNewCourses(payload).subscribe({
-      next: (response: any) => {
-        if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          // if (response?.data?.nextPage == null) {
-          //   return;
-          // }
-          const newCourses = response?.data?.data || [];
-          this.newCourses = [...newCourses];
-          this.newCoursesNextPage = response?.data?.nextPage;
-          this.totalNewCoursesPages = response?.data?.pages;
-          this.totalNewCoursesElements = response?.data?.totalElements; // Set the total number of pages based on the response
+    this.setSliderLoading('new_courses', true);
+    this._courseService
+      .getNewCourses(payload)
+      .pipe(finalize(() => this.completeSliderLoad('new_courses')))
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            // if (response?.data?.nextPage == null) {
+            //   return;
+            // }
+            const newCourses = response?.data?.data || [];
+            this.newCourses = [...newCourses];
+            this.newCoursesNextPage = response?.data?.nextPage;
+            this.totalNewCoursesPages = response?.data?.pages;
+            this.totalNewCoursesElements = response?.data?.totalElements; // Set the total number of pages based on the response
 
-          // Convert course durations to hours and minutes
-          this.newCourses?.forEach((element) => {
-            element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
-            );
-          });
-        } else if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.newCourses = [];
-        }
-      },
-      error: (error: any) => {
-        if (
-          error?.error?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.newCourses = [];
-        }
-      },
-    });
+            // Convert course durations to hours and minutes
+            this.newCourses?.forEach((element) => {
+              element.courseDuration = this.convertSecondsToHoursAndMinutes(
+                element.courseDuration,
+              );
+            });
+          } else if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.newCourses = [];
+          }
+        },
+        error: (error: any) => {
+          if (
+            error?.error?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.newCourses = [];
+          }
+        },
+      });
   }
 
   getTest(direction?: string) {
     // If total pages haven't been loaded yet, return early
-    if (
-      this.totalTestPages === 0 &&
-      direction !== this.directionEnum.INITIAL
-    ) {
+    if (this.totalTestPages === 0 && direction !== this.directionEnum.INITIAL) {
       return; // Prevents moving left or right until data isthis.directionEnum.INITIALzed
     }
 
@@ -702,43 +837,47 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       pageSize: 16,
     };
 
-    this._courseService.getTest(payload).subscribe({
-      next: (response: any) => {
-        if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          // if (response?.data?.nextPage == null) {
-          //   return;
-          // }
-          const tests = response?.data?.data || [];
-          this.tests = [...tests];
-          this.newCoursesNextPage = response?.data?.nextPage;
-          this.totalTestPages = response?.data?.pages;
-          this.totalTestElements = response?.data?.totalElements; // Set the total number of pages based on the response
+    this.setSliderLoading('test_center', true);
+    this._courseService
+      .getTest(payload)
+      .pipe(finalize(() => this.completeSliderLoad('test_center')))
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            // if (response?.data?.nextPage == null) {
+            //   return;
+            // }
+            const tests = response?.data?.data || [];
+            this.tests = [...tests];
+            this.newCoursesNextPage = response?.data?.nextPage;
+            this.totalTestPages = response?.data?.pages;
+            this.totalTestElements = response?.data?.totalElements; // Set the total number of pages based on the response
 
-          // Convert course durations to hours and minutes
-          this.tests?.forEach((element) => {
-            element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
-            );
-          });
-        } else if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.tests = [];
-        }
-      },
-      error: (error: any) => {
-        if (
-          error?.error?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.newCourses = [];
-        }
-      },
-    });
+            // Convert course durations to hours and minutes
+            this.tests?.forEach((element) => {
+              element.courseDuration = this.convertSecondsToHoursAndMinutes(
+                element.courseDuration,
+              );
+            });
+          } else if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.tests = [];
+          }
+        },
+        error: (error: any) => {
+          if (
+            error?.error?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.newCourses = [];
+          }
+        },
+      });
   }
   getInstructors(direction?: string) {
     // If total pages haven't been loaded yet, return early
@@ -785,7 +924,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
           // Convert course durations to hours and minutes
           this.instructorList?.forEach((element) => {
             element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
+              element.courseDuration,
             );
           });
         } else if (
@@ -834,41 +973,45 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       pageSize: 16,
     };
 
-    this._courseService.getTrendingCourses(payload).subscribe({
-      next: (response: any) => {
-        if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          // if (response?.data?.nextPage == null) {
-          //   return;
-          // }
-          const newTrendingCourses = response?.data?.data || [];
-          this.trendingCourses = [...newTrendingCourses];
-          this.trendingCoursesNextPage = response?.data?.nextPage;
-          this.totalTrendingCoursesPages = response?.data?.pages;
-          this.totalTrendingCoursesElements = response?.data?.totalElements;
-          this.trendingCourses?.forEach((element) => {
-            element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
-            );
-          });
-        } else if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.trendingCourses = [];
-        }
-      },
-      error: (error: any) => {
-        if (
-          error?.error?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.trendingCourses = [];
-        }
-      },
-    });
+    this.setSliderLoading('about_us', true);
+    this._courseService
+      .getTrendingCourses(payload)
+      .pipe(finalize(() => this.completeSliderLoad('about_us')))
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            // if (response?.data?.nextPage == null) {
+            //   return;
+            // }
+            const newTrendingCourses = response?.data?.data || [];
+            this.trendingCourses = [...newTrendingCourses];
+            this.trendingCoursesNextPage = response?.data?.nextPage;
+            this.totalTrendingCoursesPages = response?.data?.pages;
+            this.totalTrendingCoursesElements = response?.data?.totalElements;
+            this.trendingCourses?.forEach((element) => {
+              element.courseDuration = this.convertSecondsToHoursAndMinutes(
+                element.courseDuration,
+              );
+            });
+          } else if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.trendingCourses = [];
+          }
+        },
+        error: (error: any) => {
+          if (
+            error?.error?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.trendingCourses = [];
+          }
+        },
+      });
   }
   getFreeCourses(direction?: string) {
     // If total pages haven't been loaded yet, return early
@@ -899,42 +1042,46 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       pageSize: 16,
     };
 
-    this._courseService.getFreeCourses(payload).subscribe({
-      next: (response: any) => {
-        if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          // if (response?.data?.nextPage == null) {
-          //   return;
-          // }
-          const newFreeCourses = response?.data?.data || [];
+    this.setSliderLoading('free_courses', true);
+    this._courseService
+      .getFreeCourses(payload)
+      .pipe(finalize(() => this.completeSliderLoad('free_courses')))
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            // if (response?.data?.nextPage == null) {
+            //   return;
+            // }
+            const newFreeCourses = response?.data?.data || [];
 
-          this.freeCourses = [...newFreeCourses];
-          this.freeCoursesNextPage = response?.data?.nextPage;
-          this.totalFreeCoursesPages = response?.data?.pages;
-          this.totalFreeCoursesElements = response?.data?.totalElements;
-          this.freeCourses?.forEach((element) => {
-            element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
-            );
-          });
-        } else if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.freeCourses = [];
-        }
-      },
-      error: (error: any) => {
-        if (
-          error?.error?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.freeCourses = [];
-        }
-      },
-    });
+            this.freeCourses = [...newFreeCourses];
+            this.freeCoursesNextPage = response?.data?.nextPage;
+            this.totalFreeCoursesPages = response?.data?.pages;
+            this.totalFreeCoursesElements = response?.data?.totalElements;
+            this.freeCourses?.forEach((element) => {
+              element.courseDuration = this.convertSecondsToHoursAndMinutes(
+                element.courseDuration,
+              );
+            });
+          } else if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.freeCourses = [];
+          }
+        },
+        error: (error: any) => {
+          if (
+            error?.error?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.freeCourses = [];
+          }
+        },
+      });
   }
   // getPremiumCourses(direction?: string) {
   //   // If total pages haven't been loaded yet, return early
@@ -1034,49 +1181,53 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
       pageSize: 16,
     };
 
-    this._courseService.getPremiumCourses(payload).subscribe({
-      next: (response: any) => {
-        if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-        ) {
-          const newCourses = response?.data?.data || [];
+    this.setSliderLoading('premium_courses', true);
+    this._courseService
+      .getPremiumCourses(payload)
+      .pipe(finalize(() => this.completeSliderLoad('premium_courses')))
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+          ) {
+            const newCourses = response?.data?.data || [];
 
-          // if (
-          //   response?.data?.nextPage == null &&
-          //   response.data?.totalElements > 4
-          // ) {
-          //   return;
-          // }
+            // if (
+            //   response?.data?.nextPage == null &&
+            //   response.data?.totalElements > 4
+            // ) {
+            //   return;
+            // }
 
-          // Append new courses if they exist, otherwise keep current courses
-          this.premiumCourses = [...newCourses];
-          this.premiumCoursesNextPage = response?.data?.nextPage;
-          this.totalPremiumCoursesPages = response?.data?.pages;
-          this.totalPremiumCoursesElements = response?.data?.totalElements;
+            // Append new courses if they exist, otherwise keep current courses
+            this.premiumCourses = [...newCourses];
+            this.premiumCoursesNextPage = response?.data?.nextPage;
+            this.totalPremiumCoursesPages = response?.data?.pages;
+            this.totalPremiumCoursesElements = response?.data?.totalElements;
 
-          // Convert course durations to hours and minutes
-          this.premiumCourses?.forEach((element) => {
-            element.courseDuration = this.convertSecondsToHoursAndMinutes(
-              element.courseDuration
-            );
-          });
-        } else if (
-          response?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.premiumCourses = [];
-        }
-      },
-      error: (error: any) => {
-        if (
-          error?.error?.status ===
-          this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
-        ) {
-          this.premiumCourses = [];
-        }
-      },
-    });
+            // Convert course durations to hours and minutes
+            this.premiumCourses?.forEach((element) => {
+              element.courseDuration = this.convertSecondsToHoursAndMinutes(
+                element.courseDuration,
+              );
+            });
+          } else if (
+            response?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.premiumCourses = [];
+          }
+        },
+        error: (error: any) => {
+          if (
+            error?.error?.status ===
+            this._httpConstants.REQUEST_STATUS.REQUEST_NOT_FOUND_404.CODE
+          ) {
+            this.premiumCourses = [];
+          }
+        },
+      });
   }
 
   toggleFavoriteCourse(courseId: any, isFavorite: boolean) {
@@ -1087,7 +1238,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
           let course = this.courseList.find(
-            (x: any) => x?.courseId == courseId
+            (x: any) => x?.courseId == courseId,
           );
           if (course) {
             course.favourite = !isFavorite;
@@ -1149,7 +1300,7 @@ export class LandingPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  scrollToCourseSection() {
-    document.getElementById('courses-section').scrollIntoView();
-  }
+  // scrollToCourseSection() {
+  //   document.getElementById('courses-section').scrollIntoView();
+  // }
 }

@@ -1,0 +1,286 @@
+.certificate {
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+.left-side {
+  border: 1px solid #212189;
+  padding: 20px;
+}
+
+.side-nav-button {
+  background-color: #262261;
+  border-color: #212189;
+  color: white;
+  height: 40px;
+  width: 40px;
+}
+
+.recipient-name {
+  display: flex;
+  padding: 6px;
+}
+
+.name {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.heading-weight {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.para {
+  color: black;
+  font-size: 16px;
+  font-weight: 900;
+  margin-top: 10px;
+}
+
+.para1 {
+  color: #212189;
+  font-size: 16px;
+  font-weight: 900;
+  margin-top: 10px;
+}
+
+.main-content {
+  padding-top: 2%;
+}
+
+:host ::ng-deep .ant-rate-star:not(:last-child) {
+  margin: 0;
+}
+
+.section-topic-time {
+  display: flex;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.rating {
+  font-size: 16px;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+}
+
+.instructor-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11px;
+}
+
+.m-l {
+  margin-left: 10px;
+  color: #212189;
+}
+
+.instructor-rating {
+  margin-top: 6px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+
+.share-btn {
+  border: #fe4a55 1px solid;
+  color: #fe4a55;
+  border-radius: 4px;
+  width: 40%;
+  height: 40px;
+}
+
+.share-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.download-btn {
+  margin-left: 10px;
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  width: 40%;
+  height: 40px;
+}
+
+.download-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+}
+
+.center {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.left {
+  display: flex;
+}
+
+.left-blue-background {
+  background-color: #212189;
+  height: 643px;
+  width: 100%;
+}
+
+.right-golden-background {
+  background-color: goldenrod;
+  height: 643px;
+  width: 10px;
+}
+
+.main {
+  background-color: white;
+}
+
+.logo {
+  margin-top: 40px;
+  margin-left: 15px;
+  margin-bottom: 10px;
+}
+
+.red-box {
+  position: relative;
+  background-color: #b20a14;
+  height: 200px;
+
+  .badge {
+    position: absolute;
+    right: -100px;
+    top: 0;
+    z-index: 10;
+    height: 300px;
+  }
+}
+
+.inner {
+  background-image: url("../../../../assets/images/certificate-background.png");
+  height: 543px;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.right {
+  padding: 50px 25px 50px 0px;
+}
+
+.certificate-header {
+  text-align: center;
+}
+
+.certificate-header h1 {
+  font-size: 50px;
+  font-weight: 900;
+  color: #262261;
+  margin: auto;
+  text-transform: uppercase;
+  font-variant: small-caps;
+}
+
+.certificate-header p {
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
+  line-height: 5px;
+}
+
+.certificate-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-left: 12%;
+}
+
+.certificate-title h1 {
+  // width: 40rem;
+  margin: auto;
+  line-height: 40px;
+  margin-bottom: 6px;
+}
+
+.certificate-title p {
+  font-weight: 600;
+}
+
+.instructor-container {
+  text-align: center;
+}
+
+.instructor {
+  color: black;
+}
+
+.certificate-name {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.certificate-name h2 {
+  color: black;
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.underline {
+  width: 70%;
+  border-color: red;
+}
+
+.date-hours {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.date {
+  color: black;
+}
+
+.hours {
+  color: black;
+}
+
+.certificate-content {
+  padding: 60px 20px 0px 20px;
+}
+
+.certificate-content-para {
+  padding-top: 2%;
+}
+
+.paragraph {
+  color: black;
+}
+
+.paragraph a {
+  font-weight: 600;
+}
+
+@media screen and (max-width: 900px) {
+  .right-side {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .download-btn {
+    width: auto;
+  }
+}

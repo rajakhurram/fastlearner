@@ -1,4 +1,4 @@
-<div  class="quiz-attempt-container" *ngIf="quizData && !isReviewing">
+<div class="quiz-attempt-container" *ngIf="quizData && !isReviewing">
   <div class="chart-section">
     <div class="donut-chart">
       <svg viewBox="0 0 36 36" class="circular-chart">
@@ -56,7 +56,8 @@
         <span
           [ngClass]="{
             failed: quizData.obtainedPercentage < quizData.quiz.passingCriteria,
-            passed: quizData.obtainedPercentage >= quizData.quiz.passingCriteria
+            passed:
+              quizData.obtainedPercentage >= quizData.quiz.passingCriteria,
           }"
         >
           {{
@@ -69,37 +70,39 @@
       </h3>
 
       <div class="percentage">
-        {{ quizData.obtainedPercentage === 100
-            ? '100'
-            : (quizData.obtainedPercentage | number:'1.2-2') }}%
-        <span *ngIf="!isSurvey">Correct ({{ correct }} / {{ quizData.totalQuestion }})</span>
-        </div>
-
+        {{
+          quizData.obtainedPercentage === 100
+            ? "100"
+            : (quizData.obtainedPercentage | number: "1.2-2")
+        }}%
+        <span *ngIf="!isSurvey"
+          >Correct ({{ correct }} / {{ quizData.totalQuestion }})</span
+        >
+      </div>
 
       <p><b>Duration:</b> {{ quizData.quiz.durationInMinutes }} minutes</p>
       <p><b>Date:</b> {{ formattedDate }}</p>
     </div>
 
     <div class="btn-wrapper">
-            <button
-              class="retry-btn"
-              nz-button
-              (click)="reviewQuiz()"
-              nzType="default"
-              
-            >
-              Review Questions
-            </button>
-            <button
-              class="retake-btn"
-              nz-button
-              (click)="retakeQuiz($event)"
-              nzType="primary"
-              *ngIf="isAllowedToRetake"
-            >
-              Retake Quiz
-            </button>
-          </div>
+      <button
+        class="retry-btn"
+        nz-button
+        (click)="reviewQuiz()"
+        nzType="default"
+      >
+        Review Questions
+      </button>
+      <button
+        class="retake-btn"
+        nz-button
+        (click)="retakeQuiz($event)"
+        nzType="primary"
+        *ngIf="isAllowedToRetake"
+      >
+        Retake Quiz
+      </button>
+    </div>
   </div>
 </div>
 <ng-container *ngIf="isReviewing">

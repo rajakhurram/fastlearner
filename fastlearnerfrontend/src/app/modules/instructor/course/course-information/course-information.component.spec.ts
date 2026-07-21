@@ -25,6 +25,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AntDesignModule } from 'src/app/ui-library/ant-design/ant-design.module';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { CourseContentType } from 'src/app/core/enums/course-content-type.enum';
+import { CourseStatus, CourseType } from 'src/app/core/enums/course-status';
+import { CommunicationService } from 'src/app/core/services/communication.service';
+import { Router } from '@angular/router';
 
 describe('CourseInformationComponent', () => {
   let component: CourseInformationComponent;
@@ -40,7 +44,9 @@ describe('CourseInformationComponent', () => {
       'getCourseLevels',
       'createCourseDto',
       'courseTitleExist',
-      'premiumCourseAvailable'
+      'courseUrlExist',
+      'premiumCourseAvailable',
+      'getCourseFirstStepDetail',
     ]);
     courseServiceSpy.premiumCourseAvailable.and.returnValue(of({
       status: 200,
@@ -51,6 +57,11 @@ describe('CourseInformationComponent', () => {
     ]);
     const messageServiceSpy = jasmine.createSpyObj('MessageService', ['error']);
     const modalServiceSpy = jasmine.createSpyObj('NzModalService', ['create']);
+    const communicationServiceSpy = jasmine.createSpyObj(
+      'CommunicationService',
+      ['updateInstructorCourse'],
+    );
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       declarations: [CourseInformationComponent],
@@ -67,6 +78,8 @@ describe('CourseInformationComponent', () => {
         { provide: FileManager, useValue: fileManagerServiceSpy },
         { provide: MessageService, useValue: messageServiceSpy },
         { provide: NzModalService, useValue: modalServiceSpy },
+        { provide: CommunicationService, useValue: communicationServiceSpy },
+        { provide: Router, useValue: routerSpy },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -744,6 +757,743 @@ describe('CourseInformationComponent', () => {
       component.courseTitleExist();
 
       expect(component.formGroup.get('titleExist').value).toBeTrue();
+    });
+  });
+
+  describe('Phase 1 batch 1: publish flow and validation helpers', () => {
+    const successCode = 200;
+
+    beforeEach(() => {
+      courseService.createCourseDto.and.returnValue(
+        of({ status: successCode, data: { courseId: 'new-course' } }),
+      );
+    });
+
+    it('should require preview video for course content type', () => {
+      component.selectedContentType = CourseContentType.COURSE;
+      component.handleConditionalValidation();
+
+      expect(
+        component.formGroup.get('previewPath')?.hasError('required'),
+      ).toBeTrue();
+    });
+
+    it('should clear preview validators for non-course content type', () => {
+      component.selectedContentType = CourseContentType.TEST;
+      component.handleConditionalValidation();
+
+      expect(
+        component.formGroup.get('previewPath')?.hasError('required'),
+      ).toBeFalse();
+    });
+
+    it('should reject non-positive premium prices', () => {
+      const validator = component.priceGreaterThanZeroValidator();
+      expect(validator({ value: 0 } as any)).toEqual({
+        priceGreaterThanZero: true,
+      });
+      expect(validator({ value: 10 } as any)).toBeNull();
+    });
+
+    it('should sanitize course title input', () => {
+      expect(component.sanitizeCourseTitle('Hello@World!')).toBe('HelloWorld');
+      expect(component.processInput('  Trim  Me  ')).toBe(' Trim Me ');
+    });
+
+    it('should block invalid characters in course title keydown', () => {
+      const event = {
+        key: '@',
+        ctrlKey: false,
+        metaKey: false,
+        altKey: false,
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+
+      component.preventCourseTitleKeydown(event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(component.courseTitleFormatError).toBeTrue();
+    });
+
+    it('should call publishCourse from steps when form is ready', () => {
+      const publishSpy = spyOn(component, 'publishCourse');
+      spyOnProperty(component.formGroup, 'valid', 'get').and.returnValue(true);
+      component.courseSummaryArrayLength = 1;
+      component.addCourseTag({ id: 1, name: 'tag', active: true });
+
+      component.steps('section-step');
+
+      expect(publishSpy).toHaveBeenCalledWith('section-step');
+    });
+
+    it('should publish course and emit outputs on success', () => {
+      component.courseSaved = false;
+      component.sectionsData = [];
+      component.formGroup.get('courseProgress')?.setValue(0);
+      spyOn(component.currentStep, 'emit');
+      spyOn(component.courseInformationData, 'emit');
+      spyOn(component.draftCourseId, 'emit');
+      component.formGroup.get('description')?.setValue('Has content');
+
+      component.publishCourse('next');
+
+      expect(courseService.createCourseDto).toHaveBeenCalled();
+      expect(component.courseId).toBe('new-course');
+      expect(component.currentStep.emit).toHaveBeenCalledWith('next');
+      expect(component.courseInformationData.emit).toHaveBeenCalled();
+      expect(component.draftCourseId.emit).toHaveBeenCalled();
+    });
+
+    it('should short-circuit publish when course progress is 100', () => {
+      component.formGroup.get('courseProgress')?.setValue(100);
+      spyOn(component.currentStep, 'emit');
+
+      component.publishCourse('pricing');
+
+      expect(courseService.createCourseDto).not.toHaveBeenCalled();
+      expect(component.currentStep.emit).toHaveBeenCalledWith('pricing');
+    });
+
+    it('should save draft course when fields are valid', () => {
+      component.courseSaved = false;
+      component.sectionsData = [{ name: 'Section' }];
+      component.formGroup.get('courseProgress')?.setValue(0);
+      component.formGroup.get('description')?.setValue('Draft body');
+
+      component.saveAsDraftCourse();
+
+      expect(courseService.createCourseDto).toHaveBeenCalled();
+      expect(component.courseId).toBe('new-course');
+      expect(component.courseSaved).toBeTrue();
+    });
+
+    it('should count non-empty course summaries', () => {
+      component.courseSummaryArray.at(0).get('courseSummaryInfo')?.setValue('');
+      component.addCourseSummary('Summary one');
+      component.addCourseSummary('');
+
+      component.manageCourseSummaryArrayLength();
+
+      expect(component.courseSummaryArrayLength).toBe(1);
+    });
+  });
+
+  describe('Phase 1 batch 1: youtube, uploads, and UI helpers', () => {
+    it('should add youtube url to preview path', () => {
+      component.formGroup.get('previewName')?.setValue('https://youtu.be/abc');
+      component.addYoutubeUrl();
+
+      expect(component.formGroup.get('previewPath')?.value).toBe(
+        'https://youtu.be/abc',
+      );
+      expect(component.showPreview).toBeTrue();
+    });
+
+    it('should reset youtube input state when cleared', () => {
+      component.formGroup.get('previewName')?.setValue('');
+      component.videoFileBtn = 'Replace';
+      component.isYoutubeLinkPresent = true;
+
+      component.youtubeInputChange();
+
+      expect(component.videoFileBtn).toBe('Upload File');
+      expect(component.isYoutubeLinkPresent).toBeFalse();
+    });
+
+    it('should enable add button for valid youtube links', () => {
+      component.formGroup
+        .get('previewName')
+        ?.setValue('https://www.youtube.com/watch?v=abc');
+
+      component.youtubeInputChange();
+
+      expect(component.videoFileBtn).toBe('Add');
+      expect(component.isYoutubeLinkPresent).toBeTrue();
+    });
+
+    it('should copy course url to clipboard', fakeAsync(() => {
+      component.applicationCourseDetailsUrl = 'https://learn.test/course/';
+      const input = document.createElement('input');
+      input.id = 'url-input';
+      input.value = 'my-course';
+      document.body.appendChild(input);
+      spyOn(document, 'execCommand').and.returnValue(true);
+      component.formGroup.get('courseUrl')?.setValue('my-course');
+
+      component.copyUrl();
+      tick(1000);
+
+      expect(document.execCommand).toHaveBeenCalledWith('copy');
+      expect(component.copyTooltipText).toBe('Click to copy URL');
+      document.body.removeChild(input);
+    }));
+
+    it('should filter free and all course types from dropdown', () => {
+      component.courseTypes = [
+        { name: 'Free', value: 'FREE' },
+        { name: 'Premium', value: 'PREMIUM' },
+        { name: 'All', value: 'ALL' },
+      ] as any;
+
+      expect(component.filteredCourseTypes.length).toBe(1);
+      expect(component.filteredCourseTypes[0].name).toBe('Premium');
+    });
+
+    it('should lock course type for published premium courses', () => {
+      component.pricingLocked = true;
+      component.courseStatus = CourseStatus.PUBLISHED;
+
+      expect(component.isCourseTypeLocked).toBeTrue();
+
+      component.courseStatus = CourseStatus.DRAFT;
+      expect(component.isCourseTypeLocked).toBeFalse();
+    });
+
+    it('should open subscription modal when premium is unavailable', () => {
+      component.isAvailablePremium = false;
+      modalService.create.and.returnValue({ afterClose: of(null) } as any);
+
+      component.openSubscriptionPlan({
+        name: 'Premium',
+        value: CourseType.PREMIUM,
+        disabled: false,
+      });
+
+      expect(modalService.create).toHaveBeenCalled();
+    });
+
+    it('should reject invalid preview video uploads', () => {
+      component.customRequestVideo({
+        file: new File(['v'], 'bad#name.mp4', { type: 'video/mp4' }),
+      } as any);
+
+      expect(messageService.error).toHaveBeenCalledWith(
+        'File name contains special characters.',
+      );
+    });
+
+    it('should reject non-mp4 preview video uploads', () => {
+      component.customRequestVideo({
+        file: new File(['v'], 'clip.avi', { type: 'video/avi' }),
+      } as any);
+
+      expect(messageService.error).toHaveBeenCalledWith(
+        'Please upload a video file in MP4 format.',
+      );
+    });
+
+    it('should reject invalid thumbnail uploads', () => {
+      component.customRequestImage({
+        file: new File(['x'], 'file.txt', { type: 'text/plain' }),
+      } as any);
+
+      expect(messageService.error).toHaveBeenCalledWith(
+        'Please select a valid image file (jpg, jpeg, gif, png).',
+      );
+    });
+
+    it('should show validation errors when validateAndContinue is invalid', () => {
+      spyOn(component as any, 'showValidationErrors');
+      spyOn(component as any, 'scrollToFirstInvalidField');
+      spyOn(component, 'steps');
+      component.formGroup.get('courseTitle')?.setValue('');
+
+      component.validateAndContinue();
+
+      expect((component as any).showValidationErrors).toHaveBeenCalled();
+      expect((component as any).scrollToFirstInvalidField).toHaveBeenCalled();
+      expect(component.steps).not.toHaveBeenCalled();
+    });
+
+    it('should prevent emoji input', () => {
+      const event = {
+        key: '😀',
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+
+      component.preventEmoji(event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('should slice long tag names for display', () => {
+      expect(component.sliceTagName('Short')).toBe('Short');
+      expect(component.sliceTagName('VeryLongTagNameExample')).toContain('...');
+    });
+  });
+
+  describe('Phase 1 batch 2: form patching and media helpers', () => {
+    const successCode = 200;
+
+    beforeEach(() => {
+      courseService.getCourseCategory.and.returnValue(
+        of({
+          status: successCode,
+          data: [{ id: 1, name: 'Science' }],
+        }),
+      );
+      courseService.getCourseLevels.and.returnValue(
+        of({
+          status: successCode,
+          data: [{ id: 2, name: 'Beginner' }],
+        }),
+      );
+      courseService.courseTitleExist.and.returnValue(of({ status: successCode }));
+      courseService.courseUrlExist.and.returnValue(of({ status: successCode }));
+      component.categoryList = [{ id: 1, name: 'Science' }] as any;
+      component.listOfLevel = [{ id: 2, name: 'Beginner' }] as any;
+      component.currentSelectedTopic = { videoUrl: '', vttContent: '' };
+    });
+
+    it('should patch form from course detail payload', () => {
+      component.patchForm({
+        title: 'My Course',
+        courseUrl: 'my-course',
+        categoryId: 1,
+        courseType: CourseType.FREE,
+        about: 'About',
+        price: 0,
+        levelId: 2,
+        courseDescription: 'Description',
+        courseThumbnailUrl: 'thumb.png',
+        previewVideoUrl: 'video.mp4',
+        previewVideoVttContent: 'vtt',
+        prerequisite: ['None'],
+        courseProgress: 10,
+        certificateEnabled: true,
+        tags: [{ id: 1, name: 'tag1', active: true }],
+        courseOutcome: ['Outcome 1'],
+      });
+
+      expect(component.formGroup.get('courseTitle')?.value).toBe('My Course');
+      expect(component.showPreview).toBeTrue();
+      expect(component.showThumbnail).toBeTrue();
+    });
+
+    it('should detect youtube links', () => {
+      component.formGroup.get('previewName')?.setValue(
+        'https://www.youtube.com/watch?v=abc123',
+      );
+
+      expect(component.checkYoutubeLink()).toBeTrue();
+      expect(component.youtubeInputChange()).toBeUndefined();
+      expect(component.isYoutubeLinkPresent).toBeTrue();
+    });
+
+    it('should apply youtube url to preview path', () => {
+      component.formGroup.get('previewName')?.setValue(
+        'https://www.youtube.com/watch?v=abc123',
+      );
+
+      component.addYoutubeUrl();
+
+      expect(component.formGroup.get('previewPath')?.value).toContain('youtube');
+      expect(component.showPreview).toBeTrue();
+    });
+
+    it('should copy course url to clipboard', () => {
+      const input = document.createElement('input');
+      input.id = 'url-input';
+      input.value = 'my-course';
+      document.body.appendChild(input);
+      component.applicationCourseDetailsUrl = 'https://fastlearner.ai/course/';
+      const execSpy = spyOn(document, 'execCommand').and.returnValue(true);
+
+      component.copyUrl();
+
+      expect(execSpy).toHaveBeenCalledWith('copy');
+      document.body.removeChild(input);
+    });
+
+    it('should filter course types for instructor selection', () => {
+      expect(
+        component.filteredCourseTypes.every(
+          (ct) => ct.name !== 'Free' && ct.name !== 'All',
+        ),
+      ).toBeTrue();
+    });
+
+    it('should lock course type for published premium courses', () => {
+      component.formGroup.get('courseType')?.setValue(CourseType.PREMIUM);
+      component.courseStatus = CourseStatus.PUBLISHED;
+      component.pricingLocked = true;
+
+      expect(component.isCourseTypeLocked).toBeTrue();
+    });
+
+    it('should save draft and keep courseSaved flag on success', () => {
+      courseService.createCourseDto.and.returnValue(
+        of({ status: successCode, data: { courseId: 'draft-1' } }),
+      );
+      component.formGroup.get('description')?.setValue('Draft content');
+
+      component.saveAsDraftCourse();
+
+      expect(courseService.createCourseDto).toHaveBeenCalled();
+      expect(component.courseSaved).toBeTrue();
+    });
+
+    it('should block special characters in course url keydown', () => {
+      const event = {
+        key: '@',
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+
+      component.preventSpecialCharUrl(event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('should load course levels into list', () => {
+      component.getCourseLevels();
+
+      expect(component.listOfLevel.length).toBe(1);
+      expect(component.listOfLevel[0].name).toBe('Beginner');
+    });
+
+    it('should remove course summary row', () => {
+      component.addCourseSummary('Summary line');
+      expect(component.courseSummaryArray.length).toBeGreaterThan(1);
+
+      component.removeSummary(1);
+
+      expect(component.courseSummaryArray.length).toBe(1);
+    });
+  });
+
+  describe('Phase 1 batch 3: course detail, url, tags, and validation', () => {
+    const successCode = 200;
+    let router: jasmine.SpyObj<Router>;
+
+    const baseCourseDetail = () => ({
+      title: 'Loaded Course',
+      courseUrl: 'loaded-course',
+      categoryId: 1,
+      courseType: CourseType.FREE,
+      about: 'About loaded',
+      price: 0,
+      levelId: 2,
+      courseDescription: 'Description loaded',
+      courseThumbnailUrl: 'thumb.png',
+      previewVideoUrl: 'video.mp4',
+      previewVideoVttContent: 'vtt',
+      prerequisite: ['None'],
+      courseProgress: 25,
+      certificateEnabled: false,
+      courseStatus: CourseStatus.DRAFT,
+      contentType: 'COURSE',
+      tags: [{ id: 1, name: 'tag1', active: true }],
+      courseOutcome: ['Outcome 1'],
+    });
+
+    beforeEach(() => {
+      router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      courseService.getCourseCategory.and.returnValue(
+        of({ status: successCode, data: [{ id: 1, name: 'Science' }] }),
+      );
+      courseService.getCourseLevels.and.returnValue(
+        of({ status: successCode, data: [{ id: 2, name: 'Beginner' }] }),
+      );
+      courseService.courseTitleExist.and.returnValue(of({ status: successCode }));
+      courseService.courseUrlExist.and.returnValue(of({ status: successCode }));
+      courseService.getCourseFirstStepDetail.and.returnValue(
+        of({ status: successCode, data: baseCourseDetail() }),
+      );
+      component.categoryList = [{ id: 1, name: 'Science' }] as any;
+      component.listOfLevel = [{ id: 2, name: 'Beginner' }] as any;
+      component.currentSelectedTopic = { videoUrl: '', vttContent: '' };
+      component.courseId = 'course-1';
+    });
+
+    it('should block editing published premium courses', () => {
+      courseService.getCourseFirstStepDetail.and.returnValue(
+        of({
+          status: successCode,
+          data: {
+            ...baseCourseDetail(),
+            courseType: CourseType.PREMIUM,
+            courseStatus: CourseStatus.PUBLISHED,
+          },
+        }),
+      );
+
+      component.getCourseFirstStepDetail();
+
+      expect(messageService.error).toHaveBeenCalledWith(
+        'Premium courses cannot be edited.',
+      );
+      expect(router.navigate).toHaveBeenCalledWith(['instructor/dashboard']);
+    });
+
+    it('should load course detail and patch form on success', () => {
+      const patchSpy = spyOn(component, 'patchForm');
+      const validationSpy = spyOn(component, 'handleConditionalValidation');
+
+      component.getCourseFirstStepDetail();
+
+      expect(courseService.getCourseFirstStepDetail).toHaveBeenCalledWith(
+        'course-1',
+      );
+      expect(component.selectedContentType).toBe('course');
+      expect(validationSpy).toHaveBeenCalled();
+      expect(patchSpy).toHaveBeenCalled();
+    });
+
+    it('should allow draft premium courses to load', () => {
+      courseService.getCourseFirstStepDetail.and.returnValue(
+        of({
+          status: successCode,
+          data: {
+            ...baseCourseDetail(),
+            courseType: CourseType.PREMIUM,
+            courseStatus: CourseStatus.DRAFT,
+          },
+        }),
+      );
+      const patchSpy = spyOn(component, 'patchForm');
+
+      component.getCourseFirstStepDetail();
+
+      expect(messageService.error).not.toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+      expect(patchSpy).toHaveBeenCalled();
+    });
+
+    it('should fetch first step detail when patchFormGroup has courseId', () => {
+      const detailSpy = spyOn(component, 'getCourseFirstStepDetail');
+
+      component.patchFormGroup();
+
+      expect(detailSpy).toHaveBeenCalled();
+    });
+
+    it('should map premium and non-premium types in patchForm', () => {
+      component.patchForm({
+        ...baseCourseDetail(),
+        courseType: CourseType.PREMIUM,
+      });
+      expect(component.formGroup.get('courseType')?.value).toBe(
+        CourseType.PREMIUM,
+      );
+
+      component.courseTagArray.clear();
+      component.courseSummaryArray.clear();
+      component.addCourseSummary('');
+      component.patchForm({
+        ...baseCourseDetail(),
+        courseType: CourseType.FREE,
+      });
+      expect(component.formGroup.get('courseType')?.value).toBe(
+        CourseType.STANDARD,
+      );
+    });
+
+    it('should mark course url as available when service succeeds', () => {
+      component.formGroup.get('courseUrl')?.setValue('my-course-url');
+
+      component.courseUrlExist();
+
+      expect(courseService.courseUrlExist).toHaveBeenCalledWith(
+        'my-course-url',
+        'course-1',
+      );
+      expect(component.formGroup.get('urlExist')?.value).toBeFalse();
+    });
+
+    it('should mark course url as taken when service errors', () => {
+      courseService.courseUrlExist.and.returnValue(
+        throwError(() => new Error('Exists')),
+      );
+      component.formGroup.get('courseUrl')?.setValue('taken-url');
+
+      component.courseUrlExist();
+
+      expect(component.formGroup.get('urlExist')?.value).toBeTrue();
+    });
+
+    it('should skip course url check when url is empty', () => {
+      component.formGroup.get('courseUrl')?.setValue('');
+
+      component.courseUrlExist();
+
+      expect(courseService.courseUrlExist).not.toHaveBeenCalled();
+    });
+
+    it('should block invalid characters in course url keydown', () => {
+      const blocked = {
+        key: '@',
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+      const allowed = {
+        key: 'a',
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+
+      component.preventSpecialCharUrl(blocked);
+      component.preventSpecialCharUrl(allowed);
+
+      expect(blocked.preventDefault).toHaveBeenCalled();
+      expect(allowed.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should open subscription modal when premium is unavailable', () => {
+      component.isAvailablePremium = false;
+      modalService.create.and.returnValue({ afterClose: of(null) } as any);
+
+      component.openSubscriptionPlan({
+        name: 'Premium',
+        value: CourseType.PREMIUM,
+        disabled: false,
+      });
+
+      expect(modalService.create).toHaveBeenCalled();
+    });
+
+    it('should not open subscription modal when premium is available', () => {
+      component.isAvailablePremium = true;
+
+      component.openSubscriptionPlan({
+        name: 'Premium',
+        value: CourseType.PREMIUM,
+        disabled: false,
+      });
+
+      expect(modalService.create).not.toHaveBeenCalled();
+    });
+
+    it('should set premium availability from service response', () => {
+      courseService.premiumCourseAvailable.and.returnValue(
+        of({ status: successCode, data: { isAvailablePremium: true } }),
+      );
+
+      component.premiumCourseAvailable();
+
+      expect(component.isAvailablePremium).toBeTrue();
+    });
+
+    it('should log content change events', () => {
+      const logSpy = spyOn(console, 'log');
+      const event = { html: '<p>updated</p>' };
+
+      component.contentChanged(event);
+
+      expect(logSpy).toHaveBeenCalledWith(event);
+    });
+
+    it('should recheck tooltip visibility on window scroll', () => {
+      const checkSpy = spyOn(component, 'checkTooltipVisibility');
+
+      component.onWindowScroll();
+
+      expect(checkSpy).toHaveBeenCalled();
+    });
+
+    it('should show tag input and focus the element', fakeAsync(() => {
+      component.inputElement = {
+        nativeElement: { focus: jasmine.createSpy('focus') },
+      } as any;
+
+      component.showInput();
+      tick(10);
+
+      expect(component.inputVisible).toBeTrue();
+      expect(component.inputElement?.nativeElement.focus).toHaveBeenCalled();
+    }));
+
+    it('should add a unique tag on input confirm', () => {
+      component.formGroup.get('tags')?.setValue('UniqueTag');
+
+      component.handleInputConfirm();
+
+      expect(component.tags).toContain('UniqueTag');
+      expect(component.courseTagArray.length).toBe(1);
+      expect(component.inputVisible).toBeFalse();
+    });
+
+    it('should not duplicate tags on input confirm', () => {
+      component.tags = ['ExistingTag'];
+      component.formGroup.get('tags')?.setValue('ExistingTag');
+      const initialLength = component.courseTagArray.length;
+
+      component.handleInputConfirm();
+
+      expect(component.courseTagArray.length).toBe(initialLength);
+      expect(component.tags).toEqual(['ExistingTag']);
+    });
+
+    it('should keep at least one summary when removing', () => {
+      component.courseSummaryArray.clear();
+      component.addCourseSummary('Only summary');
+
+      component.removeSummary(0);
+
+      expect(component.courseSummaryArray.length).toBe(1);
+    });
+
+    it('should add summaries and update summary count', () => {
+      component.courseSummaryArray.clear();
+      component.addCourseSummary('Summary A');
+      component.addCourseSummary('Summary B');
+
+      expect(component.courseSummaryArray.length).toBe(2);
+      expect(component.courseSummaryArrayLength).toBe(2);
+    });
+
+    it('should validate tag form group required name', () => {
+      const invalidTag = component.createTag();
+      const validTag = component.createTag({
+        id: 1,
+        name: 'Valid',
+        active: true,
+      });
+
+      expect(invalidTag.get('name')?.valid).toBeFalse();
+      expect(validTag.get('name')?.valid).toBeTrue();
+    });
+
+    it('should return false from anyFieldValid when form is empty', () => {
+      component.formGroup.reset({
+        courseTitle: '',
+        titleExist: false,
+        courseUrl: '',
+        urlExist: false,
+        description: '',
+        courseCategory: null,
+        courseType: null,
+        courseLevel: null,
+        courseHeadline: '',
+        thumbnailPath: '',
+        previewPath: '',
+        prerequisite: '',
+      });
+      component.courseTagArray.clear();
+      component.courseSummaryArray.at(0).get('courseSummaryInfo')?.setValue('');
+
+      expect(component.anyFieldValid()).toBeFalse();
+    });
+
+    it('should return true from anyFieldValid for title and url', () => {
+      component.formGroup.get('courseTitle')?.setValue('Valid Course Title');
+      component.formGroup.get('titleExist')?.setValue(false);
+      component.formGroup.get('courseUrl')?.setValue('valid-course-url');
+      component.formGroup.get('urlExist')?.setValue(false);
+
+      expect(component.anyFieldValid()).toBeTrue();
+    });
+
+    it('should reject title path when url already exists', () => {
+      component.formGroup.get('courseTitle')?.setValue('Valid Course Title');
+      component.formGroup.get('titleExist')?.setValue(false);
+      component.formGroup.get('courseUrl')?.setValue('valid-course-url');
+      component.formGroup.get('urlExist')?.setValue(true);
+
+      expect(component.anyFieldValid()).toBeFalse();
+    });
+
+    it('should return true from anyFieldValid when tags are present', () => {
+      component.addCourseTag({ id: 1, name: 'DraftTag', active: true });
+
+      expect(component.anyFieldValid()).toBeTrue();
     });
   });
 });

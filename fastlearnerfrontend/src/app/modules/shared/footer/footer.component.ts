@@ -3,8 +3,10 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { ViewAllMap } from 'src/app/core/enums/course-status';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { CacheService } from 'src/app/core/services/cache.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { StateService } from 'src/app/core/services/state.service';
 
 @Component({
   selector: 'app-footer',
@@ -19,6 +21,8 @@ export class FooterComponent implements OnInit {
     private _authService: AuthService,
     private _sharedService?: SharedService,
     private _messageService?: MessageService,
+    private stateService?: StateService,
+    private cacheService?: CacheService,
   ) {}
 
   activeLink: string = '';
@@ -85,7 +89,7 @@ export class FooterComponent implements OnInit {
   routeToTwitter() {
     window.open(
       'https://x.com/fastlearner_ai?s=11&t=Vt_WkfQUCv78CQwfkOBmGw',
-      '_blank'
+      '_blank',
     );
   }
   routeToFacebook() {
@@ -102,6 +106,10 @@ export class FooterComponent implements OnInit {
   }
 
   routeToInstructorDashboard() {
+    this.cacheService.saveInCache(
+      'redirectUrl',
+      '/instructor/instructor-dashboard',
+    );
     this._authService.welcomeInstructor().subscribe({
       next: (res) => {
         const welcomeShown = res?.data?.welcomeInstructorDashboard;

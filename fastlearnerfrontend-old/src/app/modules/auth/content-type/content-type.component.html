@@ -1,0 +1,21 @@
+<div class="content-type">
+  <nz-card class="card">
+    <div class="content-header">
+      <h3 class="content-header-text">Please select the type of content you are creating</h3>
+    </div>
+
+    <div class="contents">
+      <div
+        class="content-card"
+        *ngFor="let content of contents"
+        (click)="routeTo(content?.title)"
+      >
+        <img style="height: 30px;" [src]="content?.img" alt="content-type" />
+        <h4 class="margin-0">{{ content?.title }}</h4>
+        <p style="margin-top: -5%; ;">
+          {{ content?.des }}
+        </p>
+      </div>
+    </div>
+  </nz-card>
+</div>

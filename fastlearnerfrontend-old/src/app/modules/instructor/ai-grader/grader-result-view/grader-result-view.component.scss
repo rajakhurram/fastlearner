@@ -1,0 +1,178 @@
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+:host ::ng-deep .ant-card-body {
+  padding: 12px;
+}
+
+.name-bg {
+  background-color: #edf6ff;
+  padding: 20px 12px 20px 12px;
+}
+
+.std-name {
+  padding-left: 10px;
+  padding-right: 15px;
+}
+
+.result-details-bg {
+  padding: 15px 20px 15px 20px;
+  border: 1px solid;
+  border-color: #d9d9d9;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+ .ml-auto {
+    margin-left: auto;
+  }
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+
+    .ml-2 {
+      margin-left: 0 !important;
+    }
+
+    .ml-auto {
+      margin-left: 0 !important;
+    }
+
+    .ml-4 {
+      margin-left: 0 !important;
+    }
+
+    app-button {
+      width: 100%;
+    }
+
+    .display-flex {
+      width: 100%;
+    }
+  }
+}
+
+.pdf-viewer-section {
+  padding: 15px;
+  border: 1px solid;
+  border-color: #d9d9d9;
+}
+
+.border-color {
+  border: 1px solid;
+  border-color: #f0f0f0;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.result-header {
+  padding: 10px;
+}
+
+:host ::ng-deep .ant-collapse {
+  border: none;
+}
+
+:host ::ng-deep .ant-collapse > .ant-collapse-item {
+  border: none;
+}
+
+:host ::ng-deep .ant-collapse-content {
+  border: none;
+}
+
+:host
+  ::ng-deep
+  .ant-collapse
+  > .ant-collapse-item.ant-collapse-no-arrow
+  > .ant-collapse-header {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.custom-circle-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-circle {
+  box-shadow: 2px 5px 17px #00000012;
+  margin-top: 10px;
+}
+
+.bg-F7F8FC {
+  background-color: #f7f8fc;
+}
+.bg-white {
+  background-color: white;
+}
+
+.rational-section {
+  background-color: #daecfe;
+  border-radius: 10px;
+  border: 1px solid;
+  border-color: #c6d6f1;
+  padding: 10px;
+}
+
+.scroll-container {
+  max-height: 311px;
+  overflow-y: auto;
+}
+
+.grader-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.label {
+  font-family: 'Poppins-SemiBold';
+  color: #212189;
+  font-size: 12px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plan {
+  font-size: 12px;
+  color: #313131;
+}
+
+.count {
+  font-size: 12px;
+  color: black;
+  margin-top: 2px;
+  font-family: 'Poppins-medium';
+}
+
+.upgrade-btn {
+  background-color: #ff4d4f;
+  border: none;
+}
+
+::ng-deep .grader-card .ant-card-body {
+  padding: 8px; /* or 0px if you want no padding */
+}
+

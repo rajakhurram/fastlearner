@@ -1,0 +1,415 @@
+<section class="users-page">
+  <div class="page-header">
+    <h2>Users</h2>
+    <div class="header-actions">
+      <button
+        nz-button
+        nzType="default"
+        class="export"
+        (click)="exportUserCsv()"
+      >
+        Export
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        class="primary"
+        (click)="openAddAdminModal()"
+      >
+        Invite User
+      </button>
+    </div>
+  </div>
+
+  <nz-row [nzGutter]="16" class="metric-row">
+    <nz-col
+      [nzXs]="24"
+      [nzSm]="12"
+      [nzMd]="12"
+      [nzLg]="6"
+      *ngFor="let item of metrics"
+    >
+      <div class="metric-card">
+        <span class="icons" style="background-color: #e8f2fd">
+          <img
+            loading="eager"
+            [src]="'../../../assets/icons/' + item.icon + '.svg'"
+            alt="users"
+          />
+        </span>
+        <span class="metric-content">
+          <span class="metric-value">{{ item.value | number }}</span>
+          <span class="metric-label">{{ item.label }}</span>
+        </span>
+      </div>
+    </nz-col>
+  </nz-row>
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <div class="filter-row">
+      <!-- <input nz-input placeholder="Search by name, email, or ID..." /> -->
+
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Search by name, email, or ID..."
+          name="title"
+          [(ngModel)]="queryParams.search"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span style="color: #212189" nz-icon nzType="search"></span>
+      </ng-template>
+      <nz-select
+        nzPlaceHolder="All Time"
+        [(ngModel)]="day"
+        (ngModelChange)="onDateFilterChange($event)"
+      >
+        <nz-option nzValue="all-time" nzLabel="All Time"></nz-option>
+        <nz-option nzValue="today" nzLabel="Today"></nz-option>
+        <nz-option nzValue="this-week" nzLabel="This Week"></nz-option>
+        <nz-option nzValue="this-month" nzLabel="This Month"></nz-option>
+        <nz-option nzValue="last-month" nzLabel="Last Month"></nz-option>
+        <nz-option nzValue="last-3-month" nzLabel="Last 3 Month"></nz-option>
+      </nz-select>
+      <nz-select
+        nzPlaceHolder="All Plans"
+        [(ngModel)]="queryParams.planType"
+        (ngModelChange)="onSelectFilterChange('planType', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Plans"></nz-option>
+        <nz-option nzValue="PREMIUM" nzLabel="Premium"></nz-option>
+        <nz-option nzValue="STANDARD" nzLabel="Standard"></nz-option>
+        <nz-option nzValue="FREE" nzLabel="Free"></nz-option>
+        <nz-option nzValue="ULTIMATE" nzLabel="Enterprise"></nz-option>
+      </nz-select>
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="clear-filter-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filter
+      </button>
+      <!-- <nz-select
+        nzPlaceHolder="All Subscriptions"
+        [(ngModel)]="queryParams.subscriptionStatus"
+        (ngModelChange)="onSelectFilterChange('subscriptionStatus', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Subscriptions"></nz-option>
+        <nz-option nzValue="Active" nzLabel="Active"></nz-option>
+        <nz-option nzValue="Cancelled" nzLabel="Cancelled"></nz-option>
+        <nz-option nzValue="Expired" nzLabel="Expired"></nz-option>
+      </nz-select>
+      <nz-select
+        nzPlaceHolder="All Accounts"
+        [(ngModel)]="queryParams.accountStatus"
+        (ngModelChange)="onSelectFilterChange('accountStatus', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Accounts"></nz-option>
+        <nz-option nzValue="ACTIVE" nzLabel="Active"></nz-option>
+        <nz-option nzValue="INACTIVE" nzLabel="Inactive"></nz-option>
+      </nz-select> -->
+    </div>
+
+    <nz-table
+      #usersTable
+      [nzData]="users"
+      [nzLoading]="isUsersTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+    >
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Registered</th>
+          <th>Plan Type</th>
+          <!-- <th>Subscription</th>
+          <th>Status</th> -->
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of usersTable.data">
+          <td>{{ user.rawId }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.registeredDate }}</td>
+          <td>
+            <nz-tag
+              [ngClass]="{
+                'tags-primary': user.planType == 'PREMIUM',
+                'tags-standard': user.planType == 'STANDARD',
+                'tags-enterprise': user.planType == 'ULTIMATE',
+                'tags-default': user.planType == 'FREE',
+              }"
+              >{{
+                user.planType == "ULTIMATE" ? "ENTERPRISE" : user.planType
+              }}</nz-tag
+            >
+          </td>
+          <!-- <td>
+            <nz-tag
+              [ngClass]="{
+                'tags-primary': user.subscriptionStatus == 'Active',
+                'tags-cancelled': user.subscriptionStatus == 'Cancelled',
+                'tags-standard': user.subscriptionStatus == 'Expired',
+              }"
+            >
+              {{ user.subscriptionStatus }}
+            </nz-tag>
+          </td>
+          <td>
+            <nz-tag
+              [ngClass]="{
+                'tags-primary': user.accountStatus == 'Active',
+                'tags-cancelled': user.accountStatus == 'Suspended',
+                'tags-default': user.accountStatus == 'Inactive',
+              }"
+              >{{ user.accountStatus }}</nz-tag
+            >
+          </td> -->
+          <td>
+            <button nz-button nzType="link" (click)="openUserDrawer(user)">
+              <img src="../../../assets/icons/view.svg" alt="view" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <div class="table-footer">
+      <nz-pagination
+        *ngIf="totalElements > 0"
+        style="margin-left: auto"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="queryParams.page + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="queryParams.size"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </nz-card>
+</section>
+
+<nz-drawer
+  [nzVisible]="isUserDrawerVisible"
+  nzPlacement="right"
+  [nzClosable]="false"
+  [nzMaskClosable]="true"
+  [nzWidth]="drawerWidth"
+  [nzBodyStyle]="{ padding: '0.5rem' }"
+  (nzOnClose)="closeUserDrawer()"
+  class="user-detail-drawer"
+>
+  <ng-container *nzDrawerContent>
+    <div class="drawer-container">
+      <div class="drawer-header">
+        <div class="user-meta">
+          <h3>{{ UserOverview.name }}</h3>
+          <p>{{ UserOverview.email }} · {{ UserOverview.userId }}</p>
+        </div>
+        <button nz-button nzType="text" (click)="closeUserDrawer()">
+          <span nz-icon nzType="close"></span>
+        </button>
+      </div>
+
+      <!-- <div class="drawer-action-row">
+        <button nz-button class="add-note-btn">
+          <span class="add-note-icon" aria-hidden="true"></span>
+          <span>Add Note</span>
+        </button>
+      </div> -->
+
+      <nz-tabset
+        [(nzSelectedIndex)]="activeDrawerTabIndex"
+        (nzSelectedIndexChange)="onDrawerTabChange($event)"
+        class="drawer-tabs"
+      >
+        <nz-tab nzTitle="Overview">
+          <div class="overview-grid">
+            <div class="overview-card">
+              <p class="overview-label">Subscription</p>
+              <h4>{{ UserOverview.subscriptionName }}</h4>
+            </div>
+            <div class="overview-card">
+              <p class="overview-label">Status</p>
+              <h4>{{ UserOverview.accountStatus }}</h4>
+            </div>
+            <div class="overview-card">
+              <p class="overview-label">Courses Enrolled</p>
+              <h4>{{ UserOverview.coursesEnrolled }}</h4>
+            </div>
+            <div class="overview-card">
+              <p class="overview-label">Total Spent</p>
+              <h4>{{ UserOverview.totalSpent }}</h4>
+            </div>
+          </div>
+
+          <!-- <div class="intelligence-card" *ngIf="UserOverview.hasRiskSignals">
+            <h4>System Intelligence</h4>
+            <ul>
+              <li *ngFor="let signal of UserOverview.intelligenceSignals">
+                {{ signal }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="notes-card">
+            <h4>Internal Notes</h4>
+            <p *ngIf="UserOverview?.notes?.length === 0">
+              No notes yet. Click "Add Note" to add one.
+            </p>
+            <ul *ngIf="UserOverview?.notes?.length > 0">
+              <li *ngFor="let note of UserOverview?.notes">{{ note }}</li>
+            </ul>
+          </div> -->
+        </nz-tab>
+
+        <nz-tab nzTitle="Subscriptions">
+          <div class="subscription-content">
+            <div
+              class="subscription-plan-card"
+              *ngFor="let subscription of subscriptionOverview"
+            >
+              <div class="plan-details">
+                <h4>
+                  {{ subscription?.planName }}
+                </h4>
+                <p class="overview-label">
+                  Started {{ subscription?.startDate | date: "dd/MM/yyyy" }}
+                </p>
+              </div>
+              <span class="status-pill">
+                {{ subscription?.status }}
+              </span>
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Courses">
+          <div class="courses-content">
+            <div
+              class="course-progress-card"
+              *ngFor="let course of courseOverview"
+            >
+              <div class="course-details">
+                <h4>{{ course.courseTitle }}</h4>
+                <p class="overview-label">
+                  Progress: {{ course.progressPercent }}%
+                </p>
+              </div>
+              <div class="progress-track">
+                <div
+                  class="progress-fill"
+                  [style.width.%]="course.progressPercent"
+                ></div>
+              </div>
+            </div>
+
+            <p class="tab-placeholder" *ngIf="!courseOverview.length">
+              No enrolled courses yet.
+            </p>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Transactions">
+          <div class="transactions-content">
+            <div
+              class="transaction-card"
+              *ngFor="let transaction of transactionOverview"
+            >
+              <div class="transaction-left">
+                <p class="overview-label">{{ transaction.transactionId }}</p>
+                <h4>{{ transaction.amount }}</h4>
+              </div>
+              <div class="transaction-right">
+                <p class="overview-label">
+                  {{ transaction.transactionDate | date: "dd/MM/yyyy" }}
+                </p>
+                <span
+                  class="transaction-status-pill"
+                  [ngClass]="{
+                    completed: transaction.status === 'Completed',
+                    refunded: transaction.status === 'Refunded',
+                    default: transaction.status === 'Unknown',
+                  }"
+                >
+                  {{ transaction.status }}
+                </span>
+              </div>
+            </div>
+
+            <p class="tab-placeholder" *ngIf="!transactionOverview.length">
+              No transactions found.
+            </p>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </ng-container>
+</nz-drawer>
+
+<nz-modal
+  [(nzVisible)]="isAddAdminModalVisible"
+  [nzTitle]="'Invite User'"
+  [nzClosable]="true"
+  [nzMaskClosable]="false"
+  [nzFooter]="null"
+  class="add-admin-modal"
+  (nzOnCancel)="closeAddAdminModal()"
+>
+  <ng-container *nzModalContent>
+    <form #form="ngForm" (ngSubmit)="inviteAdmin(form)">
+      <div class="add-admin-modal-content">
+        <label class="field-label" for="admin-email-input">Email</label>
+        <input
+          id="admin-email-input"
+          nz-input
+          type="email"
+          placeholder="Enter user email"
+          class="email-input"
+          name="email"
+          [(ngModel)]="adminEmail"
+          required
+          #email="ngModel"
+        />
+        <p class="error-text" *ngIf="email.invalid && email.touched">
+          Please enter a valid email address.
+        </p>
+
+        <label class="field-label" for="link">Link</label>
+        <input
+          id="link"
+          nz-input
+          type="text"
+          placeholder="Enter link"
+          class="email-input"
+          name="link"
+          [(ngModel)]="link"
+          required
+          #linkModel="ngModel"
+        />
+
+        <div class="modal-actions">
+          <button nz-button class="cancel-btn" (click)="closeAddAdminModal()">
+            Cancel
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            class="save-btn"
+            [disabled]="form.invalid"
+            type="submit"
+          >
+            Invite User
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>

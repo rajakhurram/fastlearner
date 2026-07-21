@@ -81,18 +81,99 @@
     </div>
 
     <div class="questions">
-      <div class="question-content">
-        <p
+      <div
+        *ngIf="currentSelectedTopic?.topicComprehensive"
+        class="quiz-comprehension"
+      >
+        <p class="comprehension-text">
+          {{ currentSelectedTopic.topicComprehensive }}
+        </p>
+      </div>
+
+      <div
+        class="question-content"
+        [class.forAudio]="isAudio(quizQuestions?.[index]?.questionImageUrl)"
+      >
+        <span
           class="question-text"
           style="
             color: #212189;
             font-size: 22px;
-            font-family: 'Poppins-medium';
+            font-family: &quot;Poppins-medium&quot;;
             margin-bottom: 0px;
           "
         >
           {{ quizQuestions?.[index]?.questionText }}
-        </p>
+        </span>
+
+        <div
+          *ngIf="
+            quizQuestions?.[index]?.questionImageUrl &&
+            isImage(quizQuestions?.[index]?.questionImageUrl)
+          "
+          class="question-image-wrap mt-2"
+        >
+          <img
+            [src]="quizQuestions?.[index]?.questionImageUrl"
+            alt="Question image"
+            class="question-image"
+            (click)="openImagePreview(quizQuestions?.[index]?.questionImageUrl)"
+          />
+        </div>
+
+        <div
+          *ngIf="
+            quizQuestions?.[index]?.questionImageUrl &&
+            isAudio(quizQuestions?.[index]?.questionImageUrl)
+          "
+          class="audio-preview"
+        >
+          <div class="audio-container">
+            <div class="actions">
+              <button
+                class="play-btn"
+                (click)="toggleAudio(quizQuestions?.[index])"
+              >
+                <span *ngIf="!quizQuestions?.[index]?.isPlaying">
+                  <img
+                    loading="lazy"
+                    src="./assets/icons/play.svg"
+                    alt="play"
+                  />
+                </span>
+                <span *ngIf="quizQuestions?.[index].isPlaying">
+                  <img
+                    loading="lazy"
+                    src="./assets/icons/pause.svg"
+                    alt="pause"
+                  />
+                </span>
+              </button>
+              <span class="duration">
+                {{ quizQuestions?.[index].currentTime || "0:00" }}
+              </span>
+              <div
+                class="progress-wrapper"
+                (click)="seekAudio($event, quizQuestions?.[index])"
+              >
+                <div
+                  class="progress-bar"
+                  [style.width.%]="quizQuestions?.[index].progress || 0"
+                ></div>
+              </div>
+              <span class="duration">
+                {{ quizQuestions?.[index].duration || "0:00" }}
+              </span>
+            </div>
+          </div>
+          <audio
+            #audioPlayer
+            [src]="quizQuestions?.[index].questionImageUrl"
+            (timeupdate)="updateProgress(audioPlayer, quizQuestions?.[index])"
+            (loadedmetadata)="setDuration(audioPlayer, quizQuestions?.[index])"
+            (ended)="audioEnded(quizQuestions?.[index])"
+          ></audio>
+        </div>
 
         <!-- <p style="color:#292929 ; font-family: 'Poppins-medium'; font-size: 14px; padding-top: 5px;">
         ({{
@@ -106,6 +187,14 @@
         }})
       </p> -->
       </div>
+      <!-- Preview Modal -->
+      <div
+        class="image-preview-overlay"
+        *ngIf="previewImageUrl"
+        (click)="closePreview()"
+      >
+        <img [src]="previewImageUrl" class="preview-full" />
+      </div>
       <!-- <div class="question-type">
       <p class="question-text">({{quizQuestions?.[index].questionType}})</p>
     </div> -->
@@ -116,7 +205,10 @@
         <div nz-row [nzGutter]="16">
           <div
             class="mt-15 option-row"
-            *ngFor="let option of quizQuestions?.[index].quizAnswers; let i = index"
+            *ngFor="
+              let option of quizQuestions?.[index].quizAnswers;
+              let i = index
+            "
             nz-col
             nzSpan="24"
             (click)="handleOptionClick(option)"
@@ -128,7 +220,11 @@
             "
           >
             <label
-              *ngIf="quizQuestions?.[index].questionType === questionType.SINGLE_CHOICE || quizQuestions?.[index].questionType === questionType.TRUE_FALSE"
+              *ngIf="
+                quizQuestions?.[index].questionType ===
+                  questionType.SINGLE_CHOICE ||
+                quizQuestions?.[index].questionType === questionType.TRUE_FALSE
+              "
               (click)="$event.stopPropagation()"
             >
               <input
@@ -143,7 +239,10 @@
             </label>
 
             <label
-              *ngIf="quizQuestions?.[index].questionType === questionType.MULTIPLE_CHOICE"
+              *ngIf="
+                quizQuestions?.[index].questionType ===
+                questionType.MULTIPLE_CHOICE
+              "
               (click)="$event.stopPropagation()"
             >
               <input
@@ -165,6 +264,13 @@
               >
               {{ option?.answerText }}
             </p>
+            <div *ngIf="option?.answerImageUrl" class="option-image-wrap mt-2">
+              <img
+                [src]="option?.answerImageUrl"
+                alt="Option image"
+                class="option-image"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -176,6 +282,8 @@
           class="w-100"
           style="height: 200px !important"
           [(ngModel)]="currentAnswerText"
+          [name]="'answerText' + index"
+          [id]="'answerText' + index"
           (ngModelChange)="addTextBaseQuestion(quizQuestions?.[index])"
         ></textarea>
       </div>
@@ -231,10 +339,19 @@
               style="color: #00ba00"
             ></span>
 
-            {{currentSelectedTopic.testType == "SURVEY" ? "Test Submitted" : "Quiz Result"}}
-            
+            {{
+              currentSelectedTopic.testType == "SURVEY"
+                ? "Test Submitted"
+                : "Quiz Result"
+            }}
           </h2>
-          <p>{{currentSelectedTopic.testType == "SURVEY" ? "Successfully" : "Nice job, You passed."}}</p>
+          <p>
+            {{
+              currentSelectedTopic.testType == "SURVEY"
+                ? "Successfully"
+                : "Nice job, You passed."
+            }}
+          </p>
         </div>
 
         <div
@@ -251,19 +368,22 @@
 
             Quiz Result
           </h2>
-          <p *ngIf="quizeType !== 'SURVEY'">Failed {{ passingCriteria }}% required to pass.</p>
+          <p *ngIf="quizeType !== 'SURVEY'">
+            Failed {{ passingCriteria }}% required to pass.
+          </p>
         </div>
 
         <div class="quiz-table">
           <table class="quiz-summary">
             <tr *ngIf="quizeType !== 'SURVEY'">
               <td class="text-align-left">
-                <strong>Your Percentage:</strong></td>
+                <strong>Your Percentage:</strong>
+              </td>
               <td class="text-align-right">
                 {{
                   (questionAnswers?.totalCorrectAnswer /
                     questionAnswers?.totalQuestion) *
-                    100 | number : "1.0-2"
+                    100 | number: "1.0-2"
                 }}%
               </td>
             </tr>
@@ -297,7 +417,6 @@
               nz-button
               (click)="reviewQuiz()"
               nzType="default"
-              
             >
               Review Questions
             </button>

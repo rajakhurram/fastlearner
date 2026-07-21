@@ -1,0 +1,15 @@
+<div class="payment-confirmation">
+    <nz-card class="main-card">
+        <div class="card-header">
+            <h3>Your Subscription is Successfully Subscribed</h3>
+            <p>Your payment has been successfully made</p>
+        </div>
+        <ng-lottie [options]="options" [styles]="styling" (animationCreated)="animationCreated($event)"></ng-lottie>
+
+        <div class="icon">
+        </div>
+        <div class="actions">
+            <button (click)="continue()" nz-button class="button login-form-margin" [nzType]="'primary'">Continue</button>
+        </div>
+    </nz-card>
+</div>

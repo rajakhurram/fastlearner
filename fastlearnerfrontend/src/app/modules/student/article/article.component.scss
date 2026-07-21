@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.article-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+}
+
+.article-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
+
+.article-actions {
+  flex-shrink: 0;
+  padding: 1rem 10px 1rem 0;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.continue-btn {
+  min-width: 120px;
+  color: #fff;
+  border: 1px solid #fe4a55;
+  background-color: #fe4a55;
+  border-radius: 4px;
+}
+
+.continue-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  border-color: #b20a14;
+}

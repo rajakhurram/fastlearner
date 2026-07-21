@@ -1,0 +1,114 @@
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.expand-all {
+  color: #0052f5;
+}
+
+.border-top {
+  border: 1px solid;
+  border-color: #d9d9d9 white white white;
+}
+
+:host ::ng-deep .ant-card-body {
+  padding: 15px;
+}
+
+app-table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+.start-btn{
+  display: flex;
+  justify-content: center;
+}
+
+.custom-ml-auto {
+  margin-left: auto;
+
+  @media (max-width: 450px) {
+    margin-left: 0 !important;
+  }
+}
+
+.grader-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grader-title {
+  color: #212189; /* deep blue */
+  font-weight: 600;
+}
+
+.grader-card {
+  border-radius: 4px;
+  box-shadow: none;
+  border: none;
+}
+
+.grader-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.label {
+  font-family: 'Poppins-SemiBold';
+  color: #212189;
+  font-size: 12px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plan {
+  font-size: 12px;
+  color: #313131;
+}
+
+.count {
+  font-size: 12px;
+  color: black;
+  margin-top: 2px;
+  font-family: 'Poppins-medium';
+}
+
+.upgrade-btn {
+  background-color: #ff4d4f;
+  border: none;
+}
+
+::ng-deep .grader-card .ant-card-body {
+  padding: 8px; /* or 0px if you want no padding */
+}
+
+@media screen and (max-width: 630px) {
+  .grader-results-header {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .grader-info {
+    display: block;
+  }
+  .progress-section {
+        margin-bottom: 12px;
+  }
+}

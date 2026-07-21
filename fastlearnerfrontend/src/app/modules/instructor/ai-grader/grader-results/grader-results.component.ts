@@ -4,7 +4,8 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { error } from '@ant-design/icons-angular';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { HttpConstants } from 'src/app/core/constants/http.constants';
@@ -39,6 +40,7 @@ export class GraderResultsComponent {
     private _messageService?: MessageService,
   ) {
     this.graderServiceBasePath = environment.graderServiceBasePath;
+    this.showUpgradePLanButton();
   }
 
   @ViewChild('emailEdit') emailInputRef!: ElementRef;
@@ -50,15 +52,17 @@ export class GraderResultsComponent {
   aClass?: any;
   assessment?: any;
   isLoading = true;
+  isInitialTableLoading = true;
+  hasInitialFetchCompleted = false;
   payLoad = {
     pageNo: 0,
-    pageSize: 100,
+    pageSize: 200,
     searchInput: '',
     sort: '1',
   };
-allResults: AiResultsResponse[] = [];
-displayedResults: AiResultsResponse[] = [];
-pageSize: number = 5;
+  allResults: AiResultsResponse[] = [];
+  displayedResults: AiResultsResponse[] = [];
+  pageSize: number = 5;
   aiResults: AiResults = {
     assignmentId: null,
     classId: null,
@@ -66,12 +70,12 @@ pageSize: number = 5;
     aiResultSort: null,
   };
   totalElments?: any = 0;
-
+  numberofFiles?: any = 0;
   aiResultResponse: AiResultsResponse[] = [];
   searchFilter: SearchFilterConfig = {
     placeHolder: 'Search',
     height: '45px',
-    allowToEmmitWhenInputIsEmpty: true
+    allowToEmmitWhenInputIsEmpty: true,
   };
   searchKeyword: string = '';
   selectedClassId?: any;
@@ -80,29 +84,70 @@ pageSize: number = 5;
   timestamp?: any;
   uploading?: any;
   source?: any = null;
+  private readonly initialFetchRetryDelayMs = 2000;
+  private readonly initialFetchMaxRetries = 8;
+  private initialFetchRetryCount = 0;
+  private initialFetchRetryTimer: ReturnType<typeof setTimeout> | null = null;
+  currentPage: number = 1;
+  private routerSub?: Subscription;
+  private previousUrl = '';
 
- ngOnInit(): void {
-  this.route.queryParams.subscribe((params) => {
-    this.selectedAssessmentId = +params['id'];
-    this.selectedClassId = +params['classId'];
-    this.uploading = params['uploading'];
-    this.source = params['source'] ? params['source'] : null;
+  ngOnInit(): void {
+    this.previousUrl = this.router.url;
+    this.routerSub = this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e) => {
+        const onResults =
+          e.urlAfterRedirects.includes('/ai-grader/results') &&
+          !e.urlAfterRedirects.includes('/result/view');
+        const fromDetail = this.previousUrl.includes('/result/view');
+        const needsRefresh = !!this._cacheService?.getJsonData(
+          'graderResultsNeedsRefresh',
+        );
+        if (
+          onResults &&
+          this.selectedClassId &&
+          this.selectedAssessmentId &&
+          (fromDetail || needsRefresh)
+        ) {
+          if (needsRefresh) {
+            this._cacheService?.removeFromCache('graderResultsNeedsRefresh');
+          }
+          this.fetchResults();
+        }
+        this.previousUrl = e.urlAfterRedirects;
+      });
 
-    if (this.selectedAssessmentId && this.selectedClassId) {
-      this.selectedAssignment.id = this.selectedAssessmentId;
-      this.selectedClass.id = this.selectedClassId;
+    this.route.queryParams.subscribe((params) => {
+      this.selectedAssessmentId = +params['id'];
+      this.selectedClassId = +params['classId'];
+      this.uploading = params['uploading'];
+      this.numberofFiles = params['numberOfFiles'];
+      this.source = params['source'] ? params['source'] : null;
 
-      this.aiResults.assignmentId = this.selectedAssessmentId;
-      this.aiResults.classId = this.selectedClassId;
-      this.fetchResults();
-    } else {
-      console.warn('Missing assignmentId or classId in query params.');
-    }
-  });
+      if (this.selectedAssessmentId && this.selectedClassId) {
+        this.selectedAssignment.id = this.selectedAssessmentId;
+        this.selectedClass.id = this.selectedClassId;
 
-  this.getNoOfPages();
-  this.showUpgradePLanButton();
-}
+        this.aiResults.assignmentId = this.selectedAssessmentId;
+        this.aiResults.classId = this.selectedClassId;
+        if (this._cacheService?.getJsonData('graderResultsNeedsRefresh')) {
+          this._cacheService.removeFromCache('graderResultsNeedsRefresh');
+        }
+        this.fetchResults();
+        this.connectResultSSE();
+        // if (this.uploading) {
+        //   this.connectResultSSE();
+        // }
+      } else {
+        console.warn('Missing assignmentId or classId in query params.');
+      }
+    });
+
+    this.payLoad.pageNo = this._cacheService.currentPage - 1;
+    this.getNoOfPages();
+    this.showUpgradePLanButton();
+  }
   student = {
     name: '',
     email: '',
@@ -119,15 +164,17 @@ pageSize: number = 5;
   };
 
   totalElements: any = 0;
-  showUpgradePlan?: boolean = true;
+  showUpgradePlan = false;
   subscriptionPlanType = SubscriptionPlanType;
   gradedPapers: number = 0;
   allowedPapers?: any = 0;
 
   onPageChange(page: number) {
-  this.payLoad.pageNo = page - 1; // because pageNo is 0-indexed
-  this.updateDisplayedResults();
-}
+    this._cacheService.currentPage = page;
+    this.currentPage = page;
+    this.payLoad.pageNo = page - 1; // because pageNo is 0-indexed
+    this.updateDisplayedResults();
+  }
 
   routeToGraderUploader() {
     if (this.source === 'classes') {
@@ -137,55 +184,137 @@ pageSize: number = 5;
     } else {
       this.router.navigate(['instructor/ai-grader/uploader'], {});
     }
+    this._cacheService.currentPage = 1;
   }
 
   routeToAIGraderUploader() {
     this._router.navigate(['instructor/ai-grader/uploader'], {});
+    this._cacheService.currentPage = 1;
   }
 
   fetchResults(): void {
-  if (!this.aiResults.assignmentId || !this.aiResults.classId) {
-    console.warn('Assignment ID and Class ID are required.');
-    return;
+    if (!this.aiResults.assignmentId || !this.aiResults.classId) {
+      console.warn('Assignment ID and Class ID are required.');
+      return;
+    }
+
+    if (!this.hasInitialFetchCompleted) {
+      this.isInitialTableLoading = true;
+    }
+    this.aiGraderService
+      .getClassResult(this.aiResults, this.payLoad)
+      .subscribe({
+        next: (res) => {
+          if (res.status === 200 && res?.data?.aiResultResponseList) {
+            this.hasInitialFetchCompleted = true;
+            this.isInitialTableLoading = false;
+            this.clearInitialFetchRetryTimer();
+            this.initialFetchRetryCount = 0;
+            this.allResults = [...(res.data.aiResultResponseList ?? [])];
+            this.totalElements =
+              res.data?.totalElements ?? this.allResults.length;
+            this.aiResultResponse = this.allResults;
+            this.applyMarksUpdatesFromCache();
+            const firstItem = this.allResults[0];
+            this.selectedAssignment.title =
+              firstItem?.assignmentTitle || this.selectedAssignment.title;
+            this.selectedClass.name =
+              firstItem?.className || this.selectedClass.name;
+
+            // Update the displayed results for current page
+            this.updateDisplayedResults();
+
+            // Keep progress bar in sync while grading is ongoing.
+            this.getNoOfPages();
+
+            this.aiResultResponse?.forEach((el?: any) => {
+              if (el?.resultStatus == 'INPROCESS') {
+                el.valuesLoader = true;
+              }
+            });
+            // this.connectResultSSE();
+            // if (
+            //   !this.eventSource ||
+            //   this.eventSource.readyState === EventSource.CLOSED
+            // ) {
+            //   this.connectResultSSE();
+            // }
+
+            // const hasInProcess = this.aiResultResponse?.some(
+            //   (r: any) => r.resultStatus === 'INPROCESS',
+            // );
+            const isMissingFiles =
+              this.aiResultResponse.length < this.numberofFiles;
+
+            if (isMissingFiles) {
+              this.startAutoRefresh();
+            } else {
+              this.stopAutoRefresh();
+              // this.eventSource?.close();
+            }
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching results', err);
+          if (
+            err?.status === 404 &&
+            this.initialFetchRetryCount < this.initialFetchMaxRetries
+          ) {
+            this.initialFetchRetryCount += 1;
+            this.scheduleInitialFetchRetry();
+            return;
+          }
+          this.hasInitialFetchCompleted = true;
+          this.isInitialTableLoading = false;
+          this.isLoading = false;
+          this.aiResultResponse = [];
+          this.allResults = [];
+          this.displayedResults = [];
+        },
+      });
   }
 
-  this.isLoading = true;
-  this.aiGraderService
-    .getClassResult(this.aiResults, this.payLoad)
-    .subscribe({
-      next: (res) => {
-        if (res.status === 200 && res?.data?.aiResultResponseList) {
-          this.allResults = res.data.aiResultResponseList; // Store all 100 results
-          this.totalElements = this.allResults.length; // Total items for frontend pagination
-          this.aiResultResponse = res.data?.aiResultResponseList; // Keep this if needed elsewhere
-          
-          const firstItem = res?.data?.aiResultResponseList[0];
-          this.selectedAssignment.title =
-            firstItem.assignmentTitle || this.selectedAssignment.title;
-          this.selectedClass.name =
-            firstItem.className || this.selectedClass.name;
-            
-          // Update the displayed results for current page
-          this.updateDisplayedResults();
-          
-          this.aiResultResponse?.forEach((el?: any) => {
-            if (el?.resultStatus == 'INPROCESS') {
-              el.valuesLoader = true;
-            }
-          });
-          this.connectResultSSE();
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching results', err);
-        this.isLoading = false;
-        this.aiResultResponse = [];
-        this.allResults = [];
-        this.displayedResults = [];
-      },
-    });
-}
+  private refreshInterval: any = null;
+
+  private startAutoRefresh(): void {
+    if (this.refreshInterval) return;
+
+    this.refreshInterval = setInterval(() => {
+      // const hasInProcess = this.aiResultResponse?.some(
+      //   (r: any) => r.resultStatus === 'INPROCESS',
+      // );
+      const isMissingFiles = this.allResults.length < this.numberofFiles;
+
+      if (isMissingFiles) {
+        this.fetchResults();
+      } else {
+        this.stopAutoRefresh();
+        // this.eventSource?.close();
+      }
+    }, 5000);
+  }
+
+  private stopAutoRefresh(): void {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+  }
+
+  private scheduleInitialFetchRetry(): void {
+    this.clearInitialFetchRetryTimer();
+    this.initialFetchRetryTimer = setTimeout(() => {
+      this.fetchResults();
+    }, this.initialFetchRetryDelayMs);
+  }
+
+  private clearInitialFetchRetryTimer(): void {
+    if (this.initialFetchRetryTimer) {
+      clearTimeout(this.initialFetchRetryTimer);
+      this.initialFetchRetryTimer = null;
+    }
+  }
 
   onSortChange() {
     this.aiResults.aiResultSort = this.selectedSort;
@@ -231,7 +360,7 @@ pageSize: number = 5;
         studentEmail: selectedStudent.studentEmail,
         studentName: selectedStudent.studentName,
         aiResultId: selectedStudent.id,
-        score: selectedStudent?.score
+        score: selectedStudent?.score,
       },
       nzFooter: null,
       nzWidth: 600,
@@ -251,10 +380,10 @@ pageSize: number = 5;
   saveField(field: 'email' | 'name' | 'rollNumber', row: any): void {
     const value = row[`student${this.capitalize(field)}`]?.trim();
 
-     if (!value) {
-    this._messageService.error(`${this.capitalize(field)} cannot be empty.`);
-    return;
-  }
+    if (!value) {
+      this._messageService.error(`${this.capitalize(field)} cannot be empty.`);
+      return;
+    }
 
     if (field === 'email') {
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -269,17 +398,19 @@ pageSize: number = 5;
         row[`isEditing${this.capitalize(field)}`] = false;
       },
       error: (error) => {
-      if (error.status === 409) {
-        this._messageService.error(`${this.capitalize(field)} already exists.`);
-      } else {
-        this._messageService.error(`Error updating ${field}.`);
-      }
+        if (error.status === 409) {
+          this._messageService.error(
+            `${this.capitalize(field)} already exists.`,
+          );
+        } else {
+          this._messageService.error(`Error updating ${field}.`);
+        }
 
-      // Revert field and exit edit mode
-      row[`student${this.capitalize(field)}`] = row[`original${field}`];
-      row[`isEditing${this.capitalize(field)}`] = false;
-    },
-  });
+        // Revert field and exit edit mode
+        row[`student${this.capitalize(field)}`] = row[`original${field}`];
+        row[`isEditing${this.capitalize(field)}`] = false;
+      },
+    });
   }
 
   // Small helper
@@ -340,7 +471,7 @@ pageSize: number = 5;
     return (
       this.aiResultResponse?.length > 0 &&
       this.aiResultResponse.every(
-        (result) => result.resultStatus === 'APPROVED'
+        (result) => result.resultStatus === 'APPROVED',
       )
     );
   }
@@ -372,22 +503,25 @@ pageSize: number = 5;
       this.retryGrading(data?.id);
       // return;
     } else {
-     const allStudents = this.aiResultResponse.map(x => ({
-  id: x.id,
-  status: x.resultStatus
-}));
+      const allStudents = this.aiResultResponse.map((x) => ({
+        id: x.id,
+        status: x.resultStatus,
+        grade: x.grade,
+        score: x.score,
+      }));
 
-const resultViewData = {
-  classId: this.selectedClassId,
-  assessmentId: this.selectedAssessmentId,
-  resultId: data.id,
-  students: allStudents,   // <-- store full objects
-  index: index
-};
+      const resultViewData = {
+        classId: this.selectedClassId,
+        assessmentId: this.selectedAssessmentId,
+        resultId: data.id,
+        students: allStudents, // <-- store full objects
+        index: index,
+      };
 
-this._cacheService.saveJsonData('resultView', resultViewData);
-this._router.navigate(['instructor/ai-grader/result/view']);
+      this.currentPage = this.payLoad.pageNo + 1;
 
+      this._cacheService.saveJsonData('resultView', resultViewData);
+      this._router.navigate(['instructor/ai-grader/result/view']);
     }
   }
 
@@ -407,6 +541,12 @@ this._router.navigate(['instructor/ai-grader/result/view']);
   }
 
   connectResultSSE(): void {
+    if (
+      this.eventSource &&
+      this.eventSource.readyState !== EventSource.CLOSED
+    ) {
+      return;
+    }
     if (this._cacheService.getDataFromCache('isLoggedIn')) {
       if (this.eventSource) {
         this.eventSource.close();
@@ -418,40 +558,40 @@ this._router.navigate(['instructor/ai-grader/result/view']);
 
       this._cacheService.saveInCache('unique-id', this.timestamp);
       const userProfile = JSON.parse(
-        this._cacheService.getDataFromCache('userProfile')
+        this._cacheService.getDataFromCache('userProfile'),
       );
 
       this.eventSource = new EventSource(
-        `${this.graderServiceBasePath}/api/v1/emitter/register?uniqueId=${this.timestamp}&classId=${this.aiResults.classId}&assessmentId=${this.aiResults.assignmentId}&instructorId=${userProfile?.userId}&pageNo=${this.payLoad.pageNo}&pageSize=${this.payLoad.pageSize}`
+        `${this.graderServiceBasePath}/api/v1/emitter/register?uniqueId=${this.timestamp}&classId=${this.aiResults.classId}&assessmentId=${this.aiResults.assignmentId}&instructorId=${userProfile?.userId}&pageNo=${this.payLoad.pageNo}&pageSize=${this.payLoad.pageSize}`,
       );
       this.eventSource.addEventListener('results', (message) => {
-  const response = JSON.parse(message.data);
-  const responseMap = new Map(
-    this.aiResultResponse?.map((el: any) => [el.id, el])
-  );
+        const response = JSON.parse(message.data);
+        const responseMap = new Map(
+          this.aiResultResponse?.map((el: any) => [el.id, el]),
+        );
 
-  response?.forEach((el: any) => {
-    const matched = responseMap.get(el?.id);
-    if (matched) {
-      // Only update fields if the user is NOT editing them
-      if (!matched.isEditingName) {
-        matched.studentName = el?.studentName ?? matched.studentName;
-      }
-      if (!matched.isEditingEmail) {
-        matched.studentEmail = el?.studentEmail ?? matched.studentEmail;
-      }
-      if (!matched.isEditingRollNumber) {
-        matched.studentId = el?.studentId ?? matched.studentId;
-      }
+        response?.forEach((el: any) => {
+          const matched = responseMap.get(el?.id);
+          if (matched) {
+            // Only update fields if the user is NOT editing them
+            if (!matched.isEditingName) {
+              matched.studentName = el?.studentName ?? matched.studentName;
+            }
+            if (!matched.isEditingEmail) {
+              matched.studentEmail = el?.studentEmail ?? matched.studentEmail;
+            }
+            if (!matched.isEditingRollNumber) {
+              matched.studentId = el?.studentId ?? matched.studentId;
+            }
 
-      matched.grade = el?.grade;
-      if (el?.resultStatus !== 'INPROCESS') {
-        matched.resultStatus = el?.resultStatus;
-        matched.valuesLoader = false;
-      }
-    }
-  });
-});
+            matched.grade = el?.grade;
+            if (el?.resultStatus !== 'INPROCESS') {
+              matched.resultStatus = el?.resultStatus;
+              matched.valuesLoader = false;
+            }
+          }
+        });
+      });
     }
   }
 
@@ -499,7 +639,7 @@ this._router.navigate(['instructor/ai-grader/result/view']);
 
   showUpgradePLanButton() {
     const planType: string = this._cacheService.getJsonData(
-      'loggedInUserDetails'
+      'loggedInUserDetails',
     )?.subscriptionPlanType;
 
     if (
@@ -535,9 +675,57 @@ this._router.navigate(['instructor/ai-grader/result/view']);
   }
 
   updateDisplayedResults() {
-  const startIndex = this.payLoad.pageNo * this.pageSize;
-  const endIndex = startIndex + this.pageSize;
-  this.displayedResults = this.allResults.slice(startIndex, endIndex);
-}
+    const startIndex = this.payLoad.pageNo * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayedResults = [...this.allResults.slice(startIndex, endIndex)];
+  }
 
+  /** Apply marks edited on the detail screen (router state + resultView cache). */
+  private applyMarksUpdatesFromCache(): void {
+    const navState = history.state?.updatedResult;
+    if (navState?.id != null) {
+      this.patchResultMarks(navState.id, navState.grade, navState.score);
+    }
+
+    const cache = this._cacheService?.getJsonData('resultView');
+    if (!cache) {
+      return;
+    }
+    if (cache.lastUpdatedResultId != null) {
+      this.patchResultMarks(
+        cache.lastUpdatedResultId,
+        cache.lastUpdatedGrade,
+        cache.lastUpdatedScore,
+      );
+    }
+    if (Array.isArray(cache.students)) {
+      cache.students.forEach((student: { id: number; grade?: number; score?: number }) => {
+        this.patchResultMarks(student.id, student.grade, student.score);
+      });
+    }
+  }
+
+  private patchResultMarks(
+    resultId: number,
+    grade?: number,
+    score?: number,
+  ): void {
+    const row = this.allResults?.find((r) => r.id === resultId);
+    if (!row) {
+      return;
+    }
+    if (grade !== undefined && grade !== null) {
+      row.grade = grade;
+    }
+    if (score !== undefined && score !== null) {
+      row.score = score;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
+    this.clearInitialFetchRetryTimer();
+    this.stopAutoRefresh();
+    this.eventSource?.close();
+  }
 }

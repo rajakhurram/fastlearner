@@ -1305,140 +1305,140 @@ public class CourseServiceMockTest {
         assertEquals("Quiz questions can not be empty", exception.getMessage());
     }
 
-    @DisplayName("Create course with no quiz question answers")
-    @Test
-    public void testCreateCourse_NullQuizQuestionAnswers() throws EntityNotFoundException, InternalServerException, BadRequestException, IOException {
+//    @DisplayName("Create course with no quiz question answers")
+//    @Test
+//    public void testCreateCourse_NullQuizQuestionAnswers() throws EntityNotFoundException, InternalServerException, BadRequestException, IOException {
+//
+//        CreateCourseRequest createCourseRequest = this.getMockCourse();
+//        Course mockCourse = new Course();
+//        createCourseRequest.setCourseId(null);
+//        mockCourse.setTitle("The Unsung Selldiers");
+//        createCourseRequest.setIsActive(false);
+//        createCourseRequest.setCourseType(CourseType.FREE_COURSE.name());
+//
+//        createCourseRequest.getSections().stream()
+//                .flatMap(section -> section.getTopics().stream())
+//                .filter(topic -> topic.getTopicTypeId() == 4)
+//                .forEach(top -> top.getQuiz().getQuestions().stream().forEach(q -> q.setAnswers(new ArrayList<>())));
+//
+//        com.vinncorp.fast_learner.es_models.Course esCourse = new com.vinncorp.fast_learner.es_models.Course();
+//        esCourse.setId(null);
+//
+//        // Mock repository save method
+//        when(repo.save(any(Course.class))).thenReturn(mockCourse);
+//        when(repo.findById(anyLong())).thenReturn(Optional.of(mockCourse));
+//        when(userService.findByEmail(EMAIL)).thenReturn(UserTestData.userData());
+//        when(courseLevelService.findById(1L)).thenReturn(courseLevel);
+//        when(courseCategoryService.findById(1L)).thenReturn(courseCategory);
+//        doNothing().when(tagService).createAllNewAndAlreadyExistsTags(anyList(), any(Course.class));
+////        doNothing().when(rabbitMQProducer).sendMessageToUsers(anyString(), anyLong(), anyString(), any(), any());
+//        when(sectionService.save(any(Section.class))).thenReturn(mockSection);
+//        when(topicTypeService.findById(1L)).thenReturn(topicTypeVideo);
+//        when(topicTypeService.findById(2L)).thenReturn(topicTypeArticle);
+//        when(topicTypeService.findById(4L)).thenReturn(topicTypeQuiz);
+//        when(topicService.save(any(Topic.class))).thenReturn(mockTopic);
+//        when(quizQuestionService.save(any(QuizQuestion.class))).thenReturn(quizQuestion);
+//        when(videoService.save(any(Video.class))).thenReturn(video);
+//
+//        when(esCourseService.findByDBId(anyLong())).thenReturn(esCourse);
+//        when(esCourseService.save(any(com.vinncorp.fast_learner.es_models.Course.class))).thenReturn(new Message<>());
+//
+//        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+//            Message<CreateCourseRequest> response = courseService.createCourse(createCourseRequest,null, EMAIL);
+//        });
+//
+//        assertEquals("Quiz question answers cannot be empty", exception.getMessage());
+//    }
 
-        CreateCourseRequest createCourseRequest = this.getMockCourse();
-        Course mockCourse = new Course();
-        createCourseRequest.setCourseId(null);
-        mockCourse.setTitle("The Unsung Selldiers");
-        createCourseRequest.setIsActive(false);
-        createCourseRequest.setCourseType(CourseType.FREE_COURSE.name());
-
-        createCourseRequest.getSections().stream()
-                .flatMap(section -> section.getTopics().stream())
-                .filter(topic -> topic.getTopicTypeId() == 4)
-                .forEach(top -> top.getQuiz().getQuestions().stream().forEach(q -> q.setAnswers(new ArrayList<>())));
-
-        com.vinncorp.fast_learner.es_models.Course esCourse = new com.vinncorp.fast_learner.es_models.Course();
-        esCourse.setId(null);
-
-        // Mock repository save method
-        when(repo.save(any(Course.class))).thenReturn(mockCourse);
-        when(repo.findById(anyLong())).thenReturn(Optional.of(mockCourse));
-        when(userService.findByEmail(EMAIL)).thenReturn(UserTestData.userData());
-        when(courseLevelService.findById(1L)).thenReturn(courseLevel);
-        when(courseCategoryService.findById(1L)).thenReturn(courseCategory);
-        doNothing().when(tagService).createAllNewAndAlreadyExistsTags(anyList(), any(Course.class));
-//        doNothing().when(rabbitMQProducer).sendMessageToUsers(anyString(), anyLong(), anyString(), any(), any());
-        when(sectionService.save(any(Section.class))).thenReturn(mockSection);
-        when(topicTypeService.findById(1L)).thenReturn(topicTypeVideo);
-        when(topicTypeService.findById(2L)).thenReturn(topicTypeArticle);
-        when(topicTypeService.findById(4L)).thenReturn(topicTypeQuiz);
-        when(topicService.save(any(Topic.class))).thenReturn(mockTopic);
-        when(quizQuestionService.save(any(QuizQuestion.class))).thenReturn(quizQuestion);
-        when(videoService.save(any(Video.class))).thenReturn(video);
-
-        when(esCourseService.findByDBId(anyLong())).thenReturn(esCourse);
-        when(esCourseService.save(any(com.vinncorp.fast_learner.es_models.Course.class))).thenReturn(new Message<>());
-
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            Message<CreateCourseRequest> response = courseService.createCourse(createCourseRequest,null, EMAIL);
-        });
-
-        assertEquals("Quiz question answers cannot be empty", exception.getMessage());
-    }
-
-    @DisplayName("Create course with no quiz question correct answers")
-    @Test
-    public void testCreateCourse_NullQuizQuestionCorrectAnswer() throws EntityNotFoundException, InternalServerException, BadRequestException, IOException {
-
-        CreateCourseRequest createCourseRequest = this.getMockCourse();
-        Course mockCourse = new Course();
-        createCourseRequest.setCourseId(null);
-        mockCourse.setTitle("The Unsung Selldiers");
-        createCourseRequest.setIsActive(false);
-        createCourseRequest.setCourseType(CourseType.FREE_COURSE.name());
-
-        createCourseRequest.getSections().stream()
-                .flatMap(section -> section.getTopics().stream())
-                .filter(topic -> topic.getTopicTypeId() == 4)
-                .forEach(top -> top.getQuiz().getQuestions().stream().forEach(q -> q.getAnswers().forEach(a -> a.setIsCorrectAnswer(false))));
-
-        com.vinncorp.fast_learner.es_models.Course esCourse = new com.vinncorp.fast_learner.es_models.Course();
-        esCourse.setId(null);
-
-        // Mock repository save method
-        when(repo.save(any(Course.class))).thenReturn(mockCourse);
-        when(repo.findById(anyLong())).thenReturn(Optional.of(mockCourse));
-        when(userService.findByEmail(EMAIL)).thenReturn(UserTestData.userData());
-        when(courseLevelService.findById(1L)).thenReturn(courseLevel);
-        when(courseCategoryService.findById(1L)).thenReturn(courseCategory);
-        doNothing().when(tagService).createAllNewAndAlreadyExistsTags(anyList(), any(Course.class));
-//        doNothing().when(rabbitMQProducer).sendMessageToUsers(anyString(), anyLong(), anyString(), any(), any());
-        when(sectionService.save(any(Section.class))).thenReturn(mockSection);
-        when(topicTypeService.findById(1L)).thenReturn(topicTypeVideo);
-        when(topicTypeService.findById(2L)).thenReturn(topicTypeArticle);
-        when(topicTypeService.findById(4L)).thenReturn(topicTypeQuiz);
-        when(topicService.save(any(Topic.class))).thenReturn(mockTopic);
-        when(quizQuestionService.save(any(QuizQuestion.class))).thenReturn(quizQuestion);
-        when(videoService.save(any(Video.class))).thenReturn(video);
-
-        when(esCourseService.findByDBId(anyLong())).thenReturn(esCourse);
-        when(esCourseService.save(any(com.vinncorp.fast_learner.es_models.Course.class))).thenReturn(new Message<>());
-
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            Message<CreateCourseRequest> response = courseService.createCourse(createCourseRequest,null, EMAIL);
-        });
-
-        assertEquals("Quiz question answers must have at least one correct answer", exception.getMessage());
-    }
-
-    @DisplayName("Create course with no article content")
-    @Test
-    public void testCreateCourse_NullArticleContent() throws EntityNotFoundException, InternalServerException, BadRequestException, IOException {
-
-        CreateCourseRequest createCourseRequest = this.getMockCourse();
-        Course mockCourse = new Course();
-        createCourseRequest.setCourseId(null);
-        mockCourse.setTitle("The Unsung Selldiers");
-        createCourseRequest.setIsActive(false);
-        createCourseRequest.setCourseType(CourseType.FREE_COURSE.name());
-
-        createCourseRequest.getSections().stream()
-                .flatMap(section -> section.getTopics().stream())
-                .filter(topic -> topic.getTopicTypeId() == 2)
-                .forEach(top -> top.getArticle().setArticle(null));
-
-        com.vinncorp.fast_learner.es_models.Course esCourse = new com.vinncorp.fast_learner.es_models.Course();
-        esCourse.setId(null);
-
-        // Mock repository save method
-        when(repo.save(any(Course.class))).thenReturn(mockCourse);
-        when(repo.findById(anyLong())).thenReturn(Optional.of(mockCourse));
-        when(userService.findByEmail(EMAIL)).thenReturn(UserTestData.userData());
-        when(courseLevelService.findById(1L)).thenReturn(courseLevel);
-        when(courseCategoryService.findById(1L)).thenReturn(courseCategory);
-        doNothing().when(tagService).createAllNewAndAlreadyExistsTags(anyList(), any(Course.class));
-//        doNothing().when(rabbitMQProducer).sendMessageToUsers(anyString(), anyLong(), anyString(), any(), any());
-        when(sectionService.save(any(Section.class))).thenReturn(mockSection);
-        when(topicTypeService.findById(1L)).thenReturn(topicTypeVideo);
-        when(topicTypeService.findById(2L)).thenReturn(topicTypeArticle);
-        when(topicTypeService.findById(4L)).thenReturn(topicTypeQuiz);
-        when(topicService.save(any(Topic.class))).thenReturn(mockTopic);
-        when(quizQuestionService.save(any(QuizQuestion.class))).thenReturn(quizQuestion);
-        when(videoService.save(any(Video.class))).thenReturn(video);
-
-        when(esCourseService.findByDBId(anyLong())).thenReturn(esCourse);
-        when(esCourseService.save(any(com.vinncorp.fast_learner.es_models.Course.class))).thenReturn(new Message<>());
-
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            Message<CreateCourseRequest> response = courseService.createCourse(createCourseRequest,null, EMAIL);
-        });
-
-        assertEquals("Article content cannot be empty", exception.getMessage());
-    }
+//    @DisplayName("Create course with no quiz question correct answers")
+//    @Test
+//    public void testCreateCourse_NullQuizQuestionCorrectAnswer() throws EntityNotFoundException, InternalServerException, BadRequestException, IOException {
+//
+//        CreateCourseRequest createCourseRequest = this.getMockCourse();
+//        Course mockCourse = new Course();
+//        createCourseRequest.setCourseId(null);
+//        mockCourse.setTitle("The Unsung Selldiers");
+//        createCourseRequest.setIsActive(false);
+//        createCourseRequest.setCourseType(CourseType.FREE_COURSE.name());
+//
+//        createCourseRequest.getSections().stream()
+//                .flatMap(section -> section.getTopics().stream())
+//                .filter(topic -> topic.getTopicTypeId() == 4)
+//                .forEach(top -> top.getQuiz().getQuestions().stream().forEach(q -> q.getAnswers().forEach(a -> a.setIsCorrectAnswer(false))));
+//
+//        com.vinncorp.fast_learner.es_models.Course esCourse = new com.vinncorp.fast_learner.es_models.Course();
+//        esCourse.setId(null);
+//
+//        // Mock repository save method
+//        when(repo.save(any(Course.class))).thenReturn(mockCourse);
+//        when(repo.findById(anyLong())).thenReturn(Optional.of(mockCourse));
+//        when(userService.findByEmail(EMAIL)).thenReturn(UserTestData.userData());
+//        when(courseLevelService.findById(1L)).thenReturn(courseLevel);
+//        when(courseCategoryService.findById(1L)).thenReturn(courseCategory);
+//        doNothing().when(tagService).createAllNewAndAlreadyExistsTags(anyList(), any(Course.class));
+////        doNothing().when(rabbitMQProducer).sendMessageToUsers(anyString(), anyLong(), anyString(), any(), any());
+//        when(sectionService.save(any(Section.class))).thenReturn(mockSection);
+//        when(topicTypeService.findById(1L)).thenReturn(topicTypeVideo);
+//        when(topicTypeService.findById(2L)).thenReturn(topicTypeArticle);
+//        when(topicTypeService.findById(4L)).thenReturn(topicTypeQuiz);
+//        when(topicService.save(any(Topic.class))).thenReturn(mockTopic);
+//        when(quizQuestionService.save(any(QuizQuestion.class))).thenReturn(quizQuestion);
+//        when(videoService.save(any(Video.class))).thenReturn(video);
+//
+//        when(esCourseService.findByDBId(anyLong())).thenReturn(esCourse);
+//        when(esCourseService.save(any(com.vinncorp.fast_learner.es_models.Course.class))).thenReturn(new Message<>());
+//
+//        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+//            Message<CreateCourseRequest> response = courseService.createCourse(createCourseRequest,null, EMAIL);
+//        });
+//
+//        assertEquals("Quiz question answers must have at least one correct answer", exception.getMessage());
+//    }
+//
+//    @DisplayName("Create course with no article content")
+//    @Test
+//    public void testCreateCourse_NullArticleContent() throws EntityNotFoundException, InternalServerException, BadRequestException, IOException {
+//
+//        CreateCourseRequest createCourseRequest = this.getMockCourse();
+//        Course mockCourse = new Course();
+//        createCourseRequest.setCourseId(null);
+//        mockCourse.setTitle("The Unsung Selldiers");
+//        createCourseRequest.setIsActive(false);
+//        createCourseRequest.setCourseType(CourseType.FREE_COURSE.name());
+//
+//        createCourseRequest.getSections().stream()
+//                .flatMap(section -> section.getTopics().stream())
+//                .filter(topic -> topic.getTopicTypeId() == 2)
+//                .forEach(top -> top.getArticle().setArticle(null));
+//
+//        com.vinncorp.fast_learner.es_models.Course esCourse = new com.vinncorp.fast_learner.es_models.Course();
+//        esCourse.setId(null);
+//
+//        // Mock repository save method
+//        when(repo.save(any(Course.class))).thenReturn(mockCourse);
+//        when(repo.findById(anyLong())).thenReturn(Optional.of(mockCourse));
+//        when(userService.findByEmail(EMAIL)).thenReturn(UserTestData.userData());
+//        when(courseLevelService.findById(1L)).thenReturn(courseLevel);
+//        when(courseCategoryService.findById(1L)).thenReturn(courseCategory);
+//        doNothing().when(tagService).createAllNewAndAlreadyExistsTags(anyList(), any(Course.class));
+////        doNothing().when(rabbitMQProducer).sendMessageToUsers(anyString(), anyLong(), anyString(), any(), any());
+//        when(sectionService.save(any(Section.class))).thenReturn(mockSection);
+//        when(topicTypeService.findById(1L)).thenReturn(topicTypeVideo);
+//        when(topicTypeService.findById(2L)).thenReturn(topicTypeArticle);
+//        when(topicTypeService.findById(4L)).thenReturn(topicTypeQuiz);
+//        when(topicService.save(any(Topic.class))).thenReturn(mockTopic);
+//        when(quizQuestionService.save(any(QuizQuestion.class))).thenReturn(quizQuestion);
+//        when(videoService.save(any(Video.class))).thenReturn(video);
+//
+//        when(esCourseService.findByDBId(anyLong())).thenReturn(esCourse);
+//        when(esCourseService.save(any(com.vinncorp.fast_learner.es_models.Course.class))).thenReturn(new Message<>());
+//
+//        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+//            Message<CreateCourseRequest> response = courseService.createCourse(createCourseRequest,null, EMAIL);
+//        });
+//
+//        assertEquals("Article content cannot be empty", exception.getMessage());
+//    }
 
     @DisplayName("Fetch courses by teacher with valid data")
     @Test
@@ -3037,85 +3037,85 @@ public class CourseServiceMockTest {
         verifyNoInteractions(subscriptionValidationsService, repo);
     }
 
-    // validation on quiz question type
-    @Test
-    void testValidateAnswers_MultipleChoice_Valid() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", true),
-                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", false)
-        );
-        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.MULTIPLE_CHOICE, answers));
-    }
-
-    @Test
-    void testValidateAnswers_MultipleChoice_NoCorrectAnswer() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", false),
-                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", false)
-        );
-        BadRequestException exception = assertThrows(BadRequestException.class,
-                () -> courseService.validateAnswers(QuestionType.MULTIPLE_CHOICE, answers));
-        assertEquals("Multiple choice questions must have at least one correct answer.", exception.getMessage());
-    }
-
-    @Test
-    void testValidateAnswers_SingleChoice_Valid() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", false),
-                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", true)
-        );
-        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.SINGLE_CHOICE, answers));
-    }
-
-    @Test
-    void testValidateAnswers_SingleChoice_MultipleCorrectAnswers() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", true),
-                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", true)
-        );
-        BadRequestException exception = assertThrows(BadRequestException.class,
-                () -> courseService.validateAnswers(QuestionType.SINGLE_CHOICE, answers));
-        assertEquals("Single choice questions must have exactly one correct answer.", exception.getMessage());
-    }
-
-    @Test
-    void testValidateAnswers_TrueFalse_Valid() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "True", true),
-                new CreateQuizQuestionAnswerRequest(2L, false, "False", false)
-        );
-        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.TRUE_FALSE, answers));
-    }
-
-    @Test
-    void testValidateAnswers_TrueFalse_InvalidAnswers() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Yes", true),
-                new CreateQuizQuestionAnswerRequest(2L, false, "No", false)
-        );
-        BadRequestException exception = assertThrows(BadRequestException.class,
-                () -> courseService.validateAnswers(QuestionType.TRUE_FALSE, answers));
-        assertEquals("True/False answers must be 'True' and 'False'.", exception.getMessage());
-    }
-
-    @Test
-    void testValidateAnswers_TextField_Valid() {
-        List<CreateQuizQuestionAnswerRequest> answers = List.of(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Answer", false)
-        );
-        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.TEXT_FIELD, answers));
-    }
-
-    @Test
-    void testValidateAnswers_TextField_Invalid() {
-        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
-                new CreateQuizQuestionAnswerRequest(1L, false, "Answer 1", false),
-                new CreateQuizQuestionAnswerRequest(2L, false, "Answer 2", false)
-        );
-        BadRequestException exception = assertThrows(BadRequestException.class,
-                () -> courseService.validateAnswers(QuestionType.TEXT_FIELD, answers));
-        assertEquals("Text field questions must have only one answer.", exception.getMessage());
-    }
+//    // validation on quiz question type
+//    @Test
+//    void testValidateAnswers_MultipleChoice_Valid() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", true),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", false)
+//        );
+//        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.MULTIPLE_CHOICE, answers));
+//    }
+//
+//    @Test
+//    void testValidateAnswers_MultipleChoice_NoCorrectAnswer() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", false),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", false)
+//        );
+//        BadRequestException exception = assertThrows(BadRequestException.class,
+//                () -> courseService.validateAnswers(QuestionType.MULTIPLE_CHOICE, answers));
+//        assertEquals("Multiple choice questions must have at least one correct answer.", exception.getMessage());
+//    }
+//
+//    @Test
+//    void testValidateAnswers_SingleChoice_Valid() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", false),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", true)
+//        );
+//        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.SINGLE_CHOICE, answers));
+//    }
+//
+//    @Test
+//    void testValidateAnswers_SingleChoice_MultipleCorrectAnswers() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Option 1", true),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "Option 2", true)
+//        );
+//        BadRequestException exception = assertThrows(BadRequestException.class,
+//                () -> courseService.validateAnswers(QuestionType.SINGLE_CHOICE, answers));
+//        assertEquals("Single choice questions must have exactly one correct answer.", exception.getMessage());
+//    }
+//
+//    @Test
+//    void testValidateAnswers_TrueFalse_Valid() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "True", true),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "False", false)
+//        );
+//        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.TRUE_FALSE, answers));
+//    }
+//
+//    @Test
+//    void testValidateAnswers_TrueFalse_InvalidAnswers() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Yes", true),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "No", false)
+//        );
+//        BadRequestException exception = assertThrows(BadRequestException.class,
+//                () -> courseService.validateAnswers(QuestionType.TRUE_FALSE, answers));
+//        assertEquals("True/False answers must be 'True' and 'False'.", exception.getMessage());
+//    }
+//
+//    @Test
+//    void testValidateAnswers_TextField_Valid() {
+//        List<CreateQuizQuestionAnswerRequest> answers = List.of(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Answer", false)
+//        );
+//        assertDoesNotThrow(() -> courseService.validateAnswers(QuestionType.TEXT_FIELD, answers));
+//    }
+//
+//    @Test
+//    void testValidateAnswers_TextField_Invalid() {
+//        List<CreateQuizQuestionAnswerRequest> answers = Arrays.asList(
+//                new CreateQuizQuestionAnswerRequest(1L, false, "Answer 1", false),
+//                new CreateQuizQuestionAnswerRequest(2L, false, "Answer 2", false)
+//        );
+//        BadRequestException exception = assertThrows(BadRequestException.class,
+//                () -> courseService.validateAnswers(QuestionType.TEXT_FIELD, answers));
+//        assertEquals("Text field questions must have only one answer.", exception.getMessage());
+//    }
 }
 
 

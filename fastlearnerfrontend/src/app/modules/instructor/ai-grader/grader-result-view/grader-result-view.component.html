@@ -15,9 +15,10 @@
             ></nz-progress>
           </div>
 
-<div class="count" *ngIf="gradedPapers <= allowedPapers">
-  {{ gradedPapers }} / {{ allowedPapers }}
-</div>        </div>
+          <div class="count" *ngIf="gradedPapers <= allowedPapers">
+            {{ gradedPapers }} / {{ allowedPapers }}
+          </div>
+        </div>
       </div>
       <app-button (buttonCallBack)="openSubscriptionPlan()">
         <img
@@ -60,7 +61,7 @@
           (click)="onPageChange('left')"
         ></span>
         <span class="std-name color-blue font-bold font-12"
-          >{{ currentIndex + 1 }} of {{ students.length }}</span
+          >{{ currentIndex + 1 }} of {{ students?.length || 0 }}</span
         >
         <span
           class="cursor-pointer align-items-center color-blue"
@@ -206,13 +207,13 @@
           >
             <span class="color-blue font-bold font-12">Results</span>
             <a
-              *ngIf="questions.length"
+              *ngIf="questions.length && !isQuestionsLoading"
               class="ml-auto"
               (click)="expandAll(expandAllCheck ? false : true)"
               >{{ !expandAllCheck ? "Expand all" : "Collapse All" }}</a
             >
           </div>
-          <ng-container *ngIf="questions.length">
+          <ng-container *ngIf="resultId">
             <div
               class="result-header border-bottom display-flex align-items-center"
             >
@@ -226,13 +227,26 @@
                 >Action</span
               >
             </div>
-            <div class="scroll-container" (scroll)="onScroll($event)">
+            <div
+              class="scroll-container"
+              (scroll)="!isQuestionsLoading && onScroll($event)"
+            >
+              <div *ngIf="isQuestionsLoading" class="question-table-loader">
+                <i
+                  nz-icon
+                  nzType="loading"
+                  nzTheme="outline"
+                  [style.fontSize.px]="32"
+                  class="spin-icon"
+                ></i>
+              </div>
+
               <nz-collapse>
                 <ng-container *ngFor="let question of questions; let i = index">
                   <nz-collapse-panel
                     [ngClass]="{
                       'bg-F7F8FC': i % 2 == 0,
-                      'bg-white': i % 2 != 0
+                      'bg-white': i % 2 != 0,
                     }"
                     (nzActiveChange)="onPanelClick(question)"
                     [nzActive]="question?.panelOpen"
@@ -244,7 +258,7 @@
                     >
                       <span class="color-blue font-bold">Rationale</span>
                       <span class="color-black font-bold font-10">{{
-                        question?.feedback
+                        question?.feedback || "—"
                       }}</span>
                     </div>
                   </nz-collapse-panel>
@@ -255,7 +269,13 @@
                       <div class="ml-1 mr-auto">
                         <div class="display-flex flex-direction-column">
                           <span class="color-black font-bold font-10"
-                            >Question {{ question?.questionNumber }}</span
+                            >Question {{ question?.questionNumber }}
+                            <nz-tag
+                              *ngIf="isInstructorQuestion(question)"
+                              nzColor="blue"
+                              class="manual-tag"
+                              >Manual</nz-tag
+                            ></span
                           >
                           <div *ngIf="!question?.enableQuestionEditing">
                             <span class="color-blue font-bold font-12">
@@ -283,24 +303,55 @@
                                 enableEdit(question); $event.stopPropagation()
                               "
                             ></i>
+                            <i
+                              *ngIf="isInstructorQuestion(question)"
+                              style="padding-left: 7px"
+                              nz-icon
+                              nzType="delete"
+                              class="text-red cursor-pointer"
+                              (click)="
+                                confirmDeleteManualQuestion(question);
+                                $event.stopPropagation()
+                              "
+                            ></i>
                           </div>
-                          <div *ngIf="question?.enableQuestionEditing">
-                            <input
-                              nz-input
-                              type="number"
-                              [(ngModel)]="question.editedQuestionNumber"
-                              [max]="question.totalMarks"
-                              min="0"
-                              (input)="onInput($event, question)"
-                              (keydown.enter)="updateQuestionNumber(question)"
-                              (blur)="cancelQuestionEdit(question)"
-                              autofocus
-                              style="width: 200px"
-                            />
+                          <div
+                            *ngIf="question?.enableQuestionEditing"
+                            class="marks-edit-row"
+                            (keydown.enter)="updateQuestionMarks(question)"
+                          >
+                            <div class="marks-edit-field">
+                              <label class="marks-edit-label">Obtained</label>
+                              <input
+                                #questionScoreInput
+                                nz-input
+                                type="number"
+                                [(ngModel)]="question.editedObtainedMarks"
+                                min="0"
+                                required
+                                (input)="onObtainedInput($event, question)"
+                              />
+                            </div>
+                            <span class="marks-edit-separator">/</span>
+                            <div class="marks-edit-field">
+                              <label class="marks-edit-label">Out of</label>
+                              <input
+                                nz-input
+                                type="number"
+                                [(ngModel)]="question.editedOutOfMarks"
+                                min="0"
+                                required
+                                (input)="onOutOfInput($event, question)"
+                                (blur)="updateQuestionMarks(question)"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div class="text-center">
+                      <div
+                        class="text-center"
+                        *ngIf="!isInstructorQuestion(question)"
+                      >
                         <nz-badge
                           [nzColor]="
                             getConfidenceColor(question?.confidenceLevel)
@@ -334,13 +385,165 @@
                 </ng-container>
               </nz-collapse>
             </div>
+            <div
+              *ngIf="!isQuestionsLoading && resultId"
+              class="add-question-row"
+            >
+              <button
+                nz-button
+                nzType="dashed"
+                class="add-question-btn"
+                (click)="openAddQuestionModal()"
+              >
+                <i nz-icon nzType="plus"></i>
+                Add Question
+              </button>
+            </div>
           </ng-container>
 
-          <div *ngIf="!questions.length" class="mt-2">
+          <!-- <div *ngIf="!questions.length && !isQuestionsLoading" class="mt-2">
             <nz-empty [nzNotFoundContent]="'No Data'"></nz-empty>
-          </div>
+          </div> -->
         </div>
       </nz-col>
     </nz-row>
   </nz-card>
 </div>
+
+<nz-modal
+  [(nzVisible)]="showAddQuestionModal"
+  nzTitle="Add missing question"
+  (nzOnCancel)="closeAddQuestionModal()"
+  [nzFooter]="addQuestionModalFooter"
+  nzWidth="640px"
+>
+  <ng-container *nzModalContent>
+    <div class="manual-question-edit-form">
+      <div class="manual-form-field">
+        <label>Question number</label>
+        <input
+          nz-input
+          type="number"
+          min="1"
+          [max]="allowedMaxQuestionNumber()"
+          [readOnly]="true"
+          [(ngModel)]="manualQuestionForm.questionNumber"
+        />
+        <span class="manual-form-hint"
+          >Assigned automatically as the next question.</span
+        >
+      </div>
+      <div class="marks-edit-row">
+        <div class="marks-edit-field">
+          <label class="marks-edit-label">Obtained marks *</label>
+          <input
+            nz-input
+            type="number"
+            min="0"
+            [(ngModel)]="manualQuestionForm.obtainedMarks"
+          />
+        </div>
+        <span class="marks-edit-separator">/</span>
+        <div class="marks-edit-field">
+          <label class="marks-edit-label">Out of marks *</label>
+          <input
+            nz-input
+            type="number"
+            min="0"
+            [(ngModel)]="manualQuestionForm.outOfMarks"
+          />
+        </div>
+      </div>
+      <div class="manual-form-field">
+        <label>Rationale / feedback</label>
+        <textarea
+          nz-input
+          rows="3"
+          [(ngModel)]="manualQuestionForm.feedback"
+        ></textarea>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #addQuestionModalFooter>
+    <button nz-button nzType="default" (click)="closeAddQuestionModal()">
+      Cancel
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      [nzLoading]="isSavingManualQuestion"
+      (click)="saveManualQuestion()"
+    >
+      Add question
+    </button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="showEditQuestionModal"
+  nzTitle="Edit manual question"
+  (nzOnCancel)="closeEditManualQuestionModal()"
+  [nzFooter]="editQuestionModalFooter"
+  nzWidth="640px"
+>
+  <ng-container *nzModalContent>
+    <div class="manual-question-edit-form">
+      <div class="manual-form-field">
+        <label>Question number</label>
+        <input
+          nz-input
+          type="number"
+          min="1"
+          [max]="allowedMaxQuestionNumber(editingQuestionId)"
+          [readOnly]="true"
+          [(ngModel)]="editManualQuestionForm.questionNumber"
+        />
+        <span class="manual-form-hint"
+          >Cannot skip ahead of existing questions.</span
+        >
+      </div>
+      <div class="marks-edit-row">
+        <div class="marks-edit-field">
+          <label class="marks-edit-label">Obtained marks *</label>
+          <input
+            nz-input
+            type="number"
+            min="0"
+            [(ngModel)]="editManualQuestionForm.obtainedMarks"
+          />
+        </div>
+        <span class="marks-edit-separator">/</span>
+        <div class="marks-edit-field">
+          <label class="marks-edit-label">Out of marks *</label>
+          <input
+            nz-input
+            type="number"
+            min="0"
+            [(ngModel)]="editManualQuestionForm.outOfMarks"
+          />
+        </div>
+      </div>
+      <div class="manual-form-field">
+        <label>Rationale / feedback</label>
+        <textarea
+          nz-input
+          rows="3"
+          [(ngModel)]="editManualQuestionForm.feedback"
+        ></textarea>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #editQuestionModalFooter>
+    <button nz-button nzType="default" (click)="closeEditManualQuestionModal()">
+      Cancel
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      [nzLoading]="isUpdatingManualQuestion"
+      (click)="saveManualQuestionEdit()"
+    >
+      Save changes
+    </button>
+  </ng-template>
+</nz-modal>

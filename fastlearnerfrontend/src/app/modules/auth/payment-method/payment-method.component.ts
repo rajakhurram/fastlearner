@@ -46,7 +46,6 @@ export class PaymentMethodComponent implements OnInit {
   discountInDollars: number;
   countries = contries;
 
-
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _subscriptionService: SubscriptionService,
@@ -56,14 +55,13 @@ export class PaymentMethodComponent implements OnInit {
     private _cacheService: CacheService,
     private _courseService: CourseService,
     private _communicationService: CommunicationService,
-    private _cookiesService: CookiesService
+    private _cookiesService: CookiesService,
   ) {}
 
   ngOnInit(): void {
     this.sessionId = this._activatedRoute.snapshot.queryParams['sessionId'];
     this.isMobile = this._activatedRoute.snapshot.queryParams['isMobile'];
 
-    
     // this._subscriptionService.getCountries().subscribe((res) => {
     //   if (!res.error && res.data) {
     //     this.countries = res.data;
@@ -86,10 +84,9 @@ export class PaymentMethodComponent implements OnInit {
       }
       this.subscriptionId =
         this._activatedRoute.snapshot.queryParams['subscriptionId'];
-      this.getSavedPaymentProfile();
+      // this.getSavedPaymentProfile();
       this.getSubscriptionById();
     }
-
   }
 
   onCountryChange(iso2: string) {
@@ -133,7 +130,7 @@ export class PaymentMethodComponent implements OnInit {
     this._cacheService.saveInCache('expiresIn', expiryTimeInSeconds);
     this._cacheService.saveInCache(
       'loggedInUserDetails',
-      JSON.stringify(response)
+      JSON.stringify(response),
     );
     this._cacheService.saveInCache('isLoggedIn', 'true');
     this._authService.startTokenTimer();
@@ -169,7 +166,7 @@ export class PaymentMethodComponent implements OnInit {
 
     (window as any).Accept.dispatchData(
       { authData, cardData },
-      (response: any) => this.handleResponse(response)
+      (response: any) => this.handleResponse(response),
     );
   }
 
@@ -185,7 +182,7 @@ export class PaymentMethodComponent implements OnInit {
           if (this.courseDetails.isAlreadyBought) {
             this._router.navigate(
               ['student/course-content', this.courseUrl],
-              {}
+              {},
             );
           }
         }
@@ -220,7 +217,7 @@ export class PaymentMethodComponent implements OnInit {
       },
       (error) => {
         this._message.error(error?.error?.message);
-      }
+      },
     );
   }
   ngOnDestroy(): void {
@@ -365,8 +362,12 @@ export class PaymentMethodComponent implements OnInit {
             this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
           ) {
             const discountPercent = response.data?.discount || 0;
+            const discountUnit = response.data?.discountUnit;
 
-            const discountInDollars = (originalPrice * discountPercent) / 100;
+            const discountInDollars =
+              discountUnit === 'PERCENTAGE'
+                ? (originalPrice * discountPercent) / 100
+                : discountPercent;
             const discountedPrice = originalPrice - discountInDollars;
 
             this.discountApplied = true;
@@ -376,7 +377,7 @@ export class PaymentMethodComponent implements OnInit {
             this.discountedPrice = discountedPrice;
 
             this._message.success(
-              `Promo code applied: You saved $${discountInDollars.toFixed(2)}!`
+              `Promo code applied: You saved $${discountInDollars.toFixed(2)}!`,
             );
           }
         },
@@ -384,7 +385,7 @@ export class PaymentMethodComponent implements OnInit {
           this.isApplyingPromo = false;
           this._message.remove();
           this._message.error(
-            error?.error?.message || 'Failed to apply promo code'
+            error?.error?.message || 'Failed to apply promo code',
           );
         },
       });
@@ -401,10 +402,13 @@ export class PaymentMethodComponent implements OnInit {
           : this.paymentProfile.isSave;
       this.subscription.subscriptionId = this.subscriptionId;
       this.subscription.coupon = this.discountApplied ? this.promoCode : null;
+      this.subscription.amount = this.discountApplied
+        ? this.discountedPrice
+        : this.subscriptionData?.price;
       if (typeof this.paymentProfile.cardNumber == 'string') {
         const cardNumberAsInteger = parseInt(
           this.paymentProfile.cardNumber.replace(/\D/g, ''),
-          10
+          10,
         );
         this.paymentProfile.cardNumber = cardNumberAsInteger;
       } else {
@@ -523,7 +527,7 @@ export class PaymentMethodComponent implements OnInit {
       isZipValid &&
       countryCodeValid &&
       this.paymentProfile.city != '' &&
-      this.paymentProfile.address != '' 
+      this.paymentProfile.address != ''
     ) {
       return true;
     }

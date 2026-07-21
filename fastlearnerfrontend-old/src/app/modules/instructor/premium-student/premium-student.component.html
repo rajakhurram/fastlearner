@@ -1,0 +1,246 @@
+<div class="premium-students-container" id="top" *ngIf="!showQuizReview">
+  <!-- Title -->
+  <h2>Premium Students</h2>
+  <div class="sub-main">
+    <div
+      nz-row
+      class="upper-row"
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <div style="display: flex; gap: 15px; align-items: center">
+        <div class="w-50">
+          <app-search-filter
+            [config]="searchFilter"
+            (searchCallBack)="searchCallBack($event)"
+            (clearCallBack)="clearSearch()"
+          >
+          </app-search-filter>
+        </div>
+
+        <!-- <div class="search-bar" style="flex: 1; margin-right: 10px">
+        <nz-input-group
+          class="input-group-container"
+          nzSearch
+          nzSize="large"
+          [nzAddOnAfter]="suffixIconSearch"
+        >
+          <input
+            class="search-input-container"
+            placeholder="Search by Student or course title"
+            [(ngModel)]="searchKeyword"
+            (keydown.enter)="searchByKeyword()"
+            #searchInput
+          />
+        </nz-input-group>
+
+        <ng-template #suffixIconSearch>
+          <span
+            class="cross-search-icon cursor-pointer"
+            (click)="clearSearch()"
+            nz-icon
+            nzType="close"
+          ></span>
+          <span
+            class="search-icon cursor-pointer"
+            (click)="searchByKeyword()"
+            nz-icon
+            nzType="search"
+          ></span>
+        </ng-template>
+      </div> -->
+
+        <div class="date-range-picker" style="margin-left: 20px">
+          <input
+            type="text"
+            id="rangeCalendarTimeRight"
+            class="form-control"
+            style="
+              box-shadow: none;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              border-radius: 5px;
+              padding: 10px;
+              background-color: #ececec;
+              border: none;
+              outline: none;
+            "
+            readonly
+            ngxDaterangepickerBootstrap
+            placeholder="Select a date range"
+            [(ngModel)]="selectedRangeCalendarTimeRight"
+            startKey="start"
+            endKey="end"
+            [drops]="dropsDown"
+            [opens]="opensLeft"
+            [locale]="{ format: 'DD.MM.YYYY' }"
+            [maxDate]="maxDate"
+            [autoApply]="false"
+            [ranges]="ranges"
+            [timePicker]="false"
+            [timePickerSeconds]="false"
+            [timePicker24Hour]="true"
+            [showCustomRangeLabel]="true"
+            [showCancel]="true"
+            [linkedCalendars]="true"
+            [showDropdowns]="true"
+            [showClearButton]="true"
+            [lockStartDate]="false"
+            [alwaysShowCalendars]="false"
+            [showRangeLabelOnInput]="true"
+            [formlyCustomField]="false"
+            [keepCalendarOpeningWithRange]="true"
+            [isTooltipDate]="isTooltipDate"
+            [isCustomDate]="isCustomDate"
+            (datesUpdated)="datesUpdatedRange($event)"
+            (change)="onChanges($event)"
+            (rangeClicked)="onRangeChanges($event)"
+            (clearClicked)="resetDateRange()"
+          />
+        </div>
+      </div>
+
+      <div class="export-button">
+        <button
+          nz-button
+          class="ant-btn signup-form-button"
+          nzType="primary"
+          [disabled]="!students || students.length === 0"
+          (click)="exportData()"
+        >
+          <img
+            src="../../../../assets/icons/excel.svg"
+            alt="Excel Icon"
+            class="excel-icon"
+          />
+          Export
+        </button>
+      </div>
+    </div>
+    <div class="students-courses-wrapper">
+      <div class="students-panel">
+        <div class="students-header">
+          <h3>
+            All students <span class="count">({{ premiumStudents.length }})</span>
+          </h3>
+        </div>
+<div class="students-list-wrapper">
+
+        <div class="students-list">
+          <div
+            class="student-item"
+            *ngFor="let student of premiumStudents"
+            [class.active]="student === selectedStudent"
+            (click)="selectStudent(student)"
+          >
+            <div class="avatar-container">
+              <nz-avatar
+                [nzSize]="36"
+                nzIcon="user"
+                [nzSrc]="student?.picture?.trim() || null"
+                nzBgColor="#2563eb"
+              >
+                {{ student?.studentName?.charAt(0) }}
+              </nz-avatar>
+            </div>
+
+            <div class="student-details">
+              <div class="student-name">{{ student.studentName }}</div>
+              <div class="student-email">{{ student.studentEmail }}</div>
+            </div>
+
+            <div
+  class="student-arrow"
+  [class.active]="student === selectedStudent"
+>
+  ›
+</div>
+
+
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="courses-panel">
+
+        <ng-container *ngIf="selectedStudent; else emptyState">
+          <div class="panel-head">
+          <h2 class="panel-title">Course</h2>
+          <h2 class="panel-title">Actions</h2>
+</div>
+          <div class="courses-list">
+            <div
+              *ngFor="let course of selectedStudentCourses"
+              class="course-card"
+            >
+              <div class="course-header" (click)="course.expanded = !course.expanded">
+                <img
+                  height="60px"
+                  width="100px"
+                  class="course-thumb"
+                  [src]="course.thumbnail || 'assets/default-thumbnail.png'"
+                  alt="Course thumbnail"
+                />
+                <div class="course-main-info">
+                  <div class="enroll-name">
+                    <div class="date-badge">
+                      Date of Enrolment:
+                      {{ course.purchaseDate | date : "MMM d, y" }}
+                    </div>
+
+                    <h3 class="course-title">{{ course.courseTitle }}</h3>
+                  </div>
+
+                  <div class="icon-container">
+                    <img
+                      alt="Expand / Collapse"
+                      class="arrow-icon"
+                      [class.arrow-icon-top]="course.expanded"
+                      [src]="
+                        course.expanded
+                          ? '../../../../assets/icons/arrow-collapse.svg'
+                          : '../../../../assets/icons/ic_expand_more.svg'
+                      "
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="course.expanded" class="course-sections">
+                <div
+                  *ngFor="let section of course.sections"
+                  class="section-item"
+                >
+                  <div class="section-title">{{ section.sectionTitle }}</div>
+                  <a
+                    class="view-results-btn"
+                    (click)="
+                      viewQuizResults(section, course.student.studentEmail)
+                    "
+                  >
+                    View Results
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #emptyState>
+          <div class="empty-state">Select a student to see their courses</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-quiz-review-attempt-questions
+  *ngIf="showQuizReview"
+  [quizData]="quizData"
+  [currentSelectedTopic]="currentSelectedTopic"
+  [isAllowedToRetake]="isAllowedToRetake"
+  (retakeQuizEvent)="retakeQuiz()"
+  (backToQuizEvent)="backToQuiz($event)"
+></app-quiz-review-attempt-questions>
+

@@ -1,0 +1,215 @@
+.subscription-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .page-header {
+    h2 {
+      margin: 0;
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #212189;
+    }
+  }
+
+  .metric-row {
+    .metric-card {
+      background: #fff;
+      border: 1px solid #edf0f5;
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      min-height: 9.375rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .metric-label {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #6f7894;
+      }
+
+      .metric-value {
+        margin: 0.3rem 0 0;
+        font-size: 1.3rem;
+        line-height: 1;
+        color: #101d43;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .table-section {
+    border-radius: 4px;
+  }
+
+  .filter-row {
+    margin-bottom: 0.875rem;
+    display: grid;
+    grid-template-columns: 2.1fr 1fr 1fr 1fr 0.9fr 0.9fr 0.8fr;
+    gap: 0.625rem;
+
+    .date-filter {
+      border-radius: 4px;
+      border: 1px solid #fe4a55;
+      color: #fe4a55;
+      font-weight: 500;
+    }
+
+    .clear-filter-btn {
+      height: 32px;
+      border-radius: 4px;
+      color: #212189;
+      border-color: #212189;
+    }
+  }
+
+  .user-cell {
+    .user-name {
+      margin: 0;
+      color: #101d43;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .user-email {
+      margin: 0.15rem 0 0;
+      color: #6f7894;
+      font-size: 0.8rem;
+    }
+  }
+
+  .plan-pill,
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 1rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    // white-space: nowrap;
+    border: none;
+  }
+
+  .plan-pill {
+    &.premium {
+      background: #212189;
+      color: #fff;
+    }
+
+    &.standard {
+      background: #e9edf5;
+      color: #1b2544;
+    }
+  }
+
+  .status-pill {
+    &.active {
+      background: #212189;
+      color: #fff;
+    }
+
+    &.cancelled {
+      background: #fe4a55;
+      color: #fff;
+    }
+
+    &.expired {
+      background: #6f7894;
+      color: #fff;
+    }
+  }
+
+  .invoice-btn {
+    color: #101d43;
+    font-weight: 500;
+    padding: 0;
+  }
+
+  .table-footer {
+    margin-top: 0.875rem;
+    border-top: 1px solid #edf0f5;
+    padding-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    p {
+      margin: 0;
+      color: #6f7894;
+      font-size: 0.85rem;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6f7894;
+      font-size: 0.85rem;
+
+      .rows-btn,
+      .page-btn {
+        min-width: 2.25rem;
+        height: 2rem;
+        border-radius: 4px;
+        border-color: #e6e9f1;
+        color: #6f7894;
+      }
+
+      .page-btn.active {
+        background: #fe4a55;
+        border-color: #fe4a55;
+        color: #fff;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .subscription-table .ant-table-thead > tr > th {
+  background: #edf6ff;
+  color: #212189;
+  font-weight: 600;
+}
+
+:host
+  ::ng-deep
+  .subscription-page
+  .date-filter
+  .ant-picker-input
+  > input::placeholder {
+  color: #fe4a55;
+}
+
+:host ::ng-deep .subscription-page .date-filter .ant-picker-suffix {
+  color: #fe4a55;
+}
+
+@media (max-width: 1200px) {
+  .subscription-page {
+    .filter-row {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  :host ::ng-deep .subscription-page .metric-row.ant-row {
+    row-gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .subscription-page {
+    .filter-row {
+      grid-template-columns: 1fr;
+    }
+
+    .table-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  :host ::ng-deep .subscription-page .metric-row.ant-row {
+    row-gap: 16px;
+  }
+}

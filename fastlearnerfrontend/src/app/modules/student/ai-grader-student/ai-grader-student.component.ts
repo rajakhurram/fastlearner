@@ -6,7 +6,8 @@ import { AIAssessment } from 'src/app/core/models/assessment.model';
 import { buttonConfig } from 'src/app/core/models/button.model-config';
 import { TableConfig } from 'src/app/core/models/table.model-config';
 import { AiGraderService } from 'src/app/core/services/ai-grader.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { ClassAssessmentDropdownComponent } from '../../shared/class-assessment-dropdown/class-assessment-dropdown.component';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { DatePipe } from '@angular/common';
@@ -91,6 +92,8 @@ export class AiGraderStudentComponent {
 
   actions = Actions;
   totalElements?: any = 1;
+  private routerSub?: Subscription;
+  private previousUrl = '';
 
   constructor(
     private _aiGraderService: AiGraderService,
@@ -101,7 +104,24 @@ export class AiGraderStudentComponent {
   ) {}
 
   ngOnInit(): void {
+    this.previousUrl = this._router.url;
+    this.routerSub = this._router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e) => {
+        const onList =
+          e.urlAfterRedirects.includes('/student/grader-results') &&
+          !e.urlAfterRedirects.includes('/view');
+        const fromDetail = this.previousUrl.includes('/view');
+        if (onList && fromDetail && this.selectedClassId) {
+          this.getAssessmentsByClassIdAndAssessmentId();
+        }
+        this.previousUrl = e.urlAfterRedirects;
+      });
     this.getClasses();
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
   }
 
   expandAll() {
@@ -193,6 +213,9 @@ export class AiGraderStudentComponent {
           this.selectedClassId = this.classes[0]?.id;
         }
 
+        if (this._cacheService?.getJsonData('studentGraderResultsNeedsRefresh')) {
+          this._cacheService.removeFromCache('studentGraderResultsNeedsRefresh');
+        }
         this.getAssessmentsByClassIdAndAssessmentId();
       }
     },

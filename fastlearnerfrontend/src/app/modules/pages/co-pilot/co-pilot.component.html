@@ -25,7 +25,10 @@
             [ngClass]="chat.sender"
             class="chat-block"
           >
-            <div class="message-text" [innerHTML]="formatChatText(chat.text)"></div>
+            <div
+              class="message-text"
+              [innerHTML]="formatChatText(chat.text)"
+            ></div>
 
             <!-- Show courses -->
             <div *ngFor="let entity of chat.entities">
@@ -43,8 +46,8 @@
                           margin-left: 8px;
                           text-decoration: none;
                         "
-                        onmouseover="this.style.textDecoration='underline'"
-                        onmouseout="this.style.textDecoration='none'"
+                        onmouseover="this.style.textDecoration = 'underline'"
+                        onmouseout="this.style.textDecoration = 'none'"
                       >
                         {{ entity.title }}
                       </a>
@@ -146,32 +149,18 @@
                       (click)="routeToInstructorProfile(entity.url)"
                     >
                       Instructor:
-                      <span class="link-style" style="color: #0464fc">{{ entity.name }}</span>
+                      <span class="link-style" style="color: #0464fc">{{
+                        entity.name
+                      }}</span>
                     </a>
-                    <p>
-                      Instructor: 
-                      <span *ngIf="!entity.url" style="color: #0464fc">
-                        {{ entity.name }}
-                      </span>
-                    </p>
                   </div>
                   <p *ngIf="isValidValue(entity.specialization)">
                     Specialization:
                     {{ entity.specialization }}
                   </p>
-                    <p *ngIf="isValidValue(entity.experience)">
-                      Experience: {{ entity.experience  }}</p>
-
-                  <p *ngIf="isValidValue(entity.contact)">
-                    Email:
-                    <a href="mailto:{{ entity.contact }}">{{
-                      entity.contact
-                    }}</a>
+                  <p *ngIf="isValidValue(entity.experience)">
+                    Experience: {{ entity.experience }}
                   </p>
-                  <ng-template #noEmail>
-                    <p>
-                      Email: Not available</p>
-                  </ng-template>
                 </div>
               </ng-container>
             </div>

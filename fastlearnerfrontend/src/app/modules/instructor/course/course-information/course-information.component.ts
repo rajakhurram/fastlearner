@@ -25,8 +25,15 @@ import { NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { Subscription } from 'rxjs';
 import { HttpConstants } from 'src/app/core/constants/http.constants';
 import { CourseContentType } from 'src/app/core/enums/course-content-type.enum';
-import { CourseType, courseTypeArray } from 'src/app/core/enums/course-status';
+import {
+  CourseType,
+  courseTypeArray,
+  CourseStatus,
+} from 'src/app/core/enums/course-status';
+import { SubscriptionPlanType } from 'src/app/core/enums/subscription-plan.enum';
+import { isPremiumCourseEditBlocked } from 'src/app/core/utils/course-edit.util';
 import { CreateCourse } from 'src/app/core/models/create-course.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 import { CommunicationService } from 'src/app/core/services/communication.service';
 import { CourseService } from 'src/app/core/services/course.service';
 import { FileManager } from 'src/app/core/services/file-manager.service';
@@ -59,6 +66,7 @@ export class CourseInformationComponent {
   currentSelectedTopic?: any = {};
   generatedUrl: string = '';
   minTitleLength = 10;
+  courseTitleFormatError = false;
   tags = [];
   inputVisible = false;
   inputValue = '';
@@ -82,6 +90,9 @@ export class CourseInformationComponent {
   urlTooltip = false;
   copyTooltipText = 'Click to copy URL';
   isAvailablePremium?: boolean;
+  pricingLocked?: boolean;
+  premiumConversionUsed?: boolean;
+  courseStatus?: string;
 
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -135,7 +146,7 @@ export class CourseInformationComponent {
   courseSaved?: any = false;
   applicationCourseDetailsUrl?: string;
   courseTypeSubscription: Subscription;
-  courseContentType = CourseContentType
+  courseContentType = CourseContentType;
 
   constructor(
     public domSanitizer: DomSanitizer,
@@ -146,7 +157,8 @@ export class CourseInformationComponent {
     private _fileManagerService: FileManager,
     private _viewContainerRef: ViewContainerRef,
     private _router: Router,
-    private _communicationService: CommunicationService
+    private _communicationService: CommunicationService,
+    private _cacheService: CacheService,
   ) {
     this.applicationCourseDetailsUrl = environment.applicationCourseDetailsUrl;
   }
@@ -172,7 +184,8 @@ export class CourseInformationComponent {
         '',
         [
           Validators.required,
-          this.trimmedTitleLengthValidator(10, 60)
+          this.trimmedTitleLengthValidator(10, 60),
+          this.alphanumericTitleValidator(),
         ],
       ],
       titleExist: [false],
@@ -194,53 +207,60 @@ export class CourseInformationComponent {
       courseProgress: [null],
       certificateEnabled: [null],
       youtubeUrl: [''],
-      courseUrl: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(60)]],
+      courseUrl: [
+        null,
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(60),
+        ],
+      ],
       urlExist: [false],
     });
 
-    if(this.selectedContentType === this.courseContentType.COURSE) {
+    if (this.selectedContentType === this.courseContentType.COURSE) {
       this.formGroup.setValidators([previewVideoRequiredValidator]);
       this.formGroup.updateValueAndValidity();
     }
 
-    this.handleConditionalValidation();  
+    this.handleConditionalValidation();
     this.getCategoryList();
     this.premiumCourseAvailable();
   }
 
   handleConditionalValidation(): void {
-      const previewPathControl = this.formGroup.get('previewPath');
-  
-      if (this.selectedContentType === CourseContentType.COURSE) {
-        previewPathControl?.setValidators([Validators.required]);
-      } else {
-        previewPathControl?.clearValidators();
-      }
-  
-      previewPathControl?.updateValueAndValidity();
+    const previewPathControl = this.formGroup.get('previewPath');
+
+    if (this.selectedContentType === CourseContentType.COURSE) {
+      previewPathControl?.setValidators([Validators.required]);
+    } else {
+      previewPathControl?.clearValidators();
+    }
+
+    previewPathControl?.updateValueAndValidity();
 
     this.courseTypeSubscription = this.formGroup
-    .get('courseType')
-    .valueChanges.subscribe((newCourseType) => {
-      const priceControl = this.formGroup.get('price');
+      .get('courseType')
+      .valueChanges.subscribe((newCourseType) => {
+        const priceControl = this.formGroup.get('price');
 
-      if (newCourseType === this.courseType?.PREMIUM) {
-        // Apply the validator for Premium course type
-        priceControl.setValidators([
-          Validators.required,
-          this.priceGreaterThanZeroValidator(),
-        ]);
-      } else {
-        priceControl.clearValidators();
-      }
-      priceControl.updateValueAndValidity();
-    });
+        if (newCourseType === this.courseType?.PREMIUM) {
+          // Apply the validator for Premium course type
+          priceControl.setValidators([
+            Validators.required,
+            this.priceGreaterThanZeroValidator(),
+          ]);
+        } else {
+          priceControl.clearValidators();
+        }
+        priceControl.updateValueAndValidity();
+      });
   }
 
   onInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const value = inputElement.value;
-  
+
     // Allow only numbers with up to two decimal places
     if (!/^\d+(\.\d{0,2})?$/.test(value)) {
       // Revert to the valid portion of the value
@@ -345,7 +365,10 @@ export class CourseInformationComponent {
 
   createCourseSummary(summary?: any): FormGroup {
     return this.fb.group({
-      courseSummaryInfo: [summary ? summary : '', [Validators.maxLength(500), Validators.required]],
+      courseSummaryInfo: [
+        summary ? summary : '',
+        [Validators.maxLength(500), Validators.required],
+      ],
     });
   }
 
@@ -401,7 +424,7 @@ export class CourseInformationComponent {
 
       if (!['avi', 'mov', 'mp4'].includes(fileType.toLowerCase())) {
         this._messageService.error(
-          'Please select a valid video file (AVI, MOV, MP4).'
+          'Please select a valid video file (AVI, MOV, MP4).',
         );
         return;
       } else {
@@ -447,7 +470,7 @@ export class CourseInformationComponent {
       const fileType = file.type.split('/')[1];
       if (!['jpg', 'jpeg', 'gif', 'png'].includes(fileType)) {
         this._messageService.error(
-          'Please select a valid image file (jpg, jpeg, gif, png).'
+          'Please select a valid image file (jpg, jpeg, gif, png).',
         );
         return;
       } else {
@@ -466,7 +489,9 @@ export class CourseInformationComponent {
               }
             },
             error: (error: any) => {
-              this.formGroup.get('thumbnailName')?.patchValue('No file chosen.');
+              this.formGroup
+                .get('thumbnailName')
+                ?.patchValue('No file chosen.');
               this.videoFileName = '';
             },
           });
@@ -481,6 +506,17 @@ export class CourseInformationComponent {
           response?.status ==
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
+          const courseType = response?.data?.courseType;
+          if (
+            isPremiumCourseEditBlocked({
+              courseType,
+              courseStatus: response?.data?.courseStatus,
+            })
+          ) {
+            this._messageService.error('Premium courses cannot be edited.');
+            this._router.navigate(['instructor/dashboard']);
+            return;
+          }
           this.selectedContentType = response?.data?.contentType?.toLowerCase();
           this.handleConditionalValidation();
           this.patchForm(response?.data);
@@ -516,14 +552,14 @@ export class CourseInformationComponent {
     this.manageCourseSummaryArrayLength();
     let courseType;
     courseType = this.courseTypes.find(
-      (courseType) => courseType.value == data?.courseType
+      (courseType) => courseType.value == data?.courseType,
     );
 
     this.formGroup.patchValue({
       courseTitle: data?.title,
       courseUrl: data?.courseUrl,
       courseCategory: this.categoryList.find(
-        (category) => category.id == data?.categoryId
+        (category) => category.id == data?.categoryId,
       ),
       courseType:
         courseType?.value != this.courseType.PREMIUM
@@ -540,6 +576,9 @@ export class CourseInformationComponent {
       courseProgress: data?.courseProgress,
       certificateEnabled: data?.certificateEnabled,
     });
+    this.pricingLocked = Boolean(data?.pricingLocked);
+    this.premiumConversionUsed = Boolean(data?.premiumConversionUsed);
+    this.courseStatus = data?.courseStatus;
 
     Object.keys(this.formGroup.controls).forEach((controlName) => {
       const control = this.formGroup.get(controlName);
@@ -684,7 +723,7 @@ export class CourseInformationComponent {
       });
     } else {
       this._messageService.error(
-        'Please select a valid image file (jpg, jpeg, gif, png).'
+        'Please select a valid image file (jpg, jpeg, gif, png).',
       );
     }
     return null;
@@ -704,7 +743,7 @@ export class CourseInformationComponent {
           this.courseId,
           false,
           null,
-          this.selectedContentType
+          this.selectedContentType,
         )
         .subscribe({
           next: (response: any) => {
@@ -753,7 +792,7 @@ export class CourseInformationComponent {
           this.courseId,
           false,
           null,
-          this.selectedContentType
+          this.selectedContentType,
         )
         ?.subscribe({
           next: (response: any) => {
@@ -840,9 +879,15 @@ export class CourseInformationComponent {
   }
 
   courseTitleExist() {
-    const courseTitleControl = this.formGroup.get('courseTitle').value;
+    const courseTitleControl = this.formGroup.get('courseTitle').value ?? '';
     if (courseTitleControl) {
       const processedTitle = this.processInput(courseTitleControl);
+      if (processedTitle !== courseTitleControl) {
+        this.courseTitleFormatError = true;
+        this.formGroup.get('courseTitle').markAsTouched();
+      } else {
+        this.courseTitleFormatError = false;
+      }
       this.formGroup.get('courseTitle').setValue(processedTitle);
     }
     const title = this.formGroup.get('courseTitle').value.trim();
@@ -905,7 +950,7 @@ export class CourseInformationComponent {
     return (control: AbstractControl): ValidationErrors | null => {
       const trimmedValue = control.value?.trim();
       const length = trimmedValue ? trimmedValue.length : 0;
-  
+
       if (length < min) {
         return { minLength: { requiredLength: min, actualLength: length } };
       }
@@ -916,9 +961,72 @@ export class CourseInformationComponent {
     };
   }
 
+  alphanumericTitleValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (value == null || value === '') {
+        return null;
+      }
+      if (/[^a-zA-Z0-9 ]/.test(value)) {
+        return { alphanumericOnly: true };
+      }
+      return null;
+    };
+  }
+
+  sanitizeCourseTitle(value: string): string {
+    return value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, ' ');
+  }
+
   processInput(input: string): string {
-    // return input.replace(/\s+/g, ' ').replace(/-/g, '');
-    return input.replace(/\s+/g, ' ');
+    return this.sanitizeCourseTitle(input);
+  }
+
+  preventCourseTitleKeydown(event: KeyboardEvent): void {
+    if (event.ctrlKey || event.metaKey || event.altKey) {
+      return;
+    }
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+    ];
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+    if (event.key.length === 1 && !/^[a-zA-Z0-9 ]$/.test(event.key)) {
+      event.preventDefault();
+      this.courseTitleFormatError = true;
+      this.formGroup.get('courseTitle')?.markAsTouched();
+    }
+  }
+
+  preventCourseTitleOnPaste(event: ClipboardEvent): void {
+    const pastedText = event.clipboardData?.getData('text') ?? '';
+    const sanitized = this.sanitizeCourseTitle(pastedText);
+    if (pastedText === sanitized) {
+      return;
+    }
+    this.courseTitleFormatError = true;
+    this.formGroup.get('courseTitle')?.markAsTouched();
+    event.preventDefault();
+    const input = event.target as HTMLInputElement;
+    const start = input.selectionStart ?? 0;
+    const end = input.selectionEnd ?? 0;
+    const current = this.formGroup.get('courseTitle')?.value ?? '';
+    const next = this.sanitizeCourseTitle(
+      current.slice(0, start) + sanitized + current.slice(end),
+    );
+    this.formGroup.get('courseTitle')?.setValue(next);
+    this.courseTitleExist();
   }
 
   preventSpecialChar(event: KeyboardEvent) {
@@ -990,18 +1098,20 @@ export class CourseInformationComponent {
 
   copyUrl(): void {
     // Get the input element and the static URL
-    const inputElement = document.getElementById('url-input') as HTMLInputElement;
-    const textToCopy = this.applicationCourseDetailsUrl + inputElement.value ;
-    
+    const inputElement = document.getElementById(
+      'url-input',
+    ) as HTMLInputElement;
+    const textToCopy = this.applicationCourseDetailsUrl + inputElement.value;
+
     // Create a temporary textarea element to copy text
     const tempTextArea = document.createElement('textarea');
     tempTextArea.value = textToCopy;
-    
+
     // Append the textarea to the document, select its content, and copy it
     document.body.appendChild(tempTextArea);
     tempTextArea.select();
     tempTextArea.setSelectionRange(0, 99999); // For mobile devices
-    
+
     // Execute the copy command
     try {
       document.execCommand('copy');
@@ -1022,22 +1132,44 @@ export class CourseInformationComponent {
   }
 
   get filteredCourseTypes() {
-    return this.courseTypes.filter(ct => ct.name !== 'Free' && ct.name !== 'All');
+    return this.courseTypes.filter(
+      (ct) => ct.name !== 'Free' && ct.name !== 'All',
+    );
   }
 
-  premiumCourseAvailable(){
-    this._courseService.premiumCourseAvailable().subscribe({
-      next: (response: any) => {
-        if (response?.status === 200) {
-            this.isAvailablePremium = response?.data?.isAvailablePremium;
-        }
-      },
-      error: (error) => {
-      },
-    });
+  /** Type is locked once a premium course is published; drafts stay editable. */
+  get isCourseTypeLocked(): boolean {
+    return (
+      Boolean(this.pricingLocked) && this.courseStatus !== CourseStatus.DRAFT
+    );
   }
 
-  openSubscriptionPlan(type: { name: string; value: string; disabled: boolean; }): void {
+  // this._courseService.premiumCourseAvailable().subscribe({
+  //   next: (response: any) => {
+  //     if (response?.status === 200) {
+  //       this.isAvailablePremium = response?.data?.isAvailablePremium;
+  //     }
+  //   },
+  //   error: (error) => {},
+  // });
+
+  premiumCourseAvailable() {
+    const planType: string | undefined = this._cacheService.getJsonData(
+      'loggedInUserDetails',
+    )?.subscriptionPlanType;
+
+    this.isAvailablePremium =
+      !!planType &&
+      [SubscriptionPlanType.PREMIUM, SubscriptionPlanType.ULTIMATE].includes(
+        planType.toUpperCase() as SubscriptionPlanType,
+      );
+  }
+
+  openSubscriptionPlan(type: {
+    name: string;
+    value: string;
+    disabled: boolean;
+  }): void {
     if (type.value === 'PREMIUM_COURSE' && !this.isAvailablePremium) {
       const modal = this._modal.create({
         nzContent: SubscriptionPlanComponent,
@@ -1052,30 +1184,29 @@ export class CourseInformationComponent {
         // nzWidth: this.fullWidth ? '80%' : '100%',
         nzWidth: '80%',
       });
-      modal.afterClose?.subscribe((result) => {
-        // this.subscriptionModalOpened = false;
+      modal.afterClose?.subscribe(() => {
+        this.premiumCourseAvailable();
       });
     }
   }
-  
 
-    preventEmoji(event: KeyboardEvent) {
-      const key = event.key;
-      const emojiRegex = /\p{Extended_Pictographic}/u;
-    
-      if (emojiRegex.test(key)) {
-        event.preventDefault();
-      }
+  preventEmoji(event: KeyboardEvent) {
+    const key = event.key;
+    const emojiRegex = /\p{Extended_Pictographic}/u;
+
+    if (emojiRegex.test(key)) {
+      event.preventDefault();
     }
-    
-    preventEmojiOnPaste(event: ClipboardEvent) {
-      const pastedText = event.clipboardData?.getData('text') || '';
-      const emojiRegex = /\p{Extended_Pictographic}/u;
-    
-      if (emojiRegex.test(pastedText)) {
-        event.preventDefault();
-      }
+  }
+
+  preventEmojiOnPaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const emojiRegex = /\p{Extended_Pictographic}/u;
+
+    if (emojiRegex.test(pastedText)) {
+      event.preventDefault();
     }
+  }
 
   validateAndContinue(): void {
     this.markAllFieldsAsTouched();
@@ -1092,33 +1223,44 @@ export class CourseInformationComponent {
     }
   }
 
-private validateCourseSummaries(): void {
-  // Mark all course summary controls as touched
-  this.courseSummaryArray.controls.forEach((control, index) => {
-    const summaryControl = control.get('courseSummaryInfo');
-    if (summaryControl) {
-      summaryControl.markAsTouched();
-    }
-  });
-  
-  // Update the array length calculation
-  this.manageCourseSummaryArrayLength();
-}
+  private validateCourseSummaries(): void {
+    // Mark all course summary controls as touched
+    this.courseSummaryArray.controls.forEach((control, index) => {
+      const summaryControl = control.get('courseSummaryInfo');
+      if (summaryControl) {
+        summaryControl.markAsTouched();
+      }
+    });
 
-private validateTags(): void {
-  // Mark tags array as touched
-  this.courseTagArray.markAsTouched();
-}
+    // Update the array length calculation
+    this.manageCourseSummaryArrayLength();
+  }
+
+  private validateTags(): void {
+    // Mark tags array as touched
+    this.courseTagArray.markAsTouched();
+  }
 
   private isFormValid(): boolean {
     let isValid = this.formGroup.valid;
     // if the content type is course then check for promotional video url
-    if(this.selectedContentType === this.courseContentType.COURSE) {
-      if(this.formGroup.invalid) {
+    if (this.selectedContentType === this.courseContentType.COURSE) {
+      if (this.formGroup.invalid) {
         isValid = false;
-        const videoRequiredError = this.formGroup.errors?.['previewVideoRequired'] ? 'Preview video is required' : null;
-        const thumbnailRequiredError = this.formGroup.get('thumbnailPath').invalid ? 'Thumbnail is required' : null;
-        this._messageService.error(videoRequiredError || thumbnailRequiredError || 'Required fields are missing or invalid.');
+        const videoRequiredError = this.formGroup.errors?.[
+          'previewVideoRequired'
+        ]
+          ? 'Preview video is required'
+          : null;
+        const thumbnailRequiredError = this.formGroup.get('thumbnailPath')
+          .invalid
+          ? 'Thumbnail is required'
+          : null;
+        this._messageService.error(
+          videoRequiredError ||
+            thumbnailRequiredError ||
+            'Required fields are missing or invalid.',
+        );
       } else {
         isValid = true;
       }
@@ -1128,99 +1270,149 @@ private validateTags(): void {
   }
 
   private markAllFieldsAsTouched(): void {
-  Object.keys(this.formGroup.controls).forEach(key => {
-    const control = this.formGroup.get(key);
-    if (control) {
-      control.markAsTouched();
-      
-      if (control instanceof FormArray) {
+    Object.keys(this.formGroup.controls).forEach((key) => {
+      const control = this.formGroup.get(key);
+      if (control) {
         control.markAsTouched();
-        control.controls.forEach((arrayControl: AbstractControl) => {
-          arrayControl.markAsTouched();
-          if (arrayControl instanceof FormGroup) {
-            Object.keys(arrayControl.controls).forEach(nestedKey => {
-              arrayControl.get(nestedKey)?.markAsTouched();
-            });
-          }
-        });
+
+        if (control instanceof FormArray) {
+          control.markAsTouched();
+          control.controls.forEach((arrayControl: AbstractControl) => {
+            arrayControl.markAsTouched();
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach((nestedKey) => {
+                arrayControl.get(nestedKey)?.markAsTouched();
+              });
+            }
+          });
+        }
       }
-    }
-  });
-}
+    });
+  }
 
   private scrollToFirstInvalidField(): void {
     setTimeout(() => {
       const firstInvalidControl = this.findFirstInvalidControl();
       if (firstInvalidControl) {
-        firstInvalidControl.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
+        firstInvalidControl.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
         });
-        
-        if (firstInvalidControl.tagName === 'INPUT' || 
-            firstInvalidControl.tagName === 'SELECT' ||
-            firstInvalidControl.tagName === 'TEXTAREA') {
+
+        if (
+          firstInvalidControl.tagName === 'INPUT' ||
+          firstInvalidControl.tagName === 'SELECT' ||
+          firstInvalidControl.tagName === 'TEXTAREA'
+        ) {
           (firstInvalidControl as HTMLElement).focus();
         }
       } else {
-        this.formElement?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.formElement?.nativeElement?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
       }
     }, 100);
   }
 
   private findFirstInvalidControl(): HTMLElement | null {
-  const rootElement = this.formElement?.nativeElement || document;
-  
-  // First, check for course summaries validation
-  if (this.courseSummaryArrayLength === 0) {
-    const summaryElement = rootElement.querySelector('[formArrayName="courseSummaries"]') as HTMLElement;
-    if (summaryElement) return summaryElement;
-  }
+    const rootElement = this.formElement?.nativeElement || document;
 
-  // Check for tags validation
-  if (this.courseTagArray.controls.length === 0) {
-    const tagsElement = rootElement.querySelector('[formControlName="tags"]') as HTMLElement;
-    if (tagsElement) return tagsElement;
-  }
-
-  // Rest of your existing validation checks...
-  const validationChecks = [
-    { condition: this.formGroup.get('titleExist').value, selector: '[formControlName="courseTitle"]' },
-    { condition: this.formGroup.get('urlExist').value, selector: '[formControlName="courseUrl"]' },
-    { condition: this.courseTagArray.controls.length === 0, selector: '[formControlName="tags"]' },
-    { condition: this.courseSummaryArrayLength === 0, selector: '[formArrayName="courseSummaries"]' },
-    { condition: this.formGroup.get('courseTitle').invalid, selector: '[formControlName="courseTitle"]' },
-    { condition: this.formGroup.get('courseType').invalid, selector: '[formControlName="courseType"]' },
-    { condition: this.formGroup.get('courseLevel').invalid, selector: '[formControlName="courseLevel"]' },
-    { condition: this.formGroup.get('courseCategory').invalid, selector: '[formControlName="courseCategory"]' },
-    { condition: this.formGroup.get('courseHeadline').invalid, selector: '[formControlName="courseHeadline"]' },
-    { condition: this.formGroup.get('description').invalid, selector: '[formControlName="description"]' },
-    { condition: this.formGroup.get('prerequisite').invalid, selector: '[formControlName="prerequisite"]' },
-    { condition: this.formGroup.get('courseUrl').invalid, selector: '[formControlName="courseUrl"]' },
-    { condition: this.formGroup.get('price').invalid, selector: '[formControlName="price"]' }
-  ];
-
-  for (const check of validationChecks) {
-    if (check.condition) {
-      const element = rootElement.querySelector(check.selector) as HTMLElement;
-      if (element) return element;
+    // First, check for course summaries validation
+    if (this.courseSummaryArrayLength === 0) {
+      const summaryElement = rootElement.querySelector(
+        '[formArrayName="courseSummaries"]',
+      ) as HTMLElement;
+      if (summaryElement) return summaryElement;
     }
-  }
 
-  // Check for touched and invalid form array controls
-  const errorElements = rootElement.querySelectorAll(
-    '.ng-invalid.ng-touched, .ant-form-item-has-error'
-  );
-  
-  for (let i = 0; i < errorElements.length; i++) {
-    const element = errorElements[i] as HTMLElement;
-    if (this.isElementVisible(element)) {
-      return element;
+    // Check for tags validation
+    if (this.courseTagArray.controls.length === 0) {
+      const tagsElement = rootElement.querySelector(
+        '[formControlName="tags"]',
+      ) as HTMLElement;
+      if (tagsElement) return tagsElement;
     }
-  }
 
-  return null;
-}
+    // Rest of your existing validation checks...
+    const validationChecks = [
+      {
+        condition: this.formGroup.get('titleExist').value,
+        selector: '[formControlName="courseTitle"]',
+      },
+      {
+        condition: this.formGroup.get('urlExist').value,
+        selector: '[formControlName="courseUrl"]',
+      },
+      {
+        condition: this.courseTagArray.controls.length === 0,
+        selector: '[formControlName="tags"]',
+      },
+      {
+        condition: this.courseSummaryArrayLength === 0,
+        selector: '[formArrayName="courseSummaries"]',
+      },
+      {
+        condition: this.formGroup.get('courseTitle').invalid,
+        selector: '[formControlName="courseTitle"]',
+      },
+      {
+        condition: this.formGroup.get('courseType').invalid,
+        selector: '[formControlName="courseType"]',
+      },
+      {
+        condition: this.formGroup.get('courseLevel').invalid,
+        selector: '[formControlName="courseLevel"]',
+      },
+      {
+        condition: this.formGroup.get('courseCategory').invalid,
+        selector: '[formControlName="courseCategory"]',
+      },
+      {
+        condition: this.formGroup.get('courseHeadline').invalid,
+        selector: '[formControlName="courseHeadline"]',
+      },
+      {
+        condition: this.formGroup.get('description').invalid,
+        selector: '[formControlName="description"]',
+      },
+      {
+        condition: this.formGroup.get('prerequisite').invalid,
+        selector: '[formControlName="prerequisite"]',
+      },
+      {
+        condition: this.formGroup.get('courseUrl').invalid,
+        selector: '[formControlName="courseUrl"]',
+      },
+      {
+        condition: this.formGroup.get('price').invalid,
+        selector: '[formControlName="price"]',
+      },
+    ];
+
+    for (const check of validationChecks) {
+      if (check.condition) {
+        const element = rootElement.querySelector(
+          check.selector,
+        ) as HTMLElement;
+        if (element) return element;
+      }
+    }
+
+    // Check for touched and invalid form array controls
+    const errorElements = rootElement.querySelectorAll(
+      '.ng-invalid.ng-touched, .ant-form-item-has-error',
+    );
+
+    for (let i = 0; i < errorElements.length; i++) {
+      const element = errorElements[i] as HTMLElement;
+      if (this.isElementVisible(element)) {
+        return element;
+      }
+    }
+
+    return null;
+  }
 
   private isElementVisible(element: HTMLElement): boolean {
     if (!element) return false;
@@ -1229,8 +1421,13 @@ private validateTags(): void {
   }
 
   showValidationErrors(): void {
+    if (this.formGroup?.invalid) {
+      this._messageService.error('Please provide required fields ');
+      return;
+    }
+
     const errors = [];
-    
+
     if (this.formGroup.get('titleExist').value) {
       errors.push('Course title already exists');
     }
@@ -1243,7 +1440,11 @@ private validateTags(): void {
     if (this.courseSummaryArrayLength === 0) {
       errors.push('At least one course summary is required');
     }
-    if (this.formGroup.get('courseTitle').invalid) {
+    if (this.formGroup.get('courseTitle').errors?.['alphanumericOnly']) {
+      errors.push(
+        'Course title can only contain English letters, numbers, and spaces',
+      );
+    } else if (this.formGroup.get('courseTitle').invalid) {
       errors.push('Course title is required (10-60 characters)');
     }
     if (this.formGroup.get('courseType').invalid) {
@@ -1251,7 +1452,9 @@ private validateTags(): void {
     }
 
     if (errors.length > 0) {
-      this._messageService.error('Please fix the following errors: ' + errors.join(', '));
+      this._messageService.error(
+        'Please fix the following errors: ' + errors.join(', '),
+      );
     }
   }
 }

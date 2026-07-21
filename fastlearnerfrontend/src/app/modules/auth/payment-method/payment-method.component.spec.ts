@@ -318,9 +318,13 @@ describe('PaymentMethodComponent', () => {
       of(mockResponse)
     );
 
-    component.ngOnInit();
+    component.getSavedPaymentProfile();
 
-    expect(component.paymentProfile).toEqual(mockResponse.data);
+    expect(component.paymentProfile).toEqual({
+      ...mockResponse.data,
+      date: '12/25',
+      cvv: '',
+    });
     expect(component.paymentProfile.date).toBe('12/25');
   });
 

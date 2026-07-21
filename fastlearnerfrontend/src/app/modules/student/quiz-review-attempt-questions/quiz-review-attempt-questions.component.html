@@ -9,7 +9,13 @@
     <div class="quiz-title-cont">
       <h2 class="quiz-title">{{ quizData?.quiz?.title }}</h2>
       <p class="quiz-subtitle">Result</p>
-      <button *ngIf="quizData.quiz.generateAIReport" class="viewReport" nz-button nzType="primary" (click)="showReportPreview(quizData?.html)">
+      <button
+        *ngIf="quizData.quiz.generateAIReport"
+        class="viewReport"
+        nz-button
+        nzType="primary"
+        (click)="showReportPreview(quizData?.html)"
+      >
         Get Detailed Report
       </button>
     </div>
@@ -24,24 +30,41 @@
         <div class="stat-item">
           <p><strong>Attempted Questions</strong></p>
           <p>
-            {{ getAttemptedQuestionsCount(quizData?.quiz.quizQuestions) }} out of {{ quizData?.totalQuestion }}            
+            {{ getAttemptedQuestionsCount(quizData?.quiz.quizQuestions) }} out
+            of {{ quizData?.totalQuestion }}
           </p>
         </div>
       </div>
 
       <div *ngIf="!isSurvey" class="quiz-filters">
-        <button nz-button class="filter-btn" [ngClass]="{ active: selectedFilter === 'all' }" (click)="filterResults('all')">
+        <button
+          nz-button
+          class="filter-btn"
+          [ngClass]="{ active: selectedFilter === 'all' }"
+          (click)="filterResults('all')"
+        >
           All
         </button>
-        <button nz-button class="filter-btn" [ngClass]="{ active: selectedFilter === 'correct' }" (click)="filterResults('correct')">
-         
-        </button>
-        <button nz-button class="filter-btn" [ngClass]="{ active: selectedFilter === 'incorrect' }" (click)="filterResults('incorrect')">
-      
-        </button>
+        <button
+          nz-button
+          class="filter-btn"
+          [ngClass]="{ active: selectedFilter === 'correct' }"
+          (click)="filterResults('correct')"
+        ></button>
+        <button
+          nz-button
+          class="filter-btn"
+          [ngClass]="{ active: selectedFilter === 'incorrect' }"
+          (click)="filterResults('incorrect')"
+        ></button>
       </div>
 
-      <button *ngIf="isAllowedToRetake" class="retake-btn" nz-button (click)="retakeQuiz()">
+      <button
+        *ngIf="isAllowedToRetake"
+        class="retake-btn"
+        nz-button
+        (click)="retakeQuiz()"
+      >
         Retake Quiz
       </button>
     </div>
@@ -49,25 +72,82 @@
 </div>
 
 <div class="quiz-review-container">
-  <div *ngIf="filteredQuestions?.length > 0; else noData" class="question-scroller">
+  <div *ngIf="quizData?.topicComprehensive" class="quiz-comprehension">
+    <p class="comprehension-text">
+      {{ quizData.topicComprehensive }}
+    </p>
+  </div>
+
+  <div
+    *ngIf="filteredQuestions?.length > 0; else noData"
+    class="question-scroller"
+  >
     <div
-    *ngFor="let question of filteredQuestions; let i = index"
-    class="question-card mr-1"
+      *ngFor="let question of filteredQuestions; let i = index"
+      class="question-card mr-1"
     >
       <h3 class="question-head font-16">
         Question {{ i + 1 }}:
         <span
-          [class.correct-text]="question?.correct"
-          [class.incorrect-text]="!question?.correct"
+          [class.correct-text]="isQuestionCorrect(question)"
+          [class.incorrect-text]="!isQuestionCorrect(question)"
           *ngIf="!isSurvey"
         >
-          {{ question?.correct ? "Correct" : "Incorrect" }}
+          {{ isQuestionCorrect(question) ? "Correct" : "Incorrect" }}
         </span>
       </h3>
 
       <h3 class="question-text font-16" style="color: black">
         {{ question.questionText }}
       </h3>
+
+      <div
+        *ngIf="question.questionImageUrl && isImage(question.questionImageUrl)"
+        class="review-question-image"
+      >
+        <img [src]="question.questionImageUrl" alt="Question image" />
+      </div>
+
+      <div
+        *ngIf="question.questionImageUrl && isAudio(question.questionImageUrl)"
+        class="audio-preview"
+      >
+        <div class="audio-container">
+          <div class="actions">
+            <button class="play-btn" (click)="toggleAudio(question)">
+              <span *ngIf="!question.isPlaying">
+                <img loading="lazy" src="./assets/icons/play.svg" alt="play" />
+              </span>
+              <span *ngIf="question.isPlaying">
+                <img
+                  loading="lazy"
+                  src="./assets/icons/pause.svg"
+                  alt="pause"
+                />
+              </span>
+            </button>
+            <span class="duration">
+              {{ question.currentTime || "0:00" }}
+            </span>
+            <div class="progress-wrapper" (click)="seekAudio($event, question)">
+              <div
+                class="progress-bar"
+                [style.width.%]="question.progress || 0"
+              ></div>
+            </div>
+            <span class="duration">
+              {{ question.duration || "0:00" }}
+            </span>
+          </div>
+        </div>
+        <audio
+          #audioPlayer
+          [src]="question.questionImageUrl"
+          (timeupdate)="updateProgress(audioPlayer, question)"
+          (loadedmetadata)="setDuration(audioPlayer, question)"
+          (ended)="audioEnded(question)"
+        ></audio>
+      </div>
 
       <ng-container *ngFor="let option of question?.quizQuestionAnwsers">
         <!-- <pre>{{ option | json }}</pre> -->
@@ -80,29 +160,35 @@
               option?.studentAnswer != null)
           "
           class="answer-text border-radius mb-1"
-          [class.display-flex]="!question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer"
-          [class.align-items-center]="!question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer"
-          
         >
           <p
             class="margin-0 font-bold font-16"
             [ngClass]="{
               'correct-text':
-                (question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer) ||
-                (!question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer),
-              'incorrect-text': question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer
+                (question.selectedAnswerIds?.includes(option.id) &&
+                  option?.correctAnswer) ||
+                (!question.selectedAnswerIds?.includes(option.id) &&
+                  option?.correctAnswer),
+              'incorrect-text':
+                question.selectedAnswerIds?.includes(option.id) &&
+                !option?.correctAnswer,
             }"
           >
             {{
-              question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer && !isSurvey
+              question.selectedAnswerIds?.includes(option.id) &&
+              option?.correctAnswer &&
+              !isSurvey
                 ? option?.questionType == questionType.TEXT_FIELD
                   ? textBasedCorrectAnswer
                   : correctAnswerSelectedText
-                : question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer
-                ? incorrectAnswerSelectedText
-                : !question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer && !isSurvey
-                ? nonSelectedCorrecAnswer
-                : null
+                : question.selectedAnswerIds?.includes(option.id) &&
+                    !option?.correctAnswer
+                  ? incorrectAnswerSelectedText
+                  : !question.selectedAnswerIds?.includes(option.id) &&
+                      option?.correctAnswer &&
+                      !isSurvey
+                    ? nonSelectedCorrecAnswer
+                    : null
             }}
           </p>
 
@@ -114,7 +200,10 @@
               "
             >
               <span
-                *ngIf="question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer"
+                *ngIf="
+                  question.selectedAnswerIds?.includes(option.id) &&
+                  !option?.correctAnswer
+                "
                 class="font-14"
                 style="margin-top: 7px"
                 nz-icon
@@ -122,7 +211,10 @@
                 nzTheme="fill"
               ></span>
               <span
-                *ngIf="question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer"
+                *ngIf="
+                  question.selectedAnswerIds?.includes(option.id) &&
+                  option?.correctAnswer
+                "
                 class="font-14"
                 style="margin-top: 7px"
                 nz-icon
@@ -131,8 +223,10 @@
               ></span>
               <span
                 *ngIf="
-                  (!question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer) ||
-                  (!question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer)
+                  (!question.selectedAnswerIds?.includes(option.id) &&
+                    !option?.correctAnswer) ||
+                  (!question.selectedAnswerIds?.includes(option.id) &&
+                    option?.correctAnswer)
                 "
                 class="normal-circle"
               >
@@ -143,7 +237,10 @@
               *ngIf="option?.questionType == questionType?.MULTIPLE_CHOICE"
             >
               <span
-                *ngIf="question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer"
+                *ngIf="
+                  question.selectedAnswerIds?.includes(option.id) &&
+                  !option?.correctAnswer
+                "
                 class="font-14"
                 style="margin-top: 7px"
                 nz-icon
@@ -151,7 +248,10 @@
                 nzTheme="fill"
               ></span>
               <span
-                *ngIf="question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer"
+                *ngIf="
+                  question.selectedAnswerIds?.includes(option.id) &&
+                  option?.correctAnswer
+                "
                 class="font-14"
                 style="margin-top: 7px"
                 nz-icon
@@ -160,8 +260,10 @@
               ></span>
               <span
                 *ngIf="
-                  (!question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer) ||
-                  (!question.selectedAnswerIds?.includes(option.id) && option?.correctAnswer)
+                  (!question.selectedAnswerIds?.includes(option.id) &&
+                    !option?.correctAnswer) ||
+                  (!question.selectedAnswerIds?.includes(option.id) &&
+                    option?.correctAnswer)
                 "
                 class="normal-square"
                 style="margin-top: 7px"
@@ -177,16 +279,25 @@
               }}
             </p>
           </div>
+
+          <div *ngIf="option.answerImageUrl" class="review-answer-image">
+            <img [src]="option.answerImageUrl" alt="Answer image" />
+          </div>
         </div>
 
         <div
           *ngIf="
-            option?.questionType == questionType.TEXT_FIELD &&
-            !option?.correct
+            option?.questionType == questionType.TEXT_FIELD && !option?.correct
           "
           class="correct answer-text border-radius mb-1"
-          [class.display-flex]="!question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer"
-          [class.align-items-center]="!question.selectedAnswerIds?.includes(option.id) && !option?.correctAnswer"
+          [class.display-flex]="
+            !question.selectedAnswerIds?.includes(option.id) &&
+            !option?.correctAnswer
+          "
+          [class.align-items-center]="
+            !question.selectedAnswerIds?.includes(option.id) &&
+            !option?.correctAnswer
+          "
           style="display: block"
         >
           <p class="correct-text margin-0 font-bold font-16">

@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="rate">
+        <h4>Rate this Section</h4>
+        <nz-rate class="rating-star" [(ngModel)]="sectionReview.value" [nzCharacter]="characterIcon"></nz-rate>
+        <ng-template #characterIcon let-index>
+            <ng-container>
+              <span class="star-icon" nz-icon nzType="star" nzTheme="fill"></span>
+            </ng-container>
+          </ng-template>
+        <!-- <textarea name="review" [(ngModel)]="review.comment" rows="4" nz-input></textarea> -->
+        <button nz-button (click)="submitReview()" class="signup-form-button" [nzType]="'primary'">Submit</button>
+    </div>
+</div>

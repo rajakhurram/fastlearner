@@ -8,17 +8,40 @@
     </title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preload" rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Performance: preconnect to critical third-party origins -->
+    <link rel="preconnect" href="https://jstest.authorize.net" crossorigin />
+
+    <link rel="preload" href="favicon.ico" as="image" type="image/x-icon" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <link rel="preload" href="assets/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin />
+
+    <!-- Performance: load Font Awesome without blocking render -->
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+      />
+    </noscript>
+
     <meta
       name="description"
       content="Stay engaged stay ahead. Master concepts with human expertise and AI assistance on our innovative online learning platform for students and business individuals"
     />
 
-    <script type="text/javascript" src="https://jstest.authorize.net/v1/Accept.js"></script>
+    <!-- Performance: defer payment script so it doesn't block initial render -->
+    <script
+      type="text/javascript"
+      src="https://jstest.authorize.net/v1/Accept.js"
+      defer
+    ></script>
   </head>
   <body>
 

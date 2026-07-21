@@ -3,6 +3,7 @@ import { CourseService } from 'src/app/core/services/course.service';
 import { Router } from '@angular/router';
 import { HttpConstants } from 'src/app/core/constants/http.constants';
 import { Component, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class CoPilotComponent implements AfterViewChecked {
   _httpConstants: HttpConstants = new HttpConstants();
   @ViewChild('chatContainer') public chatContainer!: ElementRef;
 shouldScroll: boolean = false;
+  private sessionId: string | null = null;
   constructor(
     private http: HttpClient,
     private _router: Router,
@@ -41,26 +43,38 @@ shouldScroll: boolean = false;
     this.message = '';
   
     const body = {
-      question: userMessage
+      question: userMessage,
+      session_id: this.sessionId ?? undefined,
     };
   
-    this._courseService.sendCoPilotMessage(body).subscribe({
+    this._courseService.sendCoPilotMessage(body).pipe(
+      finalize(() => {
+        this.showSpinner = false;
+        this.shouldScroll = true;
+      })
+    ).subscribe({
       next: (response: any) => {
-        const answerText = response?.answer?.answer || 'No answer found.';
+        // Backward compatible parsing:
+        // - New API: { answer: string, session_id: string }
+        // - Old proxy: { answer: { answer: string, entities: [] } }
+        const answerText =
+          response?.answer?.answer ??
+          (typeof response?.answer === 'string' ? response.answer : null) ??
+          'No answer found.';
+
         const rawEntities = response?.answer?.entities || [];
+        this.sessionId = response?.session_id ?? this.sessionId;
 const groupedEntities = this.processEntities(rawEntities);
 
 this.chatHistory.push({ sender: 'bot', text: answerText, entities: groupedEntities });
       },
       error: (err) => {
-        this.chatHistory.push({ sender: 'bot', text: 'Sorry, something went wrong.' });
+        this.chatHistory.push({
+          sender: 'bot',
+          text: 'Sorry, something went wrong. Please check your connection and try again.',
+        });
         console.error(err);
       },
-      complete: () => {
-        this.showSpinner = false;
-            this.shouldScroll = true;
-
-      }
     });
   }
   
@@ -126,8 +140,9 @@ this.chatHistory.push({ sender: 'bot', text: answerText, entities: groupedEntiti
     });
   }
 
-  const instructors = entities.filter(e => e.type === 'instructor');
-
+  const instructors = entities
+    .filter(e => e.type === 'instructor')
+    .map(({ contact, ...instructor }) => instructor);
 
   return [...groupedCourses, ...instructors];
 }

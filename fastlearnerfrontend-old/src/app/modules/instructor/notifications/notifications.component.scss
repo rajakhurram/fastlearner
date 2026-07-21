@@ -1,0 +1,164 @@
+.notification-header h3 {
+  font-weight: 600;
+}
+
+.container {
+  // padding: 10px;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 18px;
+}
+
+.notification-box {
+  display: flex;
+  justify-content: space-between;
+  // padding-left: 18px;
+  padding-bottom: 15px;
+}
+
+.notification-text {
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+.notification-content {
+  display: flex;
+}
+
+.side-nav-button1 {
+  background-color: #262261;
+  border-color: #212189;
+  color: white;
+  height: 50px;
+  width: 50px;
+  margin-top: 18px;
+  margin-left: 12px;
+}
+
+.red {
+  color: red !important;
+  cursor: pointer;
+}
+
+.time {
+  color: #707070;
+  font-weight: 400;
+}
+
+.back-btn {
+  border: #fe4a55 1px solid;
+  border-radius: 4px;
+  font-size: 18px;
+  color: #fe4a55;
+  height: 50px;
+  margin-right: 20px;
+  // width: 20%;
+}
+
+.back-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.clear-btn {
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  font-size: 18px;
+  height: 50px;
+}
+
+.clear-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.show-more-button {
+  // width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  border-radius: 4px;
+  color: #fe4a55;
+  height: 50px;
+}
+
+.show-more-button:hover {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+  height: 50px;
+}
+
+.unseen-notification {
+  background-color: #edf6ff !important;
+  cursor: pointer;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #c8c8c9;
+}
+
+.notification-container {
+  max-height: 601px;
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 500px) {
+  .buttons {
+    flex-direction: column;
+  }
+
+  .back-btn {
+    margin-right: 0px;
+    margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .notification-box {
+    padding: 0px;
+  }
+
+  .buttons {
+    padding: 0px;
+  }
+
+  .clear-btn {
+    font-size: 14px !important;
+  }
+  .back-btn {
+    font-size: 14px !important;
+    margin-top: 15px;
+  }
+
+  .notification-text {
+    margin-bottom: 12px;
+  }
+}
+
+.sidebar-nav-button {
+  margin-top: 18px;
+  margin-left: 12px;
+}
+
+.notification-content-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}

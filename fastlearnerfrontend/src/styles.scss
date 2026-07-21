@@ -3,27 +3,55 @@
 @font-face {
   font-family: "Poppins-regular";
   src: url("/assets/fonts/Poppins-Regular.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Poppins-bold";
   src: url("/assets/fonts/Poppins-Bold.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Poppins-semibold";
   src: url("/assets/fonts/Poppins-SemiBold.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Poppins-medium";
   src: url("/assets/fonts/Poppins-Medium.ttf") format("truetype");
+  font-display: swap;
 }
 
 :root {
   --colour1: #fe4a55;
   --colour2: #e2898f;
   --speed: 4s;
+}
+
+.ant-table-body,
+.ant-table-content {
+  &::-webkit-scrollbar {
+    height: 5px !important;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #eee !important;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #212189 !important;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #1a1a6e !important;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #212189 #eee;
 }
 
 .bar {
@@ -33,17 +61,15 @@
   /* Each color will be 10px, multiplied by 2 colors */
   box-shadow: 0px 10px 13px -6px rgba(44, 62, 80, 1);
   background-color: var(--colour2);
-  background-image: repeating-linear-gradient(45deg,
-      transparent,
-      transparent 5px,
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    /* Set the width of each color to 5px */ var(--colour1) 5px,
+    /* Set the width of each color to 5px */ var(--colour1) 10px,
+    /* Set the width of each color to 5px */ var(--colour2) 10px
       /* Set the width of each color to 5px */
-      var(--colour1) 5px,
-      /* Set the width of each color to 5px */
-      var(--colour1) 10px,
-      /* Set the width of each color to 5px */
-      var(--colour2) 10px
-      /* Set the width of each color to 5px */
-    );
+  );
   animation: slide var(--speed) linear infinite;
   will-change: background-position;
 }
@@ -490,7 +516,7 @@ h5 {
   max-height: 170px;
 }
 
-.iti__flag-container.open+input {
+.iti__flag-container.open + input {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
@@ -830,7 +856,7 @@ $border-radii: (
   // 16px
   3xl: 1.5rem,
   // 24px
-  4xl: 2rem // 32px
+  4xl: 2rem, // 32px
 );
 
 // Generate classes dynamically
@@ -873,7 +899,6 @@ button:disabled {
 .border-t {
   border-top: 1px solid #a6a6a6;
 }
-
 
 .selection-none {
   user-select: none;

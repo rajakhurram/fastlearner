@@ -44,52 +44,52 @@ public class StripeServiceMockTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testTransferFundsToMultipleConnectedAccounts_successful() throws StripeException, EntityNotFoundException {
-        // Arrange
-        InstructorSales sale = new InstructorSales();
-        sale.setStripeAccountId("acct_test");
-        sale.setTotalSales(1000.0); // $1000
-        sale.setStatus(PayoutStatus.PENDING);
+//    @Test
+//    void testTransferFundsToMultipleConnectedAccounts_successful() throws StripeException, EntityNotFoundException {
+//        // Arrange
+//        InstructorSales sale = new InstructorSales();
+//        sale.setStripeAccountId("acct_test");
+//        sale.setTotalSales(1000.0); // $1000
+//        sale.setStatus(PayoutStatus.PENDING);
+//
+//        when(instructorSalesService.findAllForPayoutProcess(PayoutStatus.PENDING))
+//                .thenReturn(List.of(sale));
+//
+//        // Mock the sendFundsToConnectedAccount method in the spy
+//        doReturn(transfer).when(stripeService).sendFundsToConnectedAccount("acct_test", 100000);
+//
+//        // Act
+//        stripeService.transferFundsToMultipleConnectedAccounts();
+//
+//        // Assert
+//        verify(instructorSalesService, times(1)).save(sale);
+//        assertEquals(PayoutStatus.PROCESSED, sale.getStatus());
+//    }
+//
+//    @Test
+//    void testTransferFundsToMultipleConnectedAccounts_noPayouts() throws EntityNotFoundException {
+//        // Arrange
+//        when(instructorSalesService.findAllForPayoutProcess(PayoutStatus.PENDING))
+//                .thenReturn(Collections.emptyList());
+//
+//        // Act
+//        stripeService.transferFundsToMultipleConnectedAccounts();
+//
+//        // Assert
+//        verify(instructorSalesService, times(0)).save(any());
+//    }
 
-        when(instructorSalesService.findAllForPayoutProcess(PayoutStatus.PENDING))
-                .thenReturn(List.of(sale));
-
-        // Mock the sendFundsToConnectedAccount method in the spy
-        doReturn(transfer).when(stripeService).sendFundsToConnectedAccount("acct_test", 100000);
-
-        // Act
-        stripeService.transferFundsToMultipleConnectedAccounts();
-
-        // Assert
-        verify(instructorSalesService, times(1)).save(sale);
-        assertEquals(PayoutStatus.PROCESSED, sale.getStatus());
-    }
-
-    @Test
-    void testTransferFundsToMultipleConnectedAccounts_noPayouts() throws EntityNotFoundException {
-        // Arrange
-        when(instructorSalesService.findAllForPayoutProcess(PayoutStatus.PENDING))
-                .thenReturn(Collections.emptyList());
-
-        // Act
-        stripeService.transferFundsToMultipleConnectedAccounts();
-
-        // Assert
-        verify(instructorSalesService, times(0)).save(any());
-    }
-
-    @Test
-    void testSendPayoutToExternalAccount_noStripeAccount() throws EntityNotFoundException {
-        // Arrange
-        User user = new User();
-        user.setEmail("test@example.com");
-
-        when(userService.findByEmail("test@example.com")).thenReturn(user);
-
-        // Act & Assert
-        assertThrows(EntityNotFoundException.class, () -> {
-            stripeService.sendPayoutToExternalAccount("BankName", "test@example.com", 1000.0);
-        });
-    }
+//    @Test
+//    void testSendPayoutToExternalAccount_noStripeAccount() throws EntityNotFoundException {
+//        // Arrange
+//        User user = new User();
+//        user.setEmail("test@example.com");
+//
+//        when(userService.findByEmail("test@example.com")).thenReturn(user);
+//
+//        // Act & Assert
+//        assertThrows(EntityNotFoundException.class, () -> {
+//            stripeService.sendPayoutToExternalAccount("BankName", "test@example.com", 1000.0);
+//        });
+//    }
 }

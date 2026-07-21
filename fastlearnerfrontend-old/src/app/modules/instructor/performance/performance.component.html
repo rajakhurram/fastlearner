@@ -1,0 +1,281 @@
+<div class="container">
+  <div class="performance">
+    <div class="performance-header display-inline-block">
+      <h3>Performance</h3>
+      <!-- <span>The data is based on 30 days</span> -->
+    </div>
+
+    <div class="display-inline-block float-right mt-2 courses-dropdown">
+      <nz-select
+        class="w-100"
+        [(ngModel)]="selectedCourseId"
+        (ngModelChange)="selectCourse()"
+        nzAllowClear="false"
+      >
+        <nz-option
+          nzSize="large"
+          *ngFor="let courseName of courseNames"
+          [nzLabel]="courseName.title"
+          [nzValue]="courseName.id"
+        ></nz-option>
+      </nz-select>
+    </div>
+
+    <div class="sales">
+      <nz-card class="card">
+        <div class="heading">
+          <h3>Active Students</h3>
+        </div>
+        <div class="spline-chart">
+          <p class="vertically-center">No of Students</p>
+          <highcharts-chart
+            *ngIf="chartOptionsLineFlag"
+            [Highcharts]="Highcharts"
+            [options]="chartOptionsLine"
+            class="line mt-2"
+          ></highcharts-chart>
+          <p style="text-align: center; width:100%" *ngIf="activeStudents?.length == 0 && !chartOptionsLineFlag">
+            No Data Found
+          </p>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-row class="justify-row" [nzGutter]="16">
+      <div nz-col nzXs="24" nzMd="12" nzLg="12">
+        <div class="course">
+          <nz-card class="card">
+            <div class="heading">
+              <h3>Course Visits</h3>
+            </div>
+            <div class="bar-chart">
+              <p class="vertically-center">No of Users</p>
+              <highcharts-chart
+                *ngIf="showChartOptionsBar"
+                [Highcharts]="Highcharts"
+                [options]="chartOptionsBar"
+                class="bar"
+              ></highcharts-chart>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+      <div nz-col nzXs="24" nzMd="12" nzLg="12">
+        <div class="rating">
+          <nz-card class="card">
+            <div class="heading">
+              <h3>Rating</h3>
+            </div>
+            <div class="rate-chart">
+              <div class="rating-section">
+                <div>
+                  <h1 class="rating-heading">
+                    {{
+                      ratingsAndReviews?.feedback?.totalReview
+                        | number : "1.1-1" || "0.0"
+                    }}
+                  </h1>
+                </div>
+                <div class="rate-icon">
+                  <nz-rate
+                    [ngModel]="ratingsAndReviews?.feedback?.totalReview"
+                    nzDisabled
+                    nzAllowHalf
+                  ></nz-rate>
+                  <p class="rating-text">
+                    Based on
+                    {{ ratingsAndReviews?.feedback?.totalUsers }} reviews
+                  </p>
+                </div>
+              </div>
+              <div class="progress-bar">
+                <div class="line-padding" nz-row>
+                  <div nz-col nzSpan="2">
+                    <small
+                      >5<span
+                        nz-icon
+                        nzType="star"
+                        nzTheme="fill"
+                        [class.star-color]="
+                          ratingsAndReviews?.feedback?.rating5 > 0
+                        "
+                      ></span
+                    ></small>
+                  </div>
+                  <div nz-col nzSpan="22">
+                    <nz-progress
+                      [nzPercent]="ratingsAndReviews?.feedback?.rating5"
+                      [nzStrokeWidth]="16"
+                      nzStatus="active"
+                      [nzStrokeColor]="'#FFC600'"
+                    ></nz-progress>
+                  </div>
+                </div>
+                <div class="line-padding" nz-row>
+                  <div nz-col nzSpan="2">
+                    <small
+                      >4<span
+                        nz-icon
+                        nzType="star"
+                        nzTheme="fill"
+                        [class.star-color]="
+                          ratingsAndReviews?.feedback?.rating4 > 0
+                        "
+                      ></span
+                    ></small>
+                  </div>
+                  <div nz-col nzSpan="22">
+                    <nz-progress
+                      [nzPercent]="ratingsAndReviews?.feedback?.rating4"
+                      [nzStrokeWidth]="16"
+                      nzStatus="active"
+                      [nzStrokeColor]="'#FFC600'"
+                    ></nz-progress>
+                  </div>
+                </div>
+                <div class="line-padding" nz-row>
+                  <div nz-col nzSpan="2">
+                    <small
+                      >3<span
+                        nz-icon
+                        nzType="star"
+                        nzTheme="fill"
+                        [class.star-color]="
+                          ratingsAndReviews?.feedback?.rating3 > 0
+                        "
+                      ></span
+                    ></small>
+                  </div>
+                  <div nz-col nzSpan="22">
+                    <nz-progress
+                      [nzPercent]="ratingsAndReviews?.feedback?.rating3"
+                      [nzStrokeWidth]="16"
+                      nzStatus="active"
+                      [nzStrokeColor]="'#FFC600'"
+                    ></nz-progress>
+                  </div>
+                </div>
+                <div class="line-padding" nz-row>
+                  <div nz-col nzSpan="2">
+                    <small
+                      >2<span
+                        nz-icon
+                        nzType="star"
+                        nzTheme="fill"
+                        [class.star-color]="
+                          ratingsAndReviews?.feedback?.rating2 > 0
+                        "
+                      ></span
+                    ></small>
+                  </div>
+                  <div nz-col nzSpan="22">
+                    <nz-progress
+                      [nzPercent]="ratingsAndReviews?.feedback?.rating2"
+                      [nzStrokeWidth]="16"
+                      nzStatus="active"
+                      [nzStrokeColor]="'#FFC600'"
+                    ></nz-progress>
+                  </div>
+                </div>
+                <div class="line-padding" nz-row>
+                  <div nz-col nzSpan="2">
+                    <small
+                      >1<span
+                        nz-icon
+                        nzType="star"
+                        nzTheme="fill"
+                        [class.star-color]="
+                          ratingsAndReviews?.feedback?.rating1 > 0
+                        "
+                      ></span
+                    ></small>
+                  </div>
+                  <div nz-col nzSpan="22">
+                    <nz-progress
+                      [nzPercent]="ratingsAndReviews?.feedback?.rating1"
+                      [nzStrokeWidth]="16"
+                      nzStatus="active"
+                      [nzStrokeColor]="'#FFC600'"
+                    ></nz-progress>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <nz-card class="card">
+        <div class="heading">
+          <h3>All Review</h3>
+        </div>
+        <div class="all-reviews reviews-container">
+          <div
+            class="box"
+            *ngFor="
+              let feedback of ratingsAndReviews?.feedback?.feedbackComments;
+              let i = index
+            "
+          >
+            <!-- <h3 class="title">Design Thinking</h3> -->
+            <!-- <hr class="seperator" /> -->
+            <div class="reviewer-name">
+              <button
+               *ngIf="feedback?.profileImage==null"
+                class="side-nav-button1"
+                nz-button
+                nzType="primary"
+                nzShape="circle"
+              >
+                {{ feedback?.userName | initialCharactor }}
+              </button>
+              <nz-avatar
+              *ngIf="feedback?.profileImage!=null"
+              [nzSize]="46"
+              nzIcon="user"
+              class="sidebar-nav-button"
+              nzAlt="Profile"
+              [nzSrc]="feedback?.profileImage"
+            ></nz-avatar>
+              <h4>{{ feedback?.userName }}</h4>
+            </div>
+            <div class="rating-star">
+              <nz-rate
+                [ngModel]="feedback?.rating"
+                nzDisabled
+                nzAllowHalf
+              ></nz-rate>
+              <p class="date">{{ feedback?.createdAt }}</p>
+            </div>
+            <div class="review-text">
+              <p>{{ feedback?.comment }}</p>
+            </div>
+          </div>
+
+          <nz-empty
+            nzNotFoundImage="simple"
+            *ngIf="
+              ratingsAndReviews == null ||
+              ratingsAndReviews?.feedback?.feedbackComments.length == 0
+            "
+          ></nz-empty>
+        </div>
+        <div
+          class="show-more-button-container"
+          *ngIf="ratingsAndReviews?.feedback?.feedbackComments.length > 0"
+        >
+          <button
+            [disabled]="payLoad.pageNo + 1 === totalPages"
+            nz-button
+            nzGhost
+            class="show-more-button"
+            [nzType]="'primary'"
+            (click)="showMoreReviews()"
+          >
+            Show More
+          </button>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>

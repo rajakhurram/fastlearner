@@ -1,0 +1,358 @@
+<section class="payouts-page">
+  <div class="page-header">
+    <h2>Payouts</h2>
+    <p>Track instructor earnings and manage payouts</p>
+  </div>
+
+  <nz-row [nzGutter]="16" class="metric-row">
+    <nz-col
+      [nzXs]="24"
+      [nzSm]="12"
+      [nzMd]="12"
+      [nzLg]="6"
+      *ngFor="let metric of metrics"
+    >
+      <div class="metric-card">
+        <img
+          class="metric-icon"
+          [src]="'../../../assets/icons/' + metric.icon + '.svg'"
+          alt="view"
+        />
+        <div class="metric-content">
+          <p class="metric-label">{{ metric.label }}</p>
+          <p class="metric-value">{{ metric.value }}</p>
+        </div>
+      </div>
+    </nz-col>
+  </nz-row>
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <div class="filter-row">
+      <!-- <input nz-input placeholder="Search by name or email..." /> -->
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Search by name, email, or ID..."
+          name="title"
+          [(ngModel)]="queryParams.search"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span style="color: #212189" nz-icon nzType="search"></span>
+      </ng-template>
+      <nz-select
+        nzPlaceHolder="All Time"
+        [(ngModel)]="day"
+        (ngModelChange)="onDateFilterChange($event)"
+      >
+        <nz-option nzValue="" nzLabel="All Time"></nz-option>
+        <nz-option nzValue="today" nzLabel="Today"></nz-option>
+        <nz-option nzValue="this-week" nzLabel="This Week"></nz-option>
+        <nz-option nzValue="this-month" nzLabel="This Month"></nz-option>
+        <nz-option nzValue="last-month" nzLabel="Last Month"></nz-option>
+        <nz-option nzValue="last-3-month" nzLabel="Last 3 Month"></nz-option>
+      </nz-select>
+
+      <nz-select
+        nzPlaceHolder="All Statuses"
+        [(ngModel)]="queryParams.status"
+        (ngModelChange)="onStatusChange($event)"
+      >
+        <nz-option nzValue="" nzLabel="All Statuses"></nz-option>
+        <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
+        <nz-option
+          nzValue="Partially Paid"
+          nzLabel="Partially Paid"
+        ></nz-option>
+        <nz-option nzValue="Paid" nzLabel="Paid"></nz-option>
+      </nz-select>
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="clear-filter-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filter
+      </button>
+
+      <!-- <nz-select nzPlaceHolder="All Courses" [(ngModel)]="queryParams.courseId">
+        <nz-option nzValue="" nzLabel="All Courses"></nz-option>
+        <nz-option
+          *ngFor="let course of courses"
+          [nzValue]="course.rawId ?? course.id"
+          [nzLabel]="course.title"
+        ></nz-option>
+      </nz-select> -->
+    </div>
+
+    <nz-table
+      #payoutTable
+      [nzData]="payouts"
+      [nzLoading]="isTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+      class="payout-table"
+    >
+      <thead>
+        <tr>
+          <th>Instructor</th>
+          <th>Email</th>
+          <th>Total Earnings</th>
+          <th>Pending</th>
+          <th>Paid</th>
+          <th>Last Payout</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payout of payoutTable.data">
+          <td class="instructor-name">{{ payout.instructorName }}</td>
+          <td>{{ payout.email }}</td>
+          <td>{{ "$" }}{{ payout.totalEarnings | number: "1.0-0" }}</td>
+          <td class="pending-amount">
+            {{ "$" }}{{ payout.pending | number: "1.0-0" }}
+          </td>
+          <td class="paid-amount">
+            {{ "$" }}{{ payout.paid | number: "1.0-0" }}
+          </td>
+          <td>
+            {{
+              payout.lastPayout && payout.lastPayout !== "-"
+                ? (payout.lastPayout | date: "mediumDate")
+                : "-"
+            }}
+          </td>
+          <td>
+            <span class="status-pill" [ngClass]="getStatusClass(payout.status)">
+              {{ payout.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-cell">
+              <button
+                nz-button
+                nzType="link"
+                class="view-btn"
+                (click)="openPayoutDrawer(payout)"
+              >
+                <img src="../../../assets/icons/view.svg" alt="view" />
+              </button>
+              <!-- <button
+                nz-button
+                nzType="primary"
+                class="mark-paid-btn"
+                *ngIf="payout.status !== 'Paid'"
+                (click)="openMarkPaidModal(payout)"
+              >
+                Mark Paid
+              </button> -->
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <div class="table-footer">
+      <nz-pagination
+        *ngIf="totalElements > 0"
+        style="margin-left: auto"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="queryParams.page + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="queryParams.size"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </nz-card>
+</section>
+
+<nz-drawer
+  [nzVisible]="isPayoutDrawerVisible"
+  nzPlacement="right"
+  [nzClosable]="false"
+  [nzMaskClosable]="true"
+  [nzWidth]="drawerWidth"
+  [nzBodyStyle]="{ padding: '1rem' }"
+  (nzOnClose)="closePayoutDrawer()"
+  class="payout-detail-drawer"
+>
+  <ng-container *nzDrawerContent>
+    <div class="drawer-container">
+      <div class="drawer-header">
+        <div class="drawer-user">
+          <h3>{{ selectedPayout.instructorName }}</h3>
+          <p>{{ selectedPayout.email }}</p>
+        </div>
+        <button nz-button nzType="text" (click)="closePayoutDrawer()">
+          <span nz-icon nzType="close"></span>
+        </button>
+      </div>
+
+      <div class="drawer-metric-row">
+        <div class="drawer-metric-card">
+          <p>Total Earnings</p>
+          <h4>{{ selectedPayout.totalEarnings | number: "1.0-0" }}</h4>
+        </div>
+        <div class="drawer-metric-card">
+          <p>Paid</p>
+          <h4 class="green-text">
+            {{ selectedPayout.paid | number: "1.0-0" }}
+          </h4>
+        </div>
+        <div class="drawer-metric-card">
+          <p>Remaining</p>
+          <h4 class="orange-text">
+            {{ selectedPayout.remaining | number: "1.0-0" }}
+          </h4>
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <h4 class="section-title">Earnings Breakdown</h4>
+        <div class="breakdown-list">
+          <div
+            class="breakdown-item"
+            *ngFor="let item of selectedPayout.courseBreakdown"
+          >
+            <div class="breakdown-text">
+              <h5>{{ item.courseTitle }}</h5>
+              <p>Watch time: {{ item.watchTime }}</p>
+            </div>
+            <div class="breakdown-amount">{{ item.amount }}</div>
+          </div>
+        </div>
+        <p class="empty-history" *ngIf="!selectedPayout.courseBreakdown.length">
+          No records yet.
+        </p>
+      </div>
+
+      <div class="drawer-section">
+        <h4 class="section-title">Payout History</h4>
+        <div class="breakdown-list" *ngIf="selectedPayout.payoutHistory.length">
+          <div
+            class="breakdown-item"
+            *ngFor="let item of selectedPayout.payoutHistory"
+          >
+            <div class="breakdown-text">
+              <h5>{{ item.courseTitle }}</h5>
+              <p>Watch time: {{ item.watchTime }}</p>
+            </div>
+            <div class="breakdown-amount">{{ item.amount }}</div>
+          </div>
+        </div>
+        <p class="empty-history" *ngIf="!selectedPayout.payoutHistory.length">
+          No payouts recorded yet.
+        </p>
+      </div>
+
+      <!-- <button
+        nz-button
+        class="mark-as-paid-btn"
+        *ngIf="selectedPayout.canMarkPaid"
+        (click)="openMarkPaidModal(selectedPayout)"
+      >
+        Mark as Paid
+      </button> -->
+    </div>
+  </ng-container>
+</nz-drawer>
+
+<!-- <nz-modal
+  [(nzVisible)]="isMarkPaidModalVisible"
+  [nzFooter]="null"
+  [nzClosable]="false"
+  [nzMaskClosable]="true"
+  [nzWidth]="'30rem'"
+  [nzStyle]="{ top: '4rem' }"
+  (nzOnCancel)="closeMarkPaidModal()"
+  class="mark-paid-modal"
+>
+  <ng-container *nzModalContent>
+    <div class="mark-paid-modal-container">
+      <div class="modal-header">
+        <h3>Mark Payout as Paid</h3>
+        <button nz-button nzType="text" (click)="closeMarkPaidModal()">
+          <span nz-icon nzType="close"></span>
+        </button>
+      </div>
+
+      <p class="modal-context">
+        Paying
+        <span class="instructor-name">{{
+          selectedPayout?.instructorName
+        }}</span>
+        <span class="dot">·</span>
+        Pending:
+        <span class="pending-highlight">
+          ${{ pendingAmountForModal | number: "1.0-0" }}
+        </span>
+      </p>
+
+      <form #markPaidForm="ngForm" (ngSubmit)="confirmMarkPaid()">
+        <div class="form-field">
+          <label>Amount to Pay ($)</label>
+          <input
+            nz-input
+            type="number"
+            class="amount-input"
+            name="markPaidAmount"
+            required
+            min="1"
+            [max]="pendingAmountForModal"
+            [(ngModel)]="markPaidAmount"
+            [placeholder]="'Max $' + (pendingAmountForModal | number: '1.0-0')"
+          />
+        </div>
+
+        <div class="form-field">
+          <label>Payment Date</label>
+          <nz-date-picker
+            class="payment-date-input"
+            name="markPaidDate"
+            required
+            nzPlaceHolder="Select date"
+            nzFormat="MMMM dd, yyyy"
+            nzPlacement="bottomLeft"
+            [(ngModel)]="markPaidDate"
+          ></nz-date-picker>
+        </div>
+
+        <div class="form-field">
+          <label>Payment Note (optional)</label>
+          <textarea
+            nz-input
+            rows="4"
+            name="markPaidNote"
+            placeholder="Add a note..."
+            [(ngModel)]="markPaidNote"
+          ></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            nz-button
+            class="cancel-btn"
+            type="button"
+            (click)="closeMarkPaidModal()"
+          >
+            Cancel
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            class="confirm-btn"
+            type="submit"
+            [disabled]="markPaidForm.invalid || !canConfirmPayment"
+          >
+            Confirm Payment
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</nz-modal> -->

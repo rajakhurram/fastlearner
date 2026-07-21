@@ -22,8 +22,102 @@
   font-weight: 100 !important;
 }
 
+.audio-container {
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  background: #f3f5fa;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  width: fit-content;
+  gap: 8px;
+  border: 1px solid #d7d8db;
+  margin-left: 0.5rem;
+  .audio-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    span.audio-icon {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      height: 2.5rem;
+      width: 2.5rem;
+      background-color: #ecf0fe;
+      img {
+        height: 1.5rem;
+        width: 1.5rem;
+      }
+    }
+
+    .audio-desc {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      span.name {
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      small {
+        font-weight: 600;
+        color: rgb(187 182 182);
+        font-size: 0.65rem;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+}
+
+.play-btn {
+  background: #212189;
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-wrapper {
+  width: 120px;
+  height: 4px;
+  background: #ecf0fe;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #212189;
+  border-radius: 5px;
+  width: 0%;
+}
+
+.duration {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: #050505;
+}
+
 /* Remove or modify these fixed heights */
-.image-class, .preview, .thumbnail {
+.image-class,
+.preview,
+.thumbnail {
   /* Remove fixed heights */
   max-width: 100%;
   width: 100%;
@@ -32,7 +126,8 @@
 }
 
 /* Update the container styles */
-.video-container, .thumbnail-container {
+.video-container,
+.thumbnail-container {
   min-height: auto !important; /* Remove fixed min-height */
   max-height: none !important; /* Remove fixed max-height */
 }
@@ -106,6 +201,49 @@ nz-table {
 }
 .margin-class-heading {
   margin-left: 1%;
+}
+
+/* Quiz options preview styling */
+.option-card {
+  display: inline-block;
+  margin-right: 24px;
+  max-width: 220px;
+  vertical-align: top;
+}
+
+.option-label-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.option-label {
+  font-weight: 600;
+  color: #212189;
+}
+
+.option-image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.option-image-wrapper img {
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+}
+
+.option-text {
+  margin-top: 6px;
+  min-height: 20px; /* keep image-only options aligned with others */
+  display: block;
+}
+
+.option-inline-check {
+  color: #212189;
 }
 
 @media screen and (max-width: 770px) {

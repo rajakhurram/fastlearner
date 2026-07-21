@@ -1,0 +1,474 @@
+$container-size: 540px;
+$container-size-height: 720px;
+$d1: 100px;
+$d2: 240px;
+$d3: 210px;
+$d4: 330px;
+
+.page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // background-color: #eee;
+
+  position: relative;
+}
+
+.image-container {
+  position: relative;
+  /* Add this to establish a stacking context for the image */
+  z-index: 1;
+  /* Set a higher z-index to make the image appear in front */
+  translate: -3px 68px;
+}
+
+.container {
+  position: relative;
+  width: #{$container-size};
+  height: #{$container-size-height};
+}
+
+.middle,
+.outer {
+  position: absolute;
+  pointer-events: none;
+}
+
+.inner,
+.middle {
+  position: absolute;
+  pointer-events: none;
+}
+
+.middle {
+  left: calc((570px - 210px) / 2);
+  top: calc((570px - 210px) / 2);
+  width: 450px;
+  height: 450px;
+  // animation: rotate 15s linear infinite;
+}
+
+.outer {
+  left: calc((#{$container-size} - #{$d4}) / 2);
+  top: calc((#{$container-size} - #{$d4}) / 2);
+  width: 600px;
+  height: 600px;
+}
+
+.inner {
+  width: 320px !important;
+  height: 320px !important;
+  left: 245px;
+  top: 245px;
+}
+
+.middle.dots,
+.outer.dots,
+.inner.dots {
+  border: 0.5px solid #cdd7e8;
+  border-radius: 500px;
+  z-index: 0;
+}
+
+.middle.dots {
+  border-color: #cdd7e8;
+}
+
+.dot {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: -24px;
+  top: calc(50% - 24px);
+  border-radius: 100px;
+  background: #fff center center;
+  background-size: 85%;
+  box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.icon-buch {
+  background-image: url(https://www.designeinheit.de/kunden/mm/icon_buch.svg);
+}
+
+.icon-screen {
+  background-image: url(https://www.designeinheit.de/kunden/mm/icon_screen.svg);
+}
+
+.icon-kompass {
+  background-image: url(https://www.designeinheit.de/kunden/mm/icon_kompass.svg);
+}
+
+.icon-film {
+  background-image: url(https://www.designeinheit.de/kunden/mm/icon_film.svg);
+}
+
+.target {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  left: -32px;
+  top: calc(50% - 32px);
+  border-radius: 32px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.dot:nth-child(2) {
+  left: calc(100% - 24px);
+}
+
+.target:nth-child(2) {
+  left: calc(100% - 32px);
+}
+
+.tooltip {
+  display: block;
+  position: absolute;
+  width: 170px;
+  height: 26px;
+  left: calc(50% - 85px);
+  top: -10px;
+  background-color: #eb860e;
+  color: #fff;
+  border-radius: 2px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 26px;
+  opacity: 0;
+  transition: top 0.15s ease-out, opacity 0.15s ease-out;
+  pointer-events: none;
+}
+
+.target:hover .tooltip {
+  top: -25px;
+  opacity: 1;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: #{$container-size};
+  height: #{$container-size};
+  border-radius: #{$container-size};
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.menu > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.menu > div > div {
+  margin-bottom: 20px;
+}
+
+.menu h2 {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  color: #eb860e;
+  margin-bottom: 0.5em;
+}
+
+.menu li {
+  font-family: Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #5b5f62;
+}
+
+.menu .icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  background-color: #fff;
+  background-position: center center;
+  background-size: 85%;
+  box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+.middle,
+.outer,
+.inner {
+  /* ... (other styles) */
+  animation-play-state: paused;
+  /* Set the initial state to running */
+}
+
+.container:hover .middle,
+.container:hover .inner,
+.container:hover .outer {
+  animation-play-state: running;
+  /* Pause the animation when hovering over the container */
+}
+
+@keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.w-40 {
+  width: 40%;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-3 {
+  width: 3%;
+}
+
+.w-4 {
+  width: 4%;
+}
+
+.w-5 {
+  width: 5%;
+}
+
+.w-9 {
+  width: 9%;
+}
+
+.w-13 {
+  width: 13%;
+}
+
+.outer.dots {
+  position: relative;
+}
+
+.outer.dots .outer-img2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .outer-img2 {
+  transform: translate(-170%, -90%);
+}
+
+.outer.dots .outer-img1 {
+  position: absolute;
+  bottom: 393px;
+  right: 450px;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .outer-img1 {
+  transform: translate(40%, -70%);
+}
+
+.outer-dot-1 {
+  position: absolute;
+  bottom: -1%;
+  right: 42%;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .outer-dot-1 {
+  transform: translate(-1250%, -300%);
+}
+
+.outer-dot-2 {
+  position: absolute;
+  bottom: 283px;
+  right: 371px;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .outer-dot-2 {
+  transform: translate(-180%, 600%);
+}
+
+.outer-dot-3 {
+  position: absolute;
+  bottom: 48%;
+  right: -1.5%;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .outer-dot-3 {
+  transform: translate(-120%, 500%);
+}
+
+.middle-dot-1 {
+  position: absolute;
+  bottom: 43%;
+  right: 97%;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .middle-dot-1 {
+  transform: translate(130%, -600%);
+}
+
+.inner-dot-1 {
+  position: absolute;
+  bottom: 2%;
+  right: 70%;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.inner-dot-2 {
+  position: absolute;
+  bottom: 70%;
+  right: 2%;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .inner-dot-2 {
+  transform: translate(30%, 450%);
+}
+
+.outer-bulb {
+  position: absolute;
+  bottom: 238px;
+  right: 560px;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+  width: 12%;
+}
+
+.container:hover .outer-bulb {
+  // transform: translate(80%, -190%);
+  transform: translate(36%, -230%);
+}
+
+.middle-monitor {
+  position: absolute;
+  bottom: 160px;
+  right: -25px;
+
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .middle-monitor {
+  transform: translate(-50%, 90%);
+}
+
+.outer.dots .outer-img3 {
+  position: absolute;
+  bottom: 300px;
+  right: -130px;
+  transform: translateX(0%, 0%);
+  transition: transform 1s ease;
+}
+
+.container:hover .outer-img3 {
+  // transform: translate(50%, 20%);
+  transform: translate(7%, -70%);
+}
+
+.main-image {
+  position: absolute;
+  height: 550px;
+  margin-top: 5%;
+  margin-left: -16%;
+  object-fit: contain;
+}
+
+@media screen and (max-width: 1600px) {
+  .container {
+    position: relative;
+    width: 540px;
+    height: 540px;
+    margin-top: -6%;
+    margin-left: -20%;
+  }
+  .middle {
+    width: 250px;
+    height: 250px;
+  }
+  .outer {
+    width: 400px;
+    height: 400px;
+  }
+
+  .inner {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .main-image {
+    position: absolute;
+    height: 306px;
+    margin-top: 19%;
+    margin-left: 8%;
+    object-fit: contain;
+  }
+
+  .outer.dots .outer-img1 {
+    position: absolute;
+    bottom: 293px;
+    right: 251px;
+    transform: translateX(0%, 0%);
+    transition: transform 1s ease;
+    width: 43% !important;
+  }
+
+  .outer.dots .outer-img2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateX(0%, 0%);
+    transition: transform 1s ease;
+    width: 39% !important;
+  }
+
+  .outer.dots .outer-img3 {
+    position: absolute;
+    bottom: 327px;
+    right: 53px;
+    transform: translateX(0%, 0%);
+    transition: transform 1s ease;
+    width: 35% !important;
+  }
+
+  .outer-bulb {
+    right: 371px;
+  }
+
+  .container:hover .outer-bulb {
+    transform: translate(80%, -190%);
+  }
+
+  .middle-monitor {
+    bottom: 100px;
+    right: -15px;
+  }
+
+  .container:hover .middle-monitor {
+    transform: translate(-20%, 150%);
+  }
+
+  .outer.dots .outer-img3 {
+    bottom: 289px;
+    right: -10px;
+  }
+
+  .container:hover .outer-img3 {
+    transform: translate(50%, 50%);
+  }
+}

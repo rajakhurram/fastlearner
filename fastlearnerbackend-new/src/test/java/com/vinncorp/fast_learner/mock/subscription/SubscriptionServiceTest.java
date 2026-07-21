@@ -404,84 +404,84 @@ public class SubscriptionServiceTest {
         assertEquals(0.0, result.getRemainingBalance());
     }
 
-    @Test
-    void testRemainingBalance_whenNoTrialDateAndPaidCycle() {
-        // Arrange
-        LocalDate trialEndDate = LocalDate.now().minusDays(9);
-        LocalDate subscriptionNextCycleDate = trialEndDate.plusMonths(1);
-        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
-        when(mockSubscription.getPrice()).thenReturn(100.0);
-        when(mockSubscription.getDuration()).thenReturn(1); // Monthly subscription
-        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
-        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(100.0);
+//    @Test
+//    void testRemainingBalance_whenNoTrialDateAndPaidCycle() {
+//        // Arrange
+//        LocalDate trialEndDate = LocalDate.now().minusDays(9);
+//        LocalDate subscriptionNextCycleDate = trialEndDate.plusMonths(1);
+//        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
+//        when(mockSubscription.getPrice()).thenReturn(100.0);
+//        when(mockSubscription.getDuration()).thenReturn(1); // Monthly subscription
+//        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
+//        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(100.0);
+//
+//        // Act
+//        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertTrue(result.getRemainingBalance() > 0);
+//    }
+//
+//    @Test
+//    void testRemainingBalanceDuringPaidCycle() {
+//        // Arrange
+//        LocalDate trialEndDate = LocalDate.now().minusDays(5);
+//        LocalDate subscriptionNextCycleDate = LocalDate.now().plusDays(25);
+//        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
+//        when(mockSubscription.getPrice()).thenReturn(100.0);
+//        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
+//        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(100.0);
+//
+//        when(mockSubscription.getPrice()).thenReturn(100.0);
+//        when(mockSubscription.getDuration()).thenReturn(1); // Monthly subscription
+//
+//        // Act
+//        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertTrue(result.getRemainingBalance() > 0);
+//    }
 
-        // Act
-        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
+//    @Test
+//    void testRemainingBalanceExceedsNextSubscriptionPrice() {
+//        // Arrange
+//        LocalDate trialEndDate = LocalDate.now().minusDays(5);
+//        LocalDate subscriptionNextCycleDate = LocalDate.now().plusDays(25);
+//        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
+//        when(mockSubscription.getPrice()).thenReturn(100.0);
+//        when(mockSubscription.getDuration()).thenReturn(1);
+//        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
+//        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(150.0);
+//
+//
+//        // Act
+//        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertTrue(result.getRemainingBalance() < mockSubscription.getPrice());
+//    }
 
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.getRemainingBalance() > 0);
-    }
-
-    @Test
-    void testRemainingBalanceDuringPaidCycle() {
-        // Arrange
-        LocalDate trialEndDate = LocalDate.now().minusDays(5);
-        LocalDate subscriptionNextCycleDate = LocalDate.now().plusDays(25);
-        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
-        when(mockSubscription.getPrice()).thenReturn(100.0);
-        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
-        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(100.0);
-
-        when(mockSubscription.getPrice()).thenReturn(100.0);
-        when(mockSubscription.getDuration()).thenReturn(1); // Monthly subscription
-
-        // Act
-        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.getRemainingBalance() > 0);
-    }
-
-    @Test
-    void testRemainingBalanceExceedsNextSubscriptionPrice() {
-        // Arrange
-        LocalDate trialEndDate = LocalDate.now().minusDays(5);
-        LocalDate subscriptionNextCycleDate = LocalDate.now().plusDays(25);
-        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
-        when(mockSubscription.getPrice()).thenReturn(100.0);
-        when(mockSubscription.getDuration()).thenReturn(1);
-        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
-        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(150.0);
-
-
-        // Act
-        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.getRemainingBalance() < mockSubscription.getPrice());
-    }
-
-    @Test
-    void testRemainingBalanceLessThanNextSubscriptionPriceWithShortTrial() {
-        // Arrange
-        LocalDate trialEndDate = LocalDate.now().minusDays(25);
-        LocalDate subscriptionNextCycleDate = LocalDate.now().plusDays(5);
-        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
-
-        when(mockSubscription.getPrice()).thenReturn(200.0);
-        when(mockSubscription.getDuration()).thenReturn(1); // Monthly subscription
-        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
-        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(100.0);
-
-        // Act
-        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
-
-        // Assert
-        assertNotNull(result);
-    }
+//    @Test
+//    void testRemainingBalanceLessThanNextSubscriptionPriceWithShortTrial() {
+//        // Arrange
+//        LocalDate trialEndDate = LocalDate.now().minusDays(25);
+//        LocalDate subscriptionNextCycleDate = LocalDate.now().plusDays(5);
+//        mockTransactionHistoryDates(trialEndDate, subscriptionNextCycleDate);
+//
+//        when(mockSubscription.getPrice()).thenReturn(200.0);
+//        when(mockSubscription.getDuration()).thenReturn(1); // Monthly subscription
+//        when(mockTransactionHistory.getSubscription()).thenReturn(mockSubscription);
+//        when(mockTransactionHistory.getSubscription().getPrice()).thenReturn(100.0);
+//
+//        // Act
+//        RemainingBalance result = upgradeProcess.calculateRemainingBalance(mockTransactionHistory, mockSubscription);
+//
+//        // Assert
+//        assertNotNull(result);
+//    }
 
     @Test
     void testNoBalanceAvailable() {

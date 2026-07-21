@@ -16,9 +16,10 @@
             ></nz-progress>
           </div>
 
-<div class="count" *ngIf="gradedPapers <= allowedPapers">
-  {{ gradedPapers }} / {{ allowedPapers }}
-</div>        </div>
+          <div class="count" *ngIf="gradedPapers <= allowedPapers">
+            {{ gradedPapers }} / {{ allowedPapers }}
+          </div>
+        </div>
       </div>
       <app-button (buttonCallBack)="openSubscriptionPlan()">
         <img
@@ -26,7 +27,7 @@
           alt="Upgrade"
           width="20"
           height="20"
-          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px;"
+          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px"
         />
         Upgrade
       </app-button>
@@ -42,24 +43,23 @@
       </div>
 
       <div class="custom-ml-auto">
-  <span
-    nz-tooltip
-    [nzTooltipTitle]="
-      gradedPapers >= allowedPapers && showUpgradePlan
-        ? 'Free limit exceeded. Please upgrade your plan.'
-        : null
-    "
-  >
-    <app-button
-      [config]="assessmentButtonConfig"
-      [buttonText]="'Start a new assessment'"
-      [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
-      (buttonCallBack)="routeToGraderUploader()"
-    >
-    </app-button>
-  </span>
-</div>
-
+        <span
+          nz-tooltip
+          [nzTooltipTitle]="
+            gradedPapers >= allowedPapers && showUpgradePlan
+              ? 'Free limit exceeded. Please upgrade your plan.'
+              : null
+          "
+        >
+          <app-button
+            [config]="assessmentButtonConfig"
+            [buttonText]="'Start a new assessment'"
+            [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
+            (buttonCallBack)="routeToGraderUploader()"
+          >
+          </app-button>
+        </span>
+      </div>
     </div>
 
     <!-- <hr class="line-color mt-2" /> -->

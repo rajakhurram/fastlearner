@@ -1,0 +1,37 @@
+.button {
+  font-size: 18px;
+  font-family: "Poppins-regular";
+  color: white;
+  background-color: #fe4a55;
+  padding: 10px 20px 10px 20px;
+  border-radius: 5px;
+  height: auto;
+  border: none;
+  border-radius: 10px;
+}
+
+button.hover-enabled {
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--hover-bg-color) !important;
+    color: var(--hover-color) !important;
+  }
+}
+
+.button-hover:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  border: none;
+  outline: none;
+}
+
+@media screen and (max-width: 1600px) {
+  .button {
+    font-size: 12px;
+  }
+}
+@media screen and (max-width: 750px) {
+  .button {
+    font-size: 14px;
+  }
+}

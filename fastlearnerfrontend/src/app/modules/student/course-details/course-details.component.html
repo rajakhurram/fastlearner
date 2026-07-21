@@ -8,14 +8,19 @@
               <h1 class="font break-word">
                 <!-- {{ courseDetails?.metaHeading ?? courseDetails?.title }} -->
                 {{ courseDetails?.title }}
-
               </h1>
               <p class="header-description break-word">
                 <!-- {{ courseDetails?.metaDescription ?? courseDetails?.about }} -->
                 {{ courseDetails?.about }}
               </p>
             </div>
-            <div class="video-player" *ngIf="courseDetails?.previewVideoUrl != null && courseDetails?.previewVideoUrl != ''">
+            <div
+              class="video-player"
+              *ngIf="
+                courseDetails?.previewVideoUrl != null &&
+                courseDetails?.previewVideoUrl != ''
+              "
+            >
               <app-video-player
                 #videoPlayerElement
                 [autoPlayValue]="false"
@@ -25,8 +30,13 @@
               ></app-video-player>
             </div>
 
-            <div *ngIf="courseDetails?.previewVideoUrl == null || courseDetails?.previewVideoUrl == ''">
-              <img class="w-100" [src]="courseDetails?.courseThumbnailUrl">
+            <div
+              *ngIf="
+                courseDetails?.previewVideoUrl == null ||
+                courseDetails?.previewVideoUrl == ''
+              "
+            >
+              <img class="w-100" [src]="courseDetails?.courseThumbnailUrl" />
             </div>
 
             <div
@@ -39,7 +49,16 @@
               <div class="sticky-res visibility">
                 <nz-card class="card">
                   <div class="label-container">
-                    <p class="font-light">This {{courseDetails?.contentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}} includes:</p>
+                    <p class="font-light">
+                      This
+                      {{
+                        courseDetails?.contentType?.toLowerCase() ==
+                        courseContentType.COURSE
+                          ? "course"
+                          : "test"
+                      }}
+                      includes:
+                    </p>
                     <img
                       *ngIf="courseDetails?.courseType == courseType.PREMIUM"
                       src="../../../../assets/icons/premium-details.svg"
@@ -47,7 +66,12 @@
                   </div>
                   <ul class="font-light">
                     <li class="include-list">
-                      {{ courseDetails?.contentType?.toLowerCase() === courseContentType.COURSE ? (totalSectionTimeInSeconds | msIntoHHMMSS) : (testTotalQuestions + ' Questions') }}
+                      {{
+                        courseDetails?.contentType?.toLowerCase() ===
+                        courseContentType.COURSE
+                          ? (totalSectionTimeInSeconds | msIntoHHMMSS)
+                          : testTotalQuestions + " Questions"
+                      }}
                     </li>
                     <li class="include-list">Access on mobile and PC</li>
                     <li class="include-list">Lifetime access on completion</li>
@@ -124,10 +148,12 @@
               </span>
               &nbsp;
               <span>
-                {{ courseDetails?.totalStudents }} 
-                {{ courseDetails?.totalStudents === 1 ? 'student' : 'students' }}
+                {{ courseDetails?.totalStudents }}
+                {{
+                  courseDetails?.totalStudents === 1 ? "student" : "students"
+                }}
               </span>
-                          </div>
+            </div>
 
             <hr />
             <div nz-row>
@@ -181,7 +207,7 @@
                     <p>
                       {{
                         courseDetails?.lastUpdate
-                          ? (courseDetails?.lastUpdate | date : "mediumDate")
+                          ? (courseDetails?.lastUpdate | date: "mediumDate")
                           : "-"
                       }}
                     </p>
@@ -199,10 +225,10 @@
                         courseDetails?.level === 'Expert'
                           ? '../../../../assets/icons/expert-level.svg'
                           : courseDetails?.level === 'Intermediate'
-                          ? '../../../../assets/icons/Intermediate.svg'
-                          : courseDetails?.level === 'Beginner'
-                          ? '../../../../assets/icons/Beginner.svg'
-                          : '../../../../assets/icons/All-Level.svg'
+                            ? '../../../../assets/icons/Intermediate.svg'
+                            : courseDetails?.level === 'Beginner'
+                              ? '../../../../assets/icons/Beginner.svg'
+                              : '../../../../assets/icons/All-Level.svg'
                       "
                       alt="Level"
                     />
@@ -306,15 +332,29 @@
               <div class="course-outline">
                 <div class="section-topic-header">
                   <div class="section-topic-time">
-                    <span>• {{ totalSections }} {{totalSections > 1 ? 'Sections' : 'Section'}}</span> &nbsp;
-                    <span>• {{ totalTopics }} {{totalTopics > 1 ? 'Topics' : 'Topic'}}</span> &nbsp;
+                    <span
+                      >• {{ totalSections }}
+                      {{ totalSections > 1 ? "Sections" : "Section" }}</span
+                    >
+                    &nbsp;
+                    <span
+                      >• {{ totalTopics }}
+                      {{ totalTopics > 1 ? "Topics" : "Topic" }}</span
+                    >
+                    &nbsp;
                     <span style="white-space: pre">
-                      • {{
-                        courseDetails?.contentType?.toLowerCase() === courseContentType.COURSE
+                      •
+                      {{
+                        courseDetails?.contentType?.toLowerCase() ===
+                        courseContentType.COURSE
                           ? (totalSectionTimeInSeconds | msIntoHHMMSS)
-                          : (testTotalQuestions + ' ' + (testTotalQuestions === 1 ? 'Question' : 'Questions'))
+                          : testTotalQuestions +
+                            " " +
+                            (testTotalQuestions === 1
+                              ? "Question"
+                              : "Questions")
                       }}
-                    </span>                    
+                    </span>
                   </div>
                   <div class="expand">
                     <a id="expandAll" (click)="toggleAllSection()">{{
@@ -384,7 +424,7 @@
                               'text-decoration':
                                 topic?.topicType == 'Video'
                                   ? 'underline'
-                                  : 'none'
+                                  : 'none',
                             }"
                             class="topic-color"
                             >{{ topic?.topicName }}</span
@@ -426,9 +466,13 @@
                       />
                       &nbsp;
                       <span>
-                        • {{ section?.totalLectures }} {{ section?.totalLectures === 1 ? 'Lecture' : 'Lectures' }} •
+                        • {{ section?.totalLectures }}
+                        {{
+                          section?.totalLectures === 1 ? "Lecture" : "Lectures"
+                        }}
+                        •
                         {{ section.totalTime | msIntoHHMMSS }}
-                      </span>                      
+                      </span>
                     </ng-template>
                     <ng-template #sectionNameTemplate>
                       <p class="sectionTemp">
@@ -441,7 +485,7 @@
             </div>
             <div
               [ngStyle]="{
-                'padding-bottom': courseDetails?.hasCertificate ? '0px' : '2%'
+                'padding-bottom': courseDetails?.hasCertificate ? '0px' : '2%',
               }"
               class="prerequisite"
             >
@@ -550,9 +594,13 @@
                         nzAllowHalf
                       ></nz-rate>
                       <p class="rating-text">
-                        Based on {{ courseDetails?.noOfReviewers }} 
-                        {{ courseDetails?.noOfReviewers === 1 ? 'review' : 'reviews' }}
-                      </p>                      
+                        Based on {{ courseDetails?.noOfReviewers }}
+                        {{
+                          courseDetails?.noOfReviewers === 1
+                            ? "review"
+                            : "reviews"
+                        }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -686,7 +734,7 @@
                     nzAllowHalf
                   ></nz-rate>
                   <small class="date">{{
-                    comment?.createdAt | date : "longDate"
+                    comment?.createdAt | date: "longDate"
                   }}</small>
                 </div>
                 <span class="comment-text">{{ comment?.comment }}</span>
@@ -723,7 +771,7 @@
                   class="show-more-button"
                   (click)="fetchMoreComments()"
                   [disabled]="!hasMoreComments"
-                  >
+                >
                   Show More
                 </button>
               </div>
@@ -754,11 +802,7 @@
                 </div>
                 <div class="show-more-button-container">
                   <button
-                    [disabled]="
-                      courseList.length <= 1 ||
-                      noOfCount < 2 ||
-                      courseList.length == 0
-                    "
+                    [disabled]="totalElements == courseList.length"
                     (click)="nextPageOfRelatedCourse()"
                     nz-button
                     nzGhost
@@ -786,7 +830,16 @@
               <div class="sticky">
                 <nz-card class="card">
                   <div class="label-container">
-                    <p class="font-light">This {{courseDetails?.contentType?.toLowerCase() == courseContentType.COURSE ? 'course' : 'test'}} includes:</p>
+                    <p class="font-light">
+                      This
+                      {{
+                        courseDetails?.contentType?.toLowerCase() ==
+                        courseContentType.COURSE
+                          ? "course"
+                          : "test"
+                      }}
+                      includes:
+                    </p>
                     <img
                       *ngIf="courseDetails?.courseType == courseType.PREMIUM"
                       src="../../../../assets/icons/premium-details.svg"
@@ -794,7 +847,12 @@
                   </div>
                   <ul class="font-light">
                     <li class="include-list">
-                      {{ courseDetails?.contentType?.toLowerCase() === courseContentType.COURSE ? (totalSectionTimeInSeconds | msIntoHHMMSS) : (testTotalQuestions + ' Questions') }}
+                      {{
+                        courseDetails?.contentType?.toLowerCase() ===
+                        courseContentType.COURSE
+                          ? (totalSectionTimeInSeconds | msIntoHHMMSS)
+                          : testTotalQuestions + " Questions"
+                      }}
                     </li>
                     <li class="include-list">Access on mobile and PC</li>
                     <li class="include-list">Lifetime access on completion</li>

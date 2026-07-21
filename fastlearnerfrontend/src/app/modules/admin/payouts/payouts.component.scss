@@ -1,0 +1,579 @@
+.payouts-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .page-header {
+    h2 {
+      margin: 0;
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #212189;
+    }
+
+    p {
+      margin: 0.25rem 0 0;
+      color: #6f7894;
+      font-size: 0.95rem;
+    }
+  }
+
+  .metric-row {
+    .metric-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #fff;
+      border: 1px solid #edf0f5;
+      border-radius: 4px;
+      padding: 0.8rem;
+      min-height: 9.375rem;
+
+      .metric-icon {
+        width: 2.5rem;
+      }
+
+      .metric-content {
+        .metric-label {
+          margin: 0;
+          font-size: 0.85rem;
+          color: #6f7894;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+        }
+
+        .metric-value {
+          margin: 0.2rem 0 0;
+          font-size: 1rem;
+          line-height: 1;
+          color: #101d43;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .table-section {
+    border-radius: 4px;
+  }
+
+  .filter-row {
+    margin-bottom: 0.875rem;
+    display: grid;
+    grid-template-columns: 2.1fr 1fr 1fr 1fr;
+    gap: 0.625rem;
+
+    .clear-filter-btn {
+      height: 32px;
+      border-radius: 4px;
+      color: #212189;
+      border-color: #212189;
+    }
+  }
+
+  .instructor-name {
+    color: #101d43;
+    font-weight: 600;
+  }
+
+  .pending-amount {
+    color: #c89a2f;
+    font-weight: 600;
+  }
+
+  .paid-amount {
+    color: #29a36a;
+    font-weight: 600;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 1rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+
+    &.partially-paid {
+      background: #d8dce6;
+      color: #2f3a5b;
+    }
+
+    &.pending {
+      background: #faedd1;
+      color: #c89a2f;
+    }
+
+    &.paid {
+      background: #dff3ea;
+      color: #29a36a;
+    }
+  }
+
+  .action-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .view-btn {
+      color: #101d43;
+      font-weight: 500;
+      padding: 0;
+    }
+
+    .mark-paid-btn {
+      border-radius: 4px;
+      background: #fe4a55;
+      border-color: #fe4a55;
+      font-size: 0.8rem;
+      font-weight: 500;
+      height: 2rem;
+      padding: 0 0.7rem;
+
+      &:hover {
+        background: linear-gradient(180deg, #fe4a55, #b20a14);
+      }
+    }
+  }
+
+  .table-footer {
+    margin-top: 0.875rem;
+    border-top: 1px solid #edf0f5;
+    padding-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    p {
+      margin: 0;
+      color: #6f7894;
+      font-size: 0.85rem;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6f7894;
+      font-size: 0.85rem;
+
+      .rows-btn,
+      .page-btn {
+        min-width: 2.25rem;
+        height: 2rem;
+        border-radius: 4px;
+        border-color: #e6e9f1;
+        color: #6f7894;
+      }
+
+      .page-btn.active {
+        background: #fe4a55;
+        border-color: #fe4a55;
+        color: #fff;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .payout-table .ant-table-thead > tr > th {
+  background: #edf6ff;
+  color: #212189;
+  font-weight: 600;
+}
+
+:host ::ng-deep .payout-detail-drawer {
+  .ant-drawer-body {
+    padding: 1rem !important;
+  }
+}
+
+:host ::ng-deep .mark-paid-modal {
+  .ant-modal-content {
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .ant-modal-body {
+    padding: 1.25rem;
+  }
+
+  .ant-input,
+  .ant-picker,
+  textarea.ant-input {
+    width: 100%;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .ant-input:hover,
+  .ant-picker:hover,
+  textarea.ant-input:hover {
+    border-color: #fe4a55;
+  }
+
+  .ant-input:focus,
+  .ant-picker-focused,
+  textarea.ant-input:focus {
+    border-color: #fe4a55;
+    box-shadow: 0 0 0 0.125rem rgba(254, 74, 85, 0.14);
+  }
+
+  .ant-picker-suffix,
+  .ant-picker-input > input {
+    color: #fe4a55;
+  }
+}
+
+.mark-paid-modal-container {
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.45rem;
+      line-height: 1.2;
+      font-weight: 600;
+      color: #232a3a;
+    }
+  }
+
+  .modal-context {
+    margin: 0.6rem 0 1.2rem;
+    color: #6b7282;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.35;
+
+    .instructor-name {
+      color: #2a2f3f;
+      font-weight: 600;
+    }
+
+    .dot {
+      margin: 0 0.4rem;
+      color: #8992a3;
+    }
+
+    .pending-highlight {
+      color: #df9717;
+      font-weight: 600;
+    }
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.1rem;
+
+    label {
+      color: #2b3242;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .amount-input,
+    .payment-date-input {
+      width: 100%;
+    }
+
+    .amount-input {
+      height: 2.85rem;
+      font-size: 1.1rem;
+    }
+
+    textarea {
+      font-size: 1rem;
+      color: #2b3242;
+      min-height: 6rem;
+      resize: vertical;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      border-color: #d8dde8;
+
+      &::placeholder {
+        color: #8c94a6;
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    margin-top: 0.4rem;
+
+    button {
+      height: 2.6rem;
+      border-radius: 0.7rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0 1.2rem;
+    }
+
+    .cancel-btn {
+      border: 0.0625rem solid #fe4a55;
+      color: #fe4a55;
+      background: #fff;
+    }
+
+    .confirm-btn {
+      background: #f4a0a7;
+      border-color: #f4a0a7;
+      color: #fff;
+
+      &:not(:disabled) {
+        background: #fe4a55;
+        border-color: #fe4a55;
+      }
+    }
+  }
+}
+
+.drawer-container {
+  .drawer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #edf0f5;
+
+    .drawer-user {
+      min-width: 0;
+      flex: 1;
+
+      h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #101d43;
+      }
+
+      p {
+        // margin: 0.3rem 0 0;
+        color: #5d6b87;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .drawer-metric-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0.9rem 0;
+  }
+
+  .drawer-metric-card {
+    background: #f2f4f8;
+    border-radius: 4px;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      margin: 0;
+      color: #6f7894;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    h4 {
+      // margin: 0.4rem 0 0;
+      color: #101d43;
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1;
+
+      &.green-text {
+        color: #23a26d;
+      }
+
+      &.orange-text {
+        color: #c89a2f;
+      }
+    }
+  }
+
+  .drawer-section {
+    padding-top: 0.7rem;
+    // margin-top: 1rem;
+    border-top: 1px solid #edf0f5;
+
+    .section-title {
+      // margin: 0 0 0.8rem;
+      color: #101d43;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+
+  .breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .breakdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #f2f4f8;
+    border-radius: 4px;
+    padding: 0.8rem 0.9rem;
+
+    .breakdown-text {
+      h5 {
+        margin: 0;
+        color: #101d43;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0.25rem 0 0;
+        color: #5d6b87;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+    }
+
+    .breakdown-amount {
+      color: #101d43;
+      font-size: 1rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+  }
+
+  .empty-history {
+    margin: 0;
+    color: #5d6b87;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .mark-as-paid-btn {
+    width: 100%;
+    margin-top: 1.1rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    background: #fe4a55;
+    border-color: #fe4a55;
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 510px) {
+  :host ::ng-deep .payout-detail-drawer {
+    .ant-drawer-content-wrapper {
+      width: 100% !important;
+      max-width: 100vw !important;
+    }
+
+    .ant-drawer-content {
+      width: 100% !important;
+    }
+
+    .ant-drawer-body {
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 0.75rem !important;
+    }
+  }
+
+  .drawer-container {
+    min-width: 0;
+    max-width: 100%;
+
+    .drawer-header .drawer-user {
+      h3 {
+        font-size: 1.1rem;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      p {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .drawer-metric-row {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .drawer-metric-card {
+      h4 {
+        font-size: 1.15rem;
+      }
+    }
+
+    .breakdown-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      .breakdown-text {
+        width: 100%;
+
+        h5 {
+          word-break: break-word;
+          overflow-wrap: anywhere;
+        }
+      }
+
+      .breakdown-amount {
+        white-space: normal;
+        align-self: flex-start;
+      }
+    }
+
+    .mark-as-paid-btn {
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .payouts-page {
+    .filter-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  :host ::ng-deep .payouts-page .metric-row.ant-row {
+    row-gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payouts-page {
+    .filter-row {
+      grid-template-columns: 1fr;
+    }
+
+    .table-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  :host ::ng-deep .payouts-page .metric-row.ant-row {
+    row-gap: 16px;
+  }
+}

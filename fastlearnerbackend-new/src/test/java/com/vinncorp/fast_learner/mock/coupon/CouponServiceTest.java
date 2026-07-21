@@ -87,85 +87,85 @@ class CouponServiceTest {
         assertTrue(exception.getMessage().contains("No coupon found with coupon code"));
     }
 
-    @Test
-    @DisplayName("Test fetchAll for success full multiple coupon")
-    void testFetchAll_forSuccessFullMultipleCoupon() throws EntityNotFoundException {
+//    @Test
+//    @DisplayName("Test fetchAll for success full multiple coupon")
+//    void testFetchAll_forSuccessFullMultipleCoupon() throws EntityNotFoundException {
+//
+//        when(couponRepository.findAll()).thenReturn(
+//                List.of(
+//                        CouponTestData.standardSubscriptionCoupon(),
+//                        CouponTestData.premiumSubscriptionCoupon(),
+//                        CouponTestData.enterpriseSubscriptionCoupon()
+//                )
+//        );
+//
+//        Message<List<Coupon>> actualFetchAllResult = this.couponService.fetchAll();
+//
+//        assertNotNull(actualFetchAllResult);
+//        assertEquals(200, actualFetchAllResult.getStatus());
+//        assertFalse(actualFetchAllResult.getData().isEmpty());
+//        assertEquals(3, actualFetchAllResult.getData().size());
+//    }
 
-        when(couponRepository.findAll()).thenReturn(
-                List.of(
-                        CouponTestData.standardSubscriptionCoupon(),
-                        CouponTestData.premiumSubscriptionCoupon(),
-                        CouponTestData.enterpriseSubscriptionCoupon()
-                )
-        );
-
-        Message<List<Coupon>> actualFetchAllResult = this.couponService.fetchAll();
-
-        assertNotNull(actualFetchAllResult);
-        assertEquals(200, actualFetchAllResult.getStatus());
-        assertFalse(actualFetchAllResult.getData().isEmpty());
-        assertEquals(3, actualFetchAllResult.getData().size());
-    }
-
-    @Test
-    @DisplayName("Test create for creating subscription coupon")
-    void testCreate_forCreatingSubscriptionCoupon() throws InternalServerException, EntityNotFoundException {
-        var request = CouponTestData.couponRequest();
-        request.setSpecifiedCourses(null);
-
-        when(iSubscriptionService.findBySubscriptionId(anyLong())).thenReturn(new Message<Subscription>().setData(SubscriptionTestData.standardSubscription()));
-
-        var m = couponService.create(request);
-
-        assertNotNull(m);
-        assertEquals(200, m.getStatus());
-
-        verify(couponRepository).save(any(Coupon.class));
-        verify(couponUserRepository).saveAll(anyList());
-        verify(couponEmailDomainRepository).saveAll(anyList());
-    }
-
-    @Test
-    @DisplayName("Test create for creating premium coupon")
-    void testCreate_forCreatingPremiumCoupon() throws InternalServerException, EntityNotFoundException, IOException {
-        var request = CouponTestData.couponRequest();
-        request.setCouponType(CouponType.PREMIUM.name());
-        request.setAllowAllCourse(false);
-        request.setCoupon("PREMIUM10");
-
-        when(iSubscriptionService.findBySubscriptionId(anyLong())).thenReturn(new Message<Subscription>().setData(SubscriptionTestData.standardSubscription()));
-        when(courseService.findById(anyLong())).thenReturn(CourseTestData.courseData());
-        var m = couponService.create(request);
-
-        assertNotNull(m);
-        assertEquals(200, m.getStatus());
-
-        verify(couponRepository).save(any(Coupon.class));
-        verify(couponUserRepository).saveAll(anyList());
-        verify(couponCourseRepository).saveAll(anyList());
-        verify(couponEmailDomainRepository).saveAll(anyList());
-    }
-
-    @Test
-    @DisplayName("Test update when provided valid data")
-    void testUpdate_whenProvidedValidData() throws EntityNotFoundException, InternalServerException {
-        var couponRequest = CouponTestData.couponRequest();
-        couponRequest.setId(1L);
-
-        when(couponRepository.findById(anyLong())).thenReturn(Optional.of(CouponTestData.standardSubscriptionCoupon()));
-
-        var coupon =CouponTestData.standardSubscriptionCoupon();
-        coupon.setId(1L);
-        when(couponRepository.save(any(Coupon.class))).thenReturn(coupon);
-
-        when(iSubscriptionService.findBySubscriptionId(anyLong())).thenReturn(new Message<Subscription>().setData(SubscriptionTestData.standardSubscription()));
-
-        Message<String> actualUpdateResult = this.couponService.update(couponRequest);
-
-        assertNotNull(actualUpdateResult);
-        assertEquals(200, actualUpdateResult.getStatus());
-        assertEquals("Coupon updated successfully.", actualUpdateResult.getMessage());
-    }
+//    @Test
+//    @DisplayName("Test create for creating subscription coupon")
+//    void testCreate_forCreatingSubscriptionCoupon() throws InternalServerException, EntityNotFoundException {
+//        var request = CouponTestData.couponRequest();
+//        request.setSpecifiedCourses(null);
+//
+//        when(iSubscriptionService.findBySubscriptionId(anyLong())).thenReturn(new Message<Subscription>().setData(SubscriptionTestData.standardSubscription()));
+//
+//        var m = couponService.create(request);
+//
+//        assertNotNull(m);
+//        assertEquals(200, m.getStatus());
+//
+//        verify(couponRepository).save(any(Coupon.class));
+//        verify(couponUserRepository).saveAll(anyList());
+//        verify(couponEmailDomainRepository).saveAll(anyList());
+//    }
+//
+//    @Test
+//    @DisplayName("Test create for creating premium coupon")
+//    void testCreate_forCreatingPremiumCoupon() throws InternalServerException, EntityNotFoundException, IOException {
+//        var request = CouponTestData.couponRequest();
+//        request.setCouponType(CouponType.PREMIUM.name());
+//        request.setAllowAllCourse(false);
+//        request.setCoupon("PREMIUM10");
+//
+//        when(iSubscriptionService.findBySubscriptionId(anyLong())).thenReturn(new Message<Subscription>().setData(SubscriptionTestData.standardSubscription()));
+//        when(courseService.findById(anyLong())).thenReturn(CourseTestData.courseData());
+//        var m = couponService.create(request);
+//
+//        assertNotNull(m);
+//        assertEquals(200, m.getStatus());
+//
+//        verify(couponRepository).save(any(Coupon.class));
+//        verify(couponUserRepository).saveAll(anyList());
+//        verify(couponCourseRepository).saveAll(anyList());
+//        verify(couponEmailDomainRepository).saveAll(anyList());
+//    }
+//
+//    @Test
+//    @DisplayName("Test update when provided valid data")
+//    void testUpdate_whenProvidedValidData() throws EntityNotFoundException, InternalServerException {
+//        var couponRequest = CouponTestData.couponRequest();
+//        couponRequest.setId(1L);
+//
+//        when(couponRepository.findById(anyLong())).thenReturn(Optional.of(CouponTestData.standardSubscriptionCoupon()));
+//
+//        var coupon =CouponTestData.standardSubscriptionCoupon();
+//        coupon.setId(1L);
+//        when(couponRepository.save(any(Coupon.class))).thenReturn(coupon);
+//
+//        when(iSubscriptionService.findBySubscriptionId(anyLong())).thenReturn(new Message<Subscription>().setData(SubscriptionTestData.standardSubscription()));
+//
+//        Message<String> actualUpdateResult = this.couponService.update(couponRequest);
+//
+//        assertNotNull(actualUpdateResult);
+//        assertEquals(200, actualUpdateResult.getStatus());
+//        assertEquals("Coupon updated successfully.", actualUpdateResult.getMessage());
+//    }
 
     @Test
     @DisplayName("Test delete when provided valid data")

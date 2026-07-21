@@ -1,0 +1,235 @@
+.premium-heading h3 {
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+.payment-heading span {
+  color: #212189;
+}
+
+.search-container {
+  width: 40%;
+  float: right;
+}
+
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.card-container {
+  display: flex;
+  width: -webkit-fill-available;
+  padding-right: 3%;
+  justify-content: space-between;
+  &__card {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+
+    &__container {
+      display: flex;
+      align-items: center;
+      // width: 60%;
+    }
+    &__content {
+      margin-left: 15px;
+      width: 50%;
+      align-self: center;
+      &__heading {
+        margin-bottom: 0px;
+        font-size: 18px;
+      }
+      &__description {
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        margin-bottom: 2px;
+        color: #292929;
+        // width: 60%;
+      }
+      &__reviews {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      &__matches {
+        display: flex;
+        align-items: baseline;
+        cursor: pointer;
+        &__content {
+          margin-left: 5px;
+          align-self: center;
+          margin-bottom: 2px;
+        }
+        &__svg {
+          fill: "#292929";
+          margin-top: 3px;
+        }
+      }
+    }
+
+    &__button-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      // width: 20%;
+    }
+  }
+}
+
+.rate-text-color {
+  margin-right: 10px;
+  color: #25183a;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.star-container {
+  margin-left: 5px;
+}
+
+.card-container__card__content__matches svg {
+  cursor: pointer;
+  transition: fill 0.3s ease;
+  /* Smooth transition */
+  margin-top: 3px;
+}
+
+.card-container__card__content__matches:hover svg path {
+  fill: red !important;
+  /* Change color on hover */
+}
+
+.card-container__card__content__matches:hover p {
+  color: red !important;
+  /* Change color on hover */
+}
+
+.arrow-svg {
+  margin-left: 40px;
+  // width: 20%;
+}
+
+.free-label {
+  position: absolute;
+  top: 116px;
+  left: 20px;
+}
+
+.tag-premium-color {
+  color: white;
+  font-weight: 100;
+}
+
+.card-container__card__content__heading {
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  white-space: normal;
+  // width: 50%;
+}
+
+.image-height {
+  width: 175px;
+  height: 100px;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+}
+
+@media screen and (max-width: 800px) {
+  .card-container {
+    &__card {
+      flex-direction: column;
+      &__content {
+        margin-left: 0px;
+        margin-top: 10px;
+      }
+    }
+  }
+  .image-height {
+    width: 100%;
+  }
+  .header {
+    margin-left: 1%;
+  }
+
+  .expand-container {
+    margin-top: 27% !important;
+  }
+
+  .card-container__card__content__heading,
+  .card-container__card__content__description {
+    margin-left: 20px;
+  }
+
+  .card-container {
+    flex-direction: column !important;
+  }
+
+  .button-div {
+    position: relative !important;
+    right: 0px !important;
+    margin-left: 14%;
+  }
+}
+@media screen and (max-width: 1650px) {
+  .button-div {
+    position: absolute;
+    right: 15% !important;
+  }
+
+  .card-container__card__content__heading,
+  .card-container__card__content__description {
+    font-size: 14px;
+  }
+}
+
+:host ::ng-deep .ant-collapse-content > .ant-collapse-content-box {
+  padding: 2% 3% 5% 1%;
+}
+
+:host
+  ::ng-deep
+  .ant-collapse
+  > .ant-collapse-item.ant-collapse-no-arrow
+  > .ant-collapse-header {
+  background: white;
+}
+
+.expand-container {
+  text-align: right;
+  margin-top: 7%;
+}
+
+.expand-text {
+  font-size: 18px;
+  font-family: "Poppins-medium";
+  cursor: pointer;
+}
+
+.image-container {
+  // width: 14%;
+  // background-color: #25183a;
+}
+
+.button-div {
+  position: absolute;
+  right: 10%;
+}
+
+:host ::ng-deep .ant-collapse {
+  border-right: none !important;
+  border-left: none !important;
+}

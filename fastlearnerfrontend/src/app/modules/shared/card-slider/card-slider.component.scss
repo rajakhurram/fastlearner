@@ -9,10 +9,28 @@
   display: flex;
   overflow: hidden;
   will-change: transform;
-  // width: 100%;
+  width: 100%;
 }
 .slider:active {
   cursor: grabbing;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+@media screen and (max-width: 400px) {
+  .slider {
+    ::ng-deep app-course-card {
+      .card {
+        width: 20rem !important;
+        margin-right: 0.5rem;
+      }
+    }
+  }
 }
 
 // /* Prevent text selection when grabbing or dragging */

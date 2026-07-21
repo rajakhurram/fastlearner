@@ -373,6 +373,7 @@ export class InstructorComponent implements OnInit {
 
   signOut() {
     document.body.classList.remove('hide-scrollbar');
+    const pathBeforeLogout = this._router.url;
     this._authService.signOut().subscribe({
       next: (response: any) => {
         this.notifications = [];
@@ -380,6 +381,12 @@ export class InstructorComponent implements OnInit {
         this.sideBarVisible = false;
         this.loggedInUser.profilePicture = null;
         this._cacheService.clearCache();
+        if (pathBeforeLogout.includes('ai-grader/result/view')) {
+          localStorage.setItem(
+            'redirectUrl',
+            '/instructor/instructor-dashboard',
+          );
+        }
         this._router.navigate(['']);
         this._authService.changeNavState(false);
       },
@@ -460,5 +467,16 @@ export class InstructorComponent implements OnInit {
     // document.body.classList.remove('hide-scrollbar');
     // this.navbarVisible = false;
     this._router.navigate(['subscription']);
+  }
+
+  get isSuperAdmin(): boolean {
+    return this._authService.isSuperAdmin();
+  }
+
+  routeToAdminDashboard(): void {
+    document.body.classList.remove('hide-scrollbar');
+    this.menuVisible = false;
+    this.sideBarVisible = false;
+    this._router.navigate(['/admin/users']);
   }
 }

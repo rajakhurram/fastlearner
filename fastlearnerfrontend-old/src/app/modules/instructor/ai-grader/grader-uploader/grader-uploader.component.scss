@@ -1,0 +1,392 @@
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.upload-box {
+  border: 2px dashed #d9d9d9;
+  background: #f5f9ff;
+  padding: 2rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+.mb-3 {
+  margin-bottom: 1rem;
+}
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.font-bold {
+  font-weight: 600;
+}
+.text-danger {
+  color: red;
+}
+
+::ng-deep .class-select {
+  .ant-select-selector {
+    background-color: #f8faff !important;
+    border: 1px solid #d6e4ff !important;
+    box-shadow: none !important;
+    border-radius: 4px;
+    padding: 6px 11px;
+    transition: all 0.3s;
+  }
+
+  .ant-select-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  &.ant-select-open .ant-select-arrow {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown-footer {
+  background-color: #f8faff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.create-class-link {
+  color: #212189;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+::ng-deep .ant-empty-description {
+  color: black !important;
+  font-weight: 500;
+}
+
+.upload-box {
+  border: 2px dashed #d3d3d3;
+  border-radius: 12px;
+  background-color: #f5f9ff;
+  padding: 32px;
+  min-height: 250px;
+  position: relative;
+}
+
+.file-card {
+  width: 100px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px;
+  text-align: center;
+}
+
+.file-thumb img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.file-name {
+  font-size: 12px;
+  margin: 4px 0 2px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-label {
+  font-size: 10px;
+  color: #777;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.text-center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.custom-upload-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
+  border: 1px solid;
+  border-color: beige;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #747ca3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  background: #f7f8fc;
+  padding: 10px;
+}
+
+.upload-btn {
+  height: 40px;
+  background-color: #f5f9ff;
+  color: #212189;
+  padding: 8px 0px;
+  border-color: white;
+  border: #212189 1px solid;
+  width: 168px;
+  border-radius: 6px;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.upload-btn:hover {
+  background-color: #1a187a;
+  color: white;
+}
+
+.grade-btn {
+  height: 40px;
+  border: #fe4a55 1px solid;
+  background: #fe4a55;
+  border-radius: 4px;
+  color: #fff;
+  padding: 8px 0px;
+  border-color: white;
+  width: 130px;
+  align-items: center;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.grade-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.file-card {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.pdf-page-card {
+  position: relative;
+  width: 120px; /* Width of PDF thumbnail */
+  height: 160px; /* Height of PDF thumbnail */
+  overflow: hidden;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+::ng-deep .pdfViewer.removePageBorders .page {
+  margin: -9px !important;
+}
+
+pdf-viewer {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  overflow: hidden !important;
+}
+
+::ng-deep .pdf-page-card {
+  margin-bottom: 8px; // tighter between same-file pages
+}
+
+::ng-deep .pdf-page-card.file-separator {
+  margin-top: 32px; // extra top gap between different PDFs
+  gap: 32px;
+}
+
+.page-number {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background-color: #212189;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #eae8fb;
+  padding: 10px 16px;
+  font-weight: bold;
+  color: #212189;
+  margin-bottom: 10px;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.required {
+  color: red;
+}
+
+.dropdown-input {
+  width: 100%;
+  padding: 8px 8px;
+  // border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.rubric-key {
+  flex-direction: column;
+  background: #f5f9ff;
+  padding: 12px;
+}
+
+.rubric-key p {
+  color: #747ca3;
+}
+
+.btn-disable {
+  border: none !important;
+  background-color: #fe4a5554 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.btn-disable:hover {
+  background-color: #fe4a5554 !important;
+}
+
+
+@media screen and (max-width: 600px) {
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.grader-results-header h3 {
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+.grader-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grader-title {
+  color: #212189; /* deep blue */
+  font-weight: 600;
+}
+
+.grader-card {
+  border-radius: 4px;
+  box-shadow: none;
+  border: none;
+}
+
+.grader-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.label {
+  font-family: 'Poppins-SemiBold';
+  color: #212189;
+  font-size: 12px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plan {
+  font-size: 12px;
+  color: #313131;
+}
+
+.count {
+  font-size: 12px;
+  color: black;
+  margin-top: 2px;
+  font-family: 'Poppins-medium';
+}
+
+.upgrade-btn {
+  background-color: #ff4d4f;
+  border: none;
+}
+
+::ng-deep .grader-card .ant-card-body {
+  padding: 8px; /* or 0px if you want no padding */
+}
+
+@media screen and (max-width: 630px) {
+  .grader-results-header {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .grader-info {
+    display: block;
+  }
+  .progress-section {
+        margin-bottom: 12px;
+  }
+}

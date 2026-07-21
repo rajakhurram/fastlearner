@@ -1,0 +1,131 @@
+<div>
+    <div class="payment-heading display-inline-block">
+        <h3>Payments</h3>
+        <span class="font-14">Connect with Stripe to securely create your FastLearner wallet</span>
+        <br>
+        <span class="font-14">and manage your payment effortlessly.</span>
+      </div>
+</div>
+
+<div class="container">
+        <nz-card class="card">
+
+            <div nz-row class="display-flex payment-header">
+                <div class="align-items-center">
+                    <img style="height: 40px;" class="align-items-center" src="../../../../assets/icons/Stripe.svg">
+                    <div class="text-color mt-4">{{accountConnected ? 'Connected' : 'Not Connected'}}</div>
+                </div>
+                
+                
+                <div class="ml-auto display-flex align-items-center">
+                    <button
+                    *ngIf="!accountConnected"
+                    class="stripe-btn border-radius"
+                    nz-button
+                    nzType="primary"
+                    nzGhost
+                    (click)="createStripeAccount()"
+                  >
+                    Connect With Stripe
+                  </button>
+
+                  <button
+                  style="padding-left: 40px !important; padding-right: 40px !important;"
+                  *ngIf="accountConnected"
+                  class="stripe-btn border-radius"
+                  nz-button
+                  nzType="primary"
+                  nzGhost
+                  (click)="deleteStripeAccount()"
+                >
+                  Remove
+                </button>
+
+                </div>
+            </div>
+
+            <ng-container *ngIf="accountConnected">
+                <div nz-row class="payment-details-container">
+                    <div nz-col nzSpan="16">
+                        <div nz-row class="mt-2 ml-3">
+                            <div nz-col nzSpan="12">
+                                <label class="text-color">Full Name</label>
+                                <div class="fields mt-1 border-radius"> {{payment?.fullName}}</div>
+                            </div>
+                            <div nz-col nzSpan="12">
+                                <label class="text-color">Stripe Account Id</label>
+                                <div class="fields mt-1 border-radius"> {{payment?.stripeId}}</div>
+                            </div>
+                        </div>
+            
+                        <div nz-row class="mt-2 ml-3 mb-2">
+                            <div nz-col nzSpan="12">
+                                <label class="text-color">Bank Name</label>
+                                <div class="fields mt-1 border-radius"> {{payment?.bankName}}</div>
+                            </div>
+                            <div nz-col nzSpan="12">
+                                <label class="text-color">Balance</label>
+                                <div class="fields mt-1 border-radius"> ${{payment?.balance}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div nz-col nzSpan="8" class="display-flex align-items-center justify-content-end">
+                        <button
+                        style="padding-left: 37px !important; padding-right: 37px !important;"
+                        class="stripe-btn border-radius mr-4"
+                        nz-button
+                        nzType="primary"
+                        nzGhost
+                        (click)="openWithDrawModal()"
+                      >
+                        Withdraw
+                      </button>
+                    </div>
+
+                </div>
+            </ng-container>
+
+            <ng-container >
+                <div nz-row class="mt-2">
+                    
+                    <div class="transaction-history-head color-blue w-100">Transaction History</div>
+
+                    <nz-table #basicTable [nzData]="transactionHistory" [nzShowPagination]="false" class="w-100 mt-1">
+                        <thead>
+                          <tr>
+                            <th class="th-style tr-style">Date</th>
+                            <th class="th-style tr-style">Time</th>
+                            <th class="th-style tr-style">Bank Name</th>
+                            <th class="th-style tr-style">Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of basicTable?.data">
+                              <td class="tr-style font-16">{{ data.withdrawalAt }}</td>
+                              <td class="tr-style font-16">{{ data.time }}</td>
+                              <td class="tr-style font-16">{{ data.bankName }}</td>
+                              <td class="tr-style font-16">{{ data.amount }}</td>
+                            </tr>
+                        </tbody>
+                      </nz-table>
+
+                      <div class="w-100 display-flex justify-content-end">
+                        <nz-pagination
+                        style="float: right"
+                        class="display-inline-block mt-2"
+                        [nzPageIndex]="transactionHistoryPayload.pageNo + 1"
+                        [nzTotal]="totalElements"
+                        [nzPageSize]="10"
+                        (nzPageIndexChange)="onPageChange($event)"
+                      >
+                      </nz-pagination>
+                      </div>
+
+                </div>
+            </ng-container>
+
+        
+        </nz-card>
+</div>
+  

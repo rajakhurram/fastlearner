@@ -1,0 +1,182 @@
+<div class="chat">
+  <div nz-row>
+    <div nz-col>
+      <div class="chat-header">
+        <h3>Chat with AI</h3>
+      </div>
+    </div>
+  </div>
+  <div class="chat-content">
+    <div nz-row class="chat-row" [nzGutter]="16">
+      <div nz-col nzXs="24" nzMd="24" nzLg="6">
+        <div class="chat-left-side">
+          <div class="box">
+            <div
+              class="align-heading"
+              *ngFor="let panel of courseChat; let i = index"
+            >
+              <h4>Section {{ i + 1 }}: {{ panel?.sectionName }}</h4>
+              <nz-collapse
+                style="background-color: white"
+                [nzBordered]="false"
+                [nzExpandIconPosition]="'right'"
+              >
+                <nz-collapse-panel
+                  #p
+                  *ngFor="let topic of panel.topics; let j = index"
+                  [nzHeader]="header"
+                  [nzActive]="topic.active"
+                  [ngStyle]="topic.customStyle"
+                >
+                  <div
+                    *ngFor="let chat of topic?.chatTopicHistory"
+                    class="inner-questions"
+                    class="inner-questions"
+                    [ngClass]="{ selected: chat?.chatId === selectedChatId }"
+                    (click)="
+                      getCourseChatHistory(
+                        chat?.chatId,
+                        chat?.time,
+                        topic?.topicId
+                      )
+                    "
+                  >
+                    <div class="time">
+                      <nz-tag class="tag-border" [nzColor]="'#212189'">{{
+                        chat?.time
+                      }}</nz-tag>
+                    </div>
+                    <div class="question-topic">
+                      <span>{{ chat?.title }}</span>
+                    </div>
+                    <div class="chat-more-option">
+                      <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" class="chat-more-option">
+                        <span nz-icon nzType="more" ></span>
+                      </a>
+                      <nz-dropdown-menu #menu="nzDropdownMenu" nzPlacement="'bottomRight'">
+                        <ul nz-menu>
+                          <li nz-menu-item (click)="deleteChat(chat)">Delete</li>
+                        </ul>
+                      </nz-dropdown-menu>
+                    </div>
+                  </div>
+                  <ng-template #header>
+                    <div class="inner-chat-header">
+                      <span
+                        style="
+                          text-align: left;
+                          display: flex;
+                          width: 85%;
+                          color: #292929;
+                          word-break: break-word;
+                        "
+                      >
+                        {{ panel?.sequenceNumber }}.{{ topic?.sequence }}
+                        {{ topic?.topicName }}</span
+                      >
+                    </div>
+                  </ng-template>
+                </nz-collapse-panel>
+              </nz-collapse>
+            </div>
+            <div class="chat-img" *ngIf="!courseChatPresent">
+              <img src="../../../../assets/images/chat-ai.svg" alt="Chat" />
+              <div class="image-text-container">
+                <p class="image-text-container__text">
+                  Ask your first question
+                </p>
+                <p class="image-text-container__text">Start a chat</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzXs="24" nzMd="24" nzLg="18">
+        <div class="chat-right-side">
+          <div class="chat-box">
+            <div *ngIf="courseChatPresent" class="chat-scroll">
+              <div
+                class="chat"
+                *ngFor="let chat of courseChatHistory; let i = index"
+              >
+                <div class="row" nz-row [nzGutter]="16">
+                  <div nz-col>
+                    <div class="user-avatar">
+                      <nz-avatar
+                        class="user-icon"
+                        nzIcon="user"
+                        [nzSrc]="profilePicture"
+                        nzAlt="Profile"
+                      ></nz-avatar>
+                    </div>
+                  </div>
+                  <div nz-col style="flex: 1">
+                    <div class="question">
+                      <p>{{ chat?.question }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="16">
+                  <div nz-col>
+                    <div class="user-avatar">
+                      <nz-avatar
+                        nzAlt="chat"
+                        class="user-icon"
+                        nzIcon="user"
+                        nzSrc="../../../../assets/icons/chat-ai.svg"
+                      ></nz-avatar>
+                    </div>
+                  </div>
+                  <div nz-col style="flex: 1">
+                    <div class="reply">
+                      <p>{{ chat?.answer }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <nz-spin
+              [nzSpinning]="showSpinner"
+              class="spinner"
+              nzSimple
+            ></nz-spin>
+            <div class="row" nz-row [nzGutter]="16">
+              <div nz-col>
+                <div class="user-avatar">
+                  <nz-avatar
+                    nzAlt="Profile"
+                    class="user-icon"
+                    nzIcon="user"
+                    [nzSrc]="profilePicture"
+                    style="margin-left: 8px"
+                  ></nz-avatar>
+                </div>
+              </div>
+              <div nz-col col style="flex: 1">
+                <textarea
+                  (keyup.enter)="sendMessage()"
+                  class="text-area"
+                  name="question"
+                  [(ngModel)]="askQuestion"
+                  [rows]="courseChatPresent ? '4' : '20'"
+                  nz-input
+                  placeholder="Write something"
+                ></textarea>
+              </div>
+            </div>
+            <div class="button-row">
+              <button
+                (click)="sendMessage()"
+                nz-button
+                class="chat-button"
+                [nzType]="'primary'"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -20,6 +20,7 @@ import { SearchFilterConfig } from 'src/app/core/models/search-filter-config.mod
 import { TableConfig } from 'src/app/core/models/table.model-config';
 import { AffiliateService } from 'src/app/core/services/affiliate.service';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { formatAffiliateRevenue } from '../affiliate-format.util';
 import { MessageService } from 'src/app/core/services/message.service';
 import { AffiliateModalComponent } from 'src/app/modules/dynamic-modals/affiliate-modal/affiliate-modal.component';
 import { AssignCourseModalComponent } from 'src/app/modules/dynamic-modals/assign-course-modal/assign-course-modal.component';
@@ -302,6 +303,7 @@ export class PremiumCoursesComponent implements OnInit {
           const assignedCourses: AssignedPremiumCourses[] =
             response?.data?.content;
           assignedCourses?.forEach((element) => {
+            element.revenue = formatAffiliateRevenue(element.revenue);
             element['showCopyIcon'] = true;
           });
 

@@ -36,11 +36,11 @@ import { SearchDropdownComponent } from './search-dropdown/search-dropdown.compo
 import { ClassAssessmentDropdownComponent } from './class-assessment-dropdown/class-assessment-dropdown.component';
 import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { AiGraderLandingPageComponent } from '../pages/ai-grader-landing-page/ai-grader-landing-page.component';
-import { NzCarouselModule } from "ng-zorro-antd/carousel";
+import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { AiGraderLoaderComponent } from './ai-grader-loader/ai-grader-loader.component';
 import { PricingPageComponent } from '../pages/pricing-page/pricing-page.component';
 import { RouterModule } from '@angular/router';
+import { StripHtmlPipe } from 'src/app/core/pipes/strip-html.pipe';
 
 @NgModule({
   declarations: [
@@ -71,9 +71,9 @@ import { RouterModule } from '@angular/router';
     SearchDropdownComponent,
     ClassAssessmentDropdownComponent,
     PdfViewerComponent,
-    AiGraderLandingPageComponent,
     AiGraderLoaderComponent,
-    PricingPageComponent
+    PricingPageComponent,
+    StripHtmlPipe,
   ],
 
   imports: [
@@ -89,7 +89,7 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     PdfViewerModule,
     NzCarouselModule,
-    RouterModule
+    RouterModule,
   ],
   exports: [
     NavbarComponent,
@@ -110,13 +110,15 @@ import { RouterModule } from '@angular/router';
     ViewAllButtonComponent,
     CourseCardComponent,
     AssignCourseAffliateComponent,
+    ContainerComponent,
     InputComponent,
     PreviewUploadComponent,
     DropdownComponent,
     SearchDropdownComponent,
     ClassAssessmentDropdownComponent,
     PdfViewerComponent,
-    AiGraderLoaderComponent
+    AiGraderLoaderComponent,
+    StripHtmlPipe,
   ],
 })
-export class SharedModule { }
+export class SharedModule {}

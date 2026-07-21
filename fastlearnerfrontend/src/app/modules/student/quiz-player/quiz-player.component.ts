@@ -17,7 +17,7 @@ import { MessageService } from 'src/app/core/services/message.service';
 type AnswerSubmitEvent = {
   quizAttemptId: string;
   isAllowedToRetake: boolean;
-}
+};
 
 @Component({
   selector: 'app-quiz-player',
@@ -26,7 +26,7 @@ type AnswerSubmitEvent = {
 })
 export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
   _httpConstants: HttpConstants = new HttpConstants();
-  quizeType: "TEST" | "SURVEY" = "TEST";
+  quizeType: 'TEST' | 'SURVEY' = 'TEST';
 
   @Input() currentSelectedTopic: any;
   @Output() skipQuizEmitter = new EventEmitter<any>();
@@ -68,6 +68,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
     submitted: boolean;
     courseId: number;
     timeZone: string;
+    questionText: string;
   }> = [];
   selectedAnswers: string[] = [];
   questionAnswers: any = [];
@@ -75,19 +76,21 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
   quizBtnText?: string = 'Next';
   quizAttemptData: any;
   loading: boolean = false;
-
+  previewImageUrl: string | null = null;
   isLastQuestion: any;
   option: any;
   @Output() reviewCallBack = new EventEmitter<any>();
   currentAnswerText?: any;
+  @Output() quizStartedEmitter = new EventEmitter<boolean>();
 
   constructor(
     private _courseService: CourseService,
     private _message: MessageService,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
+    console.log(this.quizQuestions);
     this.currentAnswerText = null;
     this.quizeType = this.currentSelectedTopic.testType;
     if (this.congratsScreen) {
@@ -110,9 +113,76 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
     this.fetchAttemptQuiz();
   }
 
+  isImage(fileUrl: string): boolean {
+    return /\.(jpg|jpeg|png|gif|bmp|svg)$/.test(fileUrl);
+  }
+
+  isAudio(fileUrl: string): boolean {
+    return /\.(mp3|wav|ogg|aac|flac)$/.test(fileUrl);
+  }
+
+  toggleAudio(question: any) {
+    const audio: HTMLAudioElement = document.querySelector(
+      `audio[src="${question.questionImageUrl}"]`,
+    ) as HTMLAudioElement;
+
+    if (!audio) return;
+
+    if (question.isPlaying) {
+      audio.pause();
+      question.isPlaying = false;
+    } else {
+      audio.play();
+      question.isPlaying = true;
+    }
+  }
+
+  updateProgress(audio: HTMLAudioElement, question: any) {
+    question.progress = (audio.currentTime / audio.duration) * 100;
+    question.currentTime = this.formatTime(audio.currentTime);
+  }
+
+  setDuration(audio: HTMLAudioElement, question: any) {
+    question.duration = this.formatTime(audio.duration);
+  }
+
+  audioEnded(question: any) {
+    question.isPlaying = false;
+    question.progress = 0;
+  }
+
+  seekAudio(event: MouseEvent, question: any) {
+    const bar = event.currentTarget as HTMLElement;
+    const rect = bar.getBoundingClientRect();
+    const percent = (event.clientX - rect.left) / rect.width;
+
+    const audio: HTMLAudioElement = document.querySelector(
+      `audio[src="${question.attachedAudioUrl}"]`,
+    ) as HTMLAudioElement;
+
+    if (audio) {
+      audio.currentTime = percent * audio.duration;
+    }
+  }
+
+  formatTime(time: number): string {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60)
+      .toString()
+      .padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
+
+  openImagePreview(url: string) {
+    this.previewImageUrl = url;
+  }
+
+  closePreview() {
+    this.previewImageUrl = null;
+  }
   resetAnswers() {
     this.quizQuestions.forEach((x: any) =>
-      x.quizAnswers.forEach((y: any) => (y.active = false))
+      x.quizAnswers.forEach((y: any) => (y.active = false)),
     );
   }
 
@@ -138,8 +208,9 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
         this.currentSelectedTopic?.quizQuestionAnswer?.quizQuestions;
       this.passingCriteria = this.currentSelectedTopic?.passingCriteria;
       this.durationInMinutes = this.currentSelectedTopic?.durationInMinutes;
-      this.showQuizAttempt= false;
-      // this.fetchAttemptQuiz();
+      this.showQuizAttempt = false;
+      this.showCongratsScreen = false;
+      this.fetchAttemptQuiz();
     }
   }
 
@@ -148,6 +219,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   startQuiz() {
+    this.currentAnswerText = null;
     this.showQuizScreen = true;
     this.welcomeQuizScreen = false;
     this.index = 0;
@@ -166,6 +238,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
     this.durationInMinutes;
     this.stopTimer();
     this.startTimer();
+    this.quizStartedEmitter.emit(true);
   }
 
   stopTimer() {
@@ -186,13 +259,13 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
         x.active = x.answerId === option.answerId;
       });
     }
-    this.submitAnswer();
+    this.submitAnswer(option);
     // else if(this.quizQuestions[this.index].questionType === 'MULTIPLE_CHOICE'){
     //   this.submitAnswer();
     // }
   }
 
-  submitAnswer() {
+  submitAnswer(option: any) {
     if (this.selectedAnswerId) {
       let question =
         this.currentSelectedTopic?.quizQuestionAnswer?.quizQuestions[
@@ -200,9 +273,10 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
         ];
       let answer = {
         questionId: question?.questionId,
+        questionText: question?.questionText,
         questionType: question?.questionType,
         answerId: [],
-        answerText: null,
+        answerText: option.answerText,
         submitted: false,
         courseId: this.courseId,
         timeZone: this.timeZone,
@@ -211,7 +285,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
       if (
         this.userAnswers?.length > 0 &&
         this.userAnswers?.some(
-          (ua?: any) => ua.questionId == question?.questionId
+          (ua?: any) => ua.questionId == question?.questionId,
         )
       ) {
         this.userAnswers?.forEach((el?: any) => {
@@ -230,7 +304,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
               el.answerId.push(this.selectedAnswerId);
             } else {
               el.answerId = el?.answerId?.filter(
-                (num?: any) => num !== this.selectedAnswerId
+                (num?: any) => num !== this.selectedAnswerId,
               );
             }
           }
@@ -267,7 +341,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
         const nextAnswer = this.userAnswers.find(
           (answer: any) =>
-            answer.questionId === this.quizQuestions[this.index].questionId
+            answer.questionId === this.quizQuestions[this.index].questionId,
         );
 
         this.selectedAnswerId = nextAnswer ? nextAnswer.answerId[0] : null;
@@ -281,7 +355,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
         // Filter only attempted answers
         this.userAnswers = this.userAnswers.filter(
-          (ua?: any) => ua.submitted && ua.answerId.length > 0
+          (ua?: any) => ua.submitted && ua.answerId.length > 0,
         );
 
         this._courseService.submitQuizAnswers(this.userAnswers).subscribe({
@@ -295,6 +369,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
               quizAttemptId: response.data?.quizAttemptId,
               isAllowedToRetake: response.data?.isAllowedToRetake,
             });
+            this.quizStartedEmitter.emit(false);
           },
           error: (error: any) => {
             this.stopTimer();
@@ -367,7 +442,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     let existingAnswerIndex = this.userAnswers.findIndex(
-      (ans: any) => ans.questionId === currentQuestion?.questionId
+      (ans: any) => ans.questionId === currentQuestion?.questionId,
     );
 
     if (existingAnswerIndex !== -1) {
@@ -377,6 +452,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
     } else if (this.selectedAnswerId !== null) {
       this.userAnswers.push({
         questionId: currentQuestion.questionId,
+        questionText: currentQuestion.questionText,
         answerId: [this.selectedAnswerId],
         answerText: this.currentAnswerText,
         questionType: currentQuestion.questionType,
@@ -388,12 +464,12 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
     // **Check if all answers are empty before submitting**
     const hasValidAnswers = this.userAnswers.some(
-      (answer?: any) => answer?.answerId !== null && answer?.submitted
+      (answer?: any) => answer?.answerId !== null && answer?.submitted,
     );
 
     if (!hasValidAnswers) {
       this._message.error(
-        'No answers submitted! Redirecting to start screen...'
+        'No answers submitted! Redirecting to start screen...',
       );
 
       // **Reset quiz states and redirect to start screen**
@@ -408,13 +484,15 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
       let finalSubmission = this.quizQuestions.map((q: any) => {
         const userAnswer = this.userAnswers.find(
-          (ua: any) => ua.questionId === q.questionId
+          (ua: any) => ua.questionId === q.questionId,
         );
         return {
           questionId: q.questionId,
           answerId: userAnswer ? userAnswer.answerId : null,
           questionType: q.questionType,
+          questionText: q.questionText,
           submitted: !!userAnswer,
+          answerText: userAnswer ? userAnswer.answerText : null,
           courseId: this.courseId,
           timeZone: this.timeZone,
         };
@@ -433,6 +511,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
             quizAttemptId: response.data?.quizAttemptId,
             isAllowedToRetake: response.data?.isAllowedToRetake,
           });
+          this.quizStartedEmitter.emit(false);
         },
         error: (error: any) => {
           console.error('Quiz submission error:', error);
@@ -452,7 +531,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
       const previousAnswer = this.userAnswers.find(
         (answer: any) =>
-          answer.questionId === this.quizQuestions[this.index].questionId
+          answer.questionId === this.quizQuestions[this.index].questionId,
       );
 
       if (previousAnswer) {
@@ -477,7 +556,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
         this.selectedAnswers.push(option.answerId);
       } else {
         this.selectedAnswers = this.selectedAnswers.filter(
-          (id) => id !== option.answerId
+          (id) => id !== option.answerId,
         );
       }
     }
@@ -521,7 +600,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
   addTextBaseQuestion(currentQuestion?: any) {
     this.userAnswers = this.userAnswers.filter(
-      (ans) => ans.questionId !== currentQuestion?.questionId
+      (ans) => ans.questionId !== currentQuestion?.questionId,
     );
 
     if (this.currentAnswerText) {
@@ -529,6 +608,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
       let answer = {
         questionId: currentQuestion?.questionId,
         questionType: currentQuestion?.questionType,
+        questionText: currentQuestion?.questionText,
         answerId: [currentQuestion.quizAnswers[0].answerId],
         answerText: this.currentAnswerText,
         submitted: false,
@@ -541,12 +621,13 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   fetchAttemptQuiz() {
-    const quizId = this.currentSelectedTopic?.quizId || this.currentSelectedTopic?.id;
+    const quizId =
+      this.currentSelectedTopic?.quizId || this.currentSelectedTopic?.id;
     this.loading = true;
 
-    if (this.showQuizAttempt || this.welcomeQuizScreen) {
-      return;
-    }
+    // if (this.showQuizAttempt || this.welcomeQuizScreen) {
+    //   return;
+    // }
 
     this._courseService.getQuizAttempt(quizId).subscribe({
       next: (res: any) => {
@@ -581,7 +662,7 @@ export class QuizPlayerComponent implements OnInit, OnChanges, OnDestroy {
           this.showQuizAttempt = false;
           this.welcomeQuizScreen = true;
         }
-      }
+      },
     });
   }
 }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CourseContentType } from 'src/app/core/enums/course-content-type.enum';
 import { CourseType } from 'src/app/core/enums/course-status';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { StripHtmlPipe } from 'src/app/core/pipes/strip-html.pipe';
 
 @Component({
   selector: 'app-course-card',

@@ -8,9 +8,14 @@ import { SharedModule } from '../../shared/shared.module';
 import { CourseInformationComponent } from './course-information/course-information.component';
 import { AddSectionComponent } from './add-section/add-section.component';
 import { PreviewComponent } from './preview/preview.component';
-import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray, CdkDragHandle} from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDropList,
+  CdkDrag,
+  moveItemInArray,
+  CdkDragHandle,
+} from '@angular/cdk/drag-drop';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-
 
 @NgModule({
   declarations: [
@@ -27,9 +32,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     CourseRoutingModule,
     AntDesignModule,
     SharedModule,
-    AngularEditorModule
-  ], 
-  providers: [
+    AngularEditorModule,
   ],
+  providers: [],
 })
-export class CourseModule { }
+export class CourseModule {}

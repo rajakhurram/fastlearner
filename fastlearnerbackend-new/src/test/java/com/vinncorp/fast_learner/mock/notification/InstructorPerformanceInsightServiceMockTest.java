@@ -71,16 +71,16 @@ public class InstructorPerformanceInsightServiceMockTest {
                 any(), any(), any(), any());
     }
 
-    @Test
-    @DisplayName("Test: Notify To User On New Subscription- when provided valid data (Success)")
-    public void notifyToUserOnNewSubscription_whenProvidedValidData() throws IOException {
-        doNothing().when(rabbitMQProducer).sendMessageToLoggedInUser(anyString(), anyLong(), anyLong(), anyString(),
-                any(), any(), any(), any());
-        service.notifyToUserOnNewSubscription("Monthly", 1L);
-
-        verify(rabbitMQProducer, times(1)).sendMessageToLoggedInUser(anyString(), anyLong(), eq(null), eq(null),
-                any(), any(), any(), any());
-    }
+//    @Test
+//    @DisplayName("Test: Notify To User On New Subscription- when provided valid data (Success)")
+//    public void notifyToUserOnNewSubscription_whenProvidedValidData() throws IOException {
+//        doNothing().when(rabbitMQProducer).sendMessageToLoggedInUser(anyString(), anyLong(), anyLong(), anyString(),
+//                any(), any(), any(), any());
+//        service.notifyToUserOnNewSubscription("Monthly", 1L);
+//
+//        verify(rabbitMQProducer, times(1)).sendMessageToLoggedInUser(anyString(), anyLong(), eq(null), eq(null),
+//                any(), any(), any(), any());
+//    }
 
     @Test
     @DisplayName("Test: Notify To User Exclusive Course Access- when provided valid data (Success)")

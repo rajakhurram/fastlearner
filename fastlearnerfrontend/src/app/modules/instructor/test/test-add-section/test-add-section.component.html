@@ -1355,17 +1355,22 @@
                                                 nz-input
                                                 type="text"
                                                 [(ngModel)]="question.ques"
-                                                (keyup)="onQuizInputChange(topic)"
+                                                (keyup)="
+                                                  onQuizInputChange(topic)
+                                                "
                                                 placeholder="Let's ask a question"
                                                 nzSize="large"
-                                                maxlength="500" 
+                                                maxlength="500"
                                               />
                                               <small
                                                 style="color: red"
                                                 class="text-danger"
-                                                *ngIf="question.ques?.length === 500"
+                                                *ngIf="
+                                                  question.ques?.length === 500
+                                                "
                                               >
-                                                You’ve reached the 500 character limit.
+                                                You’ve reached the 500 character
+                                                limit.
                                               </small>
                                             </div>
 
@@ -1411,7 +1416,7 @@
                                                           questionType?.key ===
                                                           questionType?.TRUE_FALSE
                                                             ? '7px'
-                                                            : '9px'
+                                                            : '9px',
                                                       }"
                                                     />
                                                   </div>
@@ -1646,14 +1651,14 @@
                                                 "
                                                 [ngClass]="{
                                                   'correct-answer':
-                                                    answer?.isCorrectAnswer
+                                                    answer?.isCorrectAnswer,
                                                 }"
                                               >
                                                 {{
                                                   question?.questionType?.key ==
                                                   questionType.TRUE_FALSE
                                                     ? (answer?.ans
-                                                      | slice : 0 : 1)
+                                                      | slice: 0 : 1)
                                                     : answer?.answerOrder
                                                 }}
                                               </span>
@@ -1924,7 +1929,7 @@
                       courseInformationData?.value?.courseType ===
                       courseType.PREMIUM
                         ? '2%'
-                        : '0px'
+                        : '0px',
                   }"
                   class="display-inline-block"
                   style="margin-left: 10px"

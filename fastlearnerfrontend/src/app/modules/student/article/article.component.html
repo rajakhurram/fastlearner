@@ -1,1 +1,9 @@
-<div [innerHtml]="article" class="mt-4"></div>
+<div class="article-container">
+  <div class="article-content" [innerHtml]="article"></div>
+
+  <div class="article-actions">
+    <button class="continue-btn" nz-button (click)="continue()">
+      Continue
+    </button>
+  </div>
+</div>

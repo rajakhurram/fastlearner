@@ -12,6 +12,7 @@ import { SubscriptionPlanComponent } from 'src/app/modules/auth/subscription-pla
 import { CacheService } from 'src/app/core/services/cache.service';
 import { SubscriptionPlanType } from 'src/app/core/enums/subscription-plan.enum';
 import { ClassAssessmentModalComponent } from 'src/app/modules/dynamic-modals/class-assessment-modal/class-assessment-modal.component';
+import JSZip from 'jszip';
 
 @Component({
   selector: 'app-grader-uploader',
@@ -19,6 +20,7 @@ import { ClassAssessmentModalComponent } from 'src/app/modules/dynamic-modals/cl
   styleUrls: ['./grader-uploader.component.scss'],
 })
 export class GraderUploaderComponent {
+  private readonly freePlanMaxGradableFiles = 7;
   className: any;
   constructor(
     private modal: NzModalService,
@@ -28,8 +30,10 @@ export class GraderUploaderComponent {
     public sanitizer: DomSanitizer,
     private loader: NgxUiLoaderService,
     private _viewContainerRef: ViewContainerRef,
-    private _cacheService?: CacheService
-  ) {}
+    private _cacheService?: CacheService,
+  ) {
+    this.showUpgradePLanButton();
+  }
 
   userCreatedClasses: Array<{ label: string; value: string }> = [];
   isProcessing = false;
@@ -71,10 +75,13 @@ export class GraderUploaderComponent {
   gradedPapers?: number = 0;
   allowedPapers?: number = 0;
   maxPapers = 500;
-  showUpgradePlan?: boolean = true;
+  showUpgradePlan = false;
   subscriptionPlanType = SubscriptionPlanType;
+  totalFileCount = 0;
 
   ngOnInit(): void {
+    const savedCount = Number(localStorage.getItem('totalFileCount') || 0);
+    this.totalFileCount = Number.isFinite(savedCount) ? savedCount : 0;
     this.fetchClasses();
     this.getNoOfPages();
     this.showUpgradePLanButton();
@@ -85,7 +92,7 @@ export class GraderUploaderComponent {
       next: (res) => {
         this.classes = append
           ? [...this.classes, ...res?.data?.aiClasses]
-          : res?.data?.aiClasses ?? [];
+          : (res?.data?.aiClasses ?? []);
         this.classesTotalPages = res?.data?.pages;
         this.filteredClassList = [...this.classes];
       },
@@ -97,7 +104,7 @@ export class GraderUploaderComponent {
 
   showUpgradePLanButton() {
     const planType: string = this._cacheService.getJsonData(
-      'loggedInUserDetails'
+      'loggedInUserDetails',
     )?.subscriptionPlanType;
 
     if (
@@ -150,6 +157,8 @@ export class GraderUploaderComponent {
       return;
     }
 
+    
+
     const formData = new FormData();
 
     this.uploadedFiles.forEach((fileWrapper: any) => {
@@ -160,33 +169,50 @@ export class GraderUploaderComponent {
       formData.append('answer_key_file', this.selectedAnswerFile);
     }
 
+    const selectedClassName =
+      this.classes?.find((c) => c.id === this.selectedClass)?.name || '';
+    const selectedAssessmentName =
+      this.assessments?.find((a) => a.id === this.selectedAssessment)?.name ||
+      '';
+
     formData.append('evaluationCriteria', this.evaluationCriteria);
     formData.append('assessmentId', this.selectedAssessment);
+    formData.append('classId', this.selectedClass);
+    formData.append('className', selectedClassName);
+    formData.append('assessmentName', selectedAssessmentName);
 
     this.isProcessing = true;
 
-    this.aiGraderService.startGrading(formData).subscribe({
+    this.aiGraderService.startGradingLandingPage(formData).subscribe({
       next: (res) => {
+        if (this.isFreePlan()) {
+          //this.totalFileCount += currentUploadUnits;
+          localStorage.setItem(
+            'totalFileCount',
+            this.totalFileCount.toString(),
+          );
+        }
         this.isProcessing = false;
         this.router.navigate(['instructor/ai-grader/results'], {
           queryParams: {
             id: this.selectedAssessment,
             classId: this.selectedClass,
-            source: 'uploader'
+            numberOfFiles: res.data.numberOfFiles,
+            source: 'uploader',
           },
         });
       },
-     error: (err) => {
-    this.isProcessing = false;
+      error: (err) => {
+        this.isProcessing = false;
 
-    if (err.status != 500 && err.error?.message) {
-      this._messageService.error(err.error.message);
-    }else {
-      this._messageService.error('Upload failed. Please try again.');
-    }
+        if (err.status != 500 && err.error?.message) {
+          this._messageService.error(err.error.message);
+        } else {
+          this._messageService.error('Upload failed. Please try again.');
+        }
 
-    this.router.navigate(['instructor/ai-grader/uploader']);
-  },
+        this.router.navigate(['instructor/ai-grader/uploader']);
+      },
     });
   }
 
@@ -215,24 +241,27 @@ export class GraderUploaderComponent {
     event.target.value = '';
   }
 
-  onFileUpload(event: any) {
-  const files: FileList = event.target.files;
-  const newFiles = Array.from(files || []);
-  const totalFiles = (this.uploadedFiles?.length || 0) + newFiles.length;
+  async onFileUpload(event: any) {
+    const files: FileList = event.target.files;
+    const newFiles = Array.from(files || []);
+    const totalFiles = (this.uploadedFiles?.length || 0) + newFiles.length;
 
-  if (totalFiles > 40) {
-    this._messageService?.error('You can upload a maximum of 40 files.');
-    return;
-  }
+    if (totalFiles > 100) {
+      this._messageService?.error('You can upload a maximum of 100 files.');
+      return;
+    }
 
-  for (let i = 0; i < newFiles.length; i++) {
-    const file = newFiles[i];
+    // let queuedUnits = this.getCurrentQueuedUnits();
+    for (let i = 0; i < newFiles.length; i++) {
+      const file = newFiles[i];
+      // const incomingUnits = await this.getIncomingUnits(file);
+      // if (!this.canUploadInFreePlan(incomingUnits, queuedUnits)) continue;
 
-    if (file.type === 'application/pdf') {
+      // if (file.type === 'application/pdf') {
       const objectUrl = URL.createObjectURL(file);
 
       const alreadyUploaded = this.uploadedFiles.some(
-        (f) => f.name === file.name
+        (f) => f.name === file.name,
       );
       if (alreadyUploaded) continue;
 
@@ -242,13 +271,61 @@ export class GraderUploaderComponent {
         pages: [1],
         file,
         name: file.name,
+        // gradingUnits: incomingUnits,
       });
-    } else {
-      this._messageService?.error?.(`${file.name} is not a PDF file.`);
+      // queuedUnits += incomingUnits;
+      // }
+      // else {
+      //   this._messageService?.error?.(`${file.name} is not a PDF file.`);
+      // }
     }
   }
-}
 
+  private isFreePlan(): boolean {
+    const planType =
+      this._cacheService
+        ?.getJsonData('loggedInUserDetails')
+        ?.subscriptionPlanType?.toUpperCase?.() || '';
+    return planType === this.subscriptionPlanType.FREE;
+  }
+
+  private getCurrentQueuedUnits(): number {
+    return this.uploadedFiles.reduce(
+      (sum, fileWrapper: any) => sum + (Number(fileWrapper?.gradingUnits) || 1),
+      0,
+    );
+  }
+
+  private canUploadInFreePlan(
+    incomingUnits: number,
+    queuedUnits: number,
+  ): boolean {
+    if (!this.isFreePlan()) return true;
+
+    const remainingUnits =
+      this.freePlanMaxGradableFiles - this.totalFileCount - queuedUnits;
+    if (incomingUnits <= remainingUnits) return true;
+
+    this._messageService.error('free plan limit exceed , upgrade your plan');
+    return false;
+  }
+
+  private async getIncomingUnits(file: File): Promise<number> {
+    if (!this.isZipFile(file, true)) return 1;
+
+    try {
+      const zip = await JSZip.loadAsync(file);
+      const totalFilesInZip = Object.values(zip.files).filter(
+        (entry) => !entry.dir,
+      ).length;
+      return totalFilesInZip || 1;
+    } catch {
+      this._messageService.error(
+        'Invalid ZIP file. Please upload a valid ZIP archive.',
+      );
+      return Number.MAX_SAFE_INTEGER;
+    }
+  }
 
   onPdfLoaded(pdf: any, file: any) {
     console.log('PDF loaded:', pdf);
@@ -256,30 +333,51 @@ export class GraderUploaderComponent {
     file.pages = Array.from({ length: pdf.numPages }, (_, i) => i + 1);
   }
 
+  isZipFile(file: any, zipOnly = false): boolean {
+    if (!file) return false;
+
+    const type = (file.type || '').toLowerCase();
+    const name = (file.name || '').toLowerCase();
+
+    const isZip =
+      type === 'application/zip' ||
+      type === 'application/x-zip-compressed' ||
+      name.endsWith('.zip');
+
+    if (zipOnly) return isZip;
+
+    return (
+      isZip ||
+      type === 'application/vnd.rar' ||
+      type === 'application/x-rar-compressed' ||
+      name.endsWith('.rar')
+    );
+  }
+
   resetUpload() {
     this.uploadedFiles = [];
   }
 
   onDrop(event: DragEvent) {
-  event.preventDefault();
-  this.isDragging = false;
+    event.preventDefault();
+    this.isDragging = false;
 
-  const files = Array.from(event.dataTransfer?.files || []);
-  const totalFiles = (this.uploadedFiles?.length || 0) + files.length;
+    const files = Array.from(event.dataTransfer?.files || []);
+    const totalFiles = (this.uploadedFiles?.length || 0) + files.length;
 
-  if (totalFiles > 40) {
-    this._messageService?.error('You can upload a maximum of 40 files.');
-    return;
+    if (totalFiles > 40) {
+      this._messageService?.error('You can upload a maximum of 40 files.');
+      return;
+    }
+
+    // Only proceed if limit is fine
+    this.onFileUpload({ target: { files: event.dataTransfer?.files } });
   }
 
-  // Only proceed if limit is fine
-  this.onFileUpload({ target: { files: event.dataTransfer?.files } });
-}
-
   onDragOver(event: DragEvent) {
-  event.preventDefault();
-  this.isDragging = true;
-}
+    event.preventDefault();
+    this.isDragging = true;
+  }
 
   onDragLeave() {
     this.isDragging = false;
@@ -296,7 +394,7 @@ export class GraderUploaderComponent {
       next: (res) => {
         this.assessments = append
           ? [...this.assessments, ...res?.data?.aiAssessments]
-          : res?.data?.aiAssessments ?? [];
+          : (res?.data?.aiAssessments ?? []);
         // this.assessments = res?.data?.aiAssessments;
         this.assessmentsTotalPages = res?.data?.pages;
         this.filteredAssessmentList = [...this.assessments];
@@ -374,45 +472,43 @@ export class GraderUploaderComponent {
     });
   }
 
-onClassDropdownChange(value: string | number): void {
-  // Use setTimeout to ensure the dropdown updates properly
-  setTimeout(() => {
-    if (value === '__create__') {
-      this.selectedClass = null;
-      this.assessments = [];            
-      this.filteredAssessmentList = []; 
-      this.selectedAssessment = null;
-      this.openModal('class');
-    } else {
-      this.selectedClass = Number(value);
-      this.assessments = [];            
-      this.filteredAssessmentList = [];
-      this.selectedAssessment = null;
-      this.fetchAssessments();
-    }
-  });
-}
+  onClassDropdownChange(value: string | number): void {
+    // Use setTimeout to ensure the dropdown updates properly
+    setTimeout(() => {
+      if (value === '__create__') {
+        this.selectedClass = null;
+        this.assessments = [];
+        this.filteredAssessmentList = [];
+        this.selectedAssessment = null;
+        this.openModal('class');
+      } else {
+        this.selectedClass = Number(value);
+        this.assessments = [];
+        this.filteredAssessmentList = [];
+        this.selectedAssessment = null;
+        this.fetchAssessments();
+      }
+    });
+  }
 
-onAssessmentDropdownChange(value: string | number): void {
-  // Use setTimeout to ensure the dropdown updates properly
-  setTimeout(() => {
-    if (value === '__create__') {
-      this.selectedAssessment = null;   
-      this.openModal('assessment');
-    } else {
-      this.selectedAssessment = Number(value);
-    }
-  });
-}
-
+  onAssessmentDropdownChange(value: string | number): void {
+    // Use setTimeout to ensure the dropdown updates properly
+    setTimeout(() => {
+      if (value === '__create__') {
+        this.selectedAssessment = null;
+        this.openModal('assessment');
+      } else {
+        this.selectedAssessment = Number(value);
+      }
+    });
+  }
 
   cancelNewAssessmentInput() {
-  if (!this.newAssessmentName?.trim()) {
-    this.showNewAssessmentInput = false;
-    this.selectedAssessment = null; // ✅ clear wrong selection
+    if (!this.newAssessmentName?.trim()) {
+      this.showNewAssessmentInput = false;
+      this.selectedAssessment = null; // ✅ clear wrong selection
+    }
   }
-}
-
 
   onClassScrollToBottom() {
     if (this.classPayload?.pageNo + 1 < this.classesTotalPages) {
@@ -461,41 +557,40 @@ onAssessmentDropdownChange(value: string | number): void {
     });
   }
 
-  undoRubricFile(){
+  undoRubricFile() {
     this.selectedAnswerFile = null;
     this.selectedFileName = null;
   }
 
   openModal(type: 'class' | 'assessment'): void {
-  const modalRef = this.modal.create({
-    nzContent: ClassAssessmentModalComponent,
-    nzComponentParams: {
-      type,
-      classId: this.selectedClass,
-    },
-    nzFooter: null,
-    nzWidth: 600,
-  });
+    const modalRef = this.modal.create({
+      nzContent: ClassAssessmentModalComponent,
+      nzComponentParams: {
+        type,
+        classId: this.selectedClass,
+      },
+      nzFooter: null,
+      nzWidth: 600,
+    });
 
-  modalRef.afterClose.subscribe((created) => {
-    if (created) {
-      if (created.type === 'class') {
-        this.classes.push({ id: created.id, name: created.name });
-        this.selectedClass = created.id;
-        this.fetchAssessments(); // ✅ Fetch assessments tied to new class
-      } else if (created.type === 'assessment') {
-        this.assessments.push({ id: created.id, name: created.name });
-        this.selectedAssessment = created.id;
+    modalRef.afterClose.subscribe((created) => {
+      if (created) {
+        if (created.type === 'class') {
+          this.classes.push({ id: created.id, name: created.name });
+          this.selectedClass = created.id;
+          this.fetchAssessments(); // ✅ Fetch assessments tied to new class
+        } else if (created.type === 'assessment') {
+          this.assessments.push({ id: created.id, name: created.name });
+          this.selectedAssessment = created.id;
+        }
+      } else {
+        // ✅ Reset the dropdowns when modal is closed without creation
+        if (type === 'class') {
+          this.selectedClass = null;
+        } else if (type === 'assessment') {
+          this.selectedAssessment = null;
+        }
       }
-    } else {
-      // ✅ Reset the dropdowns when modal is closed without creation
-      if (type === 'class') {
-        this.selectedClass = null;
-      } else if (type === 'assessment') {
-        this.selectedAssessment = null;
-      }
-    }
-  });
-}
-
+    });
+  }
 }

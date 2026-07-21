@@ -21,7 +21,7 @@ export class AiGraderStudentResultComponent {
     private location: Location,
     private router: Router,
     private _messageService?: MessageService,
-    private _cacheService?: CacheService
+    private _cacheService?: CacheService,
   ) {}
 
   resultViewData?: any;
@@ -31,6 +31,7 @@ export class AiGraderStudentResultComponent {
   questionTotalPages?: any;
   questions?: AIResultQuestion[] = [];
   loadingMoreQuestions?: boolean = false;
+  showRubricModal = false;
   resultPayload = {
     pageNo: 0,
     pageSize: 1,
@@ -41,41 +42,69 @@ export class AiGraderStudentResultComponent {
   };
 
   ngOnInit(): void {
-  this.resultViewData = this._cacheService.getJsonData('resultView');
+    this.resultViewData = this._cacheService.getJsonData('resultView');
 
-  if (!this.resultViewData) {
-    const assessmentId = this.route.snapshot.queryParamMap.get('assessmentId');
-    const classId = this.route.snapshot.queryParamMap.get('classId');
+    if (!this.resultViewData) {
+      const assessmentId =
+        this.route.snapshot.queryParamMap.get('assessmentId');
+      const classId = this.route.snapshot.queryParamMap.get('classId');
 
-    if (assessmentId && classId) {
-      this.resultViewData = {
-        assessmentId: +assessmentId,
-        classId: +classId,
-        pageNo: 1,
-      };
-      this._cacheService.saveJsonData('resultView', this.resultViewData);
+      if (assessmentId && classId) {
+        this.resultViewData = {
+          assessmentId: +assessmentId,
+          classId: +classId,
+          pageNo: 1,
+        };
+        this._cacheService.saveJsonData('resultView', this.resultViewData);
+      }
+    }
+    if (this.resultViewData) {
+      this.resultPayload.pageNo = this.resultViewData?.pageNo - 1 || 0;
+      this.getResultByClassAndAssessmentId();
+    } else {
+      this._messageService?.error('Missing result information. Please retry.');
     }
   }
-  if (this.resultViewData) {
-    this.resultPayload.pageNo = this.resultViewData?.pageNo - 1 || 0;
-    this.getResultByClassAndAssessmentId();
-  } else {
-    this._messageService?.error('Missing result information. Please retry.');
-  }
-}
 
+  private getStudentEmail(): string | null {
+    // Prefer full user profile if available
+    const profileRaw = this._cacheService?.getDataFromCache('userProfile');
+    if (profileRaw) {
+      try {
+        return JSON.parse(profileRaw)?.email ?? null;
+      } catch {}
+    }
+
+    // Fallback to loggedInUserDetails (always set right after login, including Google)
+    const loggedRaw = this._cacheService?.getDataFromCache(
+      'loggedInUserDetails',
+    );
+    if (loggedRaw) {
+      try {
+        return JSON.parse(loggedRaw)?.email ?? null;
+      } catch {}
+    }
+
+    return null;
+  }
 
   getResultByClassAndAssessmentId() {
+    const studEmail = this.getStudentEmail();
+    if (!studEmail) {
+      this._messageService?.error(
+        'Unable to load result. Please refresh and try again.',
+      );
+      return;
+    }
+
     this._aiGraderService
       .getResultByClassAndAssessmentId(
         {
           classId: this.resultViewData?.classId,
           assignmentId: this.resultViewData?.assessmentId,
-          studEmail: JSON.parse(
-            this._cacheService.getDataFromCache('userProfile')
-          ).email
+          studEmail,
         },
-        this.resultPayload
+        this.resultPayload,
       )
       ?.subscribe({
         next: (response: any) => {
@@ -111,7 +140,7 @@ export class AiGraderStudentResultComponent {
                     ...this.questions,
                     ...response?.data?.aiResultQueResponseList,
                   ]
-                : response?.data?.aiResultQueResponseList ?? [];
+                : (response?.data?.aiResultQueResponseList ?? []);
               this.loadingMoreQuestions = false;
             } else {
               this.questions = response?.data?.aiResultQueResponseList;
@@ -147,7 +176,16 @@ export class AiGraderStudentResultComponent {
     }
   }
 
+  get hasRubric(): boolean {
+    return !!this.result?.rubricUrl?.trim();
+  }
+
+  closeRubricModal(): void {
+    this.showRubricModal = false;
+  }
+
   goBack() {
-    this.router.navigate(['/student/grader-results'])
+    this._cacheService?.saveJsonData('studentGraderResultsNeedsRefresh', true);
+    this.router.navigate(['/student/grader-results']);
   }
 }

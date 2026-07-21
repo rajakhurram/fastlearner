@@ -3,7 +3,9 @@ import {
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
+  EventEmitter,
 } from '@angular/core';
 
 @Component({
@@ -13,6 +15,7 @@ import {
 })
 export class ArticleComponent implements OnInit, OnChanges {
   @Input() currentSelectedTopic: any;
+  @Output() continueArticleEmitter = new EventEmitter<void>();
   article: any;
 
   constructor() {}
@@ -22,6 +25,12 @@ export class ArticleComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.article = this.currentSelectedTopic?.article;
+    if (changes['currentSelectedTopic']) {
+      this.article = this.currentSelectedTopic?.article;
+    }
+  }
+
+  continue(): void {
+    this.continueArticleEmitter.emit();
   }
 }

@@ -1,0 +1,176 @@
+.enrollments-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .page-header {
+    h2 {
+      margin: 0;
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #212189;
+    }
+  }
+
+  .table-section {
+    border-radius: 4px;
+  }
+
+  .filter-row {
+    margin-bottom: 0.875rem;
+    display: grid;
+    grid-template-columns: 2.1fr 1fr 1fr 1fr;
+    gap: 0.625rem;
+
+    .clear-filter-btn {
+      height: 32px;
+      border-radius: 4px;
+      color: #212189;
+      border-color: #212189;
+    }
+  }
+
+  .student-name {
+    color: #101d43;
+    font-weight: 600;
+  }
+
+  .progress-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    span {
+      font-size: 0.85rem;
+      color: #6f7894;
+      min-width: 2rem;
+    }
+
+    .progress-track {
+      width: 5rem;
+      height: 0.4rem;
+      border-radius: 99rem;
+      background: #e6e9f1;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 99rem;
+        background: #212189;
+      }
+    }
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 1rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+
+    &.enrolled {
+      color: #fff;
+      background-color: #212189;
+    }
+
+    &.completed {
+      color: #04af04;
+      background-color: #e9edf5;
+    }
+
+    &.inactive {
+      color: #7d869f;
+      background-color: #f2f3f6;
+    }
+
+    &.inprogress {
+      color: #fff;
+      background-color: #9c3af7;
+    }
+  }
+
+  // .status-text {
+  //   font-size: 0.95rem;
+  //   font-weight: 500;
+
+  //   &.active {
+  //     color: #101d43;
+  //   }
+
+  //   &.completed {
+  //     color: #596179;
+  //   }
+
+  //   &.inactive {
+  //     color: #7d869f;
+  //   }
+  // }
+
+  .table-footer {
+    margin-top: 0.875rem;
+    border-top: 1px solid #edf0f5;
+    padding-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    p {
+      margin: 0;
+      color: #6f7894;
+      font-size: 0.85rem;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6f7894;
+      font-size: 0.85rem;
+
+      .rows-btn,
+      .page-btn {
+        min-width: 2.25rem;
+        height: 2rem;
+        border-radius: 4px;
+        border-color: #e6e9f1;
+        color: #6f7894;
+      }
+
+      .page-btn.active {
+        background: #fe4a55;
+        border-color: #fe4a55;
+        color: #fff;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .enrollment-table .ant-table-thead > tr > th {
+  background: #edf6ff;
+  color: #212189;
+  font-weight: 600;
+}
+
+@media (max-width: 1200px) {
+  .enrollments-page {
+    .filter-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .enrollments-page {
+    .filter-row {
+      grid-template-columns: 1fr;
+    }
+
+    .table-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

@@ -55,6 +55,17 @@ export class AuthService {
     return this._cacheService.getDataFromCache('role');
   }
 
+  isSuperAdmin(): boolean {
+    try {
+      const details = this._cacheService.getDataFromCache('loggedInUserDetails');
+      if (!details) return false;
+      const user = JSON.parse(details);
+      return user?.role === 'SUPER_ADMIN';
+    } catch {
+      return false;
+    }
+  }
+
   getLoggedInName() {
     return this._cacheService.getDataFromCache('loggedInUserDetails')
       ? JSON.parse(this._cacheService.getDataFromCache('loggedInUserDetails'))[

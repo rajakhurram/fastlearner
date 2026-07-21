@@ -1,0 +1,194 @@
+.bulk-quiz-modal-title {
+  align-items: center;
+  display: flex;
+  color: #212189;
+  font-weight: 600;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.bulk-icons {
+  width: 1.5rem;
+  height: 1.5rem;
+  // margin-bottom: 12px;
+}
+.bulk-quiz-preview {
+  display: flex;
+  // flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // min-height: 200px;
+  margin: 5px 16px;
+  padding: 1rem;
+  border: 1px dashed #d9d9d9;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background: #fafafa;
+}
+
+.close-icon {
+  cursor: pointer;
+}
+
+.temp {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #212189;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// .bulk-quiz-image {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: 200px;
+//   margin: 0 16px;
+//   padding: 24px 16px;
+// }
+
+.bulk-quiz-image-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #212189;
+  text-align: center;
+}
+
+.bulk-quiz-image-size {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.bulk-quiz-preview--empty {
+  color: #8c8c8c;
+}
+
+.bulk-quiz-preview-icon {
+  font-size: 64px;
+  color: #212189;
+  margin-bottom: 12px;
+}
+
+.bulk-quiz-preview-icon--muted {
+  color: #bfbfbf;
+}
+
+.bulk-quiz-preview-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #212189;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.bulk-quiz-preview-size {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.bulk-quiz-preview-placeholder {
+  margin: 0;
+  font-size: 14px;
+}
+
+.note {
+  margin: 0 16px;
+  font-size: 0.75rem;
+  color: #212189;
+  // text-align: center;
+}
+
+.btn-cropper {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.cancelBtn {
+  background-color: white;
+  color: #fe4a55;
+  width: 25%;
+  height: 39px;
+  border-radius: 4px;
+  border: 1px solid #fe4a55;
+}
+
+.cancelBtn:hover {
+  background-color: #fe4a55;
+  color: white;
+}
+
+.saveBtn {
+  background-color: #fe4a55;
+  color: white;
+  width: 25%;
+  height: 39px;
+  border-radius: 4px;
+  border: none;
+}
+
+.saveBtn[disabled] {
+  background-color: #f5f5f5;
+  color: rgba(0, 0, 0, 0.25);
+  border: 1px solid #d9d9d9;
+}
+
+.uploader {
+  border: 1px solid #d9d9d9;
+}
+
+.file-name {
+  margin-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-file-upload {
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.custom-file-upload input[type="file"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.upload-button {
+  padding: 11px 35px;
+  cursor: pointer;
+  background-color: #212189;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // display: inline-block;
+  color: white;
+  // flex-shrink: 0;
+}
+
+.modal-loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -50,11 +50,11 @@
 </ng-container>
 
 <ng-template #loadingTemplate>
-  <!-- <div class="spinner-container" [ngClass]="">
-    {{ courses?.length }}
+  <div class="spinner-container" *ngIf="loading">
     <nz-spin [nzSize]="'large'" class="spinner" nzSimple></nz-spin>
-  </div> -->
-  <div class="center" *ngIf="courses?.length == 0">
+  </div>
+
+  <div class="center" *ngIf="courses?.length == 0 && !loading">
     <div class="empty-div">
       <nz-empty
         [ngStyle]="{ color: buttonTheme == 'dark' ? 'white' : '#292929' }"

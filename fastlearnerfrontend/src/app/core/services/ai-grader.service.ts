@@ -17,10 +17,10 @@ export class AiGraderService {
   public createClass(body): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}ai-grader/create-class`,
-      body
+      body,
     );
   }
- getResultById(id: number): Observable<any> {
+  getResultById(id: number): Observable<any> {
     return this._http.get(`${environment.baseUrl}ai-result/${id}`);
   }
 
@@ -33,11 +33,11 @@ export class AiGraderService {
   public getAssessment(
     body: any,
     pageNo: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<any> {
     return this._http.post<any>(
       `${environment.baseUrl}assessment/?pageNo=${pageNo}&pageSize=${pageSize}`,
-      body
+      body,
     );
   }
 
@@ -45,47 +45,49 @@ export class AiGraderService {
     return this._http.post(`${environment.baseUrl}assessment/create`, body);
   }
 
-  
-
   public editEmail(aiResultId: number, email: string): Observable<any> {
     return this._http.put(
       `${environment.baseUrl}ai-result/update?aiResultId=${aiResultId}&email=${email}`,
-      null
+      null,
     );
   }
 
-  public editField(aiResultId: number, field: string, value: string): Observable<any> {
-  const params = new URLSearchParams();
-  params.set('aiResultId', aiResultId.toString());
+  public editField(
+    aiResultId: number,
+    field: string,
+    value: string,
+  ): Observable<any> {
+    const params = new URLSearchParams();
+    params.set('aiResultId', aiResultId.toString());
 
-  if (field === 'email') {
-    params.set('email', value);
-  } else if (field === 'name') {
-    params.set('studentName', value);
-  } else if (field === 'rollNumber') {
-    params.set('studentRollNumber', value);
+    if (field === 'email') {
+      params.set('email', value);
+    } else if (field === 'name') {
+      params.set('studentName', value);
+    } else if (field === 'rollNumber') {
+      params.set('studentRollNumber', value);
+    }
+
+    return this._http.put(
+      `${environment.baseUrl}ai-result/update?${params.toString()}`,
+      null,
+    );
   }
-
-  return this._http.put(
-    `${environment.baseUrl}ai-result/update?${params.toString()}`,
-    null
-  );
-}
-
 
   startGrading(formData: FormData) {
     return this._http.post<any>(
       `${environment.baseUrl}ai-result/create`,
-      formData
+      formData,
     );
   }
 
   startGradingLandingPage(formData: FormData) {
     return this._http.post<any>(
       `${environment.baseUrl}ai-result/create-landing-page`,
-      formData
+      formData,
     );
   }
+
   getFilterSearch(body: any) {
     return this._http.post<any>(`${environment.baseUrl}ai-result/`, body);
   }
@@ -93,20 +95,20 @@ export class AiGraderService {
   public sendEmail(email: string, aiResultId: number): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}ai-result/send-email?aiResultId=${aiResultId}&email=${email}`,
-      null
+      null,
     );
   }
 
   public deleteStudentResult(aiResultId: number): Observable<any> {
     return this._http.delete(
-      `${environment.baseUrl}ai-result/delete?aiResultId=${aiResultId}`
+      `${environment.baseUrl}ai-result/delete?aiResultId=${aiResultId}`,
     );
   }
 
   public getClassResult(body: any, payLoad?: any): Observable<any> {
     return this._http.post<any>(
       `${environment.baseUrl}ai-result/?pageNo=${payLoad?.pageNo}&pageSize=${payLoad?.pageSize}`,
-      body
+      body,
     );
   }
 
@@ -116,7 +118,7 @@ export class AiGraderService {
       body,
       {
         responseType: 'blob' as 'json',
-      }
+      },
     );
   }
 
@@ -133,56 +135,56 @@ export class AiGraderService {
   public getClassesStudent(body?: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}ai-grader/student?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
-      null
+      null,
     );
   }
 
   public getAssessments(assessment?: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}assessment/?pageNo=${assessment?.pageNo}&pageSize=${assessment?.pageSize}`,
-      assessment
+      assessment,
     );
   }
 
   public getAssessmentsByClassIdAndAssessmentId(
     data?: any,
-    body?: any
+    body?: any,
   ): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}assessment/class-id-and-assessment-id?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
-      data
+      data,
     );
   }
 
   public editClass(classId?: any, editValue?: any): Observable<any> {
     return this._http.put(
       `${environment.baseUrl}ai-grader/update?classId=${classId}&name=${editValue}`,
-      null
+      null,
     );
   }
 
   public deleteClass(classId?: any): Observable<any> {
     return this._http.delete(
-      `${environment.baseUrl}ai-grader/?classId=${classId}`
+      `${environment.baseUrl}ai-grader/?classId=${classId}`,
     );
   }
 
   public deleteAssessment(assessmentId?: any): Observable<any> {
     return this._http.delete(
-      `${environment.baseUrl}assessment/delete?id=${assessmentId}`
+      `${environment.baseUrl}assessment/delete?id=${assessmentId}`,
     );
   }
 
   public editAssessment(assessmentId?: any, editValue?: any): Observable<any> {
     return this._http.put(
       `${environment.baseUrl}assessment/update?aiAssessmentId=${assessmentId}&name=${editValue}`,
-      null
+      null,
     );
   }
 
   public getAiStudentResult(aiResultId: number): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}ai-result/questions?aiResultId=${aiResultId}`
+      `${environment.baseUrl}ai-result/questions?aiResultId=${aiResultId}`,
     );
   }
 
@@ -205,40 +207,62 @@ export class AiGraderService {
     const queryString = params.join('&');
 
     return this._http.get(
-      `${environment.baseUrl}assessment/details?${queryString}`
+      `${environment.baseUrl}assessment/details?${queryString}`,
     );
   }
 
   public getResultQuestions(resultId?: any, data?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}ai-result/questions?aiResultId=${resultId}&pageNo=${data?.pageNo}&pageSize=${data?.pageSize}`
+      `${environment.baseUrl}ai-result/questions?aiResultId=${resultId}&pageNo=${data?.pageNo}&pageSize=${data?.pageSize}`,
     );
   }
 
   public getResultByClassAndAssessmentId(
     data?: any,
-    body?: any
+    body?: any,
   ): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}ai-result/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
-      data
+      data,
     );
   }
 
   public approveResult(resultId?: any): Observable<any> {
     return this._http.put(
       `${environment.baseUrl}ai-result/update/status?aiResultId=${resultId}`,
-      null
+      null,
     );
   }
 
   public updateQuestion(
     aiResultQuestionId?: any,
-    score?: any
+    obtainedMarks?: any,
+    outOfMarks?: any,
+  ): Observable<any> {
+    let url = `${environment.baseUrl}ai-result/question/update?aiResultQuestionId=${aiResultQuestionId}&score=${obtainedMarks}`;
+    if (outOfMarks !== undefined && outOfMarks !== null) {
+      url += `&totalMarks=${outOfMarks}`;
+    }
+    return this._http.put(url, null);
+  }
+
+  public createManualQuestion(body: any): Observable<any> {
+    return this._http.post(`${environment.baseUrl}ai-result/question/manual`, body);
+  }
+
+  public updateManualQuestion(
+    aiResultQuestionId: number,
+    body: any,
   ): Observable<any> {
     return this._http.put(
-      `${environment.baseUrl}ai-result/question/update?aiResultQuestionId=${aiResultQuestionId}&score=${score}`,
-      null
+      `${environment.baseUrl}ai-result/question/manual?aiResultQuestionId=${aiResultQuestionId}`,
+      body,
+    );
+  }
+
+  public deleteManualQuestion(aiResultQuestionId: number): Observable<any> {
+    return this._http.delete(
+      `${environment.baseUrl}ai-result/question/manual?aiResultQuestionId=${aiResultQuestionId}`,
     );
   }
 
@@ -249,7 +273,7 @@ export class AiGraderService {
   public retryGrading(resultId?: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}ai-result/retry-grading?resultId=${resultId}`,
-      null
+      null,
     );
   }
 }

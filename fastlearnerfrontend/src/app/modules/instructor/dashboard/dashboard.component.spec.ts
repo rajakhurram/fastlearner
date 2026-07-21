@@ -23,10 +23,15 @@ describe('DashboardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DashboardComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule,AntDesignModule , BrowserAnimationsModule],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        AntDesignModule,
+        BrowserAnimationsModule,
+      ],
       providers: [
         Router,
-        DashboardService, 
+        DashboardService,
         HttpConstants,
         CacheService,
         CommunicationService,
@@ -37,9 +42,9 @@ describe('DashboardComponent', () => {
           provide: 'SocialAuthServiceConfig',
           useValue: {
             autoLogin: false,
-            providers: []
-          }
-        }
+            providers: [],
+          },
+        },
       ],
     }).compileComponents();
   });
@@ -67,6 +72,7 @@ describe('DashboardComponent', () => {
     const mockDashboardData = {
       completionRate: 2,
       totalParticipants: 2,
+      availableBalance: 500,
       revenue: 2,
       totalStudents: {
         totalValue: 1,
@@ -87,7 +93,7 @@ describe('DashboardComponent', () => {
       of({
         status: 200,
         data: mockDashboardData,
-      })
+      }),
     );
     component.getDashboardStatistics();
     expect(component.dashboard).toEqual(mockDashboardData);
@@ -96,7 +102,7 @@ describe('DashboardComponent', () => {
   it('should log error on getDashboardStatistics failure', () => {
     const consoleSpy = spyOn(console, 'log');
     spyOn(dashboardService, 'getDashboardStats').and.returnValue(
-      throwError(() => new Error('Error'))
+      throwError(() => new Error('Error')),
     );
     component.getDashboardStatistics();
     expect(consoleSpy).toHaveBeenCalledWith(new Error('Error'));
@@ -120,14 +126,14 @@ describe('DashboardComponent', () => {
 
   it('should handle error on getCourseListOfInstructor call', () => {
     spyOn(dashboardService, 'getMyCourses').and.returnValue(
-      throwError(() => new Error('Error'))
+      throwError(() => new Error('Error')),
     );
     component.getCourseListOfInstructor();
     expect(component.myCourseList).toEqual([]);
   });
   it('should navigate to the course page with the correct ID', () => {
     const navigateSpy = spyOn(router, 'navigate');
-    component.routeToCoursePage({contentType: 'course', id: 1});
+    component.routeToCoursePage({ contentType: 'course', id: 1 });
     expect(navigateSpy).toHaveBeenCalledWith(['instructor/course'], {
       queryParams: { id: 1 },
     });
@@ -153,7 +159,7 @@ describe('DashboardComponent', () => {
       of({
         status: 200,
         data: null,
-      })
+      }),
     );
     component.getDashboardStatistics();
     expect(component.dashboard).toBeNull();
@@ -164,10 +170,91 @@ describe('DashboardComponent', () => {
       of({
         status: 200,
         data: { courses: [], totalElements: 0 },
-      })
+      }),
     );
     component.getCourseListOfInstructor();
     expect(component.myCourseList.length).toBe(0);
     expect(component.totalElements).toBe(0);
+  });
+
+  it('should navigate to test page for test content type', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.routeToCoursePage({ contentType: 'test', id: 9 });
+    expect(navigateSpy).toHaveBeenCalledWith(['instructor/test'], {
+      queryParams: { id: 9 },
+    });
+  });
+
+  it('should block navigation for published premium courses', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    const messageService = TestBed.inject(MessageService);
+    spyOn(messageService, 'error');
+
+    component.routeToCoursePage({
+      courseType: 'PREMIUM_COURSE',
+      courseStatus: 'PUBLISHED',
+      contentType: 'course',
+      id: 1,
+    });
+
+    expect(navigateSpy).not.toHaveBeenCalled();
+    expect(messageService.error).toHaveBeenCalledWith(
+      'Premium courses cannot be edited.',
+    );
+  });
+
+  it('should allow navigation for draft premium courses', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+
+    component.routeToCoursePage({
+      courseType: 'PREMIUM',
+      courseStatus: 'DRAFT',
+      contentType: 'course',
+      id: 1,
+    });
+
+    expect(navigateSpy).toHaveBeenCalledWith(['instructor/course'], {
+      queryParams: { id: 1 },
+    });
+  });
+
+  it('should capitalize status labels', () => {
+    expect(component.capitalizeFirstLetter('publish')).toBe('Publish');
+    expect(component.capitalizeFirstLetter('UNPUBLISH')).toBe('Unpublish');
+  });
+
+  it('should toggle publish state on cancel', () => {
+    component.myCourseList = [{ id: 3, coursePublish: true }] as any;
+    component.switchPreviousState(3, component.CourseStatus.PUBLISHED);
+    expect(component.myCourseList[0].coursePublish).toBeFalse();
+  });
+
+  it('should refetch courses after successful status change', () => {
+    spyOn(dashboardService, 'changeCourseStatus').and.returnValue(
+      of({ status: 200 }),
+    );
+    spyOn(component, 'getCourseListOfInstructor');
+    component.changeCourseStatus(1, component.CourseStatus.PUBLISHED);
+    expect(component.getCourseListOfInstructor).toHaveBeenCalled();
+  });
+
+  it('should set coursePublish flag from course status', () => {
+    spyOn(dashboardService, 'getMyCourses').and.returnValue(
+      of({
+        status: 200,
+        data: {
+          courses: [{ id: 1, courseStatus: 'PUBLISHED' }],
+          totalElements: 1,
+        },
+      }),
+    );
+    component.getCourseListOfInstructor();
+    expect(component.myCourseList[0].coursePublish).toBeTrue();
+  });
+
+  it('should trigger search refetch', () => {
+    spyOn(component, 'getCourseListOfInstructor');
+    component.getCourseListOfInstructorBySearch();
+    expect(component.getCourseListOfInstructor).toHaveBeenCalled();
   });
 });

@@ -1,0 +1,20 @@
+<div>
+  <p
+    (click)="viewAllEmitter()"
+    [ngStyle]="{
+      right: applyRight ? '10%' : '8%',
+      'padding-top': applyRight ? '4%' : '0%',
+      'margin-top': !applyRight ? '4%' : '0%',
+      color: theme === 'dark' ? 'white' : ' #212189'
+    }"
+  >
+    View All
+    <img
+      class=""
+      height="15px"
+      width="15px"
+      alt="Arrow"
+      src="./../../../assets/icons/arrow-new.svg"
+    />
+  </p>
+</div>

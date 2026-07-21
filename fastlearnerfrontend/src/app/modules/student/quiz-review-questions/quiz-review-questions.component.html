@@ -6,18 +6,18 @@
 <div class="quiz-results-header-container">
   <div class="quiz-results-container">
     <div class="quiz-title-cont">
-    <h2 class="quiz-title">{{ currentSelectedTopic?.quizTitle }}</h2>
+      <h2 class="quiz-title">{{ currentSelectedTopic?.quizTitle }}</h2>
 
-    <p class="quiz-subtitle">Result</p>
-    <button
-      class="viewReport"
-      nz-button
-      nzType="primary"
-      nzGhost
-      (click)="viewReport()"
-    >
-      Get Detailed Report
-    </button>
+      <p class="quiz-subtitle">Result</p>
+      <button
+        class="viewReport"
+        nz-button
+        nzType="primary"
+        nzGhost
+        (click)="viewReport()"
+      >
+        Get Detailed Report
+      </button>
     </div>
     <hr />
 
@@ -64,7 +64,12 @@
       </div>
 
       <!-- Retake Quiz Button -->
-      <button *ngIf="isAllowedToRetake" class="retake-btn" nz-button (click)="retakeQuiz()">
+      <button
+        *ngIf="isAllowedToRetake"
+        class="retake-btn"
+        nz-button
+        (click)="retakeQuiz()"
+      >
         Retake Quiz
       </button>
     </div>
@@ -72,6 +77,15 @@
 </div>
 
 <div class="quiz-review-container">
+  <div
+    *ngIf="currentSelectedTopic?.topicComprehensive"
+    class="quiz-comprehension"
+  >
+    <p class="comprehension-text">
+      {{ currentSelectedTopic.topicComprehensive }}
+    </p>
+  </div>
+
   <div
     *ngIf="filteredQuestions?.length > 0; else noData"
     class="question-scroller"
@@ -95,6 +109,53 @@
         {{ question.questionText }}
       </h3>
 
+      <div
+        *ngIf="question.questionImageUrl && isImage(question.questionImageUrl)"
+        class="review-question-image"
+      >
+        <img [src]="question.questionImageUrl" alt="Question image" />
+      </div>
+
+      <div
+        *ngIf="question.questionImageUrl && isAudio(question.questionImageUrl)"
+        class="audio-preview"
+      >
+        <div class="audio-container">
+          <div class="actions">
+            <button class="play-btn" (click)="toggleAudio(question)">
+              <span *ngIf="!question.isPlaying">
+                <img loading="lazy" src="./assets/icons/play.svg" alt="play" />
+              </span>
+              <span *ngIf="question.isPlaying">
+                <img
+                  loading="lazy"
+                  src="./assets/icons/pause.svg"
+                  alt="pause"
+                />
+              </span>
+            </button>
+            <span class="duration">
+              {{ question.currentTime || "0:00" }}
+            </span>
+            <div class="progress-wrapper" (click)="seekAudio($event, question)">
+              <div
+                class="progress-bar"
+                [style.width.%]="question.progress || 0"
+              ></div>
+            </div>
+            <span class="duration">
+              {{ question.duration || "0:00" }}
+            </span>
+          </div>
+        </div>
+        <audio
+          #audioPlayer
+          [src]="question.questionImageUrl"
+          (timeupdate)="updateProgress(audioPlayer, question)"
+          (loadedmetadata)="setDuration(audioPlayer, question)"
+          (ended)="audioEnded(question)"
+        ></audio>
+      </div>
       <ng-container *ngFor="let option of question?.answerResponseList">
         <div
           *ngIf="
@@ -105,9 +166,6 @@
               question?.studentAnswer != null)
           "
           class="answer-text border-radius mb-1"
-          [class.display-flex]="!option?.selected && !option?.corrected"
-          [class.align-items-center]="!option?.selected && !option?.corrected"
-          
         >
           <p
             class="margin-0 font-bold font-16"
@@ -115,7 +173,7 @@
               'correct-text':
                 (option?.selected && option?.corrected) ||
                 (!option?.selected && option?.corrected),
-              'incorrect-text': option?.selected && !option?.corrected
+              'incorrect-text': option?.selected && !option?.corrected,
             }"
           >
             {{
@@ -124,10 +182,10 @@
                   ? textBasedCorrectAnswer
                   : correctAnswerSelectedText
                 : option?.selected && !option?.corrected
-                ? incorrectAnswerSelectedText
-                : !option?.selected && option?.corrected && !isSurvey
-                ? nonSelectedCorrecAnswer
-                : null
+                  ? incorrectAnswerSelectedText
+                  : !option?.selected && option?.corrected && !isSurvey
+                    ? nonSelectedCorrecAnswer
+                    : null
             }}
           </p>
 
@@ -201,6 +259,10 @@
                   : option.answerText
               }}
             </p>
+          </div>
+
+          <div *ngIf="option.answerImageUrl" class="review-answer-image">
+            <img [src]="option.answerImageUrl" alt="Answer image" />
           </div>
         </div>
 

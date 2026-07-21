@@ -19,7 +19,7 @@ public class CouponTestData {
         request.setCoupon("SUBS10");
         request.setDiscount(10.0d);
         request.setSubscriptionId(2L);
-        request.setCouponType(CouponType.SUBSCRIPTION.name());
+        request.setCouponType(CouponType.valueOf(CouponType.SUBSCRIPTION.name()));
         request.setStartDate(new Date());
         request.setEndDate(new Date(System.currentTimeMillis() + 172800000)); // 2 days
         request.setDurationInMonth(1);

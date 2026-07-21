@@ -40,7 +40,7 @@ import { CourseContentType } from 'src/app/core/enums/course-content-type.enum';
 type AnswerSubmitEvent = {
   quizAttemptId: string;
   isAllowedToRetake: boolean;
-}
+};
 
 @Component({
   selector: 'app-course-content',
@@ -163,7 +163,8 @@ export class CourseContentComponent implements OnInit, AfterViewInit {
   hasMoreComments = true;
   courseContentType = CourseContentType;
   selectedContentType?: any;
-comingFromReview: boolean;
+  comingFromReview: boolean;
+  isQuizOrSurveyStarted: boolean = false;
 
   constructor(
     private _courseService: CourseService,
@@ -179,7 +180,7 @@ comingFromReview: boolean;
     private _certificateService: CertificateService,
     private metaService: Meta,
     private titleService: Title,
-    private viewportScroller: ViewportScroller
+    private viewportScroller: ViewportScroller,
   ) {
     this.loggedInUser.email = this._authService?.getLoggedInEmail();
     this.loggedInUser.fullName = this._authService.getLoggedInName();
@@ -253,13 +254,13 @@ comingFromReview: boolean;
     this.onResize({ target: window });
     window.addEventListener(
       'beforeunload',
-      this.beforeUnloadHandler.bind(this)
+      this.beforeUnloadHandler.bind(this),
     );
     window.addEventListener('offline', this.onOffline.bind(this));
     this.routeSubscription = this._activatedRoute?.paramMap?.subscribe(
       (params: ParamMap) => {
         this.getCourseIdFromRoute();
-      }
+      },
     );
   }
 
@@ -268,7 +269,7 @@ comingFromReview: boolean;
     this.manageWatchTime();
     window.removeEventListener(
       'beforeunload',
-      this.beforeUnloadHandler.bind(this)
+      this.beforeUnloadHandler.bind(this),
     );
     window.removeEventListener('offline', this.onOffline.bind(this));
     // this.saveCurrentCourseData();
@@ -293,13 +294,13 @@ comingFromReview: boolean;
   saveCurrentCourseData() {
     setTimeout(() => {
       this.currentSelectedTopic.seekTime = this.getTimeInSec(
-        this.currentVideoTime
+        this.currentVideoTime,
       );
       let currentCourseData = {
         courseId: this.courseId,
         section: this.currentSelectedSection,
         index: this.sectionPanelList.findIndex(
-          (obj) => obj.sectionId === this.currentSelectedSection.sectionId
+          (obj) => obj.sectionId === this.currentSelectedSection.sectionId,
         ),
         topic: this.currentSelectedTopic,
       };
@@ -352,8 +353,8 @@ comingFromReview: boolean;
             this.selectedContentType = response?.data?.course?.contentType;
             this.titleService.setTitle(
               `${response?.data?.course?.title?.replace(/\b\w/g, (char) =>
-                char.toUpperCase()
-              )} | Contents | FastLearner.ai`
+                char.toUpperCase(),
+              )} | Contents | FastLearner.ai`,
             );
             if (this.courseId) {
               this.enrolledInCourse();
@@ -468,85 +469,100 @@ comingFromReview: boolean;
   }
 
   skipQuiz(event: any) {
-  const currentSectionIndex = this.sectionPanelList.findIndex(
-    (section) => section.sectionId === this.currentSelectedSection?.sectionId
-  );
+    const currentSectionIndex = this.sectionPanelList.findIndex(
+      (section) => section.sectionId === this.currentSelectedSection?.sectionId,
+    );
 
-  if (currentSectionIndex === -1) {
-    this._messageService.info('No active section found.');
-    return;
-  }
+    if (currentSectionIndex === -1) {
+      this._messageService.info('No active section found.');
+      return;
+    }
 
-  const currentSection = this.sectionPanelList[currentSectionIndex];
+    const currentSection = this.sectionPanelList[currentSectionIndex];
 
-  // Ensure topicList exists and current topic is valid
-  if (!currentSection.topicList?.length) {
-    this._messageService.info('No topics in the current section.');
-    return;
-  }
+    // Ensure topicList exists and current topic is valid
+    if (!currentSection.topicList?.length) {
+      this._messageService.info('No topics in the current section.');
+      return;
+    }
 
-  const currentTopicIndex = currentSection.topicList.findIndex(
-    (topic) => topic === this.currentSelectedTopic
-  );
+    const currentTopicIndex = currentSection.topicList.findIndex(
+      (topic) => topic.topicId === this.currentSelectedTopic.topicId,
+    );
 
-  if (currentTopicIndex === -1) {
-    this._messageService.info('Current topic not found.');
-    return;
-  }
+    if (currentTopicIndex === -1) {
+      this._messageService.info('Current topic not found.');
+      return;
+    }
 
-  const nextTopicIndex = currentTopicIndex + 1;
+    const nextTopicIndex = currentTopicIndex + 1;
 
-  // Mark topic as completed
-  this.currentSelectedTopic.isCompleted = true;
-  this.completeTopic(
-    currentSection, // use the section from panelList
-    this.currentSelectedTopic,
-    true,
-    this.currentSelectedTopic?.topicId,
-    this.currentSelectedTopic?.seekTime,
-    this.currentSelectedTopic?.topicType
-  );
+    // Mark topic as completed
 
-  // Move to next topic/section after a short delay
-  setTimeout(() => {
-    if (nextTopicIndex < currentSection.topicList.length) {
-      const nextTopic = currentSection.topicList[nextTopicIndex];
-      this.setCurrentTopicAndSection(nextTopic, currentSection);
-    } else {
-      const nextSectionIndex = currentSectionIndex + 1;
-      if (nextSectionIndex < this.sectionPanelList.length) {
-        const nextSection = this.sectionPanelList[nextSectionIndex];
-        if (nextSection.free) {
-          this.isPanelActive(nextSection, true, nextSectionIndex);
-          setTimeout(() => {
-            this.setCurrentTopicAndSection(nextSection.topicList[0], nextSection);
-          }, 1000);
-        } else {
-          this._messageService.error(
-            'You have to get a subscription, next section is not free.'
-          );
-        }
+    const topicInList = currentSection.topicList[currentTopicIndex];
+    topicInList.isCompleted = true;
+
+    this.completeTopic(
+      currentSection,
+      topicInList,
+      true,
+      topicInList?.topicId,
+      topicInList?.seekTime,
+      topicInList?.topicType,
+    );
+
+    // this.currentSelectedTopic.isCompleted = true;
+    // this.completeTopic(
+    //   currentSection, // use the section from panelList
+    //   this.currentSelectedTopic,
+    //   true,
+    //   this.currentSelectedTopic?.topicId,
+    //   this.currentSelectedTopic?.seekTime,
+    //   this.currentSelectedTopic?.topicType,
+    // );
+
+    // Move to next topic/section after a short delay
+    setTimeout(() => {
+      if (nextTopicIndex < currentSection.topicList.length) {
+        const nextTopic = currentSection.topicList[nextTopicIndex];
+        this.setCurrentTopicAndSection(nextTopic, currentSection);
       } else {
-        if (this.courseProgress === 100) {
-          this.getCertificateData();
+        const nextSectionIndex = currentSectionIndex + 1;
+        if (nextSectionIndex < this.sectionPanelList.length) {
+          const nextSection = this.sectionPanelList[nextSectionIndex];
+          if (nextSection.free) {
+            this.isPanelActive(nextSection, true, nextSectionIndex);
+            setTimeout(() => {
+              this.setCurrentTopicAndSection(
+                nextSection.topicList[0],
+                nextSection,
+              );
+            }, 1000);
+          } else {
+            this._messageService.error(
+              'You have to get a subscription, next section is not free.',
+            );
+          }
         } else {
-          this._messageService.info('No more sections.');
+          if (this.courseProgress === 100) {
+            this.getCertificateData();
+          } else {
+            this._messageService.info('No more sections.');
+          }
         }
       }
-    }
-  }, 500); // reduced delay to make UI snappier
-}
+    }, 500); // reduced delay to make UI snappier
+  }
 
-// Helper method to set current topic & section
-setCurrentTopicAndSection(topic: any, section: any) {
-  if (!topic || !section) return;
-  this.currentSelectedTopic = topic;
-  this.currentSelectedTopicType = topic.topicType;
-  this.currentSelectedTopicId = topic.topicId;
-  this.currentSelectedSection = section;
-  this.currentSelectedSectionId = section.sectionId;
-}
-
+  // Helper method to set current topic & section
+  setCurrentTopicAndSection(topic: any, section: any) {
+    if (!topic || !section) return;
+    this.currentSelectedTopic = topic;
+    this.currentSelectedTopicType = topic.topicType;
+    this.currentSelectedTopicId = topic.topicId;
+    this.currentSelectedSection = section;
+    this.currentSelectedSectionId = section.sectionId;
+  }
 
   getCourseSectionList(sectionId?: number | null, topicId?: string | null) {
     this._courseService.getCourseSections(this.courseId)?.subscribe({
@@ -564,7 +580,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
                 alternateSectionPanelList: [],
                 topics: [], // Initialize topics if needed
               };
-            }
+            },
           );
 
           this.currentCategory = response?.data?.category;
@@ -575,7 +591,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           if (sectionId) {
             // If sectionId is provided, activate the section
             const sectionIndex = this.sectionPanelList.findIndex(
-              (section: any) => section.sectionId === sectionId
+              (section: any) => section.sectionId === sectionId,
             );
 
             if (sectionIndex !== -1) {
@@ -585,7 +601,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
                 this.defaultSection,
                 sectionIndex,
                 true,
-                topicId ? { topicId: topicId } : null // Pass topicId if available
+                topicId ? { topicId: topicId } : null, // Pass topicId if available
               );
             } else {
               this.setDefaultSection(response?.data?.sectionDetails);
@@ -594,7 +610,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
             // If topicId is provided, find the section containing that topic
             const sectionContainingTopic = this.sectionPanelList.find(
               (section: any) =>
-                section.topics.some((topic: any) => topic.topicId === topicId)
+                section.topics.some((topic: any) => topic.topicId === topicId),
             );
 
             if (sectionContainingTopic) {
@@ -606,7 +622,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
                 sectionContainingTopic,
                 this.sectionPanelList.indexOf(sectionContainingTopic),
                 true,
-                { topicId: topicId }
+                { topicId: topicId },
               );
             } else {
               this.setDefaultSection(response?.data?.sectionDetails);
@@ -625,7 +641,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
 
   setDefaultSection(sectionDetails: any) {
     const defaultSectionIndex = sectionDetails.findIndex(
-      (section: any) => section.free
+      (section: any) => section.free,
     );
 
     const defaultSection =
@@ -642,38 +658,65 @@ setCurrentTopicAndSection(topic: any, section: any) {
       this.defaultSection,
       defaultSectionIndex !== -1 ? defaultSectionIndex : 0,
       true,
-      null
+      null,
     );
   }
 
   videoCompleted(event) {
-  if (!this.currentSelectedTopic?.isCompleted) {
-    this.currentSelectedTopic.isCompleted = true;
-    this.manageWatchTime();
-    
-    const currentTopic = this.currentSelectedTopic;
-    const currentSection = this.currentSelectedSection;
-    
-    const completionSubscription = this.completeTopic(
-      currentSection,
-      currentTopic,
-      true,
-      currentTopic?.topicId,
-      currentTopic?.seekTime,
-      currentTopic?.topicType
-    );
+    if (!this.currentSelectedTopic?.isCompleted) {
+      this.currentSelectedTopic.isCompleted = true;
+      this.manageWatchTime();
 
-    setTimeout(() => {
+      const currentTopic = this.currentSelectedTopic;
+      const currentSection = this.currentSelectedSection;
+
+      const completionSubscription = this.completeTopic(
+        currentSection,
+        currentTopic,
+        true,
+        currentTopic?.topicId,
+        currentTopic?.seekTime,
+        currentTopic?.topicType,
+      );
+
+      setTimeout(() => {
+        this.playNextVideo();
+        // Unsubscribe to prevent memory leaks
+        if (completionSubscription) {
+          completionSubscription.unsubscribe();
+        }
+      }, 800); // Increased delay to ensure progress update
+    } else {
       this.playNextVideo();
-      // Unsubscribe to prevent memory leaks
-      if (completionSubscription) {
-        completionSubscription.unsubscribe();
-      }
-    }, 800); // Increased delay to ensure progress update
-  } else {
-    this.playNextVideo();
+    }
   }
-}
+
+  articleCompleted(): void {
+    if (!this.currentSelectedTopic?.isCompleted) {
+      this.currentSelectedTopic.isCompleted = true;
+
+      const currentTopic = this.currentSelectedTopic;
+      const currentSection = this.currentSelectedSection;
+
+      const completionSubscription = this.completeTopic(
+        currentSection,
+        currentTopic,
+        true,
+        currentTopic?.topicId,
+        currentTopic?.seekTime,
+        currentTopic?.topicType,
+      );
+
+      setTimeout(() => {
+        this.playNextVideo();
+        if (completionSubscription) {
+          completionSubscription.unsubscribe();
+        }
+      }, 500);
+    } else {
+      this.playNextVideo();
+    }
+  }
 
   routeToNotificationPage() {
     this._router.navigate(['/user/notifications']);
@@ -688,16 +731,15 @@ setCurrentTopicAndSection(topic: any, section: any) {
 
     // Find the index of the current section
     const currentSectionIndex = this.sectionPanelList.findIndex(
-      (section) => section.sectionId === currentSectionId
+      (section) => section.sectionId === currentSectionId,
     );
 
     // If we have a valid section index
     if (currentSectionIndex !== -1) {
       const currentSection = this.sectionPanelList[currentSectionIndex];
       let currentTopicIndex = currentSection?.topicList?.findIndex(
-        (topic) => topic === this.currentSelectedTopic
+        (topic) => topic.topicId === this.currentSelectedTopic?.topicId,
       );
-
       // If there is no active topic but we have a current index, try to play the next topic
       if (currentTopicIndex === -1) {
         currentTopicIndex = 0;
@@ -734,7 +776,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           } else {
             // If the next section is not free, show an error message
             this._messageService.error(
-              'User have to get a subscription, next section is not free.'
+              'User have to get a subscription, next section is not free.',
             );
             // You can use your messaging service to show an error message here if available
           }
@@ -767,14 +809,16 @@ setCurrentTopicAndSection(topic: any, section: any) {
             // Convert topic durations
             this.sectionPanelList[i].topicList.forEach((el: any) => {
               el.topicDuration = this.convertSecondsToHoursAndMinutes(
-                el.topicDuration
+                el.topicDuration,
               );
             });
+
+            // const inCompleteTopic = this.sectionPanelList[i].topicList.find((el: any) => !el.isCompleted);
 
             // If a specific topic is provided (from URL or passed in), select it; otherwise, use the first topic
             this.defaultTopic = topic
               ? this.sectionPanelList[i].topicList.find(
-                  (el: any) => el.topicId === topic?.topicId
+                  (el: any) => el.topicId === topic?.topicId && !el.isCompleted,
                 )
               : this.sectionPanelList[i].topicList[0]; // Default to the first topic if no topic is provided
 
@@ -836,7 +880,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
       // });
 
       this.chatSectionPosition(section?.sectionId);
-      this.getSectionTopicList(section, index, false, null);
+      this.getSectionTopicList(section, index, true, null);
       this.chatSectionPosition(section.sectionId);
     }
   }
@@ -858,6 +902,13 @@ setCurrentTopicAndSection(topic: any, section: any) {
   }
 
   onSelectTopicFromPlayList(section: any, topic: any) {
+    try {
+      this.checkCurrectSelectedTopicIsQuizOrSurvey();
+    } catch (error: any) {
+      this._messageService.error(error.message);
+      return;
+    }
+
     const targetDiv = document.getElementById(`topic-selected`);
     if (targetDiv) {
       // Scroll smoothly to the target div
@@ -879,6 +930,13 @@ setCurrentTopicAndSection(topic: any, section: any) {
     // Fetch notes if the topic type is 'Quiz'
     if (this.currentSelectedTopicType === 'Quiz') {
       this.getNotes();
+      if (!topic.isCompleted) {
+        this.showQuizPlayerWelcomeScreen = true;
+        this.showCongratsScreen = false;
+      } else {
+        this.showQuizPlayerWelcomeScreen = false;
+        this.showQuizAttempt = true;
+      }
     }
 
     // Fetch other necessary data related to the section and course
@@ -897,7 +955,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
         this.courseChatPresent = true;
 
         const matchingTopic = course.topics.find(
-          (t: any) => t.topicId === this.currentSelectedTopicId
+          (t: any) => t.topicId === this.currentSelectedTopicId,
         );
 
         if (matchingTopic && matchingTopic.chatTopicHistory.length) {
@@ -908,7 +966,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           this.getCourseChatHistory(
             firstChatHistory.chatId,
             firstChatHistory.time,
-            matchingTopic.topicId
+            matchingTopic.topicId,
           );
         }
         break; // Stop searching once a match is found
@@ -920,59 +978,62 @@ setCurrentTopicAndSection(topic: any, section: any) {
   }
 
   completeTopic(
-  section: any,
-  topic: any,
-  isComplete: boolean,
-  topicId: any,
-  seekTime: any,
-  topicType: any
-) {
-  if (section != null) {
-    if (isComplete) {
-      if (section.totalTopicCompleted < section.topicList.length) {
-        section.totalTopicCompleted += 1;
+    section: any,
+    topic: any,
+    isComplete: boolean,
+    topicId: any,
+    seekTime: any,
+    topicType: any,
+  ) {
+    if (section != null) {
+      if (isComplete) {
+        if (section.totalTopicCompleted < section.topicList.length) {
+          section.totalTopicCompleted += 1;
+        }
+      } else {
+        section.totalTopicCompleted = Math.max(
+          section.totalTopicCompleted - 1,
+          0,
+        );
       }
-    } else {
-      section.totalTopicCompleted = Math.max(section.totalTopicCompleted - 1, 0);
     }
-  }
 
-  let completePayLoad = {};
-  if (topicType == 'Video') {
-    completePayLoad = {
-      isCompleted: isComplete,
-      topicId: topicId,
-      seekTime:
-        isComplete || topicId != this.currentSelectedTopicId
-          ? 0
-          : this.getTimeInSec(this.currentVideoTime),
-    };
-  } else {
-    completePayLoad = {
-      isCompleted: isComplete,
-      topicId: topicId,
-      seekTime: 0,
-    };
-  }
+    let completePayLoad = {};
+    if (topicType == 'Video') {
+      completePayLoad = {
+        isCompleted: isComplete,
+        topicId: topicId,
+        seekTime:
+          isComplete || topicId != this.currentSelectedTopicId
+            ? 0
+            : this.getTimeInSec(this.currentVideoTime),
+      };
+    } else {
+      completePayLoad = {
+        isCompleted: isComplete,
+        topicId: topicId,
+        seekTime: 0,
+      };
+    }
 
-  // Return the observable so we can subscribe to it properly
-  return this._courseService.markTopicComplete(completePayLoad)?.subscribe({
-    next: (response: any) => {
-      if (
-        response?.status ==
-        this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
-      ) {
-        console.log('Topic marked as complete successfully:', topicId);
-        this.getCourseProgress();
-      }
-    },
-    error: (error: any) => {
-      topic.isCompleted = !isComplete;
-      console.error('Error marking topic as complete:', error);
-      // this._messageService.error(error?.error?.message);
-    },
-  });
-}
+    // Return the observable so we can subscribe to it properly
+    return this._courseService.markTopicComplete(completePayLoad)?.subscribe({
+      next: (response: any) => {
+        if (
+          response?.status ==
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+        ) {
+          console.log('Topic marked as complete successfully:', topicId);
+          this.getCourseProgress();
+        }
+      },
+      error: (error: any) => {
+        topic.isCompleted = !isComplete;
+        console.error('Error marking topic as complete:', error);
+        // this._messageService.error(error?.error?.message);
+      },
+    });
+  }
 
   getVideoTime(eventData: {
     videoTime: any;
@@ -1057,7 +1118,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
               this.getCourseChatHistory(
                 this.courseChat[0]?.topics[0]?.chatTopicHistory[0]?.chatId,
                 this.courseChat[0]?.topics[0]?.chatTopicHistory[0]?.time,
-                this.courseChat[0]?.topics[0]?.topicId
+                this.courseChat[0]?.topics[0]?.topicId,
               );
             }
           }
@@ -1204,7 +1265,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
 
     if (
       !this.completeReview?.feedbackComments?.some(
-        (comment: any) => comment?.reviewId === feedback?.reviewId
+        (comment: any) => comment?.reviewId === feedback?.reviewId,
       )
     ) {
       this.completeReview?.feedbackComments?.push(feedback);
@@ -1285,7 +1346,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
   updateNote(noteId) {
     let updateNotePayLoad = {};
     let findElement = this.courseNote.find(
-      (note: any) => note.topicNotesId == noteId
+      (note: any) => note.topicNotesId == noteId,
     );
     if (findElement != undefined) {
       updateNotePayLoad = {
@@ -1398,7 +1459,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
         }
       });
       this.questionAnswers.questionDetails = Array.from(
-        uniqueQuestionsMap.values()
+        uniqueQuestionsMap.values(),
       );
     }
   }
@@ -1406,7 +1467,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
   getQuestionReplies(question: any) {
     question.showReply = false;
     let index = this.questionAnswers?.questionDetails?.findIndex(
-      (item: any) => item?.questionId == question?.questionId
+      (item: any) => item?.questionId == question?.questionId,
     );
     let questionRepliesPayLoad = {
       courseId: this.courseId,
@@ -1423,7 +1484,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           this.questionAnswers.questionDetails[index].answerDetail =
             response?.data?.answerDetail;
           this.questionAnswers.questionDetails[index].answerDetail.forEach(
-            (item: any) => (item.questionId = question?.questionId)
+            (item: any) => (item.questionId = question?.questionId),
           );
           if (
             this.questionAnswers &&
@@ -1525,7 +1586,6 @@ setCurrentTopicAndSection(topic: any, section: any) {
                 feedbackComments: response.data.feedback.feedbackComments || [],
               };
             }
-            
 
             this.hasMoreComments =
               this.courseReviewPayLoad.pageNo < this.courseReviewTotalPages - 1;
@@ -1620,7 +1680,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           response?.status ==
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
-          this._messageService.success("Added to favorites")
+          this._messageService.success('Added to favorites');
         }
       },
       error: (error: any) => {
@@ -1665,7 +1725,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
           this.toCourseId,
           this.toSectionId,
           fromCourseId,
-          fromSectionId
+          fromSectionId,
         )
         .subscribe({
           next: (response: any) => {
@@ -1709,7 +1769,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
     this._courseService
       ?.getSectionTopics(
         this.courseId,
-        section.alternateSectionPanelList[i].sectionId
+        section.alternateSectionPanelList[i].sectionId,
       )
       ?.subscribe({
         next: (response: any) => {
@@ -1718,7 +1778,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
             this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
           ) {
             const completedTopics = response?.data.filter(
-              (el) => el.isCompleted === true
+              (el) => el.isCompleted === true,
             );
             let sectionDuration = 0;
             response?.data.forEach((el) => {
@@ -1751,9 +1811,9 @@ setCurrentTopicAndSection(topic: any, section: any) {
             section.alternateSectionPanelList[i].topicList.forEach(
               (el: any) => {
                 el.topicDuration = this.convertSecondsToHoursAndMinutes(
-                  el.topicDuration
+                  el.topicDuration,
                 );
-              }
+              },
             );
           }
         },
@@ -1926,7 +1986,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
         seekTime: this.getTimeInSec(this.currentVideoTime),
       };
       this.currentSelectedTopic.seekTime = this.getTimeInSec(
-        this.currentVideoTime
+        this.currentVideoTime,
       );
 
       this._courseService.markTopicComplete(completePayLoad)?.subscribe({
@@ -2059,7 +2119,8 @@ setCurrentTopicAndSection(topic: any, section: any) {
       this.isReviewing = true;
       this.questionAnswersQuiz = event;
       const currentSectionIndex = this.sectionPanelList.findIndex(
-        (section) => section.sectionId === this.currentSelectedSection?.sectionId
+        (section) =>
+          section.sectionId === this.currentSelectedSection?.sectionId,
       );
 
       if (currentSectionIndex === -1) {
@@ -2076,14 +2137,17 @@ setCurrentTopicAndSection(topic: any, section: any) {
       }
 
       const currentTopicIndex = currentSection.topicList.findIndex(
-        (topic) => topic === this.currentSelectedTopic
+        (topic) => topic.topicId === this.currentSelectedTopic?.topicId,
       );
 
       if (currentTopicIndex === -1) {
         this._messageService.info('Current topic not found.');
         return;
       }
-      this.updateCourseProgressOnReview(currentSection, this.currentSelectedTopic);
+      this.updateCourseProgressOnReview(
+        currentSection,
+        this.currentSelectedTopic,
+      );
     }
   }
 
@@ -2123,8 +2187,10 @@ setCurrentTopicAndSection(topic: any, section: any) {
     // Call backend to mark topic complete
     this._courseService.markTopicComplete(completePayload)?.subscribe({
       next: (response: any) => {
-        if (response?.status === this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE) {
-          console.log('Topic marked as complete successfully:', topic.topicId);
+        if (
+          response?.status ===
+          this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
+        ) {
           this.getCourseProgress(); // update overall course progress
         }
       },
@@ -2135,7 +2201,6 @@ setCurrentTopicAndSection(topic: any, section: any) {
     });
   }
 
-
   retakeQuiz(currentSelectedTopic?: any) {
     this.showCongratsScreen = false;
     this.isReviewing = false;
@@ -2143,7 +2208,7 @@ setCurrentTopicAndSection(topic: any, section: any) {
     this.showQuizPlayerWelcomeScreen = true;
 
     let section = this.sectionPanelList.find(
-      (section?: any) => section.sectionId == currentSelectedTopic.sectionId
+      (section?: any) => section.sectionId == currentSelectedTopic.sectionId,
     );
     this.getSectionTopicList(section, 0, true, currentSelectedTopic);
   }
@@ -2164,19 +2229,42 @@ setCurrentTopicAndSection(topic: any, section: any) {
   }
 
   toggleReplyAndScroll(question: any): void {
-  question.showReply = !question.showReply;
+    question.showReply = !question.showReply;
 
-  setTimeout(() => {
-    const element = document.getElementById('reply-input-' + question.questionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      (element as HTMLInputElement).focus();
-    }
-  }, 100);
-}
+    setTimeout(() => {
+      const element = document.getElementById(
+        'reply-input-' + question.questionId,
+      );
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        (element as HTMLInputElement).focus();
+      }
+    }, 100);
+  }
 
   onAnswerSubmit(event: AnswerSubmitEvent) {
     this.quizAttemptId = event.quizAttemptId;
     this.isAllowedToRetake = event.isAllowedToRetake;
+  }
+
+  checkCurrectSelectedTopicIsQuizOrSurvey() {
+    const testTypes = ['TEST', 'SURVEY'];
+    if (!this.currentSelectedTopic) return false;
+
+    const { testType } = this.currentSelectedTopic;
+
+    if (testTypes.includes(testType)) {
+      if (this.isQuizOrSurveyStarted) {
+        throw new Error(
+          'Cannot switch to another topic until the current quiz or survey is completed!',
+        );
+      }
+    }
+
+    return true;
+  }
+
+  updateQuizStartedStatus(status: boolean) {
+    this.isQuizOrSurveyStarted = status;
   }
 }

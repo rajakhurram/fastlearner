@@ -1,0 +1,99 @@
+.banner {
+  background-color: white;
+}
+.banner-about-us {
+  background-color: #f8f8fa;
+}
+.image-container {
+  position: relative;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+}
+.text-overlay h2 {
+  font-weight: bolder;
+}
+.course-card-section {
+  background-color: white;
+}
+.banner-image-style {
+  display: flex;
+  justify-content: center;
+}
+.landing-page-banner {
+  padding-top: 20%;
+  padding-bottom: 15%;
+}
+.student-pick {
+  color: black;
+}
+h3 {
+  color: #212189;
+  font-weight: bolder;
+  margin: 0;
+}
+h2{
+  font-weight: bolder;
+}
+h4 {
+  color: #212189;
+  font-weight: bolder;
+  margin: 0;
+}
+.content-bottom {
+  padding-bottom: 10px;
+}
+.text-overlay h1 {
+  color: #212189;
+  font-weight: bolder;
+}
+
+@media screen and (max-width: 650px) {
+  .text-overlay {
+    position: static;
+    margin-left: 25px;
+    transform: none;
+  }
+}
+
+.acc-item {
+  border-bottom: 1px solid black;
+}
+
+.title {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: 10px;
+  align-items: center;
+
+  padding: 0 10px;
+  cursor: pointer;
+}
+.title:hover {
+}
+
+div.icon {
+  width: 25px;
+  height: 25px;
+  background: #212189;
+  color: white;
+  text-align: center;
+  border-radius: 54px;
+}
+
+.acc-description {
+  max-height: 0px;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0px;
+  transition: opacity 0.2s ease-in, max-height 0.2s ease-in;
+}
+
+.expanded {
+  opacity: 1;
+  max-height: 118px;
+}

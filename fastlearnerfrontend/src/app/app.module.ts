@@ -39,6 +39,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { DeletionModalComponent } from './modules/dynamic-modals/deletion-modal/deletion-modal.component';
 import { ImageUploaderModalComponent } from './modules/dynamic-modals/image-uploader-modal/image-uploader-modal.component';
+import { BulkQuizUploaderModalComponent } from './modules/dynamic-modals/bulk-quiz-uploader-modal/bulk-quiz-uploader-modal.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { SharedService } from './core/services/shared.service';
 import { ProfileUploaderModalComponent } from './modules/dynamic-modals/profile-uploader-modal/profile-uploader-modal.component';
@@ -49,10 +50,7 @@ import { PreviewVideoModalComponent } from './modules/dynamic-modals/preview-vid
 import { MaintenancePageComponent } from './modules/pages/maintenance-page/maintenance-page.component';
 import { WithdrawModalComponent } from './modules/dynamic-modals/withdraw-modal/withdraw-modal.component';
 import { AffiliateModalComponent } from './modules/dynamic-modals/affiliate-modal/affiliate-modal.component';
-import {
-  googleTagId,
-  googleTrackingId,
-} from './core/constants/http.constants';
+import { googleTagId, googleTrackingId } from './core/constants/http.constants';
 import { AssignCourseModalComponent } from './modules/dynamic-modals/assign-course-modal/assign-course-modal.component';
 import { FastlearnerSigninComponent } from './fastlearner-signin/fastlearner-signin.component';
 import { FastlearnerLoginComponent } from './fastlearner-login/fastlearner-login.component';
@@ -67,6 +65,7 @@ import { ClassAssessmentModalComponent } from './modules/dynamic-modals/class-as
 import { CoPilotComponent } from './modules/pages/co-pilot/co-pilot.component';
 import { ReportPreviewModalComponent } from './modules/dynamic-modals/report-preview-modal-component/report-preview-modal-component.component';
 import { PricingPageComponent } from './modules/pages/pricing-page/pricing-page.component';
+import { AdminComponent } from './modules/admin/admin.component';
 
 export function playerFactory() {
   return player;
@@ -91,6 +90,7 @@ export function playerFactory() {
     OtpModalComponent,
     DeletionModalComponent,
     ImageUploaderModalComponent,
+    BulkQuizUploaderModalComponent,
     ProfileUploaderModalComponent,
     CourseDraftModalComponent,
     PreviewVideoModalComponent,
@@ -104,6 +104,7 @@ export function playerFactory() {
     FastlearnerSignupComponent,
     ClassAssessmentModalComponent,
     ReportPreviewModalComponent,
+    // AdminComponent,
   ],
   imports: [
     FormsModule,
@@ -169,6 +170,7 @@ export function playerFactory() {
         `${environment.baseUrl}home-page/new-courses`,
         `${environment.baseUrl}home-page/top-instructor`,
         `${environment.baseUrl}home-page/free-courses`,
+        `${environment.baseUrl}home-page/test`,
         `${environment.baseUrl}course/search-by-filter`,
         `${environment.baseUrl}course/unique-course-title`,
         `${environment.baseUrl}enrollment/`,
@@ -178,8 +180,20 @@ export function playerFactory() {
         `${environment.baseUrl}courspremiue/get-related-courses`,
         `${environment.baseUrl}affiliate-course/by-course`,
         environment.baseUrl + `watch-time/`,
-        environment.basePath +`copilot/chat/`,
+        environment.basePath + `copilot/chat/`,
         `${environment.baseUrl}ai-result/create`,
+        `${environment.baseUrl}ai-result/`,
+        `${environment.baseUrl}user/user-details`,
+        `${environment.baseUrl}super-admin/users?`,
+        `${environment.baseUrl}coupon/?`,
+        `${environment.baseUrl}super-admin/subscriptions`,
+        `${environment.baseUrl}super-admin/courses?`,
+        `${environment.baseUrl}super-admin/enrollments?`,
+        `${environment.baseUrl}super-admin/payments?`,
+        `${environment.baseUrl}super-admin/payouts?`,
+        `${environment.baseUrl}super-admin/settings/admins`,
+        `/invoices?page=`,
+        `${environment.baseUrl}course/test/bulk-questions/parse`,
       ],
     }),
     NgxUiLoaderModule.forRoot(NgxLoaderCongif.masterLoaderConfig),
@@ -205,7 +219,7 @@ export function playerFactory() {
       multi: true,
     },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
-    CookieService
+    CookieService,
   ],
   bootstrap: [AppComponent],
 })

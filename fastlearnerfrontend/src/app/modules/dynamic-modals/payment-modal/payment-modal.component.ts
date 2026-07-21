@@ -29,8 +29,16 @@ export class PaymentModalComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.paymentProfileData != null && this.paymentProfileData != undefined) {
-      this.paymentProfile = this.paymentProfileData;
-      this.paymentProfile.date = this.paymentProfile.expiryMonth + '/' + this.paymentProfile.expiryYear;
+      this.paymentProfile = { ...this.paymentProfileData };
+      this.paymentProfile.date =
+        this.paymentProfile.expiryMonth + '/' + this.paymentProfile.expiryYear;
+      // Masked card numbers from Authorize.Net cannot be re-submitted; require a fresh entry.
+      if (String(this.paymentProfile.cardNumber ?? '').toUpperCase().includes('X')) {
+        this.paymentProfile.cardNumber = '';
+      }
+      if (this.paymentProfile.zipCode != null) {
+        this.paymentProfile.zipCode = String(this.paymentProfile.zipCode);
+      }
     }
   }
 
@@ -93,14 +101,17 @@ export class PaymentModalComponent implements OnInit {
       this.paymentProfile.expiryYear = this.paymentProfile.date?.split('/')[1];
       this.paymentProfile.isSave = this.paymentProfile.isSave == 
       null ? this.paymentProfile.isSave = false : this.paymentProfile.isSave;
+      this.paymentProfile.zipCode = String(this.paymentProfile.zipCode).trim();
+      this.paymentProfile.countryCode = String(this.paymentProfile.countryCode).trim().toUpperCase();
       if (typeof this.paymentProfile.cardNumber == 'string') {
-        const cardNumberAsInteger = parseInt(
-          this.paymentProfile.cardNumber.replace(/\D/g, ''),
-          10
-        );
-        this.paymentProfile.cardNumber = cardNumberAsInteger;
+        const cardDigits = this.paymentProfile.cardNumber.replace(/\D/g, '');
+        if (cardDigits.length < 13) {
+          this._message.error('Please enter the full card number');
+          return;
+        }
+        this.paymentProfile.cardNumber = cardDigits;
       } else {
-        this.paymentProfile.cardNumber = this.paymentProfile.cardNumber;
+        this.paymentProfile.cardNumber = String(this.paymentProfile.cardNumber);
       }
       this._subscriptionService.savePaymentProfile(this.paymentProfile).subscribe({
   next: (response: any) => {
@@ -130,7 +141,8 @@ export class PaymentModalComponent implements OnInit {
   }
 });
     }else {
-      this._message.error('Please fill the fields');
+      this._message.remove();
+      this._message.error('Please fill all required fields. ZIP code must be 4-10 digits.');
     }
   }
 
@@ -139,15 +151,11 @@ export class PaymentModalComponent implements OnInit {
   }
 
   validateData() {
-    const isZipValid =
-      this.paymentProfile?.zipCode !== undefined &&
-      this.paymentProfile?.zipCode !== null &&
-      this.paymentProfile?.zipCode.toString().trim().length > 0;
+    const zipCode = this.paymentProfile?.zipCode?.toString().trim() ?? '';
+    const isZipValid = /^[0-9]{4,10}$/.test(zipCode);
 
-    const countryCodeValid =
-      this.paymentProfile?.countryCode !== undefined &&
-      this.paymentProfile?.countryCode !== null &&
-      this.paymentProfile?.countryCode.toString().trim().length > 0;
+    const countryCode = this.paymentProfile?.countryCode?.toString().trim() ?? '';
+    const countryCodeValid = /^[A-Z]{2}$/i.test(countryCode);
 
     if (
       this.paymentProfile.firstName != '' &&

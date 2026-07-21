@@ -47,7 +47,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   emailValid?: any = false;
   notificationCount?: any = 0;
   private destroy$ = new Subject<void>();
-
+  nextRoute: any = '';
   payLoad = {
     token: '',
     provider: '',
@@ -79,6 +79,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private _subscriptionService: SubscriptionService,
     private _cookiesService: CookiesService,
+    private stateService: StateService,
     // private _authStateHandlerService: StateService,
   ) {
     this.validateForm = this._fb.group({
@@ -93,9 +94,11 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userIsSubscribed();
+    this.handleClassLinkOAuthCallback();
     // this.getAuthenticUserState();
     // this.getLinkedInToken();
     this._communicationService.removeEmitterData$.subscribe(() => {});
+    // this.nextRoute = this._cacheService.getDataFromCache('nextRoute');
   }
 
   ngOnDestroy(): void {
@@ -150,14 +153,16 @@ export class SignInComponent implements OnInit, OnDestroy {
 
           // Wait for subscription permissions to load
           return this._subscriptionService.loadSubscriptionPermissions().pipe(
-            map(() => response) // forward the original response
+            map(() => response), // forward the original response
           );
-        })
+        }),
       )
       .subscribe({
         next: (response: any) => {
           const redirectUrl =
             this._cacheService.getDataFromCache('redirectUrl');
+          // const basePath = redirectUrl ? redirectUrl.split('?')[0] : '';
+          // const isAuthRoute = basePath.startsWith('/auth');
 
           if (redirectUrl && response?.subscribed) {
             this._cacheService.removeFromCache('redirectUrl');
@@ -165,6 +170,9 @@ export class SignInComponent implements OnInit, OnDestroy {
           } else if (response?.role == null) {
             this.saveUserRole();
           } else {
+            if (redirectUrl) {
+              this._cacheService.removeFromCache('redirectUrl');
+            }
             if (response?.role === Role.Student && response?.subscribed) {
               this._router.navigate(['student']);
             } else if (
@@ -178,16 +186,15 @@ export class SignInComponent implements OnInit, OnDestroy {
           }
         },
         error: (error: any) => {
-          // Handle signup error
           console.error('Signup error', error);
-          // Optionally show a message
           this._messageService.error(error?.error?.message || 'Signup failed');
         },
       });
   }
 
-  saveUserRole() {
+  saveUserRole(isSubscribed?: boolean) {
     this.saveRole = 'STUDENT';
+    const subscribed = isSubscribed ?? this.isSubscribed;
 
     this._cacheService.saveInCache('role', this.saveRole);
 
@@ -197,16 +204,20 @@ export class SignInComponent implements OnInit, OnDestroy {
           response?.status ==
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
-          if (this.saveRole == Role.Student && this.isSubscribed) {
-            this._router.navigate(['student']);
-          } else if (this.saveRole == Role.Student && !this.isSubscribed) {
-            this._router.navigate(['subscription-plan']);
+          if (this.saveRole == Role.Student && subscribed) {
+            this._router.navigate(['student'], { replaceUrl: true });
+          } else if (this.saveRole == Role.Student && !subscribed) {
+            this._router.navigate(['subscription-plan'], { replaceUrl: true });
           } else if (this.saveRole == Role.Instructor) {
-            this._router.navigate(['instructor']);
+            this._router.navigate(['instructor'], { replaceUrl: true });
           }
         }
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this._messageService.error(
+          error?.error?.message || 'Unable to save user role.',
+        );
+      },
     });
   }
 
@@ -225,7 +236,6 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   onSignIn(body: any) {
     this.callInProgress = true;
-
     this._authService
       .signIn(body)
       .pipe(
@@ -243,15 +253,18 @@ export class SignInComponent implements OnInit, OnDestroy {
 
           // Call subscription permission and wait for it
           return this._subscriptionService.loadSubscriptionPermissions().pipe(
-            map(() => response) // pass response forward
+            map(() => response), // pass response forward
           );
-        })
+        }),
       )
       .subscribe({
         next: (response: any) => {
-          const redirectUrl =
-            this._cacheService.getDataFromCache('redirectUrl');
+          let redirectUrl = this._cacheService.getDataFromCache('redirectUrl');
           const splittedUrl = redirectUrl ? redirectUrl.split('?')[0] : '';
+          // if (this.nextRoute) {
+          //   redirectUrl = this.nextRoute;
+          //   this._cacheService.removeFromCache('nextRoute');
+          // }
 
           setTimeout(() => {
             this.callInProgress = false;
@@ -289,7 +302,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           this.user = response?.data;
           this._cacheService.saveInCache(
             'userProfile',
-            JSON.stringify(response?.data)
+            JSON.stringify(response?.data),
           );
         }
       },
@@ -307,7 +320,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     this._cacheService.saveInCache('expiresIn', expiryTimeInSeconds);
     this._cacheService.saveInCache(
       'loggedInUserDetails',
-      JSON.stringify(response)
+      JSON.stringify(response),
     );
     this._cacheService.saveInCache('isLoggedIn', 'true');
     this._authService.startTokenTimer();
@@ -315,22 +328,142 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   getAuthenticUserState() {
     this._socialAuthService.authState
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((user) => {
-      if (user) {
-        if (
-          this.currentLoggedInUserDetails == undefined ||
-          this.currentLoggedInUserDetails == null
-        ) {
-          this.currentLoggedInUserDetails = user;
-          this.signUp(this.currentLoggedInUserDetails);
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        if (user) {
+          if (
+            this.currentLoggedInUserDetails == undefined ||
+            this.currentLoggedInUserDetails == null
+          ) {
+            this.currentLoggedInUserDetails = user;
+            this.signUp(this.currentLoggedInUserDetails);
+          }
         }
-      }
-    });
+      });
   }
 
   signInWithGoogle() {
     this._socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
+  private handleClassLinkOAuthCallback() {
+    this.clearInvalidRedirectUrl();
+
+    const queryParams = this.getClassLinkOAuthQueryParams();
+    const token = queryParams['token'];
+    const error = queryParams['error'];
+
+    if (error) {
+      this._messageService.error(
+        'ClassLink LaunchPad sign-in failed. Please launch FastLearner again from ClassLink LaunchPad.',
+      );
+      return;
+    }
+
+    if (!token) {
+      return;
+    }
+
+    const response = {
+      token,
+      refreshToken: queryParams['refreshToken'],
+      expiredInSec: Number(queryParams['expiredInSec']),
+      name: queryParams['name'],
+      email: queryParams['email'],
+      role: queryParams['role'] || null,
+      subscribed: queryParams['subscribed'] === 'true',
+    };
+
+    this.saveResponseInCache(response);
+    this._authService.changeNavState(true);
+    this.completeClassLinkSignIn(response);
+  }
+
+  private completeClassLinkSignIn(response: any) {
+    const target = response?.subscribed ? ['student'] : ['subscription-plan'];
+    this._router.navigate(target, { replaceUrl: true });
+  }
+
+  /**
+   * Hash routes keep OAuth params in window.location.hash; snapshot.queryParams can be empty.
+   */
+  private getClassLinkOAuthQueryParams(): Record<string, string> {
+    const routeParams = this._activatedRoute.snapshot.queryParams;
+    if (routeParams['token'] || routeParams['error']) {
+      return routeParams as Record<string, string>;
+    }
+
+    const hash = window.location.hash || '';
+    const queryIndex = hash.indexOf('?');
+    if (queryIndex === -1) {
+      return routeParams as Record<string, string>;
+    }
+
+    const params = new URLSearchParams(hash.substring(queryIndex + 1));
+    const parsed: Record<string, string> = {};
+    params.forEach((value, key) => {
+      parsed[key] = value;
+    });
+    return parsed;
+  }
+
+  private navigateAfterClassLinkLogin(response: any) {
+    if (response?.role == null) {
+      this.clearInvalidRedirectUrl();
+      this.saveUserRole(response?.subscribed);
+      return;
+    }
+
+    const redirectUrl = this.getSafeRedirectUrl(
+      this._cacheService.getDataFromCache('redirectUrl'),
+    );
+
+    if (redirectUrl && response?.subscribed) {
+      this._cacheService.removeFromCache('redirectUrl');
+      this._router.navigateByUrl(redirectUrl, { replaceUrl: true });
+      return;
+    }
+
+    if (redirectUrl) {
+      this._cacheService.removeFromCache('redirectUrl');
+    }
+
+    this.navigateToPostLoginRoute(response);
+  }
+
+  private navigateToPostLoginRoute(response: any) {
+    if (response?.role === Role.Student && response?.subscribed) {
+      this._router.navigate(['student'], { replaceUrl: true });
+    } else if (response?.role === Role.Student && !response?.subscribed) {
+      this._router.navigate(['subscription-plan'], { replaceUrl: true });
+    } else if (response?.role === Role.Instructor) {
+      this._router.navigate(['instructor'], { replaceUrl: true });
+    }
+  }
+
+  private clearInvalidRedirectUrl(): void {
+    const redirectUrl = this._cacheService.getDataFromCache('redirectUrl');
+    if (!this.getSafeRedirectUrl(redirectUrl)) {
+      this._cacheService.removeFromCache('redirectUrl');
+    }
+  }
+
+  private getSafeRedirectUrl(url: string): string | null {
+    if (!url) {
+      return null;
+    }
+
+    const basePath = url.split('?')[0];
+    if (
+      basePath.includes('/auth/sign-in') ||
+      basePath.includes('/auth/sign-up') ||
+      url.includes('token=') ||
+      url.includes('error=')
+    ) {
+      return null;
+    }
+
+    return url;
   }
 
   togglePassword() {

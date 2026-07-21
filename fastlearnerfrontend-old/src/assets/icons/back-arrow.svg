@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <filter id="Ellipse_3092" x="0" y="0" width="48" height="48" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="ic_keyboard_backspace_24px" transform="translate(9 6)">
+    <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#Ellipse_3092)">
+      <circle id="Ellipse_3092-2" data-name="Ellipse 3092" cx="15" cy="15" r="15" transform="translate(9 6)" fill="#fff"/>
+    </g>
+    <path id="ic_keyboard_backspace_24px-2" data-name="ic_keyboard_backspace_24px" d="M19.5,10.583H6.511L9.793,7.293,8.5,6,3,11.5,8.5,17l1.293-1.292L6.511,12.417H19.5Z" transform="translate(3.75 3.5)" fill="#212189"/>
+  </g>
+</svg>

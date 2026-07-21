@@ -3,6 +3,7 @@
   flex: 0 0 25%; /* 25% means 4 cards per row */
   margin: 10px;
   width: 374px;
+  // width: 30%;
   transition: all ease 0.6s;
   transform: scale(1);
 }
@@ -106,14 +107,50 @@
   margin-bottom: 0px !important;
 }
 
+// .description {
+//   margin-bottom: 16px;
+//   overflow: hidden;
+
+//   .course-description {
+//     margin: 0;
+//     display: -webkit-box;
+//     -webkit-box-orient: vertical;
+//     -webkit-line-clamp: 1;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: normal;
+//     word-break: break-word;
+//     line-height: 1.4;
+//     max-height: 1.4em;
+
+//     ::ng-deep p,
+//     ::ng-deep span,
+//     ::ng-deep div {
+//       margin: 0;
+//       display: inline;
+//     }
+
+//     // width: 100%;
+//   }
+// }
+
 .description {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  white-space: pre-wrap;
-  height: 46px;
   margin-bottom: 16px;
+  overflow: hidden;
+
+  .course-description {
+    margin: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-word;
+    line-height: 1.4;
+    max-height: 1.4em;
+  }
 }
 
 .course-creator-premium {
@@ -403,9 +440,6 @@ button:hover {
     color: #292929;
     font-size: 12px;
   }
-  .description {
-    height: 38px;
-  }
 
   .image-height {
     width: 305px;
@@ -420,6 +454,17 @@ button:hover {
     font-size: 12px;
   }
 }
+
+@media screen and (max-width: 1366px) {
+  .card {
+    // width: 374px;
+
+    // img {
+    //   width: 100%;
+    // }
+  }
+}
+
 @media screen and (max-width: 600px) {
   .slider-container {
     display: contents;
@@ -455,18 +500,31 @@ button:hover {
   margin-top: -15px !important;
 }
 
-
-
-@media screen and (max-width: 320px) {
-
+@media screen and (max-width: 400px) {
   .image-height {
-    width: 280px;
-    height: 185px;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 1rem;
   }
 
   .card {
-    width: 280px;
-    margin: 15px;
+    width: 100%;
+    padding: 0.5rem;
+    margin-inline: auto;
   }
-
+  :host ::ng-deep .ant-card-body {
+    padding: 0 !important;
+  }
 }
+
+// @media screen and (max-width: 320px) {
+//   .image-height {
+//     width: 280px;
+//     height: 185px;
+//   }
+
+//   .card {
+//     width: 280px;
+//     margin: 15px;
+//   }
+// }

@@ -52,11 +52,22 @@ describe('CacheService', () => {
     expect(result).toBe('');
   });
 
-  it('should clear localStorage and call signOut and removeEmitter', () => {
+  it('should clear localStorage and call signOut', () => {
+    localStorage.setItem('otherKey', 'value');
+
     service.clearCache();
 
-    expect(localStorage.length).toBe(0);
+    expect(localStorage.getItem('otherKey')).toBeNull();
     expect(socialAuthServiceSpy.signOut).toHaveBeenCalled();
+  });
+
+  it('should preserve redirectUrl when clearing cache', () => {
+    localStorage.setItem('redirectUrl', '/student/course');
+
+    service.clearCache();
+
+    expect(localStorage.getItem('redirectUrl')).toBe('/student/course');
+    expect(localStorage.length).toBe(1);
   });
 
   it('should cache login data correctly', () => {

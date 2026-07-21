@@ -64,7 +64,7 @@ export class PreviewComponent {
   imageSrc = '../../../../assets/images/add_image.svg';
   videoSrc = '../../../../../assets/images/add_video.svg';
   courseContentType = CourseContentType;
-
+  mediaType: string = '';
   constructor(
     private fb: FormBuilder,
     private _instructorService: InstructorService,
@@ -73,7 +73,7 @@ export class PreviewComponent {
     private _router: Router,
     private _communicationService: CommunicationService,
     private _modal: NzModalService,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
   ) {}
 
   @HostListener('window:scroll', [])
@@ -96,8 +96,10 @@ export class PreviewComponent {
     this.previewVideo.videoUrl =
       this.courseInformationData?.get('previewPath')?.value;
     this.previewVideo.vttContent = this.courseInformationData?.get(
-      'previewVideoVttContent'
+      'previewVideoVttContent',
     )?.value;
+
+    console.log(this.sectionsData);
   }
 
   checkTooltipVisibility() {
@@ -139,6 +141,7 @@ export class PreviewComponent {
   }
 
   publishCourse() {
+    console.log(this.sectionsData);
     this._courseService
       .createCourseDto(
         this.courseInformationData,
@@ -146,7 +149,7 @@ export class PreviewComponent {
         this.courseId,
         true,
         this.course?.certificateEnabled,
-        this.selectedContentType
+        this.selectedContentType,
       )
       .subscribe({
         next: (response: any) => {
@@ -162,6 +165,58 @@ export class PreviewComponent {
           console.log(error);
         },
       });
+  }
+
+  toggleAudio(question: any) {
+    const audio: HTMLAudioElement = document.querySelector(
+      `audio[src="${question.attachedImageUrl}"]`,
+    ) as HTMLAudioElement;
+
+    if (!audio) return;
+
+    if (question.isPlaying) {
+      audio.pause();
+      question.isPlaying = false;
+    } else {
+      audio.play();
+      question.isPlaying = true;
+    }
+  }
+
+  updateProgress(audio: HTMLAudioElement, question: any) {
+    question.progress = (audio.currentTime / audio.duration) * 100;
+    question.currentTime = this.formatTime(audio.currentTime);
+  }
+
+  setDuration(audio: HTMLAudioElement, question: any) {
+    question.duration = this.formatTime(audio.duration);
+  }
+
+  audioEnded(question: any) {
+    question.isPlaying = false;
+    question.progress = 0;
+  }
+
+  formatTime(time: number): string {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60)
+      .toString()
+      .padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
+
+  seekAudio(event: MouseEvent, question: any) {
+    const bar = event.currentTarget as HTMLElement;
+    const rect = bar.getBoundingClientRect();
+    const percent = (event.clientX - rect.left) / rect.width;
+
+    const audio: HTMLAudioElement = document.querySelector(
+      `audio[src="${question.attachedAudioUrl}"]`,
+    ) as HTMLAudioElement;
+
+    if (audio) {
+      audio.currentTime = percent * audio.duration;
+    }
   }
 
   getCourseTags() {
@@ -285,6 +340,7 @@ export class PreviewComponent {
           level: index + 1,
           topicTypeId: this.fetchTopicTypeId(topic.selectedContentType),
           duration: topic.topicDuration,
+          topicComprehensive: topic.topicComprehensive ?? undefined,
           video: video,
           quiz: quiz,
           article: article,
@@ -331,24 +387,35 @@ export class PreviewComponent {
       id: quiz.quizId,
       delete: quiz.delete,
       title: quiz.title,
+      durationInMinutes: quiz.durationInMinutes,
+      passingCriteria: quiz.passingCriteria,
+      testType: quiz.type,
+      isAllowedToRetake: quiz.isAllowedToRetake,
       questions: this.getQuizQuestions(quiz.questions),
     };
     return qui;
   }
 
   getQuizQuestions(questions?: any) {
+    console.log(questions);
     const quizQuestions: Question[] = [];
     questions.forEach((question: any) => {
       const ques: Question = {
         id: question.questionId,
         delete: question.delete,
         questionText: question.ques,
+        questionImageUrl:
+          question.attachedImageUrl || question.questionImageUrl,
+        mediaType: question.mediaType,
         answers: this.getQuestionAnswers(
           question.answers,
-          question.correctAnswer
+          question.correctAnswer,
         ),
+        // questionAudioUrl:
+        //   question.attachedAudioUrl || question.questionAudioUrl,
       };
       quizQuestions.push(ques);
+      console.log(quizQuestions);
     });
     return quizQuestions;
   }
@@ -360,6 +427,7 @@ export class PreviewComponent {
         id: answer.answerId,
         delete: answer.delete,
         answerText: answer.ans,
+        answerImageUrl: answer.attachedImageUrl || answer.answerImageUrl,
         isCorrectAnswer: answer.ans == correctAnswer.ans ? true : false,
       };
       questionAnswers.push(ans);
@@ -392,7 +460,7 @@ export class PreviewComponent {
 
   fetchTopicTypeId(selectedContentType?: any) {
     const topicType = this.topicTypes.find(
-      (topicType) => topicType.name === selectedContentType
+      (topicType) => topicType.name === selectedContentType,
     );
     return topicType?.id;
   }
@@ -429,5 +497,13 @@ export class PreviewComponent {
   closeCourseCompletionModal() {
     // this._modal.closeAll();
     this.routeToDashboard();
+  }
+
+  isImage(fileUrl: string): boolean {
+    return /\.(jpg|jpeg|png|gif|bmp|svg)$/.test(fileUrl);
+  }
+
+  isAudio(fileUrl: string): boolean {
+    return /\.(mp3|wav|ogg|aac|flac)$/.test(fileUrl);
   }
 }

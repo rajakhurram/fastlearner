@@ -268,7 +268,9 @@ div.icon {
   overflow: hidden;
   opacity: 0;
   padding: 0px;
-  transition: opacity 0.5s ease-in, max-height 0.5s ease-in;
+  transition:
+    opacity 0.5s ease-in,
+    max-height 0.5s ease-in;
   margin-top: 8px;
   color: #313131;
 }
@@ -283,7 +285,7 @@ div.icon {
 }
 
 .test-center-heading {
-    text-align: center;
+  text-align: center;
 }
 .free-courses-heading {
   text-align: center;
@@ -386,7 +388,7 @@ div.icon {
 }
 
 .test-center {
-  background: #E4EEFF;
+  background: #e4eeff;
   padding-top: 3%;
   padding-bottom: 3%;
 }
@@ -1414,12 +1416,12 @@ p {
     text-align: center;
     justify-content: center;
   }
-  .text-align{
+  .text-align {
     text-align: center;
     justify-content: center;
   }
-   .student-pick-content {
-    margin-bottom: 20px; 
+  .student-pick-content {
+    margin-bottom: 20px;
   }
   .about-us-heading {
     text-align: center !important;
@@ -2092,3 +2094,29 @@ p {
   }
 }
 
+@media screen and (max-width: 700px) {
+  .banner-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+    margin: 1rem auto !important;
+    margin-left: 0 !important;
+
+    .hero-lcp-image {
+      display: block;
+      margin-inline: auto;
+      width: min(30rem, calc(100vw - 2rem)) !important;
+      max-width: 100%;
+      height: auto !important;
+      object-fit: contain;
+    }
+  }
+
+  .hero-image {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-inline: auto !important;
+  }
+}

@@ -1,0 +1,315 @@
+<nz-layout
+  class="admin-layout"
+  [class.is-booting]="!isLayoutReady"
+  [class.is-mobile]="isMobileView"
+  [class.sidebar-open]="sideBarVisible"
+>
+  <div
+    class="admin-sidebar-backdrop"
+    *ngIf="isMobileView && sideBarVisible"
+    (click)="closeSidebar()"
+    aria-hidden="true"
+  ></div>
+
+  <nz-sider
+    nzTheme="light"
+    nzWidth="250px"
+    [nzCollapsible]="!isMobileView"
+    [nzCollapsed]="isCollapsed"
+    [nzTrigger]="null"
+    class="admin-sider"
+  >
+    <div class="brand">
+      <img src="assets/icons/FL-Logo (1).svg" alt="FastLearner" />
+      <button
+        type="button"
+        class="admin-sider-close"
+        *ngIf="isMobileView"
+        (click)="closeSidebar()"
+        aria-label="Close menu"
+      >
+        <img src="../../../assets/icons/cross.svg" alt="" />
+      </button>
+    </div>
+
+    <ul nz-menu nzMode="inline" class="admin-menu">
+      <li
+        nz-menu-item
+        *ngFor="let item of menuItems"
+        [nzSelected]="isRouteActive(item.route)"
+        [class.coming-soon]="!item.route"
+        (click)="navigate(item.route)"
+        [class.ant-menu-item-selected]="isRouteActive(item.route)"
+      >
+        <!-- <span nz-icon [nzType]="item.icon"></span> -->
+        <img
+          [src]="'../../../assets/icons/' + item.icon + '.svg'"
+          alt=""
+          [class.legacy-icon]="isLegacyIcon(item.icon)"
+        />
+        <span>{{ item.label }}</span>
+      </li>
+    </ul>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="admin-header">
+      <!-- <button nz-button nzType="text" (click)="isCollapsed = !isCollapsed">
+        <span nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+      </button> -->
+
+      <!-- <div class="search-bar">
+        <nz-input-group
+          class="input-group-container"
+          nzSearch
+          nzSize="large"
+          [nzAddOnAfter]="suffixIconSearch"
+        >
+          <input
+            nz-input
+            class="search-input-container"
+            placeholder="Search"
+            [(ngModel)]="searchKeyword"
+            #searchInput
+          />
+        </nz-input-group>
+      </div> -->
+
+      <!-- <nz-input-group
+        class="search-bar"
+        [nzSuffix]="suffixIconSearch"
+        nzSize="large"
+      >
+        <input
+          type="text"
+          nz-input
+          placeholder="Search users, actions..."
+          name="title"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span style="color: #212189" nz-icon nzType="search"></span>
+      </ng-template> -->
+
+      <button
+        type="button"
+        class="hamburger"
+        *ngIf="isMobileView"
+        (click)="toggleSidebar()"
+        aria-label="Open menu"
+      >
+        <img src="../../../assets/icons/burger-menu.svg" alt="" />
+      </button>
+
+      <div class="wrapper">
+        <button
+          (nzVisibleChange)="notificationToggle($event)"
+          nz-dropdown
+          nzTrigger="click"
+          [nzDropdownMenu]="menuNotification"
+          [nzVisible]="isNotificationDropdownVisible"
+          class="notification-nav"
+          (click)="removeNotificationCount()"
+          nz-button
+          nzType="text"
+        >
+          <div class="notification-icon-container">
+            <img
+              height="30px"
+              class="ml-5px"
+              alt="Notifications"
+              src="../../../assets/icons/notifications.svg"
+              loading="lazy"
+            />
+            <div
+              *ngIf="notificationCount > 0"
+              class="notification-style notification-count"
+              [class.notification-count-plus]="notificationCount > 4"
+            >
+              <span style="font-size: 10px">{{
+                notificationCount > 4 ? "4+" : notificationCount
+              }}</span>
+            </div>
+          </div>
+        </button>
+
+        <div class="initials">
+          <button
+            *ngIf="!loggedInUser?.profilePicture"
+            nz-dropdown
+            nzTrigger="click"
+            [nzDropdownMenu]="portalMenu"
+            class="ml-5px side-nav-button"
+            nz-button
+            nzType="primary"
+            nzShape="circle"
+          >
+            {{ getInitialOfLoggedInUser | initialCharactor }}
+          </button>
+          <nz-avatar
+            *ngIf="loggedInUser?.profilePicture"
+            [nzSize]="40"
+            nz-dropdown
+            style="cursor: pointer"
+            nzTrigger="click"
+            nzAlt="Profile"
+            nzIcon="user"
+            [nzDropdownMenu]="portalMenu"
+            [nzSrc]="loggedInUser?.profilePicture"
+          ></nz-avatar>
+          <!-- <div class="profile-info">
+            <span>{{ loggedInUser?.fullName }}</span>
+            <span>{{ loggedInUser?.email }}</span>
+          </div> -->
+        </div>
+      </div>
+    </nz-header>
+
+    <nz-content class="admin-content">
+      <router-outlet></router-outlet>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+
+<nz-dropdown-menu #portalMenu="nzDropdownMenu">
+  <div class="admin-profile-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="user-profile">
+          <div>
+            <button
+              *ngIf="!loggedInUser?.profilePicture"
+              class="profile-avatar-btn"
+              nz-button
+              nzType="primary"
+              nzShape="circle"
+            >
+              {{ getInitialOfLoggedInUser | initialCharactor }}
+            </button>
+            <nz-avatar
+              *ngIf="loggedInUser?.profilePicture"
+              [nzSize]="46"
+              nzIcon="user"
+              class="profile-avatar-btn"
+              nzAlt="Profile"
+              [nzSrc]="loggedInUser?.profilePicture"
+            ></nz-avatar>
+          </div>
+          <div class="user-profile-text">
+            <p>{{ loggedInUser?.fullName }}</p>
+            <p>{{ loggedInUser?.email }}</p>
+            <p><a (click)="routeToUpdateProfile()">Edit Profile</a></p>
+          </div>
+        </div>
+        <li nz-menu-divider></li>
+        <li nz-menu-item (click)="routeToMyCourses()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/courses-menu.svg"
+          />
+          My Courses
+        </li>
+        <!-- <li nz-menu-item (click)="routeToFavoriteCourses()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/heart-menu.svg"
+          />
+          Favorites
+        </li> -->
+        <li nz-menu-item (click)="routeToSubscription()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/subscription-menu.svg"
+          />
+          Subscriptions
+        </li>
+        <li nz-menu-item (click)="routeToStudentPortal()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/courses-menu.svg"
+          />
+          Student's Portal
+        </li>
+        <li nz-menu-item (click)="routeToInstructorPortal()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/dashboard-menu.svg"
+          />
+          Instructor's Portal
+        </li>
+        <li nz-menu-item (click)="signOut()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/logout.svg"
+          />
+          Logout
+        </li>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuNotification="nzDropdownMenu">
+  <div id="admin-notification-menu">
+    <ul nz-menu>
+      <li class="blue-divider" nz-menu-divider></li>
+      <div>
+        <div class="notification-content-heading">
+          <div class="notification-text">
+            <p class="font-14 mb-1">Notifications</p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount > 0"
+            >
+              You have {{ notificationCount }} new notifications
+            </p>
+            <p
+              class="notification-message font-10 mb-2"
+              *ngIf="notificationCount === 0"
+            >
+              New notifications
+            </p>
+          </div>
+        </div>
+
+        <div
+          (click)="redirect(notification)"
+          class="remove-space cursor-pointer"
+          [class.border-bottom]="i !== notifications.length - 1"
+          *ngFor="let notification of notifications; let i = index"
+        >
+          <div
+            class="notification-box pb-4"
+            [class.unseen-notification]="!notification.read"
+          >
+            <div class="notification-content">
+              <div class="notification-text">
+                <div style="line-height: 15px">
+                  <p class="color-blue notification-message font-12 mb-1">
+                    {{ notification.senderName }}
+                  </p>
+                  <p class="notification-message font-12 mb-2">
+                    {{ notification.content }}
+                  </p>
+                </div>
+                <span class="font-10 mb-0 time-text">{{
+                  notification.creationDate
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="notifications?.length">
+          <p
+            class="text-align-center mt-4 mb-1 cursor-pointer see-all-notification"
+            (click)="routeToNotificationPage()"
+          >
+            See All Notifications
+          </p>
+        </div>
+      </div>
+    </ul>
+  </div>
+</nz-dropdown-menu>

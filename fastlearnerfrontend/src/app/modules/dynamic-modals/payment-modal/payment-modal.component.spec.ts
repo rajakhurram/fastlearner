@@ -81,8 +81,10 @@ describe('PaymentModalComponent', () => {
     component.paymentProfileData = mockPaymentProfile;
     component.ngOnInit();
 
-    expect(component.paymentProfile).toEqual(mockPaymentProfile);
-    expect(component.paymentProfile.date).toBe('12/2025');
+    expect(component.paymentProfile).toEqual({
+      ...mockPaymentProfile,
+      date: '12/2025',
+    });
   });
   
   it('should return current year in two digits', () => {
@@ -126,11 +128,13 @@ describe('PaymentModalComponent', () => {
       lastName: 'Doe',
       cardNumber: '4111111111111111',
       expiryMonth: '12',
-      expiryYear: '2025',
+      expiryYear: '25',
       cvv: '123',
-      date: new Date().toLocaleDateString(),
+      date: '12/25',
       zipCode: '123123123',
       countryCode: 'PK',
+      city: 'Karachi',
+      address: '123 Main St',
     };
 
     expect(component.validateData()).toBeTrue();
@@ -153,11 +157,13 @@ describe('PaymentModalComponent', () => {
       lastName: 'Doe',
       cardNumber: '4111111111111111',
       expiryMonth: '12',
-      expiryYear: '2025',
+      expiryYear: '25',
       cvv: '123',
-      date: new Date().toLocaleDateString(),
+      date: '12/25',
       zipCode: '123123123',
       countryCode: 'PK',
+      city: 'Karachi',
+      address: '123 Main St',
     };
     
     // Set the component's paymentProfile
@@ -170,8 +176,18 @@ describe('PaymentModalComponent', () => {
     component.savePaymentProfile();
     tick(); // Simulate the passage of time for async operations
   
-    // Assert the service was called
-    expect(subscriptionService.savePaymentProfile).toHaveBeenCalledWith(paymentProfile);
+    expect(subscriptionService.savePaymentProfile).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        firstName: 'John',
+        lastName: 'Doe',
+        expiryMonth: '12',
+        expiryYear: '25',
+        zipCode: '123123123',
+        countryCode: 'PK',
+        city: 'Karachi',
+        address: '123 Main St',
+      }),
+    );
     expect(nzModalRefSpy.close).toHaveBeenCalled();
   }));
   
@@ -183,11 +199,13 @@ describe('PaymentModalComponent', () => {
       lastName: 'Doe',
       cardNumber: '4111111111111111',
       expiryMonth: '12',
-      expiryYear: '2025',
+      expiryYear: '25',
       cvv: '123',
-      date: new Date().toLocaleDateString(),
+      date: '12/25',
       zipCode: '123123123',
       countryCode: 'PK',
+      city: 'Karachi',
+      address: '123 Main St',
     };
   
     // Set the component's paymentProfile
@@ -200,8 +218,14 @@ describe('PaymentModalComponent', () => {
     component.savePaymentProfile();
     tick(); // Simulate the passage of time for async operations
   
-    // Assert the service was called
-    expect(subscriptionService.savePaymentProfile).toHaveBeenCalledWith(paymentProfile);
+    expect(subscriptionService.savePaymentProfile).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        firstName: 'John',
+        lastName: 'Doe',
+        expiryMonth: '12',
+        expiryYear: '25',
+      }),
+    );
   }));
   
 

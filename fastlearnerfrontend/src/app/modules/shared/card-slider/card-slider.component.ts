@@ -38,8 +38,10 @@ export class CardSliderComponent implements OnInit, OnChanges {
   @Input() showButton: boolean;
   @Input() isPremium: boolean = false;
   @Input() applyMargin: boolean = false;
+  @Input() sectionId: string = '';
   @Output() rightClickEmitter: EventEmitter<any> = new EventEmitter();
   @Output() leftClickEmitter: EventEmitter<any> = new EventEmitter();
+  @Input() loading: boolean = false;
   viewAllMap = ViewAllMap;
   visibleCourses = [];
   currentIndex = 0;
@@ -54,13 +56,8 @@ export class CardSliderComponent implements OnInit, OnChanges {
   constructor(
     private _router: Router,
     private renderer: Renderer2,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
-
-  // ngOnInit() {
-  //   this.updateCardsToShow();
-  //   this.updateVisibleCourses();
-  // }
 
   ngOnChanges() {
     this.updateVisibleCourses();
@@ -75,7 +72,7 @@ export class CardSliderComponent implements OnInit, OnChanges {
   updateVisibleCourses() {
     this.visibleCourses = this.courses.slice(
       this.currentIndex,
-      this.currentIndex + this.cardsToShow
+      this.currentIndex + this.cardsToShow,
     );
   }
 
@@ -106,6 +103,9 @@ export class CardSliderComponent implements OnInit, OnChanges {
   }
 
   routeToCourseEmitter(courseUrl: string) {
+    if (this.sectionId) {
+      sessionStorage.setItem('sectionId', this.sectionId);
+    }
     this._router.navigate(['student/course-details', courseUrl]);
   }
 
@@ -286,7 +286,7 @@ export class CardSliderComponent implements OnInit, OnChanges {
     this.isLeftBtnEnable = true;
     const isOneCardBeforeEnd =
       Math.ceil(
-        carousel.scrollLeft + carousel.clientWidth + carouselCardWidth
+        carousel.scrollLeft + carousel.clientWidth + carouselCardWidth,
       ) >= carousel.scrollWidth;
 
     if (isOneCardBeforeEnd) {

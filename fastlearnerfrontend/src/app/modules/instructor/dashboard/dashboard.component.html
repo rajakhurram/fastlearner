@@ -24,6 +24,7 @@
             ></nz-option>
             <nz-option nzLabel="This year" nzValue="yearly"></nz-option>
             <nz-option nzLabel="Last Year" nzValue="previous_year"></nz-option>
+            <nz-option nzLabel="All time" nzValue="all_time"></nz-option>
           </nz-select>
         </div>
       </div>
@@ -44,13 +45,34 @@
               ${{
                 dashboard?.revenue
                   ? dashboard?.revenue.toFixed(2)
-                  : ("0" | number : "1.0" : "en-US")
+                  : ("0" | number: "1.0" : "en-US")
               }}
             </h4>
             <img
               class="graph-image"
               src="../../../../assets/icons/Total_Revenue.svg"
             />
+            <p
+              class="available-balance-label"
+              style="
+                margin-top: 0.5rem;
+                margin-bottom: 0;
+                font-size: 0.875rem;
+                color: #666;
+              "
+            >
+              Available balance
+            </p>
+            <p
+              class="available-balance-value"
+              style="margin: 0; font-size: 1rem; font-weight: 600"
+            >
+              ${{
+                dashboard?.availableBalance != null
+                  ? dashboard?.availableBalance.toFixed(2)
+                  : ("0" | number: "1.0" : "en-US")
+              }}
+            </p>
           </nz-card>
         </div>
         <div
@@ -214,15 +236,16 @@
                     "
                   />
                 </td>
-                <td class="w-20" nz-tooltip="{{ data.title }}">
+                <td class="w-20">
                   <span
                     class="clickable-title"
                     (click)="routeToCoursePage(data)"
-                    [class.cursor-pointer]="
-                      canEditPremiumCourse || data?.courseType != 'PREMIUM'
-                    "
-                    [class.text-muted]="
-                      !canEditPremiumCourse && data?.courseType == 'PREMIUM'
+                    [class.cursor-pointer]="!isPremiumCourseEditBlocked(data)"
+                    [class.text-muted]="isPremiumCourseEditBlocked(data)"
+                    [nz-tooltip]="
+                      isPremiumCourseEditBlocked(data)
+                        ? 'Premium courses cannot be edited'
+                        : data.title
                     "
                   >
                     {{
@@ -244,7 +267,7 @@
                 <td>
                   {{
                     data?.lastUpdated
-                      ? (data?.lastUpdated | date : "mediumDate")
+                      ? (data?.lastUpdated | date: "mediumDate")
                       : "-"
                   }}
                 </td>
@@ -261,7 +284,9 @@
                     [class.disable-switch]="data?.courseStatus == 'DRAFT'"
                     [nzDisabled]="
                       data?.courseStatus == 'DRAFT' ||
-                      (data?.courseType == 'PREMIUM' && data?.coursePublish)
+                      ((data?.courseType == 'PREMIUM' ||
+                        data?.courseType == 'PREMIUM_COURSE') &&
+                        data?.coursePublish)
                     "
                     class="publish-switch"
                   ></nz-switch>
@@ -273,13 +298,14 @@
                 <td>
                   <div class="action-buttons">
                     <button
-                      [class.cursor-pointer]="
-                        canEditPremiumCourse || data?.courseType != 'PREMIUM'
-                      "
+                      nz-tooltip="{{
+                        isPremiumCourseEditBlocked(data)
+                          ? 'Premium courses cannot be edited'
+                          : ''
+                      }}"
+                      [class.cursor-pointer]="!isPremiumCourseEditBlocked(data)"
                       class="action-edit border-radius"
-                      [disabled]="
-                        !canEditPremiumCourse && data?.courseType == 'PREMIUM'
-                      "
+                      [disabled]="isPremiumCourseEditBlocked(data)"
                       (click)="routeToCoursePage(data)"
                     >
                       <span
@@ -301,7 +327,8 @@
                       class="action-delete border-radius cursor-pointer"
                       [disabled]="
                         data?.courseStatus == 'PUBLISHED' ||
-                        data?.courseType == 'PREMIUM'
+                        data?.courseType == 'PREMIUM' ||
+                        data?.courseType == 'PREMIUM_COURSE'
                       "
                     >
                       <span

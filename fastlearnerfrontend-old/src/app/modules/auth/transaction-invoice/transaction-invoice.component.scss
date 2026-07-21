@@ -1,0 +1,32 @@
+.invoice-container {
+    background-color: white;
+}
+
+.centered-div {
+    width: 200px;
+    height: 200px;
+    background-color: lightgray;
+    text-align: center;
+    line-height: 200px;
+    /* for vertical centering of text */
+}
+
+.main-body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.invoice-border {
+    border: 1px solid black;
+}
+
+.logo-style {
+    height: 50px;
+}
+
+.cross-icon {
+    height: 12px;
+}

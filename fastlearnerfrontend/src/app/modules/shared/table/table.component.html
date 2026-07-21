@@ -15,7 +15,7 @@
         class="column-text"
         [ngStyle]="{
           'background-color': col.backgroundColor,
-          color: col.color
+          color: col.color,
         }"
       >
         {{ col.header }}
@@ -29,7 +29,7 @@
       (click)="onRowClickAction($event, row)"
       [ngStyle]="{
         'background-color': tableConfig.rowColor,
-        color: tableConfig?.rowTextColor
+        color: tableConfig?.rowTextColor,
       }"
     >
       <td *ngFor="let col of tableConfig.columns" class="data-text">
@@ -52,7 +52,11 @@
 
         <!-- Name Column (Clickable) -->
         <a
-          *ngIf="!col.actions && col.header === 'Name' && !row.editableKey?.includes(col.field)"
+          *ngIf="
+            !col.actions &&
+            col.header === 'Name' &&
+            !row.editableKey?.includes(col.field)
+          "
           class="link-class"
           (click)="routeToAffiliateDetail($event, row)"
         >
@@ -61,12 +65,17 @@
 
         <!-- Email Column (Tooltip + Truncated) -->
         <span
-          *ngIf="!col.actions && col.header === 'Email' && !row.editableKey?.includes(col.field)"
+          *ngIf="
+            !col.actions &&
+            col.header === 'Email' &&
+            !row.editableKey?.includes(col.field)
+          "
           class="email-cell"
           nz-tooltip
           [nzTooltipTitle]="row[col.field]"
         >
-          {{ row[col.field] | slice : 0 : 12 }}{{ row[col.field]?.length > 12 ? "..." : "" }}
+          {{ row[col.field] | slice: 0 : 12
+          }}{{ row[col.field]?.length > 12 ? "..." : "" }}
         </span>
 
         <!-- Clickable Key Columns -->
@@ -86,24 +95,31 @@
         <!-- Default Non-editable Text -->
         <span
           *ngIf="
+            !col.actions &&
             !row.editableKey?.includes(col.field) &&
             !tableConfig?.clickableKeys?.includes(col.field) &&
             col.header !== 'Name' &&
             col.header !== 'Email'
           "
+          [class.cell-padding-left]="col.header === 'Teacher name'"
         >
           {{ row[col.field] }}
         </span>
 
         <!-- Action Buttons Column -->
-        <div *ngIf="col.actions" class="action-buttons">
+        <div *ngIf="col.actions" class="action-buttons cell-padding-left">
           <button
             *ngIf="row.showEditIcon"
             class="action-edit border-radius cursor-pointer"
             [disabled]="row.isSelf"
             (click)="onAction($event, 'edit', row)"
           >
-            <span nz-icon nzType="edit" nzTheme="outline" class="action-icon font-16"></span>
+            <span
+              nz-icon
+              nzType="edit"
+              nzTheme="outline"
+              class="action-icon font-16"
+            ></span>
           </button>
 
           <button
@@ -111,7 +127,12 @@
             class="action-copy border-radius cursor-pointer"
             (click)="onAction($event, 'copy', row)"
           >
-            <span nz-icon nzType="copy" nzTheme="outline" class="action-icon font-16"></span>
+            <span
+              nz-icon
+              nzType="copy"
+              nzTheme="outline"
+              class="action-icon font-16"
+            ></span>
           </button>
 
           <button
@@ -120,7 +141,12 @@
             [disabled]="row.isSelf"
             (click)="onAction($event, 'delete', row)"
           >
-            <span nz-icon nzType="delete" nzTheme="fill" class="action-icon font-16"></span>
+            <span
+              nz-icon
+              nzType="delete"
+              nzTheme="fill"
+              class="action-icon font-16"
+            ></span>
           </button>
 
           <button
@@ -129,7 +155,12 @@
             [disabled]="row.isSelf"
             (click)="onAction($event, 'view', row, i + 1)"
           >
-            <span nz-icon nzType="eye" nzTheme="outline" class="action-icon font-16"></span>
+            <span
+              nz-icon
+              nzType="eye"
+              nzTheme="outline"
+              class="action-icon font-16"
+            ></span>
           </button>
 
           <nz-switch

@@ -22,7 +22,6 @@
           nz-tooltip
           src="../../../../../assets/icons/info-icon.svg"
         />
-
       </label>
       <nz-select
         style="margin-top: 5px"
@@ -33,7 +32,7 @@
             : 'Select test type'
         "
         formControlName="courseType"
-        [nzDisabled]="formGroup.get('courseProgress').value === '100'"
+        [nzDisabled]="isCourseTypeLocked"
         nzDropdownClassName="course-type"
       >
         <nz-option
@@ -50,7 +49,7 @@
               {{ type.name }}
             </span>
             <span
-            *ngIf="type.value === courseType.PREMIUM && !isAvailablePremium"
+              *ngIf="type.value === courseType.PREMIUM && !isAvailablePremium"
               style="font-size: 16px !important; color: black"
               class="cursor-pointer ml-2"
               nz-icon
@@ -58,8 +57,11 @@
               nzTheme="fill"
             ></span>
           </div>
-          </nz-option>
+        </nz-option>
       </nz-select>
+      <small *ngIf="isCourseTypeLocked" class="text-muted d-block mt-1">
+        Course type is locked because this is a premium course. Premium courses cannot be changed back to standard or free.
+      </small>
     </div>
     <div
       *ngIf="formGroup.get('courseType').value == courseType.PREMIUM"
@@ -114,35 +116,47 @@
         nzSize="large"
         formControlName="courseTitle"
         (input)="courseTitleExist()"
-        (keydown)="preventEmoji($event)"
-        (paste)="preventEmojiOnPaste($event)"
+        (keydown)="preventCourseTitleKeydown($event)"
+        (paste)="preventCourseTitleOnPaste($event)"
       />
       <div
         *ngIf="
-          formGroup.get('courseTitle').invalid &&
-          formGroup.get('courseTitle').dirty
+          courseTitleFormatError ||
+          (formGroup.get('courseTitle').invalid &&
+            (formGroup.get('courseTitle').dirty ||
+              formGroup.get('courseTitle').touched))
         "
       >
-        <div
-          style="color: red"
+        <p
+          class="error-text"
+          *ngIf="
+            courseTitleFormatError ||
+            formGroup.get('courseTitle').errors?.['alphanumericOnly']
+          "
+        >
+          Title can only contain English letters, numbers, and spaces (no Urdu
+          or special characters).
+        </p>
+        <p
+          class="error-text"
           *ngIf="formGroup.get('courseTitle').errors?.['minLength']"
         >
           Title must be at least
           {{
-            formGroup.get("courseTitle").errors?.['minLength'].requiredLength
+            formGroup.get("courseTitle").errors?.["minLength"].requiredLength
           }}
           characters long.
-        </div>
-        <div
-          style="color: red"
+        </p>
+        <p
+          class="error-text"
           *ngIf="formGroup.get('courseTitle').errors?.['maxLength']"
         >
           Title cannot be greater than
           {{
-            formGroup.get("courseTitle").errors?.['maxLength'].requiredLength
+            formGroup.get("courseTitle").errors?.["maxLength"].requiredLength
           }}
           characters long.
-        </div>
+        </p>
       </div>
       <div *ngIf="formGroup.get('titleExist').value == true" style="color: red">
         Course Title already exist.
@@ -211,9 +225,7 @@
           *ngIf="formGroup.get('courseUrl').errors?.['minlength']"
         >
           URL must be at least
-          {{
-          formGroup.get('courseUrl').errors?.['minlength'].requiredLength
-          }}
+          {{ formGroup.get("courseUrl").errors?.["minlength"].requiredLength }}
           characters long.
         </div>
         <div
@@ -221,9 +233,7 @@
           *ngIf="formGroup.get('courseUrl').errors?.['maxlength']"
         >
           URL cannot be greater than
-          {{
-          formGroup.get('courseUrl').errors?.['maxlength'].requiredLength
-          }}
+          {{ formGroup.get("courseUrl").errors?.["maxlength"].requiredLength }}
           characters long.
         </div>
       </div>
@@ -321,13 +331,19 @@
     </div>
   </div>
 
-  <div class="mt-2" [class.tags-invalid]="courseTagArray.controls.length === 0 && courseTagArray.touched">
+  <div
+    class="mt-2"
+    [class.tags-invalid]="
+      courseTagArray.controls.length === 0 && courseTagArray.touched
+    "
+  >
     <label class="label-color">Hashtags <span class="mandatory">*</span></label>
     <div
       nz-row
       class="hashtag-wrapper"
       [ngClass]="{
-        'ng-invalid': courseTagArray.controls.length === 0 && courseTagArray.touched
+        'ng-invalid':
+          courseTagArray.controls.length === 0 && courseTagArray.touched,
       }"
     >
       <div nz-col nzSpan="24" for>
@@ -367,8 +383,12 @@
         />
       </div>
     </div>
-    <p class="error-text" *ngIf="courseTagArray.controls.length === 0 && courseTagArray.touched">
-      At least one hashtag is required.</p>
+    <p
+      class="error-text"
+      *ngIf="courseTagArray.controls.length === 0 && courseTagArray.touched"
+    >
+      At least one hashtag is required.
+    </p>
   </div>
 
   <div nz-row class="mt-1">
@@ -421,8 +441,11 @@
         nzMd="24"
         nzLg="24"
         [formGroupName]="i"
-        [class.invalid-field]="courseSummary.get('courseSummaryInfo').invalid && courseSummary.get('courseSummaryInfo').touched"
-    >
+        [class.invalid-field]="
+          courseSummary.get('courseSummaryInfo').invalid &&
+          courseSummary.get('courseSummaryInfo').touched
+        "
+      >
         <textarea
           class="text-area-class"
           (ngModelChange)="manageCourseSummaryArrayLength()"
@@ -571,7 +594,7 @@
           [ngClass]="{
             'ng-invalid':
               formGroup.hasError('previewVideoRequired') &&
-              (formGroup.touched || formGroup.dirty)
+              (formGroup.touched || formGroup.dirty),
           }"
         />
 
@@ -685,15 +708,15 @@
   <div nz-row class="mt-3" style="justify-content: center">
     <div nz-col>
       <button
-  class="continueBtn"
-  nz-button
-  nzType="primary"
-  nzGhost
-  (click)="validateAndContinue()"
-  style="padding-left: 72px; padding-right: 73px"
->
-  Continue
-</button>
+        class="continueBtn"
+        nz-button
+        nzType="primary"
+        nzGhost
+        (click)="validateAndContinue()"
+        style="padding-left: 72px; padding-right: 73px"
+      >
+        Continue
+      </button>
     </div>
   </div>
 </form>

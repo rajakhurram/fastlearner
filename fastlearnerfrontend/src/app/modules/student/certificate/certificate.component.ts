@@ -33,7 +33,7 @@ export class CertificateComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _authService: AuthService,
     private _modal: NzModalService,
-    private loader: NgxUiLoaderService
+    private loader: NgxUiLoaderService,
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +59,7 @@ export class CertificateComponent implements OnInit {
           this.certificate = response?.data;
           this.uuid = this.certificate.uuid;
           this.certificate.certifiedAt = this.formatDate(
-            this.certificate.certifiedAt
+            this.certificate.certifiedAt,
           );
         }
       },
@@ -68,28 +68,34 @@ export class CertificateComponent implements OnInit {
   }
 
   getCertificate(courseId?: any): void {
-    this.isLoading = true; 
-    this.loader.start(); 
+    this.isLoading = true;
+    this.loader.start();
 
     try {
-      this.certificateUrl = this._certificateService.getCertificateUrl(courseId, false);
-      this.isLoading = false; 
+      this.certificateUrl = this._certificateService.getCertificateUrl(
+        courseId,
+        false,
+      );
+      this.isLoading = false;
     } catch (error) {
       console.error('Error fetching certificate URL:', error);
-      this.isLoading = false; 
+      this.isLoading = false;
     }
   }
 
   onImageLoad(): void {
-    this.loader.stop(); 
+    this.loader.stop();
   }
 
   onImageError(): void {
-    this.loader.stop(); 
+    this.loader.stop();
   }
 
   downloadPDF() {
-    const certificateUrl = this._certificateService.getCertificateUrl(this.courseId, true);
+    const certificateUrl = this._certificateService.getCertificateUrl(
+      this.courseId,
+      true,
+    );
     if (certificateUrl) {
       this.convertImageToPDF(certificateUrl);
     } else {
@@ -98,7 +104,10 @@ export class CertificateComponent implements OnInit {
   }
 
   downloadJPG() {
-    const certificateUrl = this._certificateService.getCertificateUrl(this.courseId, true);
+    const certificateUrl = this._certificateService.getCertificateUrl(
+      this.courseId,
+      true,
+    );
     if (certificateUrl) {
       this.convertImageToJPG(certificateUrl);
     } else {
@@ -121,7 +130,7 @@ export class CertificateComponent implements OnInit {
       nzViewContainerRef: this._viewContainerRef,
       nzComponentParams: {
         data: null,
-        url: `https://fastlearner.ai/student/verify-certificate/${this.uuid}`,
+        url: `${environment.basePath}student/verify-certificate/${this.uuid}`,
         title: 'Share Certificate',
         label: 'Share Certificate URL',
       },
@@ -135,26 +144,26 @@ export class CertificateComponent implements OnInit {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const reader = new FileReader();
-  
+
       reader.onload = function (e: any) {
         const imgData = e.target.result;
-  
+
         const pdf = new jsPDF('landscape', 'pt', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
-  
+
         const image = new Image();
         image.src = imgData;
         image.onload = function () {
           const imgWidth = image.width;
           const imgHeight = image.height;
-  
+
           // Scale the image to fill the entire PDF page
           pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
           pdf.save('certificate.pdf');
         };
       };
-  
+
       reader.readAsDataURL(blob);
     } catch (error) {
       console.error('Error converting image to PDF', error);
@@ -166,34 +175,37 @@ export class CertificateComponent implements OnInit {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const reader = new FileReader();
-  
+
       reader.onload = function (e: any) {
         const imgData = e.target.result;
-  
+
         const image = new Image();
         image.src = imgData;
         image.onload = function () {
           const canvas = document.createElement('canvas');
           canvas.width = image.width;
           canvas.height = image.height;
-  
+
           const ctx = canvas.getContext('2d');
           ctx.drawImage(image, 0, 0);
-  
+
           // Convert canvas content to a JPG blob
-          canvas.toBlob((blob) => {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'certificate.jpg';
-            link.click();
-          }, 'image/jpeg', 1.0);
+          canvas.toBlob(
+            (blob) => {
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = 'certificate.jpg';
+              link.click();
+            },
+            'image/jpeg',
+            1.0,
+          );
         };
       };
-  
+
       reader.readAsDataURL(blob);
     } catch (error) {
       console.error('Error converting image to JPG', error);
     }
   }
-
 }

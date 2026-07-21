@@ -161,6 +161,7 @@ describe('AffliateDetailsComponent', () => {
       {
         courseTitle: 'Test',
         status: 'INACTIVE',
+        revenue: '0.00',
         showCopyIcon: true,
         showDeleteIcon: false,
         switchValue: false,

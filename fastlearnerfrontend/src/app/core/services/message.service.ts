@@ -40,6 +40,14 @@ export class MessageService {
     this.currentMessageId = this._message.info(message, this.config)?.messageId;
   }
 
+  loading(message: string) {
+    this.closeCurrentMessage();
+    this.currentMessageId = this._message.loading(message, {
+      nzDuration: 0,
+      nzAnimate: true,
+    })?.messageId;
+  }
+
   remove() {
     if (this.currentMessageId) {
       this._message.remove(this.currentMessageId);

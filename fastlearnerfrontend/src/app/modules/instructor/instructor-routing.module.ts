@@ -34,14 +34,14 @@ const routes: Routes = [
         path: 'performance',
         loadChildren: () =>
           import('./performance/performance.module').then(
-            (m) => m.PerformanceModule
+            (m) => m.PerformanceModule,
           ),
       },
       {
         path: 'notifications',
         loadChildren: () =>
           import('./notifications/notifications.module').then(
-            (m) => m.NotificationsModule
+            (m) => m.NotificationsModule,
           ),
       },
       {
@@ -65,15 +65,15 @@ const routes: Routes = [
         },
       },
       {
-          path: 'content-type',
-          component: ContentTypeComponent,
-          data: { title: 'Instructor' },
-        },
+        path: 'content-type',
+        component: ContentTypeComponent,
+        data: { title: 'Instructor' },
+      },
       {
         path: 'premium-student',
         loadChildren: () =>
           import('./premium-student/premium-student.module').then(
-            (m) => m.Premium_StudentModule
+            (m) => m.Premium_StudentModule,
           ),
         canLoad: [PermissionGuard],
         data: {
@@ -85,7 +85,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./ai-grader/ai-grader.module').then((m) => m.AiGraderModule),
         canLoad: [AuthGuard],
-                data: {
+        data: {
           requiredPermission: InstructorTabs.AI_GRADER,
         },
       },

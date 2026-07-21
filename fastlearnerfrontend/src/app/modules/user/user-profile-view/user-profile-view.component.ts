@@ -7,9 +7,9 @@ import { MessageService } from 'src/app/core/services/message.service';
 @Component({
   selector: 'app-user-profile-view',
   templateUrl: './user-profile-view.component.html',
-  styleUrls: ['./user-profile-view.component.scss']
+  styleUrls: ['./user-profile-view.component.scss'],
 })
-export class UserProfileViewComponent  implements OnInit {
+export class UserProfileViewComponent implements OnInit {
   _httpConstants: HttpConstants = new HttpConstants();
   showDescription: boolean = false;
   courseList: Array<any> = [];
@@ -24,11 +24,12 @@ export class UserProfileViewComponent  implements OnInit {
     pageNo: 0,
     pageSize: 10,
   };
+  totalCourses: number = 0;
   constructor(
     private _courseService: CourseService,
     private _messageService: MessageService,
     private _router: Router,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +83,7 @@ export class UserProfileViewComponent  implements OnInit {
           if (!isFirst) {
             response?.data?.data?.forEach((x: any) => {
               x.courseDuration = this.convertSecondsToHoursAndMinutes(
-                x.courseDuration
+                x.courseDuration,
               );
               this.courseList.push(x);
             });
@@ -90,9 +91,10 @@ export class UserProfileViewComponent  implements OnInit {
           if (isFirst) {
             this.courseList = response?.data?.data;
             this.noOfCount = response?.data?.pages;
+            this.totalCourses = response?.data?.totalElements;
             this.courseList?.forEach((res: any) => {
               res.courseDuration = this.convertSecondsToHoursAndMinutes(
-                res.courseDuration
+                res.courseDuration,
               );
             });
           }
@@ -128,6 +130,23 @@ export class UserProfileViewComponent  implements OnInit {
     this._router.navigate(['student/course-details', courseUrl], {
       fragment: 'course-content',
     });
+  }
+
+  get hasEducationDetails(): boolean {
+    const profile = this.instructorPublicProfile;
+    return !!(
+      profile?.specialization ||
+      profile?.qualification ||
+      profile?.experience
+    );
+  }
+
+  get hasAboutMe(): boolean {
+    return !!this.instructorPublicProfile?.aboutMe;
+  }
+
+  get hasCourses(): boolean {
+    return this.courseList.length > 0;
   }
 
   convertSecondsToHoursAndMinutes(seconds: number): string {

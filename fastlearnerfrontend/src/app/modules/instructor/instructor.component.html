@@ -11,7 +11,7 @@
     <ul nz-menu nzTheme="light" nzMode="inline" class="custom-sidebar-menu">
       <li
         class="menu-item"
-        [nzSelected]="activeDashboard"
+        [nzSelected]="selectedRoute === '/instructor/instructor-dashboard'"
         (click)="changeTab(InstructorTabs.DASHBOARD)"
         nz-menu-item
         [class.instructor-menu]="
@@ -38,14 +38,14 @@
       <li
   class="menu-item"
   (click)="changeTab(InstructorTabs.COURSE)"
-  [nzSelected]="activeCourse"
+  [nzSelected]="selectedRoute === '/instructor/content-type'"
   nz-menu-item
-  [class.instructor-menu]="activeCourse"
+  [class.instructor-menu]="selectedRoute === '/instructor/content-type'"
 >
         <img
   class="icon"
   [src]="
-    activeCourse
+    selectedRoute === '/instructor/content-type'
       ? '../../../assets/icons/create-course-.svg'
       : '../../../assets/icons/Create--course.svg'
   "
@@ -53,8 +53,8 @@
 />
 <span
   [ngClass]="{
-    'icon-text1': activeCourse,
-    'icon-text': !activeCourse
+    'icon-text1': selectedRoute === '/instructor/content-type',
+    'icon-text': selectedRoute !== '/instructor/content-type'
   }"
   >Create Course</span
 >
@@ -263,12 +263,12 @@
   class="menu-item"
   (click)="changeTab(InstructorTabs.COURSE)"
   nz-menu-item
-  [class.instructor-menu]="activeCourse"
+  [class.instructor-menu]="selectedRoute === '/instructor/content-type'"
 >
           <img
   class="icon"
   [src]="
-    activeCourse
+    selectedRoute === '/instructor/content-type'
       ? '../../../assets/icons/create-course-.svg'
       : '../../../assets/icons/Create--course.svg'
   "
@@ -276,8 +276,8 @@
 />
 <span
   [ngClass]="{
-    'icon-text1': activeCourse,
-    'icon-text': !activeCourse
+    'icon-text1': selectedRoute === '/instructor/content-type',
+    'icon-text': selectedRoute !== '/instructor/content-type'
   }"
   >Create Course</span
 >
@@ -670,6 +670,10 @@
             <a>Student</a>
             <img src="../../../../assets/icons/side-arrow.svg" alt="Arrow" />
           </li>
+          <li *ngIf="isSuperAdmin" class="list-style" (click)="routeToAdminDashboard()">
+            <a>Admin's Portal</a>
+            <img src="../../../../assets/icons/side-arrow.svg" alt="Arrow" />
+          </li>
         </ul>
       </div>
       <div
@@ -752,6 +756,13 @@
           />
           Subscriptions
         </li>
+        <li *ngIf="isSuperAdmin" nz-menu-item (click)="routeToAdminDashboard()">
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../assets/icons/admin.svg"
+          />
+          Admin's Portal
+        </li>
         <li nz-menu-item (click)="signOut()">
           <img
             style="margin-right: 20px; width: 15px"
@@ -790,6 +801,7 @@
         </li>
         <li nz-menu-item (click)="routeToNotificationPage()">Notifications</li>
         <li nz-menu-item (click)="routeToStudentDashboard()">Student</li>
+        <li *ngIf="isSuperAdmin" nz-menu-item (click)="routeToAdminDashboard()">Admin's Portal</li>
         <li nz-menu-item (click)="signOut()">Logout</li>
       </div>
     </ul>

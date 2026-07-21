@@ -21,6 +21,7 @@ import { DeletionModalComponent } from '../../../dynamic-modals/deletion-modal/d
 import { SubscriptionPlanComponent } from 'src/app/modules/auth/subscription-plan/subscription-plan.component';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { SubscriptionPlanType } from 'src/app/core/enums/subscription-plan.enum';
+import { SubscriptionService } from 'src/app/core/services/subscription.service';
 
 @Component({
   selector: 'app-grader-classes',
@@ -109,7 +110,7 @@ export class GraderClassesComponent {
   };
 
   actions = Actions;
-  showUpgradePlan?: boolean = true;
+  showUpgradePlan = false;
   subscriptionPlanType = SubscriptionPlanType;
 
   constructor(
@@ -117,13 +118,20 @@ export class GraderClassesComponent {
     private _viewContainerRef: ViewContainerRef,
     private _aiGraderService?: AiGraderService,
     private _router?: Router,
-    private _cacheService?: CacheService
-  ) {}
+    private _cacheService?: CacheService,
+    private _subscriptionService?: SubscriptionService
+  ) {
+    this.showUpgradePLanButton();
+  }
 
   ngOnInit(): void {
+    this.showUpgradePLanButton();
     this.getClasses();
     this.getNoOfPages();
-    this.showUpgradePLanButton();
+    this._subscriptionService?.fetchCurrentSubscriptionPlanType().subscribe({
+      next: () => this.showUpgradePLanButton(),
+      error: () => this.showUpgradePLanButton(),
+    });
   }
 
   showUpgradePLanButton() {

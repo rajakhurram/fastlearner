@@ -19,12 +19,12 @@ export class BecomeInstructorComponent {
     private _modal: NzModalService,
     private _viewContainerRef: ViewContainerRef,
     private metaService: Meta,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit() {
     this.titleService.setTitle(
-      'Become an Instructor at Fast Learner – Share Your Knowledge'
+      'Become an Instructor at Fast Learner – Share Your Knowledge',
     );
     this.metaService.updateTag({
       name: 'description',

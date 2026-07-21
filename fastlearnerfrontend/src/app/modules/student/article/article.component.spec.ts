@@ -9,7 +9,7 @@ describe('ArticleComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ArticleComponent],
-      schemas :[CUSTOM_ELEMENTS_SCHEMA , NO_ERRORS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
@@ -25,6 +25,15 @@ describe('ArticleComponent', () => {
     component.ngOnInit();
 
     expect(component.article).toBe('Mock Article Content');
+  });
+
+  it('should assign article object when topic article is nested', () => {
+    const mockArticle = { content: '<p>Nested article</p>' };
+    const mockTopic = { article: mockArticle };
+    component.currentSelectedTopic = mockTopic;
+    component.ngOnInit();
+
+    expect(component.article).toBe(mockArticle);
   });
 
   it('should update article when currentSelectedTopic changes', () => {
@@ -58,5 +67,23 @@ describe('ArticleComponent', () => {
     component.ngOnInit();
 
     expect(component.article).toBeUndefined();
+  });
+
+  it('should emit continueArticleEmitter when continue is clicked', () => {
+    spyOn(component.continueArticleEmitter, 'emit');
+
+    component.continue();
+
+    expect(component.continueArticleEmitter.emit).toHaveBeenCalled();
+  });
+
+  it('should render continue button in template', () => {
+    component.currentSelectedTopic = { article: '<p>Read me</p>' };
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('.continue-btn');
+    expect(button).not.toBeNull();
+    expect(button.textContent.trim()).toBe('Continue');
   });
 });

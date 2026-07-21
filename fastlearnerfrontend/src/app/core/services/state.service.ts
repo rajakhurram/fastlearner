@@ -39,7 +39,7 @@ export class StateService {
     private _userService: UserService,
     private _notificationService: NotificationService,
     private _cookiesService: CookiesService,
-    private _subscriptionService: SubscriptionService
+    private _subscriptionService: SubscriptionService,
   ) {
     this.userIsSubscribed();
     this._router.events
@@ -133,7 +133,7 @@ export class StateService {
           });
         }
       },
-      error: (error: any) => { },
+      error: (error: any) => {},
     });
   }
 
@@ -147,11 +147,11 @@ export class StateService {
           this.user = response?.data;
           this._cacheService.saveInCache(
             'userProfile',
-            JSON.stringify(response?.data)
+            JSON.stringify(response?.data),
           );
         }
       },
-      error: (error: any) => { },
+      error: (error: any) => {},
     });
   }
 
@@ -175,7 +175,7 @@ export class StateService {
           }
         }
       },
-      error: (error: any) => { },
+      error: (error: any) => {},
     });
   }
 
@@ -189,7 +189,7 @@ export class StateService {
     this._cacheService.saveInCache('expiresIn', expiryTimeInSeconds);
     this._cacheService.saveInCache(
       'loggedInUserDetails',
-      JSON.stringify(response)
+      JSON.stringify(response),
     );
     this._cacheService.saveInCache('isLoggedIn', 'true');
     this._authService.startTokenTimer();
@@ -210,5 +210,9 @@ export class StateService {
     ) {
       this._cacheService.saveInCache('redirectUrl', currentRoute);
     }
+  }
+
+  saveNextRoute(nextRoute: string) {
+    this._cacheService.saveInCache('nextRoute', nextRoute);
   }
 }

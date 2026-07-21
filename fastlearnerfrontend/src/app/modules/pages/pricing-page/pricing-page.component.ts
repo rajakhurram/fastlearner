@@ -184,25 +184,25 @@ export class PricingPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (
-      !this.isPlanSelected &&
-      !this.fromSubscriptionPlan &&
-      !this.isFreePlanSelected
-    ) {
-      this._authService.verifyUserSubscription().subscribe({
-        next: (response: any) => {
-          if (
-            !response?.data?.currentPlan ||
-            response?.data?.currentPlan !== 'Free Plan'
-          ) {
-            this.handleFreePlan();
-          }
-        },
-        error: (error: any) => {
-          console.log('Failed to verify subscription:', error);
-        },
-      });
-    }
+    // if (
+    //   !this.isPlanSelected &&
+    //   !this.fromSubscriptionPlan &&
+    //   !this.isFreePlanSelected
+    // ) {
+    //   this._authService.verifyUserSubscription().subscribe({
+    //     next: (response: any) => {
+    //       if (
+    //         !response?.data?.currentPlan ||
+    //         response?.data?.currentPlan !== 'Free Plan'
+    //       ) {
+    //         this.handleFreePlan();
+    //       }
+    //     },
+    //     error: (error: any) => {
+    //       console.log('Failed to verify subscription:', error);
+    //     },
+    //   });
+    // }
   }
 
   togglePlanType(isAnnual: boolean): void {
@@ -454,5 +454,11 @@ export class PricingPageComponent implements OnInit, OnDestroy {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+
+  goToAiGrader() {
+    this.isPlanSelected = true;
+    this._router.navigate(['/ai-grader']);
+  }
+
 
 }

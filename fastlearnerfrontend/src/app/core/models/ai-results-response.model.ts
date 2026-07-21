@@ -16,6 +16,7 @@ export class AiResultsResponse {
   status?: string;
   emailSent?: boolean;
   fileUrl?: string;
+  rubricUrl?: string;
   isEditingEmail: any;
   isEditingName: any;
   isEditingRollNumber: any;

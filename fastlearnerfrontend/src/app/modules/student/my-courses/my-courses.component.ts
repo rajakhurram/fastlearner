@@ -35,8 +35,17 @@ export class MyCoursesComponent implements OnInit {
     this.getMyCourseList(this.page, this.size, this.myCourses.sortBy);
   }
 
-  onChangeOfFilter(event) {
-    this.getMyCourseList(this.page, this.size, event);
+  onChangeOfFilter(sortValue: number | string) {
+    // Reset pagination and list when sort changes
+    this.page = 0;
+    this.myCourseList = [];
+    this.showLoader = false;
+
+    // Keep selected value and normalize to number
+    this.selectedValue = String(sortValue);
+    this.myCourses.sortBy = +sortValue;
+
+    this.getMyCourseList(this.page, this.size, this.myCourses.sortBy, true);
   }
 
   getMyCourseList(page?: any, size?: any, sortBy?: any, flag?: boolean) {
@@ -44,7 +53,8 @@ export class MyCoursesComponent implements OnInit {
   this.showLoader = true;
   this.myCourses.pageNo = page;
   this.myCourses.pageSize = size;
-  this.myCourses.sortBy = sortBy == null || undefined ? 0 : sortBy;
+  this.myCourses.sortBy =
+    sortBy === null || sortBy === undefined ? 0 : +sortBy;
 
   this._courseService.getMyCourses(this.myCourses).subscribe({
     next: (response: any) => {

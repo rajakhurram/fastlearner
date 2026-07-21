@@ -513,6 +513,8 @@ nz-select {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .img-drop-down {

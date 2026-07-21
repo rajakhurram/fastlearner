@@ -1,0 +1,413 @@
+<section class="promo-page">
+  <div class="page-header">
+    <h2>Promo Codes</h2>
+    <button
+      nz-button
+      nzType="primary"
+      class="create-btn"
+      (click)="openCreatePromoModal()"
+    >
+      Create Promo Code
+    </button>
+  </div>
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <div class="filter-row">
+      <input
+        nz-input
+        placeholder="Search codes or emails..."
+        [(ngModel)]="coupenQuery.search"
+        (ngModelChange)="onSearchChange($event)"
+      />
+      <nz-select
+        nzPlaceHolder="All Statuses"
+        [(ngModel)]="coupenQuery.status"
+        (ngModelChange)="onSelectFilterChange('status', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Statuses"></nz-option>
+        <nz-option nzValue="ACTIVE" nzLabel="Active"></nz-option>
+        <nz-option nzValue="INACTIVE" nzLabel="Inactive"></nz-option>
+      </nz-select>
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="clear-filter-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filter
+      </button>
+    </div>
+
+    <nz-table
+      #promoTable
+      [nzData]="list"
+      [nzLoading]="isTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+      class="promo-table"
+    >
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Discount</th>
+          <th>Applies To</th>
+          <th>Plan Name</th>
+          <th>Billing Cycle</th>
+          <!-- <th>Target</th>
+          <th>Usage</th> -->
+          <th>Status</th>
+          <th>Expires</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let promo of promoTable.data">
+          <td class="code-text">{{ promo.redeemCode }}</td>
+          <td>{{ promo.discount }}</td>
+          <td>{{ promo.appliesTo || "N/a" }}</td>
+          <td>{{ promo.subscription?.name || "N/a" }}</td>
+          <td>
+            {{
+              promo.subscription
+                ? promo.subscription.duration == 1
+                  ? "Monthly"
+                  : "Yearly"
+                : "N/a"
+            }}
+          </td>
+          <!-- <td>{{ promo.targetCount || "-" }}</td> -->
+          <!-- <td>{{ promo.usage || "-" }}</td> -->
+          <td>
+            <span class="status-pill">{{
+              promo.isActive ? "Active" : "Inactive"
+            }}</span>
+          </td>
+          <td>{{ promo.endDate | date: "mediumDate" }}</td>
+          <td>
+            <div class="actions-cell">
+              <button
+                nz-button
+                nzType="text"
+                class="action-menu-trigger"
+                nz-dropdown
+                [nzDropdownMenu]="actionMenu"
+                nzTrigger="click"
+                nzPlacement="bottomRight"
+              >
+                &#8942;
+              </button>
+
+              <nz-dropdown-menu #actionMenu="nzDropdownMenu">
+                <ul nz-menu>
+                  <!-- <li
+                    nz-menu-item
+                    class="menu-item primary"
+                    (click)="getcoupenById(promo.id)"
+                  >
+                    Edit
+                  </li> -->
+                  <!-- <li
+                    nz-menu-item
+                    class="menu-item danger"
+                    (click)="onDeactivateCoupon(promo)"
+                  >
+                    Deactivate
+                  </li> -->
+                  <li
+                    nz-menu-item
+                    class="menu-item primary"
+                    (click)="toggleCouponStatus(promo.id)"
+                  >
+                    {{ promo.isActive ? "Deactivate" : "Activate" }}
+                  </li>
+                  <li
+                    nz-menu-item
+                    class="menu-item danger"
+                    (click)="onDeleteCoupon(promo)"
+                  >
+                    Delete
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <div class="table-footer">
+      <nz-pagination
+        *ngIf="totalElements > 0"
+        style="margin-left: auto"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="coupenQuery.page + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="coupenQuery.size"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </nz-card>
+</section>
+
+<nz-modal
+  [(nzVisible)]="isCreatePromoModalVisible"
+  [nzFooter]="null"
+  [nzClosable]="false"
+  [nzMaskClosable]="true"
+  [nzWidth]="550"
+  [nzBodyStyle]="{ padding: '1rem', borderRadius: '0.5rem' }"
+  (nzOnCancel)="closeCreatePromoModal()"
+  class="create-promo-modal"
+>
+  <ng-container *nzModalContent>
+    <div class="modal-header">
+      <div>
+        <h3>{{ coupon.id ? "Update Promo Code" : "Create Promo Code" }}</h3>
+        <p>Fill in the details to create a new promo code.</p>
+      </div>
+      <button nz-button nzType="text" (click)="closeCreatePromoModal()">
+        <span nz-icon nzType="close"></span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form #form="ngForm">
+        <section class="form-section">
+          <h4>Promo Details</h4>
+
+          <label for="promoCode">Promo Code</label>
+          <div class="promo-code-row">
+            <input
+              nz-input
+              placeholder="E.g. SAVE20"
+              name="promoCode"
+              id="promoCode"
+              [(ngModel)]="coupon.coupon"
+              required
+            />
+            <!-- <button
+              nz-button
+              nzType="default"
+              type="button"
+              class="generate-btn"
+              (click)="generatePromoCode()"
+            >
+              Generate
+            </button> -->
+          </div>
+
+          <div class="grid-two">
+            <div>
+              <label for="discountType">Discount Type</label>
+              <nz-select
+                [(ngModel)]="coupon.discountUnit"
+                [nzPlaceHolder]="'Select type'"
+                name="discountType"
+                id="discountType"
+                required
+              >
+                <nz-option
+                  *ngFor="let item of discountTypes"
+                  [nzValue]="item"
+                  [nzLabel]="item"
+                ></nz-option>
+              </nz-select>
+            </div>
+            <div>
+              <label for="discountValue">Discount Value</label>
+              <input
+                nz-input
+                type="number"
+                placeholder="e.g. 20"
+                name="discountValue"
+                id="discountValue"
+                [(ngModel)]="coupon.discount"
+                required
+                [max]="coupon.discountUnit == 'PERCENTAGE' ? 100 : ''"
+              />
+              <span *ngIf="isFormInvalid()" class="error-text"
+                >Discount value must be less than 100%</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h4>Applies To</h4>
+
+          <label for="promoAppliesTo">Promo Applies To</label>
+          <nz-select
+            [(ngModel)]="coupon.appliesTo"
+            name="promoAppliesTo"
+            id="promoAppliesTo"
+            [nzPlaceHolder]="'Select applies to'"
+            (ngModelChange)="onAppliesToChange($event)"
+            required
+          >
+            <nz-option
+              *ngFor="let item of applyToOptions"
+              [nzValue]="item.value"
+              [nzLabel]="item.label"
+            ></nz-option>
+          </nz-select>
+
+          <ng-container *ngIf="coupon.appliesTo === 'SUBSCRIPTION_BASED'">
+            <label for="billingCycle">Billing Cycle</label>
+            <nz-select
+              [(ngModel)]="coupon.billingCycle"
+              name="billingCycle"
+              id="billingCycle"
+              [nzPlaceHolder]="'Select billing cycle'"
+              (ngModelChange)="getcoupenSubscription()"
+              required
+            >
+              <nz-option nzValue="MONTHLY" nzLabel="Monthly"></nz-option>
+              <nz-option nzValue="YEARLY" nzLabel="Yearly"></nz-option>
+            </nz-select>
+          </ng-container>
+
+          <p
+            *ngIf="coupon.appliesTo === 'SUBSCRIPTION_BASED'"
+            class="section-subtitle"
+          >
+            SELECT PLANS
+          </p>
+          <nz-select
+            *ngIf="coupon.appliesTo === 'SUBSCRIPTION_BASED'"
+            [nzPlaceHolder]="'Select subscription plan'"
+            [(ngModel)]="coupon.subscriptionId"
+            name="susbcriptionbased"
+            id="susbcriptionbased"
+            required
+          >
+            <nz-option
+              *ngFor="let item of coupenSubscriptionList"
+              [nzValue]="item.id"
+              [nzLabel]="item.name"
+            ></nz-option>
+          </nz-select>
+          <p
+            *ngIf="coupon.appliesTo === 'COURSE_BASED'"
+            class="section-subtitle"
+          >
+            SELECT Courses
+          </p>
+          <nz-select
+            *ngIf="coupon.appliesTo === 'COURSE_BASED'"
+            [nzPlaceHolder]="'Select course plan'"
+            [(ngModel)]="coupon.specifiedCourses"
+            class="course-select"
+            name="coursebased"
+            id="coursebased"
+            [nzMode]="'multiple'"
+            [style.width]="'100%'"
+            required
+          >
+            <nz-option
+              *ngFor="let item of courseList"
+              [nzValue]="item.rawId"
+              [nzLabel]="item.title"
+            ></nz-option>
+          </nz-select>
+
+          <label for="couponType">Coupon Type</label>
+          <nz-select
+            [nzPlaceHolder]="'Select coupon type'"
+            [(ngModel)]="coupon.couponType"
+            name="couponType"
+            id="couponType"
+            required
+          >
+            <nz-option
+              *ngFor="let item of couponTypes"
+              [nzValue]="item.value"
+              [nzLabel]="item.label"
+            ></nz-option>
+          </nz-select>
+        </section>
+
+        <section class="form-section">
+          <h4>Target User</h4>
+          <label for="targetUserEmail"
+            >User Email <span>(Optional)</span></label
+          >
+          <input
+            nz-input
+            placeholder="e.g. user1@example.com, user2@example.com"
+            name="targetUserEmail"
+            id="targetUserEmail"
+            [(ngModel)]="targetUserEmail"
+          />
+          <p class="hint-text">
+            Leave empty to apply to all users. Enter one or more emails,
+            separated by commas.
+          </p>
+
+          <label for="targetDomain"
+            >Specified Domain <span>(Optional)</span></label
+          >
+          <input
+            nz-input
+            placeholder="e.g. gmail.com, yahoo.com"
+            name="targetDomain"
+            id="targetDomain"
+            [(ngModel)]="targetDomain"
+          />
+          <p class="hint-text">
+            Enter one or more domain names separated by commas. These will be
+            sent as specifiedDomains array.
+          </p>
+        </section>
+
+        <section class="form-section">
+          <h4>Expiry</h4>
+          <label for="startDate">Start Date</label>
+          <nz-date-picker
+            nzPlaceHolder="Pick a date"
+            nzPlacement="bottomLeft"
+            name="startDate"
+            id="startDate"
+            [(ngModel)]="coupon.startDate"
+            class="expiry-date-picker"
+            required
+          ></nz-date-picker>
+
+          <label for="expiryDate">Expiry Date</label>
+          <nz-date-picker
+            nzPlaceHolder="Pick a date"
+            nzPlacement="bottomLeft"
+            name="expiryDate"
+            id="expiryDate"
+            [(ngModel)]="coupon.endDate"
+            class="expiry-date-picker"
+            required
+          ></nz-date-picker>
+        </section>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="cancel-btn"
+        (click)="closeCreatePromoModal()"
+      >
+        Cancel
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        type="button"
+        class="create-promo-btn"
+        (click)="coupon.id ? updatePromoCode() : createPromoCode()"
+        [disabled]="form.invalid || isFormInvalid()"
+      >
+        {{ coupon.id ? "Update Promo Code" : "Create Promo Code" }}
+      </button>
+    </div>
+  </ng-container>
+</nz-modal>

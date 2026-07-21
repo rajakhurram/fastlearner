@@ -1,0 +1,137 @@
+<section class="settings-page">
+  <div class="page-header">
+    <h2>Settings</h2>
+    <button
+      nz-button
+      nzType="primary"
+      class="add-admin-btn"
+      (click)="openAddAdminModal()"
+    >
+      Add Admin
+    </button>
+  </div>
+
+  <!-- <div class="section-header">
+    <h3>Admin Users</h3>
+    <button
+      nz-button
+      nzType="primary"
+      class="add-admin-btn"
+      (click)="openAddAdminModal()"
+    >
+      Add Admin
+    </button>
+  </div> -->
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <nz-table
+      #settingsTable
+      [nzData]="list"
+      [nzLoading]="isTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+      class="settings-table"
+    >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Last Login</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let admin of settingsTable.data">
+          <td class="admin-name">{{ admin.name }}</td>
+          <td>{{ admin.email }}</td>
+          <td>
+            <span class="role-pill">{{ admin.role }}</span>
+          </td>
+          <td>
+            <span class="status-pill">{{ admin.status }}</span>
+          </td>
+          <td>
+            {{ admin.lastLogin ? (admin.lastLogin | date: "medium") : "-" }}
+          </td>
+          <td>
+            <div class="actions-cell">
+              <!-- <button nz-button nzType="default" class="edit-role-btn">
+                Edit Role
+              </button> -->
+              <button
+                nz-button
+                nzType="link"
+                class="deactivate-btn"
+                (click)="deActivateAdmin(admin.id)"
+              >
+                Deactivate
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+</section>
+
+<nz-modal
+  [(nzVisible)]="isAddAdminModalVisible"
+  [nzTitle]="'Add Admin'"
+  [nzClosable]="true"
+  [nzMaskClosable]="false"
+  [nzFooter]="null"
+  class="add-admin-modal"
+  (nzOnCancel)="closeAddAdminModal()"
+>
+  <ng-container *nzModalContent>
+    <form #form="ngForm" (ngSubmit)="addAdmin(form)">
+      <div class="add-admin-modal-content">
+        <label class="field-label" for="admin-email-input">Email</label>
+        <input
+          id="admin-email-input"
+          nz-input
+          type="email"
+          placeholder="Enter admin email"
+          class="email-input"
+          name="email"
+          [(ngModel)]="adminEmail"
+          required
+          #email="ngModel"
+        />
+        <p class="error-text" *ngIf="email.invalid && email.touched">
+          Please enter a valid email address.
+        </p>
+
+        <!-- <label class="field-label" for="link">Link</label>
+        <input
+          id="link"
+          nz-input
+          type="text"
+          placeholder="Enter link"
+          class="email-input"
+          name="link"
+          [(ngModel)]="link"
+          required
+          #linkModel="ngModel"
+        /> -->
+
+        <div class="modal-actions">
+          <button nz-button class="cancel-btn" (click)="closeAddAdminModal()">
+            Cancel
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            class="save-btn"
+            [disabled]="form.invalid"
+            type="submit"
+          >
+            Add Admin
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>

@@ -34,7 +34,7 @@
               'box-shadow':
                 searchResults?.length || searchInstructorResults?.length
                   ? '2px 5px 17px rgba(120, 164, 243, 0.5)'
-                  : 'none'
+                  : 'none',
             }"
             class="search-results-container"
           >
@@ -98,10 +98,6 @@
           </ng-template>
         </div>
       </div>
-      <div class="co-pilot">
-       
-      </div>
-
       <div class="inner-content-right" style="justify-content: end">
         <ul class="menu-items">
           <li>
@@ -114,9 +110,7 @@
             >
           </li>
           <li>
-            <span (click)="routeToPricingPage()"
-              >Pricing</span
-            >
+            <span (click)="routeToPricingPage()">Pricing</span>
           </li>
           <li *ngIf="isLoggedIn">
             <a
@@ -174,7 +168,7 @@
               [nzVisible]="isNotificationDropdownVisible"
               class="notification-nav"
               nz-button
-              >
+            >
               <!-- (click)="removeNotificationCount()" -->
               <div class="notification-icon-container">
                 <img
@@ -488,7 +482,6 @@
             src="../../../../assets/icons/noti-menu.svg"
           />Notifications
         </li>
-
         <li id="subscription" (click)="routeToSubscription()" nz-menu-item>
           <img
             style="margin-right: 20px; width: 15px"
@@ -501,7 +494,14 @@
             style="margin-right: 20px; width: 15px"
             src="../../../../assets/icons/dashboard-menu.svg"
           />
-          Teacher's Dashboard
+          Instructor's Portal
+        </li>
+        <li *ngIf="isSuperAdmin" (click)="routeToAdminDashboard()" nz-menu-item>
+          <img
+            style="margin-right: 20px; width: 15px"
+            src="../../../../assets/icons/admin.svg"
+          />
+          Admin's Portal
         </li>
         <li nz-menu-item (click)="signOut()">
           <img
@@ -560,7 +560,7 @@
           Subscriptions
         </li>
         <li (click)="routeToInstructorDashboard()" nz-menu-item>
-          Teacher's Dashboard
+          Instructor's Portal
         </li>
         <li nz-menu-item (click)="signOut()">Logout</li>
       </div>
@@ -594,7 +594,6 @@
         </div>
         <!-- </div>
         </div> -->
-
       </li>
       <li
         (click)="redirect(notification)"
@@ -608,7 +607,9 @@
           <div class="notification-content">
             <div class="notification-text">
               <div style="line-height: 15px">
-                <p class="color-blue notification-message font-12 mb-1 titlecase">
+                <p
+                  class="color-blue notification-message font-12 mb-1 titlecase"
+                >
                   {{ notification.senderName }}
                 </p>
                 <p class="notification-message font-12 mb-2">
@@ -672,7 +673,9 @@
             <div class="notification-content">
               <div class="notification-text">
                 <div style="line-height: 15px">
-                  <p class="color-blue notification-message font-12 mb-1 titlecase">
+                  <p
+                    class="color-blue notification-message font-12 mb-1 titlecase"
+                  >
                     {{ notification.senderName }}
                   </p>
                   <p class="notification-message font-12 mb-2">
@@ -710,7 +713,6 @@
     class="nav-top"
     [ngStyle]="{
       'justify-content': !navbarVisible ? 'space-between' : 'space-between',
-     
     }"
   >
     <div class="navLeft">
@@ -726,7 +728,7 @@
         *ngIf="!showSearch"
         [ngStyle]="{
           width: isLoggedIn ? '' : '85%',
-          'margin-left': navbarVisible ? '19%' : '0px'
+          'margin-left': navbarVisible ? '19%' : '0px',
         }"
         class="inner-content"
       >
@@ -741,7 +743,6 @@
       </div>
     </div>
     <div style="display: flex; align-items: center">
-
       <div class="search-icon-mob" (click)="toggleSearch()">
         <img
           height="20px"
@@ -836,17 +837,11 @@
       </div>
       <div *ngIf="isLoggedIn">
         <div class="auth-content">
-          <p
-            *ngIf="isLoggedIn"
-            class="sign-up"
-            (click)="routeToPricingPage()"
-          >
+          <p *ngIf="isLoggedIn" class="sign-up" (click)="routeToPricingPage()">
             Pricing
           </p>
         </div>
       </div>
-      <nz-divider class="divider"></nz-divider>
-
       <nz-divider class="divider"></nz-divider>
       <div class="mobile-navbar-content">
         <ul class="menu-items-mobile">
@@ -864,7 +859,6 @@
               loading="lazy"
             />
           </li>
-          <li></li>
           <li
             *ngIf="!isLoggedIn"
             (click)="routeToPricingPage()"
@@ -959,7 +953,19 @@
             />
           </li>
           <li class="list-style" (click)="routeToInstructorDashboard()">
-            <span>Teacher's Dashboard</span>
+            <span>Instructor's Portal</span>
+            <img
+              src="../../../../assets/icons/side-arrow.svg"
+              alt="Side Arrow"
+              loading="lazy"
+            />
+          </li>
+          <li
+            *ngIf="isSuperAdmin"
+            class="list-style"
+            (click)="routeToAdminDashboard()"
+          >
+            <span>Admin's Portal</span>
             <img
               src="../../../../assets/icons/side-arrow.svg"
               alt="Side Arrow"
@@ -1003,7 +1009,7 @@
           [ngStyle]="{
             'box-shadow': searchResults.length
               ? '2px 5px 17px rgba(120, 164, 243, 0.5)'
-              : 'none'
+              : 'none',
           }"
           class="search-results-container"
         >

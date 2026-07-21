@@ -1,0 +1,18 @@
+<div class="margin-bottom" nz-col nzLg="24" nzMd="24" nzSm="24" nzXs="24">
+  <img
+    [id]="fileType"
+    class="preview"
+    *ngIf="!isUploaded"
+    [src]="videoSrc || imageSrc"
+    alt="Preview"
+  />
+  <app-video-player
+    *ngIf="isUploaded && fileType === 'video'"
+    class="preview"
+    [currentSelectedTopic]="currentSelectedTopic"
+    [autoPlayValue]="false"
+    [fromCourseInformation]="true"
+    [customSize]="true"
+  ></app-video-player>
+  <img class="thumbnail" [src]="src" *ngIf="isUploaded && fileType === 'img'" />
+</div>

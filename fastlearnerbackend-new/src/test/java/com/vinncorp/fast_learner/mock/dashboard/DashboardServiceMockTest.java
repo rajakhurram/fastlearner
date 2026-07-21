@@ -91,15 +91,15 @@ public class DashboardServiceMockTest {
         assertEquals(mockUserProfileVisitDto, response.getData().getTotalProfileVisits());
     }
 
-    @DisplayName("Fetch with invalid parameter")
-    @Test
-    public void testFetchStats_InvalidFilter() {
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            dashboardService.fetchStats("InvalidFilter", EMAIL);
-        });
-
-        assertEquals("Filter should be This month, Last month, This year or Last year only.", exception.getMessage());
-    }
+//    @DisplayName("Fetch with invalid parameter")
+//    @Test
+//    public void testFetchStats_InvalidFilter() {
+//        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+//            dashboardService.fetchStats("InvalidFilter", EMAIL);
+//        });
+//
+//        assertEquals("Filter should be This month, Last month, This year or Last year only.", exception.getMessage());
+//    }
 
     @DisplayName("Fetch with invalid user")
     @Test

@@ -1,0 +1,139 @@
+<section class="payments-page">
+  <div class="page-header">
+    <h2>Payments</h2>
+    <button
+      nz-button
+      nzType="default"
+      class="export-btn"
+      (click)="getPaymentCSV()"
+    >
+      Export
+    </button>
+  </div>
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <div class="filter-row">
+      <!-- <input nz-input placeholder="Search by user, ID, or amount..." /> -->
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Search by name, email, or ID..."
+          name="title"
+          [(ngModel)]="queryParams.search"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span style="color: #212189" nz-icon nzType="search"></span>
+      </ng-template>
+
+      <nz-select
+        nzPlaceHolder="All Plans"
+        [(ngModel)]="queryParams.planType"
+        (ngModelChange)="onSelectFilterChange('planType', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Plans"></nz-option>
+        <nz-option nzValue="PREMIUM" nzLabel="Premium"></nz-option>
+        <nz-option nzValue="STANDARD" nzLabel="Standard"></nz-option>
+        <nz-option nzValue="ULTIMATE" nzLabel="Enterprise"></nz-option>
+        <nz-option nzValue="Free" nzLabel="Free"></nz-option>
+      </nz-select>
+      <nz-select
+        nzPlaceHolder="All Statuses"
+        [(ngModel)]="queryParams.status"
+        (ngModelChange)="onSelectFilterChange('status', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Statuses"></nz-option>
+        <nz-option nzValue="Successful" nzLabel="Successful"></nz-option>
+        <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
+        <nz-option nzValue="Failed" nzLabel="Failed"></nz-option>
+      </nz-select>
+      <nz-select
+        nzPlaceHolder="All Types"
+        [(ngModel)]="queryParams.type"
+        (ngModelChange)="onSelectFilterChange('type', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Types"></nz-option>
+        <nz-option nzValue="Subscription" nzLabel="Subscription"></nz-option>
+        <nz-option nzValue="Course" nzLabel="Course"></nz-option>
+      </nz-select>
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="clear-filter-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filter
+      </button>
+    </div>
+
+    <nz-table
+      #paymentTable
+      [nzData]="payments"
+      [nzLoading]="isTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+      class="payment-table"
+    >
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>User</th>
+          <th>Plan Type</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of paymentTable.data">
+          <td>{{ payment.rawId }}</td>
+          <td>
+            <div class="user-cell">
+              <p class="user-name">{{ payment.userName }}</p>
+              <p class="user-email">{{ payment.userEmail }}</p>
+            </div>
+          </td>
+          <td>
+            <span class="plan-pill" [ngClass]="getPlanClass(payment.planType)">
+              {{
+                payment.planType == "ULTIMATE" ? "ENTERPRISE" : payment.planType
+              }}
+            </span>
+          </td>
+          <td>{{ payment.amount }}</td>
+          <td>{{ payment.date | date: "mediumDate" }}</td>
+          <td>
+            <span class="type-pill" [ngClass]="getTypeClass(payment.type)">
+              {{ payment.type }}
+            </span>
+          </td>
+          <td>
+            <span
+              class="status-pill"
+              [ngClass]="getTransactionStatusClass(payment.status)"
+            >
+              {{ payment.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <div class="table-footer">
+      <nz-pagination
+        *ngIf="totalElements > 0"
+        style="margin-left: auto"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="queryParams.page + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="queryParams.size"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </nz-card>
+</section>

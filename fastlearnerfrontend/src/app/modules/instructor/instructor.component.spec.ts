@@ -41,6 +41,7 @@ describe('InstructorComponent', () => {
       'getLoggedInPicture',
       'signOut',
       'changeNavState',
+      'isSuperAdmin',
     ]);
     const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
       'getNotifications',
@@ -87,6 +88,7 @@ describe('InstructorComponent', () => {
     authService.getLoggedInName.and.returnValue('John Doe');
     authService.getLoggedInEmail.and.returnValue('johndoe@example.com');
     authService.getLoggedInPicture.and.returnValue('profile-pic-url');
+    authService.isSuperAdmin.and.returnValue(false);
 
     cacheService.getNotifications.and.returnValue([
       { id: 1, creationDate: new Date(), read: false },
@@ -232,5 +234,70 @@ describe('InstructorComponent', () => {
 
     date.setMinutes(date.getMinutes() - 30);
     expect(component.timeAgo(date)).toBe('2 hours ago');
+  });
+
+  it('should change tab and navigate to dashboard', () => {
+    component.changeTab(component.InstructorTabs.DASHBOARD);
+    expect(component.activeDashboard).toBeTrue();
+    expect(router.navigate).toHaveBeenCalledWith([
+      'instructor/instructor-dashboard',
+    ]);
+  });
+
+  it('should change tab color for course', () => {
+    component.changeTabColor(component.InstructorTabs.COURSE);
+    expect(component.activeCourse).toBeTrue();
+    expect(component.selectedRoute).toBe(component.InstructorTabs.COURSE);
+  });
+
+  it('should toggle affiliate tab', () => {
+    component.affiliateTabOpen = false;
+    component.openAffiliateTab();
+    expect(component.affiliateTabOpen).toBeTrue();
+  });
+
+  it('should show affiliate when permission exists', () => {
+    cacheService.getDataFromCache.and.returnValue(
+      JSON.stringify([component.InstructorTabs.AFFILIATE]),
+    );
+    component.checkPermissions();
+    expect(component.hideAffiliate).toBeFalse();
+  });
+
+  it('should show grader when permission exists', () => {
+    cacheService.getDataFromCache.and.returnValue(
+      JSON.stringify([component.InstructorTabs.AI_GRADER]),
+    );
+    component.checkPermissions();
+    expect(component.hideGrader).toBeFalse();
+  });
+
+  it('should redirect notification and mark as read', () => {
+    const notification = {
+      id: 5,
+      url: 'instructor/course?id=1',
+      creationDate: new Date(),
+      read: false,
+    };
+    router.parseUrl.and.returnValue({ queryParams: { id: '1' } } as any);
+    notificationService.removeNotification.and.returnValue(of({}));
+    cacheService.getNotifications.and.returnValue([notification]);
+
+    component.redirect(notification);
+
+    expect(notificationService.removeNotification).toHaveBeenCalledWith([5]);
+    expect(cacheService.saveNotifications).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalled();
+  });
+
+  it('should route to admin dashboard for super admin', () => {
+    authService.isSuperAdmin.and.returnValue(true);
+    component.routeToAdminDashboard();
+    expect(router.navigate).toHaveBeenCalledWith(['/admin/users']);
+  });
+
+  it('should route to ai grader', () => {
+    component.routeToAiGrader();
+    expect(router.navigate).toHaveBeenCalledWith(['instructor/ai-grader']);
   });
 });

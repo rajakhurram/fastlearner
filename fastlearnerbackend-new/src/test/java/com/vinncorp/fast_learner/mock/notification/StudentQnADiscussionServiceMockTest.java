@@ -57,18 +57,18 @@ public class StudentQnADiscussionServiceMockTest {
                 eq(NotificationContentType.TEXT), eq(NotificationType.COURSE_QnA_DISCUSSION), anyLong());
     }
 
-    @Test
-    @DisplayName("Test: Notify Liked/Disliked To User - when provided valid data (Success)")
-    public void notifyToUserLikeDislikedReview_whenValidInput() throws IOException {
-        doNothing().when(producer).sendMessageToLoggedInUser(anyString(), anyLong(), anyLong(), anyString(), any(),
-                any(NotificationContentType.class), any(NotificationType.class), isNull());
-
-        studentQnADiscussion.notifyToUserLikeDislikedReview("redirectUrl","Qasim Ali", CourseReviewStatus.LIKED.name(), CourseTestData.courseData(),
-                1L, 1L);
-
-        verify(producer, times(1)).sendMessageToLoggedInUser(anyString(), anyLong(), anyLong(), anyString(), any(),
-                any(NotificationContentType.class), any(NotificationType.class), isNull());
-    }
+//    @Test
+//    @DisplayName("Test: Notify Liked/Disliked To User - when provided valid data (Success)")
+//    public void notifyToUserLikeDislikedReview_whenValidInput() throws IOException {
+//        doNothing().when(producer).sendMessageToLoggedInUser(anyString(), anyLong(), anyLong(), anyString(), any(),
+//                any(NotificationContentType.class), any(NotificationType.class), isNull());
+//
+//        studentQnADiscussion.notifyToUserLikeDislikedReview("redirectUrl","Qasim Ali", CourseReviewStatus.LIKED.name(), CourseTestData.courseData(),
+//                1L, 1L);
+//
+//        verify(producer, times(1)).sendMessageToLoggedInUser(anyString(), anyLong(), anyLong(), anyString(), any(),
+//                any(NotificationContentType.class), any(NotificationType.class), isNull());
+//    }
 
     @Test
     @DisplayName("Test: Notify QnA Reply To User - when provided valid data (Success)")

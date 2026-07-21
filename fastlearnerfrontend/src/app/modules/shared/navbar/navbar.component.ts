@@ -367,7 +367,7 @@ export class NavbarComponent implements OnInit {
       this.routeToInstructorProfile(
         this.searchInstructorResults[
           this.selectedIndex - this.searchResults?.length
-        ]?.profileUrl
+        ]?.profileUrl,
       );
     }
   }
@@ -426,7 +426,7 @@ export class NavbarComponent implements OnInit {
           const instructorIndex =
             this.selectedIndex - this.searchResults.length;
           this.routeToInstructorProfile(
-            this.searchInstructorResults[instructorIndex]?.profileUrl
+            this.searchInstructorResults[instructorIndex]?.profileUrl,
           );
         }
       } else {
@@ -527,6 +527,10 @@ export class NavbarComponent implements OnInit {
     return this._authService.getLoggedInName();
   }
 
+  get isSuperAdmin(): boolean {
+    return this._authService.isSuperAdmin();
+  }
+
   getCourseCategoryList() {
     this._courseService.getCourseCategory().subscribe({
       next: (response: any) => {
@@ -544,11 +548,11 @@ export class NavbarComponent implements OnInit {
   viewNotifications() {
     if (this.isLoggedIn) {
       this.notifications = this._cacheService.getNotifications(
-        this._dataHolderConstants.CACHE_KEYS.NOTIFICATION
+        this._dataHolderConstants.CACHE_KEYS.NOTIFICATION,
       );
       this.notifications?.forEach((notification: any) => {
         notification.creationDate = this.timeAgo(
-          new Date(notification.creationDate)
+          new Date(notification.creationDate),
         );
       });
     }
@@ -562,7 +566,7 @@ export class NavbarComponent implements OnInit {
     this.removeNotifications();
     this.routeToSelectedUrl(notification);
     this.notifications = this._cacheService.getNotifications(
-      this._dataHolderConstants.CACHE_KEYS.NOTIFICATION
+      this._dataHolderConstants.CACHE_KEYS.NOTIFICATION,
     );
     this.notifications.forEach((el) => {
       if (notification.id == el.id) {
@@ -571,7 +575,7 @@ export class NavbarComponent implements OnInit {
     });
     this._cacheService.saveNotifications(
       this._dataHolderConstants.CACHE_KEYS.NOTIFICATION,
-      this.notifications
+      this.notifications,
     );
     this.viewNotifications();
   }
@@ -715,7 +719,7 @@ export class NavbarComponent implements OnInit {
 
     if (!userProfileUrl) {
       console.error(
-        'User profile URL is missing. Cannot redirect to the profile page.'
+        'User profile URL is missing. Cannot redirect to the profile page.',
       );
       return;
     }
@@ -757,6 +761,14 @@ export class NavbarComponent implements OnInit {
       : this._router.navigate(['/auth/sign-in']);
   }
 
+  routeToAdminDashboard() {
+    document.body.classList.remove('hide-scrollbar');
+    this.navbarVisible = false;
+    this._authService.isLoggedIn()
+      ? this._router.navigate(['/admin/users'])
+      : this._router.navigate(['/auth/sign-in']);
+  }
+
   routeToCourseDetails(courseUrl: any) {
     document.body.classList.remove('hide-scrollbar');
     this.navbarVisible = false;
@@ -780,11 +792,18 @@ export class NavbarComponent implements OnInit {
 
   signOut() {
     document.body.classList.remove('hide-scrollbar');
+    const pathBeforeLogout = this._router.url;
     const uniqueId = this._cacheService.getDataFromCache('unique-id');
     this._authService.signOut(uniqueId).subscribe({
       next: (response: any) => {
         this.notifications = [];
         this._cacheService.clearCache();
+        if (pathBeforeLogout.includes('ai-grader/result/view')) {
+          localStorage.setItem(
+            'redirectUrl',
+            '/instructor/instructor-dashboard',
+          );
+        }
         this._router.navigate(['']);
         this._authService.changeNavState(false);
         this.myCourseList = [];
@@ -800,7 +819,7 @@ export class NavbarComponent implements OnInit {
 
   updateNotificationCount() {
     this.notificationCount = this._cacheService.getDataFromCache(
-      'unclicked-noti-count'
+      'unclicked-noti-count',
     );
   }
 
@@ -808,11 +827,14 @@ export class NavbarComponent implements OnInit {
     this.notificationCount = 0;
     this._cacheService.removeFromCache('unclicked-noti-count');
   }
-  
+
   reduceNotificationCount() {
-    if(this.notificationCount > 0) {
+    if (this.notificationCount > 0) {
       this.notificationCount = this.notificationCount - 1;
-      this._cacheService.saveInCache('unclicked-noti-count', this.notificationCount);
+      this._cacheService.saveInCache(
+        'unclicked-noti-count',
+        this.notificationCount,
+      );
     }
   }
 
@@ -839,7 +861,7 @@ export class NavbarComponent implements OnInit {
       this._router.navigate(['student/co-pilot']);
     } else {
       // Save current route so user can be redirected after sign-in
-      this._cacheService.saveInCache('redirectUrl', this._router.url);
+      this._cacheService.saveInCache('redirectUrl', '/student/co-pilot');
       this._router.navigate(['auth/sign-in']);
     }
   }

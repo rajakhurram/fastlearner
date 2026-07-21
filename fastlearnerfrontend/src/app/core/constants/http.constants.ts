@@ -41,7 +41,7 @@ export class HttpConstants {
       MESSAGE: 'Conflict Occured',
     },
   };
-  
+
   static REQUEST_STATUS: any;
   constructor() {}
 }

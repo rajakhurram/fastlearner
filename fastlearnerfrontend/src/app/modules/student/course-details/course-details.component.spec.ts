@@ -36,10 +36,10 @@ describe('CourseDetailsComponent', () => {
     'addOrRemoveCourseToFavorite',
     'getCourseRatingReviewAndFeedback',
     'getCourseByUrl',
-    'getComments'
+    'getComments',
   ]);
 
-  mockCourseService.getComments.and.returnValue(of({}))
+  mockCourseService.getComments.and.returnValue(of({}));
 
   const mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
 
@@ -152,7 +152,7 @@ describe('CourseDetailsComponent', () => {
     spyOn(component, 'toggleFavoriteCourse').and.callThrough();
     component.toggleFavoriteCourse();
     expect(mockCourseService.addOrRemoveCourseToFavorite).toHaveBeenCalledWith(
-      component.courseId
+      component.courseId,
     );
   });
 
@@ -163,7 +163,7 @@ describe('CourseDetailsComponent', () => {
 
   it('should handle error when getting related courses', () => {
     mockCourseService.getRelatedCourses.and.returnValue(
-      throwError(() => new Error('Error'))
+      throwError(() => new Error('Error')),
     );
 
     component.getRelatedCourses(true);
@@ -199,10 +199,10 @@ describe('CourseDetailsComponent', () => {
       fixture.detectChanges();
       const compiled = fixture.nativeElement;
       expect(compiled.querySelector('.course-name').textContent).toContain(
-        'Test Course'
+        'Test Course',
       );
       expect(
-        compiled.querySelector('.course-description').textContent
+        compiled.querySelector('.course-description').textContent,
       ).toContain('Course Description');
     });
   });
@@ -219,7 +219,7 @@ describe('CourseDetailsComponent', () => {
 
   it('should handle errors in ngOnInit correctly', () => {
     mockCourseService.getCourseByTitle.and.returnValue(
-      throwError(() => new Error('Error'))
+      throwError(() => new Error('Error')),
     );
 
     component.ngOnInit();
@@ -251,7 +251,7 @@ describe('CourseDetailsComponent', () => {
     expect(component.convertSecondsToHoursAndMinutes(3600)).toBe('1 hours');
     expect(component.convertSecondsToHoursAndMinutes(60)).toBe('1 minutes');
     expect(component.convertSecondsToHoursAndMinutes(3660)).toBe(
-      '1 hours 1 minutes'
+      '1 hours 1 minutes',
     );
     expect(component.convertSecondsToHoursAndMinutes(0)).toBe('0 minutes');
   });
@@ -285,6 +285,24 @@ describe('CourseDetailsComponent', () => {
       'test-course-title',
     ]);
   });
+  it('should reset related course pagination when navigating to another course', () => {
+    component.relatedCourse.pageNo = 2;
+    component.courseList = [{ courseId: 99 }];
+    component.noOfCount = 1;
+    component.totalElements = 5;
+
+    component.routeToCourseDetails('another-course');
+
+    expect(component.relatedCourse.pageNo).toBe(0);
+    expect(component.courseList).toEqual([]);
+    expect(component.noOfCount).toBeUndefined();
+    expect(component.totalElements).toBe(0);
+    expect(mockRouter.navigate).toHaveBeenCalledWith([
+      'student/course-details',
+      'another-course',
+    ]);
+  });
+
   it('should go to the next page of related courses', () => {
     component.relatedCourse = { pageNo: 1, pageSize: 8, courseId: 1 };
     component.noOfCount = 5;
@@ -305,14 +323,14 @@ describe('CourseDetailsComponent', () => {
     };
 
     mockCourseService.getCourseRatingReviewAndFeedback.and.returnValue(
-      of(mockResponse)
+      of(mockResponse),
     );
 
     component.getCourseCompleteReview();
 
     fixture.whenStable().then(() => {
       expect(
-        mockCourseService.getCourseRatingReviewAndFeedback
+        mockCourseService.getCourseRatingReviewAndFeedback,
       ).toHaveBeenCalledWith({
         courseId: component.courseId,
         pageNo: 0,
@@ -349,7 +367,7 @@ describe('CourseDetailsComponent', () => {
     };
 
     mockCourseService.likeAndDislikeReviewSection.and.returnValue(
-      of(mockResponse)
+      of(mockResponse),
     );
     spyOn(component, 'getCourseDetails');
 
@@ -359,7 +377,7 @@ describe('CourseDetailsComponent', () => {
 
     fixture.whenStable().then(() => {
       expect(
-        mockCourseService.likeAndDislikeReviewSection
+        mockCourseService.likeAndDislikeReviewSection,
       ).toHaveBeenCalledWith({
         reviewId: 1,
         action: 'like',
@@ -374,7 +392,7 @@ describe('CourseDetailsComponent', () => {
     component.likeCIP = false;
 
     mockCourseService.likeAndDislikeReviewSection.and.returnValue(
-      throwError(() => new Error('Error'))
+      throwError(() => new Error('Error')),
     );
 
     component.commentActions('like', 1);
@@ -383,7 +401,7 @@ describe('CourseDetailsComponent', () => {
 
     fixture.whenStable().then(() => {
       expect(
-        mockCourseService.likeAndDislikeReviewSection
+        mockCourseService.likeAndDislikeReviewSection,
       ).toHaveBeenCalledWith({
         reviewId: 1,
         action: 'like',

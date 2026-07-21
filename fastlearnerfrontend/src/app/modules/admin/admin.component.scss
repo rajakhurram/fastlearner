@@ -1,0 +1,362 @@
+.admin-layout {
+  min-height: 100vh;
+  background: #f5f7fb;
+
+  &.is-booting {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .admin-sider {
+    // border-right: 1px solid #e8ebf2;
+    padding: 0 1rem;
+    .brand {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      // padding: 0 18px;
+      // border-bottom: 1px solid #e8ebf2;
+      background: #fff;
+
+      img {
+        width: 12rem;
+        max-width: 100%;
+      }
+    }
+
+    .admin-menu {
+      // border-right: 0;
+      // padding-top: 10px;
+      border: none;
+
+      li {
+        // margin: 4px 10px;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        color: #212189;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        &:not(.ant-menu-item-selected):hover {
+          background-color: #eef1f8;
+        }
+
+        img {
+          width: 1.25rem;
+          height: 1.25rem;
+          flex-shrink: 0;
+          object-fit: contain;
+        }
+
+        img.legacy-icon {
+          width: 1.1rem;
+          height: 1.1rem;
+          opacity: 0.92;
+        }
+
+        &.ant-menu-item-selected {
+          background-color: #212189;
+          color: #fff;
+          img {
+            filter: brightness(0) invert(1);
+          }
+        }
+
+        &::after {
+          content: none;
+        }
+      }
+
+      .coming-soon {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .admin-header {
+    height: 72px;
+    padding: 0 20px;
+    background: #fff;
+    border-bottom: 1px solid #e8ebf2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .hamburger {
+      display: none;
+      border: none;
+      background: transparent;
+      padding: 0.25rem;
+      cursor: pointer;
+      line-height: 0;
+
+      img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+
+    .search-bar {
+      width: 20rem;
+    }
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .notification-nav {
+        border: none !important;
+        padding-top: 0 !important;
+        height: auto;
+        box-shadow: none;
+      }
+
+      .notification-icon-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .notification-style {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        transform: translate(50%, -50%);
+        background-color: #fe4a55;
+        color: white;
+        text-align: center;
+        line-height: 18px;
+        font-size: 12px;
+        z-index: 0;
+        min-width: 18px;
+        min-height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .initials {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        button {
+          background-color: #262261;
+          border-color: #212189;
+          color: white;
+          height: 40px;
+          width: 40px;
+        }
+
+        .profile-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+          span {
+            margin: 0;
+            line-height: 1.2;
+            font-size: 0.8rem;
+          }
+          span:last-child {
+            font-size: 0.6rem;
+            color: #6f7894;
+          }
+        }
+      }
+    }
+  }
+
+  .admin-content {
+    padding: 20px;
+  }
+}
+
+.admin-profile-menu {
+  position: relative;
+  top: 3px;
+  left: -10px;
+
+  .blue-divider {
+    background-color: #262261;
+    margin-top: -4px;
+  }
+
+  .user-profile {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .profile-avatar-btn {
+    background-color: #262261;
+    border-color: #212189;
+    color: white;
+    height: 55px;
+    width: 55px;
+  }
+
+  .user-profile-text {
+    margin: 10px;
+
+    p {
+      font-size: 10px;
+      margin: 0;
+    }
+
+    a {
+      color: #212189;
+      cursor: pointer;
+    }
+  }
+}
+
+:host ::ng-deep .admin-menu .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background-color: #eef1f8 !important;
+  color: #212189 !important;
+}
+
+#admin-notification-menu {
+  position: relative;
+  top: 15px !important;
+  width: 300px;
+
+  .blue-divider {
+    background-color: #262261;
+    margin-top: -4px;
+  }
+}
+
+.notification-box {
+  padding-bottom: 4px;
+  padding-top: 4px;
+  border-bottom: 1px solid #edf6ff;
+}
+
+.time-text {
+  display: flex;
+  justify-content: end;
+  margin-right: 10px;
+}
+
+.notification-text {
+  margin-left: 10px;
+  margin-top: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: break-spaces;
+}
+
+.notification-message {
+  max-width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unseen-notification {
+  background-color: #edf6ff !important;
+}
+
+.notification-content-heading {
+  // padding: 8px 10px 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.ml-5px {
+  margin-left: 5px;
+}
+
+.see-all-notification {
+  color: #212189;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 700px) {
+  :host ::ng-deep .admin-layout.is-mobile {
+    > .ant-layout {
+      margin-left: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .admin-sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .admin-sider.ant-layout-sider {
+      position: fixed !important;
+      left: 0;
+      top: 0;
+      z-index: 1001;
+      height: 100vh !important;
+      max-height: 100vh;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      flex: 0 0 250px !important;
+      max-width: 250px !important;
+      min-width: 250px !important;
+      width: 250px !important;
+    }
+
+    &.sidebar-open .admin-sider.ant-layout-sider {
+      transform: translateX(0);
+    }
+
+    &.sidebar-open .admin-sider .admin-sider-close {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      padding: 0.25rem;
+      cursor: pointer;
+      width: 2rem;
+      top: 0px;
+      right: 0;
+
+      img {
+        width: 1.25rem;
+        height: 1.75rem;
+      }
+    }
+
+    .admin-sider .brand img {
+      width: 9rem;
+    }
+
+    .admin-header {
+      justify-content: space-between !important;
+
+      .hamburger {
+        display: block !important;
+      }
+    }
+
+    .admin-content {
+      padding: 12px;
+    }
+  }
+}
+
+:host ::ng-deep .admin-layout.is-mobile .admin-sider .admin-sider-close {
+  display: none;
+}

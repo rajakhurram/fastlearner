@@ -74,6 +74,55 @@
   padding: 10px;
 }
 
+.add-question-row {
+  padding: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.add-question-btn {
+  width: 100%;
+  color: #212189;
+  border-color: #212189;
+}
+
+.manual-question-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.manual-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #313131;
+  }
+}
+
+.manual-form-hint {
+  font-size: 11px;
+  color: #666;
+}
+
+.manual-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.manual-tag {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.text-red {
+  color: #e23643;
+}
+
 :host ::ng-deep .ant-collapse {
   border: none;
 }
@@ -131,6 +180,13 @@
   overflow-y: auto;
 }
 
+.question-table-loader {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .grader-info {
   display: flex;
   align-items: center;
@@ -174,5 +230,34 @@
 
 ::ng-deep .grader-card .ant-card-body {
   padding: 8px; /* or 0px if you want no padding */
+}
+
+.marks-edit-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.marks-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.marks-edit-label {
+  font-size: 10px;
+  color: #666;
+  font-weight: 600;
+}
+
+.marks-edit-separator {
+  color: #212189;
+  font-weight: 700;
+  padding-bottom: 6px;
+}
+
+.marks-edit-field input {
+  width: 72px;
 }
 

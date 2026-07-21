@@ -124,7 +124,8 @@ export class AppComponent implements OnInit {
           event.url.includes('/instructor/course') ||
           event.url.includes('/instructor/performance') ||
           event.url.includes('/instructor/notifications') ||
-          event.url.includes('/instructor')
+          event.url.includes('/instructor') ||
+          event.url.includes('/admin')
         ) {
           this.showNavbar = false;
         } else {

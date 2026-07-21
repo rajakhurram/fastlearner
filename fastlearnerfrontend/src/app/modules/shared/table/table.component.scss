@@ -67,7 +67,18 @@
   width: 15%;
 }
 
-:host ::ng-deep .ant-table .ant-table-expanded-row-fixed  {
+.data-text {
+  text-align: left;
+  // font-size: 16px;
+  // font-family: "Poppins-medium";
+  width: 15%;
+}
+
+.cell-padding-left {
+  padding-left: 6px;
+}
+
+:host ::ng-deep .ant-table .ant-table-expanded-row-fixed {
   width: 100% !important;
 }
 button:disabled {
@@ -87,7 +98,6 @@ button:disabled {
   }
 }
 
-
 :host ::ng-deep .ant-table-header {
   overflow: hidden !important;
 }
@@ -98,16 +108,16 @@ button:disabled {
 
 .action-view {
   border: 0px solid;
-    border-color: #212189;
-    padding: 5px 8px;
-    background-color: gray;
-    color: white;
+  border-color: #212189;
+  padding: 5px 8px;
+  background-color: gray;
+  color: white;
 }
 
 .action-view:hover {
   border: 0px solid;
   border-color: #212189;
-    padding: 5px 8px;
+  padding: 5px 8px;
   background-color: #212189;
   color: white;
 }

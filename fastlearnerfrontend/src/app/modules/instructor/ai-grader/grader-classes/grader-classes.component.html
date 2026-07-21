@@ -17,8 +17,8 @@
           </div>
 
           <div class="count" *ngIf="gradedPapers <= allowedPapers">
-  {{ gradedPapers }} / {{ allowedPapers }}
-</div>
+            {{ gradedPapers }} / {{ allowedPapers }}
+          </div>
         </div>
       </div>
       <app-button (buttonCallBack)="openSubscriptionPlan()">
@@ -27,7 +27,7 @@
           alt="Upgrade"
           width="20"
           height="20"
-          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px;"
+          style="margin-right: 8px; vertical-align: middle; margin-bottom: 4px"
         />
         Upgrade
       </app-button>
@@ -43,24 +43,23 @@
       </div>
 
       <div class="ml-auto">
-  <span
-    nz-tooltip
-    [nzTooltipTitle]="
-      gradedPapers >= allowedPapers && showUpgradePlan
-        ? 'Free limit exceeded. Please upgrade your plan.'
-        : null
-    "
-  >
-    <app-button
-      [config]="assessmentButtonConfig"
-      [buttonText]="'Start a new assessment'"
-      [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
-      (buttonCallBack)="routeToGraderUploader()"
-    >
-    </app-button>
-  </span>
-</div>
-
+        <span
+          nz-tooltip
+          [nzTooltipTitle]="
+            gradedPapers >= allowedPapers && showUpgradePlan
+              ? 'Free limit exceeded. Please upgrade your plan.'
+              : null
+          "
+        >
+          <app-button
+            [config]="assessmentButtonConfig"
+            [buttonText]="'Start a new assessment'"
+            [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
+            (buttonCallBack)="routeToGraderUploader()"
+          >
+          </app-button>
+        </span>
+      </div>
     </div>
 
     <!-- <hr class="line-color mt-2" /> -->
@@ -183,7 +182,10 @@
           (nzPageIndexChange)="onClassPageChange($event)"
         >
         </nz-pagination>
-        <div class="display-flex justify-content-center w-100" *ngIf="!classes?.length">
+        <div
+          class="display-flex justify-content-center w-100"
+          *ngIf="!classes?.length"
+        >
           <nz-empty [nzNotFoundContent]="'No Class Found'"></nz-empty>
         </div>
       </div>

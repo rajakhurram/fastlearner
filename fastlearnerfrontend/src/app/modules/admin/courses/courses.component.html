@@ -1,0 +1,202 @@
+<section class="courses-page">
+  <div class="page-header">
+    <h2>Courses</h2>
+  </div>
+
+  <nz-card [nzBordered]="false" class="table-section">
+    <div class="filter-row">
+      <!-- <input nz-input placeholder="Search courses..." /> -->
+      <nz-input-group class="search-bar" [nzSuffix]="suffixIconSearch">
+        <input
+          type="text"
+          nz-input
+          placeholder="Search by name, email, or ID..."
+          name="title"
+          [(ngModel)]="queryParams.search"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span style="color: #212189" nz-icon nzType="search"></span>
+      </ng-template>
+      <nz-select
+        nzPlaceHolder="All Statuses"
+        [(ngModel)]="queryParams.status"
+        (ngModelChange)="onSelectFilterChange('status', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Statuses"></nz-option>
+        <nz-option nzValue="DRAFT" nzLabel="Draft"></nz-option>
+        <nz-option nzValue="PUBLISHED" nzLabel="Published"></nz-option>
+        <nz-option nzValue="UNPUBLISHED" nzLabel="Unpublished"></nz-option>
+      </nz-select>
+      <nz-select
+        nzPlaceHolder="All Categories"
+        [(ngModel)]="queryParams.category"
+        (ngModelChange)="onSelectFilterChange('category', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Categories"></nz-option>
+        <nz-option
+          *ngFor="let category of courseCategoryList"
+          [nzValue]="category.id"
+          [nzLabel]="category.name"
+        ></nz-option>
+      </nz-select>
+      <!-- <nz-select
+        nzPlaceHolder="All Instructor"
+        [(ngModel)]="queryParams.instructor"
+        (ngModelChange)="onSelectFilterChange('instructor', $event)"
+      >
+        <nz-option nzValue="" nzLabel="All Instructors"></nz-option>
+        <nz-option
+          *ngFor="let instructor of instructors"
+          [nzValue]="instructor.id"
+          [nzLabel]="instructor.name"
+        ></nz-option>
+      </nz-select> -->
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="clear-filter-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filter
+      </button>
+    </div>
+
+    <nz-table
+      #courseTable
+      [nzData]="courses"
+      [nzLoading]="isTableLoading"
+      [nzFrontPagination]="false"
+      [nzScroll]="{ x: 'max-content' }"
+      class="course-table"
+    >
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Instructor</th>
+          <th>Students</th>
+          <th>Rating</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of courseTable.data">
+          <td>{{ course.rawId }}</td>
+          <td class="course-title">{{ course.title }}</td>
+          <td>{{ course.categoryName }}</td>
+          <td>{{ course.instructorName }}</td>
+          <td>{{ course.studentCount | number }}</td>
+          <td>
+            {{
+              course.avgRating != null && course.avgRating !== ""
+                ? (course.avgRating | number: "1.2-2")
+                : "N/A"
+            }}
+          </td>
+          <td>
+            <span class="status-pill" [ngClass]="getStatusClass(course.status)">
+              {{ getStatusLabel(course.status) }}
+            </span>
+          </td>
+          <td>
+            <button
+              nz-button
+              nzType="link"
+              class="view-btn"
+              (click)="openCourseDrawer(course)"
+            >
+              <img src="../../../assets/icons/view.svg" alt="view" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <div class="table-footer">
+      <nz-pagination
+        *ngIf="totalElements > 0"
+        style="margin-left: auto"
+        class="display-inline-block mt-2"
+        [nzPageIndex]="queryParams.page + 1"
+        [nzTotal]="totalElements"
+        [nzPageSize]="queryParams.size"
+        (nzPageIndexChange)="onPageChange($event)"
+      >
+      </nz-pagination>
+    </div>
+  </nz-card>
+</section>
+
+<nz-drawer
+  [nzVisible]="isCourseDrawerVisible"
+  nzPlacement="right"
+  [nzClosable]="false"
+  [nzMaskClosable]="true"
+  [nzWidth]="drawerWidth"
+  [nzBodyStyle]="{ padding: '1rem' }"
+  (nzOnClose)="closeCourseDrawer()"
+  class="course-detail-drawer"
+>
+  <ng-container *nzDrawerContent>
+    <div class="drawer-container">
+      <div class="drawer-header">
+        <div class="course-meta">
+          <h3>{{ courseDetails.title }}</h3>
+          <p>{{ courseDetails.courseId }} · {{ courseDetails.categoryName }}</p>
+        </div>
+        <button nz-button nzType="text" (click)="closeCourseDrawer()">
+          <span nz-icon nzType="close"></span>
+        </button>
+      </div>
+
+      <div class="summary-row">
+        <span class="status-pill">
+          {{ courseDetails.status }}
+        </span>
+        <span class="dot-separator">·</span>
+        <span class="price-text">{{ courseDetails.price || "N/A" }}</span>
+      </div>
+
+      <p class="course-description" [innerHTML]="courseDetails.description"></p>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <p>Instructor</p>
+          <h4>{{ courseDetails.instructorName }}</h4>
+        </div>
+        <div class="detail-item">
+          <p>Students</p>
+          <h4>{{ courseDetails.studentCount | number }}</h4>
+        </div>
+        <div class="detail-item">
+          <p>Rating</p>
+          <h4>
+            {{
+              courseDetails.avgRating != null && courseDetails.avgRating !== ""
+                ? (courseDetails.avgRating | number: "1.2-2")
+                : "N/A"
+            }}
+          </h4>
+        </div>
+        <div class="detail-item">
+          <p>Created</p>
+          <h4>{{ courseDetails.createdDate | date: "mediumDate" }}</h4>
+        </div>
+      </div>
+
+      <button
+        nz-button
+        class="unpublish-btn"
+        (click)="togglePublishUnpublish(courseDetails.rawId)"
+        [disabled]="courseDetails.status === 'DRAFT'"
+      >
+        {{ courseDetails.status === "UNPUBLISHED" ? "Publish" : "Unpublish" }}
+      </button>
+    </div>
+  </ng-container>
+</nz-drawer>

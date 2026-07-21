@@ -1,0 +1,500 @@
+.banner {
+  background-color: white;
+}
+.banner-about-us {
+  background-color: #f8f8fa;
+}
+.course-card-section {
+  background-color: white;
+}
+.banner-image-style {
+  display: flex;
+  justify-content: center;
+}
+.landing-page-banner {
+  padding-top: 20%;
+  padding-bottom: 15%;
+}
+.about-us-page {
+  padding-top: 10%;
+  padding-bottom: 10%;
+}
+
+.landing-page-subheading p {
+  color: #fe4a55;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.landing-page-heading h1 {
+  color: #212189;
+  font-size: 40px;
+  font-weight: bold;
+  margin: 0;
+}
+.landing-page-text {
+  line-height: 18px;
+  width: 72%;
+}
+.landing-page-text small {
+  color: #212189;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.landing-page-button {
+  padding-top: 3%;
+}
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+  border-color: #212189;
+  color: #212189;
+  font-weight: bold;
+}
+
+[nz-button]:hover {
+  margin-right: 8px;
+  margin-bottom: 12px;
+  border-color: #212189;
+  color: white;
+  background-color: #212189;
+  font-weight: bold;
+}
+
+.about-us-heading {
+  text-align: center;
+}
+
+.about-us-heading h2 {
+  color: #212189;
+  font-family: "Poppins-bold";
+  font-weight: 900;
+  font-size: 28px;
+}
+
+.about-us-text {
+  text-align: center;
+  color: #292929;
+  line-height: 18px;
+}
+
+.about-us {
+  background: white;
+  padding-top: 3%;
+  padding-bottom: 6%;
+}
+
+.img-style {
+  height: 42px;
+  width: 42px;
+  display: flex;
+  margin-top: 8%;
+  justify-content: center;
+}
+
+::ng-deep .ant-card-cover {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.card-text-align {
+  text-align: center;
+  border-radius: 5px;
+  border-color: white;
+  box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+  cursor: auto;
+}
+
+.card-text-align:hover {
+  // border-color: #fe4a55;
+}
+
+::ng-deep .ant-card-meta-description {
+  color: black;
+  font-size: 11px;
+}
+
+::ng-deep .ant-card-meta-title {
+  color: #212189;
+  font-weight: 700;
+}
+
+.about-us-cards {
+  padding-top: 5%;
+}
+
+.course-card-section {
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+.course-card-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.course-card-title h2 {
+  width: 30rem;
+  color: #212189;
+  font-family: "Poppins-bold";
+  font-weight: 900;
+  font-size: 28px;
+}
+
+.course-card-text {
+  width: 50rem;
+}
+
+.courses-tabs {
+  padding-top: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 3%;
+}
+
+.menu-card {
+  background-color: white;
+  width: calc(100% - 44%);
+  height: 70px;
+  border-radius: 15px;
+}
+
+.menu-tabs-items {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  list-style-type: none;
+  padding: 0px;
+  gap: 100px;
+}
+
+.menu-tabs-items li {
+  list-style: none;
+  color: #212189;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.menu-tabs-items li a {
+  list-style: none;
+  font-size: 16px;
+  color: #212189;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.menu-tabs-items li a:active {
+  list-style: none;
+  font-size: 16px;
+  color: #fe4a55;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.menu-tabs-items li a:hover {
+  list-style: none;
+  font-size: 16px;
+  color: #fe4a55;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.main-cards {
+  padding: 0em 5em;
+}
+
+.card {
+  border-radius: 2%;
+  margin: auto;
+  margin-top: 2em;
+  max-width: 30em;
+  box-shadow: 2px 5px 17px rgba(15, 71, 175, 0.1);
+  height: 550px;
+}
+
+.image-height {
+  border-radius: 2%;
+}
+
+.topics {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.topics-text {
+  margin-left: -25px;
+  color: #292929;
+}
+
+.view-details {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.details-text {
+  margin-left: -25px;
+}
+
+.tag-color {
+  color: #212189;
+  font-weight: 100;
+}
+
+.view-details .view-details-link a {
+  color: #0052f5;
+}
+
+.view-details .view-details-link a:hover {
+  color: #fe4a55;
+}
+
+.instructor-name {
+  color: #212189;
+  margin-left: 5px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.timer {
+  color: #212189;
+  margin-left: 5px;
+}
+
+::ng-deep.ant-card-meta-title h4 {
+  white-space: normal;
+}
+
+.about-us-cards-style {
+  margin: auto;
+}
+
+.secrets-section {
+  background: linear-gradient(180deg, #edf6ff, #dae8f8);
+}
+
+.secrets-section-row {
+  padding-top: 2%;
+  padding-bottom: 1%;
+}
+
+.secret {
+  display: flex;
+  align-items: flex-end;
+}
+
+.first-secret-text {
+  width: 40%;
+  padding-left: 3%;
+  color: #212189;
+}
+
+.second-secret-text {
+  width: 41%;
+  padding-left: 3%;
+  color: #212189;
+}
+
+.third-secret-text {
+  width: 41%;
+  padding-left: 3%;
+  color: #212189;
+}
+
+.student-pick {
+  background-color: #f8f8fa;
+}
+
+.student-pick-content {
+  padding-top: 20%;
+  padding-bottom: 15%;
+}
+
+.landing-page-heading h2 {
+  color: #212189;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.about-us-btn {
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  font-size: 10px;
+  height: 29px;
+  color: white;
+  width: 100px;
+}
+
+.about-us-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+  border: #fe4a55 1px solid;
+}
+
+.student-pick-point-1 {
+  display: flex;
+}
+
+.student-pick-point-1 p {
+  font-size: 13px;
+  padding-left: 1%;
+  margin-top: 4px;
+}
+
+.student-pick-points {
+  padding-top: 18px;
+  padding-bottom: 14px;
+}
+
+.show-more-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.show-more-button {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  border-radius: 4px;
+  color: #fe4a55;
+  height: 50px;
+}
+
+.show-more-button:hover {
+  width: 20%;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  color: white;
+  height: 50px;
+}
+p {
+  margin: 0;
+}
+.fast-learner-explore-card {
+  background: linear-gradient(180deg, #ffffff, #e3eafe);
+}
+.fast-learner-explore-card-display {
+  display: flex;
+}
+.explore-card-img {
+  height: 190px;
+  translate: 25px -45px;
+}
+.explore-card-button {
+  margin-top: 14px;
+}
+.explore-section {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+.explore-card-text h5 {
+  color: #fe4a55;
+}
+.explore-card-heading {
+  color: #212189;
+  font-weight: bolder;
+}
+.explore-btn {
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  font-size: 10px;
+  height: 29px;
+  color: white;
+}
+.explore-btn:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+  border: #fe4a55 1px solid;
+}
+
+@media screen and (max-width: 756px) {
+  .detail-cards {
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 500px) {
+  .banner-row {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .width-auto {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 991px) {
+  .image-width-responsive {
+    width: auto !important;
+  }
+
+  // .banner-img {
+  //   height: auto;
+  // }
+
+  .banner-row {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .student-pick-content {
+    padding-bottom: 0px !important;
+  }
+}
+
+@media screen and (max-width: 1178px) {
+  .text-align-responsive {
+    text-align: center;
+  }
+  .justify-alignment {
+    justify-content: center;
+  }
+}
+
+.image-width-responsive {
+  width: 45%;
+}
+
+.banner {
+  background-color: #e5f3ff; /* Adjust background color to match your design */
+}
+.banner-row {
+  display: flex;
+  align-items: center; /* Align items vertically centered */
+  justify-content: space-between; /* Space between text and image */
+  // padding: 20px; /* Add padding for better spacing */
+}
+.banner-image-style {
+  display: flex;
+  justify-content: center; /* Center image horizontally within its column */
+}
+.landing-page-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center text vertically within its column */
+}
+.landing-page-text {
+  margin-top: 10px; /* Adjust margin as needed */
+}
+.banner-img {
+  max-width: 75%;
+  height: auto; 
+  margin-top: 44px;
+}

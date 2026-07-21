@@ -4,6 +4,7 @@ import { LandingPageComponent } from './modules/pages/landing-page/landing-page.
 import { AboutUsComponent } from './modules/pages/about-us/about-us.component';
 import { ContactUsComponent } from './modules/pages/contact-us/contact-us.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 import { BecomeInstructorComponent } from './modules/pages/become-instructor/become-instructor.component';
 
 import { MaintenancePageComponent } from './modules/pages/maintenance-page/maintenance-page.component';
@@ -19,7 +20,6 @@ import { SubscriptionGuard } from './core/guards/subscription.guard';
 import { PremiumStudentComponent } from './modules/instructor/premium-student/premium-student.component';
 import { FastlearnerLoginComponent } from './fastlearner-login/fastlearner-login.component';
 import { ContentTypeComponent } from './modules/auth/content-type/content-type.component';
-import { AiGraderLandingPageComponent } from './modules/pages/ai-grader-landing-page/ai-grader-landing-page.component';
 import { PaymentMethodComponent } from './modules/auth/payment-method/payment-method.component';
 import { PricingPageComponent } from './modules/pages/pricing-page/pricing-page.component';
 import { Title } from '@angular/platform-browser';
@@ -103,18 +103,21 @@ const routes: Routes = [
   {
     path: 'pricing-page',
     component: PricingPageComponent,
-    data: {title: 'Pricing Page'}
-  },
-
-  { path: 'ai-grader',
-    component: AiGraderLandingPageComponent,
-     data: { title: 'AI Grader' }, 
+    data: { title: 'Pricing Page' },
   },
 
   {
-    path:'maintanence',
+    path: 'ai-grader',
+    loadChildren: () =>
+      import('./modules/pages/ai-grader-landing-page/ai-grader-landing-page.module').then(
+        (m) => m.AiGraderLandingPageModule,
+      ),
+  },
+
+  {
+    path: 'maintanence',
     component: MaintenancePageComponent,
-    data: {title: 'Maintanence Page'},
+    data: { title: 'Maintanence Page' },
   },
 
   {
@@ -128,9 +131,16 @@ const routes: Routes = [
     path: 'instructor',
     loadChildren: () =>
       import('./modules/instructor/instructor.module').then(
-        (m) => m.InstructorModule
+        (m) => m.InstructorModule,
       ),
     canLoad: [AuthGuard],
+  },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./modules/admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [AdminGuard],
+    canLoad: [AdminGuard],
   },
   {
     path: 'student',

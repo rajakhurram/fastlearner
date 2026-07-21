@@ -17,9 +17,10 @@
                 ></nz-progress>
               </div>
 
-<div class="count" *ngIf="gradedPapers <= allowedPapers">
-  {{ gradedPapers }} / {{ allowedPapers }}
-</div>            </div>
+              <div class="count" *ngIf="gradedPapers <= allowedPapers">
+                {{ gradedPapers }} / {{ allowedPapers }}
+              </div>
+            </div>
           </div>
           <app-button (buttonCallBack)="openSubscriptionPlan()">
             <img
@@ -63,24 +64,23 @@
           </div>
         </div>
         <div class="ml-auto assignment-btn">
-  <span
-    nz-tooltip
-    [nzTooltipTitle]="
-      gradedPapers >= allowedPapers && showUpgradePlan
-        ? 'Free limit exceeded. Please upgrade your plan.'
-        : null
-    "
-  >
-    <app-button
-      [config]="assessmentButtonConfig"
-      [buttonText]="'Start a new assessment'"
-      [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
-      (buttonCallBack)="routeToAIGraderUploader()"
-    >
-    </app-button>
-  </span>
-</div>
-
+          <span
+            nz-tooltip
+            [nzTooltipTitle]="
+              gradedPapers >= allowedPapers && showUpgradePlan
+                ? 'Free limit exceeded. Please upgrade your plan.'
+                : null
+            "
+          >
+            <app-button
+              [config]="assessmentButtonConfig"
+              [buttonText]="'Start a new assessment'"
+              [disabled]="gradedPapers >= allowedPapers && showUpgradePlan"
+              (buttonCallBack)="routeToAIGraderUploader()"
+            >
+            </app-button>
+          </span>
+        </div>
       </div>
       <hr
         class="quiz-seperator ml-1 mr-1"
@@ -156,7 +156,8 @@
       <div class="my-course-table">
         <nz-table
           #basicTable
-          [nzData]="displayedResults"
+          [nzData]="isInitialTableLoading ? [] : displayedResults"
+          [nzNoResult]="isInitialTableLoading ? null : undefined"
           [nzShowPagination]="false"
           [nzPageSize]="10"
           [nzScroll]="{ x: '1000px' }"
@@ -173,6 +174,19 @@
             </tr>
           </thead>
           <tbody>
+            <tr *ngIf="isInitialTableLoading">
+              <td colspan="7" class="table-body-loader-cell">
+                <div class="table-body-loader-wrap">
+                  <i
+                    nz-icon
+                    nzType="loading"
+                    nzTheme="outline"
+                    [style.fontSize.px]="32"
+                    class="spin-icon"
+                  ></i>
+                </div>
+              </td>
+            </tr>
             <tr *ngFor="let data of basicTable.data; let i = index">
               <!-- Student Name -->
               <td class="w-20">
@@ -279,7 +293,7 @@
               </td>
 
               <td>
-                {{ data.creationDate | date : "dd MMM yyyy" }}
+                {{ data.creationDate | date: "dd MMM yyyy, HH:mm a" }}
               </td>
 
               <td>
@@ -350,6 +364,24 @@
 
               <td>
                 <div class="action-buttons">
+                  <button
+                    nz-button
+                    nzType="link"
+                    class="action-view border-radius"
+                    [disabled]="data?.resultStatus === 'INPROCESS'"
+                    [ngClass]="{
+                      'cursor-pointer': data?.resultStatus !== 'INPROCESS',
+                      'cursor-no-drop': data?.resultStatus === 'INPROCESS',
+                    }"
+                    (click)="resultView(data, i); $event.stopPropagation()"
+                  >
+                    <span
+                      class="action-icon font-16"
+                      nz-icon
+                      nzType="eye"
+                      nzTheme="outline"
+                    ></span>
+                  </button>
                   <div
                     nz-tooltip
                     [nzTooltipTitle]="
@@ -377,7 +409,7 @@
                     [disabled]="data?.resultStatus === 'INPROCESS'"
                     [ngClass]="{
                       'cursor-pointer': data?.resultStatus !== 'INPROCESS',
-                      'cursor-no-drop': data?.resultStatus === 'INPROCESS'
+                      'cursor-no-drop': data?.resultStatus === 'INPROCESS',
                     }"
                     class="action-delete border-radius"
                     (click)="deleteResult(data)"
@@ -395,14 +427,15 @@
           </tbody>
         </nz-table>
         <nz-pagination
-  style="float: right"
-  class="display-inline-block mt-2"
-  [nzPageIndex]="payLoad.pageNo + 1"
-  [nzTotal]="totalElements"  
-  [nzPageSize]="pageSize"    
-  (nzPageIndexChange)="onPageChange($event)"
->
-</nz-pagination>
+          *ngIf="!isInitialTableLoading"
+          style="float: right"
+          class="display-inline-block mt-2"
+          [nzPageIndex]="payLoad.pageNo + 1"
+          [nzTotal]="totalElements"
+          [nzPageSize]="pageSize"
+          (nzPageIndexChange)="onPageChange($event)"
+        >
+        </nz-pagination>
       </div>
     </nz-card>
   </div>

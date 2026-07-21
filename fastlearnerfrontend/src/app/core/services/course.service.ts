@@ -48,7 +48,7 @@ export class CourseService {
     private _http: HttpClient,
     private _authService: AuthService,
     handler: HttpBackend,
-    private _instructorService: InstructorService
+    private _instructorService: InstructorService,
   ) {
     this._httpBackend = new HttpClient(handler);
   }
@@ -81,7 +81,6 @@ export class CourseService {
       ]);
     }
   }
-  
 
   private searchSuggestionsIds = new BehaviorSubject<any>([]);
   public $searchSuggestionsIds: Observable<any> =
@@ -125,83 +124,79 @@ export class CourseService {
     if (this._authService.isLoggedIn()) {
       return this._http.post(
         `${environment.baseUrl}course/course-by-category`,
-        body
+        body,
       );
     } else {
       return this._httpBackend.post(
         `${environment.baseUrl}course/course-by-category`,
-        body
+        body,
       );
     }
   }
   public getNewCourses(body: any): Observable<any> {
     if (this._authService.isLoggedIn()) {
       return this._http.get(
-        `${environment.baseUrl}home-page/new-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/new-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     } else {
       return this._http.get(
-        `${environment.baseUrl}home-page/new-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/new-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
   public getTest(body: any): Observable<any> {
     if (this._authService.isLoggedIn()) {
       return this._http.get(
-        `${environment.baseUrl}home-page/test?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/test?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     } else {
       return this._http.get(
-        `${environment.baseUrl}home-page/test?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/test?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
   public getInstructors(body: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}home-page/top-instructor?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+      `${environment.baseUrl}home-page/top-instructor?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
     );
   }
   public getTrendingCourses(body: any): Observable<any> {
     if (this._authService.isLoggedIn()) {
       return this._http.get(
-        `${environment.baseUrl}home-page/trending-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/trending-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     } else {
       return this._http.get(
-        `${environment.baseUrl}home-page/trending-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/trending-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
   public getAllCourses(body: any): Observable<any> {
     if (this._authService.isLoggedIn()) {
-      return this._http.post(
-        `${environment.baseUrl}home-page/view-all`, body
-      );
+      return this._http.post(`${environment.baseUrl}home-page/view-all`, body);
     } else {
-      return this._http.post(
-        `${environment.baseUrl}home-page/view-all`, body
-      );
+      return this._http.post(`${environment.baseUrl}home-page/view-all`, body);
     }
   }
   public getFreeCourses(body: any): Observable<any> {
     if (this._authService.isLoggedIn()) {
       return this._http.get(
-        `${environment.baseUrl}home-page/free-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/free-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     } else {
       return this._httpBackend.get(
-        `${environment.baseUrl}home-page/free-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/free-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
   public getPremiumCourses(body: any): Observable<any> {
     if (this._authService.isLoggedIn()) {
       return this._http.get(
-        `${environment.baseUrl}home-page/premium-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/premium-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     } else {
       return this._httpBackend.get(
-        `${environment.baseUrl}home-page/premium-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}home-page/premium-courses?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
@@ -211,7 +206,7 @@ export class CourseService {
       return this._http.get(`${environment.baseUrl}course/get/${courseId}`);
     } else {
       return this._httpBackend.get(
-        `${environment.baseUrl}course/get/${courseId}`
+        `${environment.baseUrl}course/get/${courseId}`,
       );
     }
   }
@@ -220,12 +215,12 @@ export class CourseService {
     if (this._authService.isLoggedIn()) {
       return this._http.post(
         `${environment.baseUrl}course/get-related-courses`,
-        body
+        body,
       );
     } else {
       return this._httpBackend.post(
         `${environment.baseUrl}course/get-related-courses`,
-        body
+        body,
       );
     }
   }
@@ -233,11 +228,11 @@ export class CourseService {
   public getFavoriteCourses(body: any): Observable<any> {
     if (body?.title) {
       return this._http.get(
-        `${environment.baseUrl}favourite-course/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}&title=${body?.title}`
+        `${environment.baseUrl}favourite-course/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}&title=${body?.title}`,
       );
     } else {
       return this._http.get(
-        `${environment.baseUrl}favourite-course/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}favourite-course/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
@@ -245,11 +240,11 @@ export class CourseService {
   public getMyCourses(body: any): Observable<any> {
     if (body?.title) {
       return this._http.get(
-        `${environment.baseUrl}enrollment/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}&title=${body?.title}&sortBy=${body?.sortBy}`
+        `${environment.baseUrl}enrollment/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}&title=${body?.title}&sortBy=${body?.sortBy}`,
       );
     } else {
       return this._http.get(
-        `${environment.baseUrl}enrollment/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}&sortBy=${body?.sortBy}`
+        `${environment.baseUrl}enrollment/?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}&sortBy=${body?.sortBy}`,
       );
     }
   }
@@ -257,20 +252,20 @@ export class CourseService {
   public enrolledInCourse(courseId: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}enrollment/?courseId=${courseId}`,
-      null
+      null,
     );
   }
 
   public addOrRemoveCourseToFavorite(courseId: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}favourite-course/?courseId=${courseId}`,
-      null
+      null,
     );
   }
 
   youtubeVideoUrlUpload(videoId: string): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}youtube-video/duration?videoId=${videoId}`
+      `${environment.baseUrl}youtube-video/duration?videoId=${videoId}`,
     );
   }
 
@@ -280,7 +275,7 @@ export class CourseService {
 
   public getSectionTopics(courseId: any, sectionId: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}topic/course/${courseId}/section/${sectionId}`
+      `${environment.baseUrl}topic/course/${courseId}/section/${sectionId}`,
     );
   }
 
@@ -298,7 +293,7 @@ export class CourseService {
   public likeAndDislikeReviewSection(body: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}course-review/like/${body?.reviewId}/${body.action}`,
-      {}
+      {},
     );
   }
 
@@ -312,13 +307,13 @@ export class CourseService {
 
   public getQuestions(body): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}question/?courseId=${body?.courseId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+      `${environment.baseUrl}question/?courseId=${body?.courseId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
     );
   }
 
   public getQuestionsReplies(body): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}answer/?courseId=${body?.courseId}&questionId=${body?.questionId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+      `${environment.baseUrl}answer/?courseId=${body?.courseId}&questionId=${body?.questionId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
     );
   }
 
@@ -332,7 +327,7 @@ export class CourseService {
 
   public getCourseRatingReviewAndFeedback(body: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}course-review/?courseId=${body?.courseId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+      `${environment.baseUrl}course-review/?courseId=${body?.courseId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
     );
   }
 
@@ -352,57 +347,68 @@ export class CourseService {
     return this._http.post(`${environment.baseUrl}topic-notes/`, body);
   }
 
-  public getComments(courseId: number, currentPage: number, pageSize: number): Observable<any> {
+  public getComments(
+    courseId: number,
+    currentPage: number,
+    pageSize: number,
+  ): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}course/get/feedback/${courseId}?pageNo=${currentPage}&pageSize=${pageSize}`
+      `${environment.baseUrl}course/get/feedback/${courseId}?pageNo=${currentPage}&pageSize=${pageSize}`,
     );
   }
 
-  public sendCoPilotMessage(body: any):Observable<any> {
-    return this._http.post(`${environment.basePath}copilot/chat/`,body);
+  public sendCoPilotMessage(body: any): Observable<any> {
+    return this._http.post(`${environment.basePath}copilot/chat/`, body);
   }
 
   public getTopicNotes(body: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}topic-notes/?courseId=${body?.courseId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+      `${environment.baseUrl}topic-notes/?courseId=${body?.courseId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
     );
   }
 
   public deleteTopicNote(body: any): Observable<any> {
     return this._http.delete(
-      `${environment.baseUrl}topic-notes/?courseId=${body?.courseId}&topicId=${body?.topicId}&topicNoteId=${body?.topicNoteId}`
+      `${environment.baseUrl}topic-notes/?courseId=${body?.courseId}&topicId=${body?.topicId}&topicNoteId=${body?.topicNoteId}`,
     );
   }
 
   public validateQuizAnswer(body: any): Observable<any> {
     return this._http.post(
       `${environment.baseUrl}quiz/validate-answer?questionId=${body?.questionId}&answerId=${body?.answerId}`,
-      null
+      null,
     );
   }
 
-  public submitQuizAnswers(answers: Array<{ questionId: number; answerId: number }>) {
-    return this._http.post(`${environment.baseUrl}quiz/validate-answering`, answers);
+  public submitQuizAnswers(
+    answers: Array<{ questionId: number; answerId: number }>,
+  ) {
+    return this._http.post(
+      `${environment.baseUrl}quiz/validate-answering`,
+      answers,
+    );
   }
-  
 
   public markTopicComplete(body: any): Observable<any> {
     return this._http.post(`${environment.baseUrl}user-course-progress/`, body);
   }
 
   public manageWatchTime(courseId?: any, watchTime?: any): Observable<any> {
-    return this._http.post(`${environment.baseUrl}watch-time/?courseId=${courseId}&watchTime=${watchTime}`, null);
+    return this._http.post(
+      `${environment.baseUrl}watch-time/?courseId=${courseId}&watchTime=${watchTime}`,
+      null,
+    );
   }
 
   public searchCourse(body: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}course/course-search?query=${body?.searchValue}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+      `${environment.baseUrl}course/course-search?query=${body?.searchValue}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
     );
   }
 
   public getAlternateInstructorSections(
     courseId: any,
-    sectionId?: any
+    sectionId?: any,
   ): Observable<any> {
     let url = `${environment.baseUrl}alternate-section/`;
 
@@ -423,7 +429,7 @@ export class CourseService {
     toCourseId,
     toSectionId,
     fromCourseId,
-    fromSectionId
+    fromSectionId,
   ): Observable<any> {
     let url = `${environment.baseUrl}alternate-section/`;
 
@@ -462,13 +468,13 @@ export class CourseService {
 
   public courseProgress(courseId: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}user-course-progress/${courseId}`
+      `${environment.baseUrl}user-course-progress/${courseId}`,
     );
   }
 
   public getInstructorPublicProfile(profileUrl: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}user-profile/?profileUrl=${profileUrl}`
+      `${environment.baseUrl}user-profile/?profileUrl=${profileUrl}`,
     );
   }
 
@@ -479,11 +485,11 @@ export class CourseService {
   public getInstructorCourses(body: any): Observable<any> {
     if (body?.instructorId) {
       return this._http.get(
-        `${environment.baseUrl}course/course-by-teacher-for-profile?instructorId=${body?.instructorId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}course/course-by-teacher-for-profile?instructorId=${body?.instructorId}&pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     } else {
       return this._http.get(
-        `${environment.baseUrl}course/course-by-teacher-for-profile?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`
+        `${environment.baseUrl}course/course-by-teacher-for-profile?pageNo=${body?.pageNo}&pageSize=${body?.pageSize}`,
       );
     }
   }
@@ -494,13 +500,13 @@ export class CourseService {
 
   public getCourseFirstStepDetail(courseId?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}course/course-detail-for-update-first-step/${courseId}`
+      `${environment.baseUrl}course/course-detail-for-update-first-step/${courseId}`,
     );
   }
 
   public getSectionByCourseId(courseId?: any): Observable<any> {
     return this._http.get(
-      `${environment.baseUrl}section/section-for-update/${courseId}`
+      `${environment.baseUrl}section/section-for-update/${courseId}`,
     );
   }
 
@@ -516,13 +522,22 @@ export class CourseService {
     return this._http.post(`${environment.baseUrl}course/create`, body);
   }
 
+  public parseBulkTestQuestionsFromExcel(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this._http.post(
+      `${environment.baseUrl}course/test/bulk-questions/parse`,
+      formData,
+    );
+  }
+
   public createCourseDto(
     courseInformationData?: FormGroup,
     sectionsData?: any,
     courseId?: any,
     isActive?: any,
     certificateEnabled?: any,
-    selectedContentType?: any
+    selectedContentType?: any,
   ): Observable<any> {
     if (courseId) {
       return this.getCourseTags(courseId)?.pipe(
@@ -533,13 +548,13 @@ export class CourseService {
             courseId,
             isActive,
             certificateEnabled,
-            selectedContentType
-          )
+            selectedContentType,
+          ),
         ),
         catchError((error) => {
           console.log(error);
           return of(null); // Handle the error appropriately
-        })
+        }),
       );
     } else {
       return this.getTopicTypes(
@@ -548,7 +563,7 @@ export class CourseService {
         courseId,
         isActive,
         certificateEnabled,
-        selectedContentType
+        selectedContentType,
       );
     }
   }
@@ -561,21 +576,21 @@ export class CourseService {
   }
 
   getQuizAttempt(quizId: number): Observable<any> {
-  return this._http.get(`${environment.baseUrl}quiz/attempt/${quizId}`);
-}
+    return this._http.get(`${environment.baseUrl}quiz/attempt/${quizId}`);
+  }
 
-getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
-  return this._http.get( `${environment.baseUrl}quiz/attempt/instructor/${quizId}`,
-    {
-      params: { email }
-    }
-  );
-}
-
+  getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
+    return this._http.get(
+      `${environment.baseUrl}quiz/attempt/instructor/${quizId}`,
+      {
+        params: { email },
+      },
+    );
+  }
 
   courseUrlExist(url?: any, courseId?: any) {
     return this._http.get(
-      `${environment.baseUrl}course/unique-course-url?url=${url}&courseId=${courseId}`
+      `${environment.baseUrl}course/unique-course-url?url=${url}&courseId=${courseId}`,
     );
   }
 
@@ -689,11 +704,10 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
 
   fetchTopicTypeId(selectedContentType?: any) {
     const topicType = this.topicTypes.find(
-      (topicType) => topicType.name === selectedContentType
+      (topicType) => topicType.name === selectedContentType,
     );
     return topicType?.id;
   }
-  
 
   createTopics(section: any) {
     const topics: Topic[] = [];
@@ -705,7 +719,11 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
         let article = null;
 
         if (topic.selectedContentType == this.typeVideo) {
-          video = this.getVideoData(topic.video);
+          const videoUrl = topic.video?.videoData?.videoUrl?.trim() ?? '';
+          const youtubeUrl =
+            topic.video?.videoData?.youtubeVideoUrl?.trim() ?? '';
+          video =
+            videoUrl || youtubeUrl ? this.getVideoData(topic.video) : null;
           topic.article.articleId == ''
             ? (article = null)
             : (article = this.getArticleData(topic.article));
@@ -751,6 +769,7 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
           level: index + 1,
           topicTypeId: this.fetchTopicTypeId(topic.selectedContentType),
           duration: topic.topicDuration,
+          topicComprehensive: topic.topicComprehensive ?? undefined,
           validate: topic.validate,
           video: video,
           quiz: quiz,
@@ -809,16 +828,19 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
   getQuizQuestions(questions?: any, quizType?: string) {
     const isSurvey = quizType === 'SURVEY';
     const quizQuestions: Question[] = [];
-
     questions?.forEach((question: any) => {
       if (this.validateQuestion(question, isSurvey)) {
         const ques: Question = {
           id: question.questionId,
           delete: question.delete,
           questionText: question.ques,
+          questionImageUrl: question.attachedImageUrl,
+          mediaType: question.mediaType,
           questionType: question?.questionType?.key,
           explanation: question?.explanation,
-          surveyQuestionCount: isSurvey ? question.surveyQuestionCount : undefined,
+          surveyQuestionCount: isSurvey
+            ? question.surveyQuestionCount
+            : undefined,
           surveyAnswers: isSurvey ? question.surveyAnswers : undefined,
           answers: isSurvey
             ? this.getSurveyAnswers(question.surveyAnswers)
@@ -831,39 +853,43 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
     return quizQuestions;
   }
 
-  private getSurveyAnswers(surveyAnswers: {delete: boolean; answerId: number; count: number; answer: string}[]) {
-    return surveyAnswers.map(ans => ({
+  private getSurveyAnswers(
+    surveyAnswers: {
+      delete: boolean;
+      answerId: number;
+      count: number;
+      answer: string;
+    }[],
+  ) {
+    return surveyAnswers.map((ans) => ({
       id: ans.answerId,
       answerText: ans.answer,
       isCorrectAnswer: true,
-      delete: ans.delete,    
-    }))
+      delete: ans.delete,
+    }));
   }
 
   validateQuestion(question?: any, isSurvey: boolean = false): boolean {
-    // Skip deleted questions
-    // if (question.delete) {
-    //   return false;
-    // }
-
-    // Include existing questions (with ID)
-    if (question.questionId) {
-      return true;
+    if (question?.delete) {
+      return !!question.questionId;
     }
 
-    // For surveys, only need question text
+    const activeAnswers = (question?.answers ?? []).filter(
+      (answer: any) => !answer?.delete,
+    );
+
     if (isSurvey) {
       return !!(question.ques && question.ques.trim() !== '');
     }
 
-    // For regular quizzes, need full validation
-    const hasQuestionText = question.ques && question.ques.trim() !== '';
-    const hasCorrectAnswer = question?.answers.filter((answer: any) =>
-      answer.isCorrectAnswer
-    )?.length > 0;
-    const hasEnoughAnswers = question.questionType.key === this.questionType.TEXT_FIELD
-      ? question?.answers.length >= 1
-      : question?.answers.length > 1;
+    const hasQuestionText = !!(question.ques && question.ques.trim() !== '');
+    const hasCorrectAnswer = activeAnswers.some(
+      (answer: any) => answer.isCorrectAnswer,
+    );
+    const hasEnoughAnswers =
+      question.questionType?.key === this.questionType.TEXT_FIELD
+        ? activeAnswers.length >= 1
+        : activeAnswers.length > 1;
 
     return hasQuestionText && hasCorrectAnswer && hasEnoughAnswers;
   }
@@ -871,17 +897,17 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
   getQuestionAnswers(answers?: any, correctAnswer?: any) {
     const questionAnswers: Answer[] = [];
     answers?.forEach((answer: any) => {
-      if(!answer?.answerId && answer?.delete){
+      if (!answer?.answerId && answer?.delete) {
         return;
       }
-        const ans: Answer = {
-          id: answer.answerId,
-          delete: answer.delete,
-          answerText: answer.ans,
-          // isCorrectAnswer: answer.ans == correctAnswer.ans ? true : false,
-          isCorrectAnswer: answer?.isCorrectAnswer
-        };
-        questionAnswers.push(ans);
+      const ans: Answer = {
+        id: answer.answerId,
+        delete: answer.delete,
+        answerText: answer.ans,
+        answerImageUrl: answer.attachedImageUrl,
+        isCorrectAnswer: answer?.isCorrectAnswer,
+      };
+      questionAnswers.push(ans);
     });
     return questionAnswers;
   }
@@ -918,7 +944,7 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
         this.tags = [];
         console.log(error);
         return of(null); // Handle the error appropriately
-      })
+      }),
     );
   }
 
@@ -928,7 +954,7 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
     courseId?: any,
     isActive?: any,
     certificateEnabled?: any,
-    selectedContentType?: any
+    selectedContentType?: any,
   ): Observable<any> {
     return this._instructorService?.getTopicTypes()?.pipe(
       switchMap((response: any) => {
@@ -966,23 +992,23 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
           this.course.previewVideoURL =
             courseInformationData?.get('previewPath').value;
           this.course.previewVideoVttContent = courseInformationData?.get(
-            'previewVideoVttContent'
+            'previewVideoVttContent',
           ).value;
           this.course.tags = courseId
             ? this.modifyCourseTags(
-                courseInformationData?.get('tagsArray').value
+                courseInformationData?.get('tagsArray').value,
               )
             : courseInformationData?.get('tagsArray').value;
           this.course.prerequisite = this.fetchPrerequisite(
-            courseInformationData?.get('prerequisite').value
+            courseInformationData?.get('prerequisite').value,
           );
           this.course.courseOutcomes = this.fetchCourseSummariesInfo(
-            courseInformationData?.get('courseSummaries').value
+            courseInformationData?.get('courseSummaries').value,
           );
           this.course.contentType = selectedContentType.toUpperCase();
           this.course.sections = this.createSections(
             sectionsData,
-            this.course?.courseType
+            this.course?.courseType,
           );
           // this.course.courseProgress = isActive
           //   ? 100
@@ -999,7 +1025,7 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
       catchError((error: any) => {
         console.log(error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -1037,13 +1063,13 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
 
   premiumCourseAvailable() {
     return this._http.get(
-      `${environment.baseUrl}course/premium-course-available`
+      `${environment.baseUrl}course/premium-course-available`,
     );
   }
 
   public deleteChat(courseId?: any, chatId?: any): Observable<any> {
     return this._http.delete(
-      `${environment.baseUrl}chat/delete?courseId=${courseId}&chatId=${chatId}`
+      `${environment.baseUrl}chat/delete?courseId=${courseId}&chatId=${chatId}`,
     );
   }
 
@@ -1054,20 +1080,20 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
       answers: {
         ans: string;
         isCorrectAnswer: boolean;
-      }[]
+      }[];
     }[];
     reportPrompt: string;
     topicTitle: string;
     timeZone: string;
     durationInMinutes: number;
   }): Observable<any> {
-    const quizQuestionDtos = body.quizQuestions.map(question => ({
+    const quizQuestionDtos = body.quizQuestions.map((question) => ({
       questionText: question.ques,
       explanation: question.explanation || '',
       quizQuestionAnwsers: question.answers.map((answer: any) => ({
         answer: answer.ans,
         isCorrectAnswer: answer.isCorrectAnswer,
-      }))
+      })),
     }));
 
     const payload = {
@@ -1075,8 +1101,12 @@ getInstructorQuizAttempt(quizId: number, email: string): Observable<any> {
       quizQuestionDtos: quizQuestionDtos,
     };
 
-    return this._http.post(`${environment.baseUrl}quiz/preview-report`, payload, {
-      responseType: 'text'
-    });
+    return this._http.post(
+      `${environment.baseUrl}quiz/preview-report`,
+      payload,
+      {
+        responseType: 'text',
+      },
+    );
   }
 }

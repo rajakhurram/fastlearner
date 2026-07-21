@@ -1,7 +1,6 @@
-import { environment } from "src/environments/environment.development";
+import { environment } from 'src/environments/environment.development';
 
 export const isProductionServer = environment.isProductionServer;
-
 
 export const cards = [
   {
@@ -43,7 +42,7 @@ export const instructorCards = [
     url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=hamza-farooq`,
     content: 'Machine Learning',
     flipContent:
-      'Hamza is an AI Lecturer at Stanford University and an Adjunct Faculty Member at UCLA. He is a Founder by day and a Professor by night, focusing on NLP and Multi-Modal Systems.',
+      'I am an Instructor at Stanford Continuing Studies and an Adjunct Faculty Member at UCLA. By day, I am a founder, and by night, I teach and conduct research focused on NLP and Multi-Modal Systems. I founded traversaal.ai to build scalable, customizable, and cost-efficient LLM solutions for enterprises. Before starting my entrepreneurial journey, I worked as a Research Manager at Google, where I contributed to advancing AI and machine learning technologies.',
     flipImage: '../../../../assets/images/instFlipImage1.png',
   },
   {
@@ -52,7 +51,7 @@ export const instructorCards = [
     url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=joseph-labrecque`,
     content: 'Creative Design',
     flipContent:
-      'Joseph Labrecque is a creative developer, designer, and educator with nearly two decades of experience creating expressive web, desktop, and mobile solutions. He joined the University of Colorado Boulder College of Media, Communication and Information as faculty with the Department of Advertising, Public Relations and Media Design in Autumn 2019. His teaching focuses on creative software',
+      'I am a creative developer, designer, and educator with nearly two decades of experience building innovative web, desktop, and mobile solutions. I joined the University of Colorado Boulder College of Media, Communication and Information in 2019 as a faculty member in the Department of Advertising, Public Relations and Media Design. My teaching focuses on creative software, digital workflows, user interaction, and design principles. Prior to joining CU Boulder, I served as adjunct faculty at the University of Denver and worked as a senior interactive software engineer, user interface developer, and digital media designer.',
     flipImage: '../../../../assets/images/instFlipImage5.png',
   },
   {
@@ -61,7 +60,7 @@ export const instructorCards = [
     url: `${environment.production ? (environment.isProductionServer ? 'https://fastlearner.ai' : 'https://staging.fastlearner.ai') : 'http://localhost:4200'}/user/profile?url=shweta-mogha`,
     content: 'SPHR, ACC, CPCC',
     flipContent:
-      'Global Human Resources and Talent Acquisition leader, passionate DEI expert, and ICF certified executive coach with extensive experience in leading people strategy at Meta, Amazon, and Airtel. Successfully spearheaded several high impact diversity & inclusion programs such as Return to Work for Women, Empowered Women of the World, Veterans hiring etc.',
+      'I am a Global Human Resources and Talent Acquisition leader, DEI expert, and ICF-certified executive coach with extensive experience leading people strategy at Meta, Amazon, and Airtel. Throughout my career, I have spearheaded high-impact diversity and inclusion initiatives, including Return to Work for Women, Empowered Women of the World, and Veterans Hiring programs. I have also led global change management initiatives focused on leadership development, competency frameworks, career pathing, 360-degree assessments, and employee engagement. My leadership development courses have been published on LinkedIn Learning, Skillsoft Percipio, and other learning platforms. I have worked across North America, Europe, India, Sri Lanka, Bangladesh, and Africa, supporting diverse teams and driving impactful people strategies.',
     flipImage: '../../../../assets/images/instFlipImage4.png',
   },
   {
@@ -221,7 +220,7 @@ export const assignpremium = [
   },
 ];
 
-export const aiGraderCards   = [
+export const aiGraderCards = [
   {
     imageUrl: '../../../../assets/images/static-1.webp',
     heading: 'Supports Handwriting & Scanned Copies',
@@ -229,19 +228,19 @@ export const aiGraderCards   = [
       'FastLearner’s AI grader recognizes typed and handwritten work, ensuring all students are included.',
   },
   {
-    imageUrl: '../../../../assets/images/static-2.png',
+    imageUrl: '../../../../assets/images/static-2-new.webp',
     heading: 'One-Click Grading for the Whole Class',
     content:
       'Grade dozens of student papers instantly with bulk AI grading, saving hours of manual effort for instructors.',
   },
   {
-    imageUrl: '../../../../assets/images/static-3.png',
+    imageUrl: '../../../../assets/images/static-3-new.webp',
     heading: 'Easily Export Grading Results to a Spreadsheet',
     content:
       'Export grades, feedback, and performance data to Excel or CSV files easily. Our AI grading tool is perfect for tracking academic performance.',
   },
   {
-    imageUrl: '../../../../assets/images/static-4.png',
+    imageUrl: '../../../../assets/images/static-4-new.webp',
     heading: 'Send Results Directly to Students Via Email',
     content:
       'FastLearner’s AI grading software automatically emails grades and feedback to students, streamlining communication and reporting.',

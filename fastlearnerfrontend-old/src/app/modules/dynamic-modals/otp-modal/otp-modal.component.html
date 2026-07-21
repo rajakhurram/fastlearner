@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="modal">
+    <h4>OTP Verification</h4>
+    <p>Please enter the {{ data?.otpLength }}-digit OTP code received in your email</p>
+    <ng-otp-input
+      (onInputChange)="onOtpChange($event)"
+      [config]="{ length: data?.otpLength, allowNumbersOnly: true }"
+      (keydown.enter)="onEnterKeyPress()"
+    ></ng-otp-input>
+    <div *ngIf="continueBtn" class="button-sign-up">
+      <button
+        *ngIf="continueBtn"
+        (click)="onClose()"
+        nz-button
+        id="signUpButton"
+        class="signup-form-button login-form-margin"
+        [class.continue-btn-disable]="otpcode.length !== data?.otpLength"
+        [disabled]="otpcode.length !== data?.otpLength"
+        [nzType]="'primary'"
+      >
+        Continue
+      </button>
+      <div *ngIf="showTimer" class="timer">
+        <span *ngIf="timeLeft > 9">00:{{ timeLeft }}</span>
+        <span *ngIf="timeLeft < 10">00:0{{ timeLeft }}</span>
+      </div>
+    </div>
+    <div *ngIf="resentButton" class="button-sign-up">
+      <button
+        *ngIf="resentButton"
+        (click)="resendOTP()"
+        nz-button
+        id="signUpButton"
+        class="signup-form-button login-form-margin"
+        [class.continue-btn-disable]="otpSend"
+        [disabled]="otpSend"
+        [nzType]="'primary'"
+      >
+        Resend OTP
+      </button>
+      <div *ngIf="showTimer" class="timer">
+        <span *ngIf="timeLeft > 9">00:{{ timeLeft }}</span>
+        <span *ngIf="timeLeft < 10">00:0{{ timeLeft }}</span>
+      </div>
+    </div>
+  </div>
+</div>

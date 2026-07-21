@@ -151,7 +151,7 @@ describe('CoPilotComponent', () => {
 
       expect(component.chatHistory[1]).toEqual({
         sender: 'bot',
-        text: 'Sorry, something went wrong.'
+        text: 'Sorry, something went wrong. Please check your connection and try again.',
       });
     });
 

@@ -30,14 +30,14 @@ export class AuthGuard
   constructor(
     private _router: Router,
     private _authService: AuthService,
-    private _cacheService: CacheService
+    private _cacheService: CacheService,
   ) {}
 
   private alreadyChecked: Set<string> = new Set();
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
@@ -46,7 +46,10 @@ export class AuthGuard
     const isLoggedIn = this._authService.isLoggedIn();
 
     if (isLoggedIn) {
-      // Prevent redirect if already on an auth page
+      // Allow ClassLink OAuth callback to finish before leaving auth routes.
+      if (state.url.startsWith('/auth') && this.isOAuthCallbackUrl()) {
+        return true;
+      }
       if (state.url.startsWith('/auth')) {
         return this._router.createUrlTree(['/']); // Redirect to home
       }
@@ -54,23 +57,36 @@ export class AuthGuard
     } else {
       // If not logged in, check if on the sign-in page
       if (
-        state.url === '/auth/sign-in' ||
-        state.url === '/auth/sign-up' ||
+        state.url.startsWith('/auth/sign-in') ||
+        state.url.startsWith('/auth/sign-up') ||
         state.url.includes('/auth/reset-password')
       ) {
         return true; // Allow access
       }
 
       // Save the intended URL before redirecting to sign-in
-      this._cacheService.saveInCache('redirectUrl', state.url);
+      if (!this.isOAuthCallbackUrl()) {
+        this._cacheService.saveInCache('redirectUrl', state.url);
+      }
 
       return this._router.createUrlTree(['/auth/sign-in']); // Redirect to sign-in
     }
   }
 
+  private isOAuthCallbackUrl(): boolean {
+    const hash = window.location.hash || '';
+    const search = window.location.search || '';
+    return (
+      hash.includes('token=') ||
+      hash.includes('error=') ||
+      search.includes('token=') ||
+      search.includes('error=')
+    );
+  }
+
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
@@ -82,7 +98,7 @@ export class AuthGuard
     component: unknown,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
-    nextState?: RouterStateSnapshot
+    nextState?: RouterStateSnapshot,
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
@@ -92,7 +108,7 @@ export class AuthGuard
   }
   canMatch(
     route: Route,
-    segments: UrlSegment[]
+    segments: UrlSegment[],
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
@@ -102,7 +118,7 @@ export class AuthGuard
   }
   canLoad(
     route: Route,
-    segments: UrlSegment[]
+    segments: UrlSegment[],
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
@@ -140,7 +156,10 @@ export class AuthGuard
       // Save the current path before navigating to sign-in
       //const path = segments.map((segment) => segment?.path).join('/');
       const path = segments.map((segment) => segment?.path).join('/');
-      this._cacheService.saveInCache('redirectUrl', fullUrl.pathname+fullUrl.search);
+      this._cacheService.saveInCache(
+        'redirectUrl',
+        fullUrl.pathname + fullUrl.search,
+      );
 
       // Navigate to sign-in
       return this._router.createUrlTree(['/auth/sign-in']);

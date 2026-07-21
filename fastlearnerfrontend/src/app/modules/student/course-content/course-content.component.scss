@@ -841,9 +841,18 @@
 
 .article-player {
   min-height: 550px;
+  height: 550px;
   width: 100%;
-  max-height: 550px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  app-article {
+    display: block;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+  }
 }
 
 .show-more-button-container {

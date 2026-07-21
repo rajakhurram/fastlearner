@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { LandingPageComponent } from './landing-page.component';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CacheService } from 'src/app/core/services/cache.service';
@@ -22,7 +22,31 @@ import {
   NO_ERRORS_SCHEMA,
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { query } from '@angular/animations';
+
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | Document | null = null;
+  readonly rootMargin = '';
+  readonly thresholds: ReadonlyArray<number> = [];
+
+  observe = jasmine.createSpy('observe');
+  disconnect = jasmine.createSpy('disconnect');
+  unobserve = jasmine.createSpy('unobserve');
+  takeRecords = jasmine.createSpy('takeRecords').and.returnValue([]);
+
+  constructor(private callback: IntersectionObserverCallback) {}
+
+  triggerIntersect(sectionId: string) {
+    this.callback(
+      [
+        {
+          isIntersecting: true,
+          target: { id: sectionId },
+        } as IntersectionObserverEntry,
+      ],
+      this,
+    );
+  }
+}
 
 describe('LandingPageComponent', () => {
   let component: LandingPageComponent;
@@ -35,6 +59,7 @@ describe('LandingPageComponent', () => {
   let router: Router;
   let socialAuthService: jasmine.SpyObj<SocialAuthService>;
   let de: DebugElement;
+  let intersectionObserverInstance: MockIntersectionObserver;
 
   const mockCourseList = [
     {
@@ -269,12 +294,33 @@ describe('LandingPageComponent', () => {
   ];
 
   beforeEach(async () => {
+    intersectionObserverInstance = null as unknown as MockIntersectionObserver;
+
+    (window as any).IntersectionObserver = class extends (
+      MockIntersectionObserver
+    ) {
+      constructor(callback: IntersectionObserverCallback) {
+        super(callback);
+        intersectionObserverInstance = this;
+      }
+    };
+
+    (window as any).requestIdleCallback = (cb: () => void) => {
+      setTimeout(cb, 0);
+      return 0;
+    };
+
+    (window as any).requestAnimationFrame = (cb: FrameRequestCallback) =>
+      setTimeout(cb, 0);
+
+    sessionStorage.clear();
+
     socialAuthService = jasmine.createSpyObj(
       'SocialAuthService',
       ['signIn', 'signOut', 'authState'],
       {
         authState: of(null),
-      }
+      },
     );
 
     await TestBed.configureTestingModule({
@@ -306,9 +352,9 @@ describe('LandingPageComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
+    authService = TestBed.inject(AuthService);
     fixture = TestBed.createComponent(LandingPageComponent);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService);
     courseService = TestBed.inject(CourseService);
     messageService = TestBed.inject(MessageService);
     cacheService = TestBed.inject(CacheService);
@@ -319,14 +365,201 @@ describe('LandingPageComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    sessionStorage.clear();
+  });
+
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getCategoryList on initialization', () => {
-    spyOn(component, 'getCategoryList').and.callThrough();
+  it('should not fetch categories on initialization', () => {
+    spyOn(component, 'getCategoryList');
     component.ngOnInit();
-    expect(component.getCategoryList).toHaveBeenCalled();
+    expect(component.getCategoryList).not.toHaveBeenCalled();
+  });
+
+  it('should load pending section from sessionStorage on initialization', () => {
+    sessionStorage.setItem('sectionId', 'test_center');
+    const freshFixture = TestBed.createComponent(LandingPageComponent);
+    const freshComponent = freshFixture.componentInstance;
+    spyOn(freshComponent, 'getTest');
+
+    freshFixture.detectChanges();
+
+    expect(freshComponent.getTest).toHaveBeenCalled();
+    expect(freshComponent.sectionsLoaded['test_center']).toBeTrue();
+  });
+
+  describe('pending section scroll', () => {
+    it('should scroll to pending section after API completes', fakeAsync(() => {
+      sessionStorage.setItem('sectionId', 'test_center');
+      spyOn(courseService, 'getTest').and.returnValue(
+        of({
+          status: 200,
+          data: { data: [], pages: 0, totalElements: 0, nextPage: null },
+        }),
+      );
+
+      const freshFixture = TestBed.createComponent(LandingPageComponent);
+      const freshComponent = freshFixture.componentInstance;
+      spyOn(freshComponent, 'scrollToSpecificSection');
+
+      freshFixture.detectChanges();
+      tick(800);
+
+      expect(freshComponent.scrollToSpecificSection).toHaveBeenCalledWith(
+        'test_center',
+      );
+      expect(sessionStorage.getItem('sectionId')).toBeNull();
+    }));
+
+    it('should wait for sections above before scrolling to about_us', fakeAsync(() => {
+      sessionStorage.setItem('sectionId', 'about_us');
+      spyOn(courseService, 'getTest').and.returnValue(
+        of({
+          status: 200,
+          data: {
+            data: [{ courseId: 1 }],
+            pages: 1,
+            totalElements: 1,
+            nextPage: null,
+          },
+        }),
+      );
+      spyOn(courseService, 'getTrendingCourses').and.returnValue(
+        of({
+          status: 200,
+          data: {
+            data: [{ courseId: 2 }],
+            pages: 1,
+            totalElements: 1,
+            nextPage: null,
+          },
+        }),
+      );
+
+      const freshFixture = TestBed.createComponent(LandingPageComponent);
+      const freshComponent = freshFixture.componentInstance;
+      spyOn(freshComponent, 'scrollToSpecificSection');
+
+      freshFixture.detectChanges();
+      tick(800);
+
+      expect(courseService.getTest).toHaveBeenCalled();
+      expect(courseService.getTrendingCourses).toHaveBeenCalled();
+      expect(freshComponent.scrollToSpecificSection).toHaveBeenCalledWith(
+        'about_us',
+      );
+    }));
+
+    it('should not scroll when there is no pending section', fakeAsync(() => {
+      spyOn(courseService, 'getTest').and.returnValue(
+        of({
+          status: 200,
+          data: { data: [], pages: 0, totalElements: 0, nextPage: null },
+        }),
+      );
+      spyOn(component, 'scrollToSpecificSection');
+
+      component.getTest(component.directionEnum.INITIAL);
+      tick();
+
+      expect(component.scrollToSpecificSection).not.toHaveBeenCalled();
+    }));
+
+    it('should not scroll twice for the same pending section', fakeAsync(() => {
+      spyOn(component, 'scrollToSpecificSection');
+      (component as any).pendingScrollSectionId = 'about_us';
+      (component as any).sectionsPendingForScroll = new Set();
+
+      (component as any).tryScrollToPendingSection();
+      tick(800);
+
+      expect((component as any).scrollDone).toBeTrue();
+      const callCount = (
+        component.scrollToSpecificSection as jasmine.Spy
+      ).calls.count();
+      expect(callCount).toBeGreaterThan(0);
+
+      (component as any).tryScrollToPendingSection();
+      tick(800);
+
+      expect(
+        (component.scrollToSpecificSection as jasmine.Spy).calls.count(),
+      ).toBe(callCount);
+    }));
+  });
+
+  describe('lazy section loading', () => {
+    it('should observe landing page sections after view init', () => {
+      expect(intersectionObserverInstance.observe).toHaveBeenCalled();
+    });
+
+    it('should load trending courses when about_us section intersects', () => {
+      spyOn(component, 'getTrendingCourses');
+      intersectionObserverInstance.triggerIntersect('about_us');
+      expect(component.sectionsLoaded['about_us']).toBeTrue();
+      expect(component.getTrendingCourses).toHaveBeenCalled();
+    });
+
+    it('should load categories and courses when courses_section intersects', () => {
+      spyOn(component, 'getCategoryList');
+      spyOn(component, 'getCourseListByCategory');
+      intersectionObserverInstance.triggerIntersect('courses_section');
+      expect(component.getCategoryList).toHaveBeenCalled();
+      expect(component.getCourseListByCategory).toHaveBeenCalled();
+    });
+
+    it('should not fetch categories again when already loaded', () => {
+      component.categoryList = [{ id: 1, name: 'Design' }];
+      spyOn(component, 'getCategoryList');
+      spyOn(component, 'getCourseListByCategory');
+      component.loadSection('courses_section');
+      expect(component.getCategoryList).not.toHaveBeenCalled();
+      expect(component.getCourseListByCategory).toHaveBeenCalled();
+    });
+
+    it('should not load the same section twice', () => {
+      spyOn(component, 'getPremiumCourses');
+      component.loadSection('premium_courses');
+      component.loadSection('premium_courses');
+      expect(component.getPremiumCourses).toHaveBeenCalledTimes(1);
+    });
+
+    it('should mark static sections as loaded without API calls', () => {
+      spyOn(component, 'getTest');
+      component.loadSection('faq_container');
+      expect(component.sectionsLoaded['faq_container']).toBeTrue();
+      expect(component.getTest).not.toHaveBeenCalled();
+    });
+
+    it('should refresh only loaded sections when auth state changes', () => {
+      spyOn(component, 'getTrendingCourses');
+      spyOn(component, 'getPremiumCourses');
+      component.sectionsLoaded['about_us'] = true;
+      authService.getCategories(true);
+      expect(component.getTrendingCourses).toHaveBeenCalled();
+      expect(component.getPremiumCourses).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('banner animation', () => {
+    it('should enable banner animation component on desktop', () => {
+      component.setScreenWidth(1024);
+      expect(component.mobileView).toBeFalse();
+    });
+
+    it('should use static banner image only on mobile', () => {
+      component.setScreenWidth(375);
+      expect(component.mobileView).toBeTrue();
+    });
+  });
+
+  it('should disconnect section observer on destroy', () => {
+    const disconnectSpy = intersectionObserverInstance.disconnect;
+    component.ngOnDestroy();
+    expect(disconnectSpy).toHaveBeenCalled();
   });
 
   it('should update visible courses correctly', () => {
@@ -386,29 +619,29 @@ describe('LandingPageComponent', () => {
 
   it('should subscribe to newsletter', () => {
     spyOn(sharedService, 'subscribeNewsLetter').and.returnValue(
-      of({ message: 'Subscribed successfully' })
+      of({ message: 'Subscribed successfully' }),
     );
     spyOn(messageService, 'success').and.callThrough();
     component.subscribeEmail = 'test@example.com';
     component.emailValid = true;
     component.subscribeNewsLetter();
     expect(sharedService.subscribeNewsLetter).toHaveBeenCalledWith(
-      'test@example.com'
+      'test@example.com',
     );
     expect(messageService.success).toHaveBeenCalledWith(
-      'Subscribed successfully'
+      'Subscribed successfully',
     );
   });
 
   it('should handle course list retrieval by category', () => {
     spyOn(courseService, 'getCoursesByCategory').and.returnValue(
-      of({ status: 200, data: { pages: 1, data: mockCourseList } })
+      of({ status: 200, data: { pages: 1, data: mockCourseList } }),
     );
 
     component.getCourseListByCategory();
 
     expect(courseService.getCoursesByCategory).toHaveBeenCalledWith(
-      component.payLoad
+      component.payLoad,
     );
     expect(component.courseList).toEqual(mockCourseList);
 
@@ -418,7 +651,7 @@ describe('LandingPageComponent', () => {
 
   it('should toggle favorite status of a course', () => {
     spyOn(courseService, 'addOrRemoveCourseToFavorite').and.returnValue(
-      of({ status: 200, message: 'Success' })
+      of({ status: 200, message: 'Success' }),
     );
     spyOn(sharedService, 'updateFavCourseMenu').and.callThrough();
     component.toggleFavoriteCourse(1, false);
@@ -426,18 +659,11 @@ describe('LandingPageComponent', () => {
     expect(sharedService.updateFavCourseMenu).toHaveBeenCalled();
   });
 
-  it('should scroll to courses section', () => {
-    const mockElement = {
-      scrollIntoView: jasmine.createSpy('scrollIntoView'),
-    } as unknown as HTMLElement;
-
-    spyOn(document, 'getElementById').and.returnValue(mockElement);
-
-    component.scrollToCourseSection();
-
-    expect(document.getElementById).toHaveBeenCalledWith('courses-section');
-
-    expect(mockElement.scrollIntoView).toHaveBeenCalled();
+  it('should load courses section', () => {
+    spyOn(component, 'getCourseListByCategory');
+    component.loadSection('courses_section');
+    expect(component.sectionsLoaded['courses_section']).toBeTrue();
+    expect(component.getCourseListByCategory).toHaveBeenCalled();
   });
 
   it('should handle scrolling left and right', () => {
@@ -466,13 +692,13 @@ describe('LandingPageComponent', () => {
 
   it('should handle errors when retrieving course list by category', () => {
     spyOn(courseService, 'getCoursesByCategory').and.returnValue(
-      of({ status: 500, error: 'Internal Server Error' })
+      of({ status: 500, error: 'Internal Server Error' }),
     );
 
     component.getCourseListByCategory();
 
     expect(courseService.getCoursesByCategory).toHaveBeenCalledWith(
-      component.payLoad
+      component.payLoad,
     );
     expect(component.courseList).toEqual([]);
   });
@@ -494,7 +720,7 @@ describe('LandingPageComponent', () => {
 
   it('should handle API errors when toggling favorite status of a course', () => {
     spyOn(courseService, 'addOrRemoveCourseToFavorite').and.returnValue(
-      of({ status: 500, message: 'Error toggling favorite' })
+      of({ status: 500, message: 'Error toggling favorite' }),
     );
     spyOn(sharedService, 'updateFavCourseMenu').and.callThrough();
 
@@ -548,7 +774,7 @@ describe('LandingPageComponent', () => {
 
       expect(component['_cacheService'].saveInCache).toHaveBeenCalledWith(
         'redirectUrl',
-        'student/course-details/' + title
+        'student/course-details/' + title,
       );
       expect(component['_router'].navigate).toHaveBeenCalledWith([
         'auth/sign-in',
@@ -577,7 +803,7 @@ describe('LandingPageComponent', () => {
         ['student/course-details', 'Course Title'],
         {
           fragment: 'course-content',
-        }
+        },
       );
     });
   });
@@ -589,7 +815,7 @@ describe('LandingPageComponent', () => {
         ['student/courses'],
         {
           queryParams: { selection: 'CATEGORY_COURSES' },
-        }
+        },
       );
     });
   });
@@ -603,17 +829,17 @@ describe('LandingPageComponent', () => {
         ['user/profile'],
         {
           queryParams: { url: profileUrl },
-        }
+        },
       );
     });
   });
-  describe('scrollToSection', () => {
-    it('should scroll to the element with ID "courses-section"', () => {});
-
-    it('should not throw an error if the element is not found', () => {
+  describe('scrollToSpecificSection', () => {
+    it('should not throw when the target element is missing', () => {
       spyOn(document, 'getElementById').and.returnValue(null);
 
-      expect(() => component.scrollToSection()).not.toThrow();
+      expect(() =>
+        component.scrollToSpecificSection('courses-section'),
+      ).not.toThrow();
     });
   });
   describe('scrollToBottom', () => {
@@ -647,21 +873,21 @@ describe('LandingPageComponent', () => {
     it('should navigate to the URL from cache and remove it from cache', () => {
       const redirectUrl = 'some-url';
       spyOn(component['_cacheService'], 'getDataFromCache').and.returnValue(
-        redirectUrl
+        redirectUrl,
       );
       spyOn(component['_cacheService'], 'removeFromCache');
 
       component.checkStateManagement();
 
       expect(component['_cacheService'].removeFromCache).toHaveBeenCalledWith(
-        'redirectUrl'
+        'redirectUrl',
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith(redirectUrl);
     });
 
     it('should not navigate if no redirect URL is present in cache', () => {
       spyOn(component['_cacheService'], 'getDataFromCache').and.returnValue(
-        null
+        null,
       );
 
       component.checkStateManagement();
@@ -687,7 +913,7 @@ describe('LandingPageComponent', () => {
       component.expand(faq, event as any);
 
       expect(
-        event.currentTarget.nextSibling.classList.add
+        event.currentTarget.nextSibling.classList.add,
       ).toHaveBeenCalledWith('expanded');
       expect(faq.isExpanded).toBeTrue();
     });
@@ -709,9 +935,537 @@ describe('LandingPageComponent', () => {
       component.expand(faq, event as any);
 
       expect(
-        event.currentTarget.nextSibling.classList.remove
+        event.currentTarget.nextSibling.classList.remove,
       ).toHaveBeenCalledWith('expanded');
       expect(faq.isExpanded).toBeFalse();
+    });
+  });
+
+  describe('Phase 1 coverage: paginated sections and loaders', () => {
+    const successList = (
+      items: any[] = [{ courseId: 1, courseDuration: 3661 }],
+    ) => ({
+      status: 200,
+      data: {
+        data: items,
+        nextPage: 1,
+        pages: 3,
+        totalElements: items.length,
+      },
+    });
+
+    beforeEach(() => {
+      spyOn(component, 'convertSecondsToHoursAndMinutes').and.callThrough();
+    });
+
+    it('should load new courses on initial fetch', () => {
+      spyOn(courseService, 'getNewCourses').and.returnValue(of(successList()));
+
+      component.getNewCourses(component.directionEnum.INITIAL);
+
+      expect(courseService.getNewCourses).toHaveBeenCalled();
+      expect(component.newCourses.length).toBe(1);
+      expect(component.totalNewCoursesPages).toBe(3);
+    });
+
+    it('should paginate new courses to the right', () => {
+      component.totalNewCoursesPages = 3;
+      component.currentNewPage = 0;
+      spyOn(courseService, 'getNewCourses').and.returnValue(of(successList()));
+
+      component.getNewCourses(component.directionEnum.RIGHT);
+
+      expect(component.currentNewPage).toBe(1);
+    });
+
+    it('should skip new course pagination before pages are known', () => {
+      component.totalNewCoursesPages = 0;
+      spyOn(courseService, 'getNewCourses');
+
+      component.getNewCourses(component.directionEnum.RIGHT);
+
+      expect(courseService.getNewCourses).not.toHaveBeenCalled();
+    });
+
+    it('should clear new courses on 404 response', () => {
+      spyOn(courseService, 'getNewCourses').and.returnValue(
+        of({ status: 404 }),
+      );
+      component.newCourses = [{ courseId: 1 }] as any;
+
+      component.getNewCourses(component.directionEnum.INITIAL);
+
+      expect(component.newCourses).toEqual([]);
+    });
+
+    it('should load tests section', () => {
+      spyOn(courseService, 'getTest').and.returnValue(of(successList()));
+
+      component.getTest(component.directionEnum.INITIAL);
+
+      expect(component.tests.length).toBe(1);
+      expect(component.totalTestPages).toBe(3);
+    });
+
+    it('should load instructors when next page exists', () => {
+      spyOn(courseService, 'getInstructors').and.returnValue(
+        of(successList([{ instructorId: 1, courseDuration: 120 }])),
+      );
+
+      component.getInstructors(component.directionEnum.INITIAL);
+
+      expect(component.instructorList.length).toBe(1);
+    });
+
+    it('should skip instructor update when next page is null', () => {
+      spyOn(courseService, 'getInstructors').and.returnValue(
+        of({
+          status: 200,
+          data: { data: [{ instructorId: 1 }], nextPage: null, pages: 1 },
+        }),
+      );
+      component.instructorList = [];
+
+      component.getInstructors(component.directionEnum.INITIAL);
+
+      expect(component.instructorList).toEqual([]);
+    });
+
+    it('should load trending courses', () => {
+      spyOn(courseService, 'getTrendingCourses').and.returnValue(
+        of(successList()),
+      );
+
+      component.getTrendingCourses(component.directionEnum.INITIAL);
+
+      expect(component.trendingCourses.length).toBe(1);
+    });
+
+    it('should load free courses', () => {
+      spyOn(courseService, 'getFreeCourses').and.returnValue(of(successList()));
+
+      component.getFreeCourses(component.directionEnum.INITIAL);
+
+      expect(component.freeCourses.length).toBe(1);
+    });
+
+    it('should load premium courses', () => {
+      spyOn(courseService, 'getPremiumCourses').and.returnValue(
+        of(successList()),
+      );
+
+      component.getPremiumCourses(component.directionEnum.INITIAL);
+
+      expect(component.premiumCourses.length).toBe(1);
+    });
+
+    it('should clear premium courses on fetch error', () => {
+      spyOn(courseService, 'getPremiumCourses').and.returnValue(
+        throwError(() => ({ error: { status: 404 } })),
+      );
+      component.premiumCourses = [{ courseId: 1 }] as any;
+
+      component.getPremiumCourses(component.directionEnum.INITIAL);
+
+      expect(component.premiumCourses).toEqual([]);
+    });
+
+    it('should refresh all loaded course carousels', () => {
+      const initial = component.directionEnum.INITIAL;
+      const testSpy = spyOn(component, 'getTest');
+      const premiumSpy = spyOn(component, 'getPremiumCourses');
+      const trendingSpy = spyOn(component, 'getTrendingCourses');
+      const freeSpy = spyOn(component, 'getFreeCourses');
+      const categorySpy = spyOn(component, 'getCourseListByCategory');
+      const newSpy = spyOn(component, 'getNewCourses');
+
+      component.sectionsLoaded['test_center'] = true;
+      component.sectionsLoaded['premium_courses'] = true;
+      component.sectionsLoaded['about_us'] = true;
+      component.sectionsLoaded['free_courses'] = true;
+      component.sectionsLoaded['courses_section'] = true;
+      component.sectionsLoaded['new_courses'] = true;
+
+      (component as any).refreshLoadedSections();
+
+      expect(testSpy).toHaveBeenCalledWith(initial);
+      expect(premiumSpy).toHaveBeenCalledWith(initial);
+      expect(trendingSpy).toHaveBeenCalledWith(initial);
+      expect(freeSpy).toHaveBeenCalledWith(initial);
+      expect(categorySpy).toHaveBeenCalled();
+      expect(newSpy).toHaveBeenCalledWith(initial);
+    });
+
+    it('should lazy-load premium section', () => {
+      spyOn(component, 'getPremiumCourses');
+
+      component.loadSection('premium_courses');
+
+      expect(component.sectionsLoaded['premium_courses']).toBeTrue();
+      expect(component.getPremiumCourses).toHaveBeenCalledWith(
+        component.directionEnum.INITIAL,
+      );
+    });
+
+    it('should lazy-load new courses section', () => {
+      spyOn(component, 'getNewCourses');
+
+      component.loadSection('new_courses');
+
+      expect(component.getNewCourses).toHaveBeenCalled();
+    });
+
+    it('should lazy-load test center section', () => {
+      spyOn(component, 'getTest');
+
+      component.loadSection('test_center');
+
+      expect(component.getTest).toHaveBeenCalled();
+    });
+
+    it('should mark sections as loaded via loadSection', () => {
+      spyOn(component, 'getPremiumCourses');
+      spyOn(component, 'getTrendingCourses');
+      spyOn(component, 'getFreeCourses');
+      spyOn(component, 'getCourseListByCategory');
+      spyOn(component, 'getNewCourses');
+      spyOn(component, 'getTest');
+
+      component.loadSection('banner_container');
+      component.loadSection('premium_courses');
+      component.loadSection('about_us');
+      component.loadSection('free_courses');
+      component.loadSection('about_us_bg_light');
+      component.loadSection('courses_section');
+      component.loadSection('about_us_empowering');
+      component.loadSection('new_courses');
+      component.loadSection('student_pick');
+      component.loadSection('faq_container');
+
+      expect(component.sectionsLoaded['banner_container']).toBeTrue();
+      expect(component.sectionsLoaded['premium_courses']).toBeTrue();
+      expect(component.sectionsLoaded['faq_container']).toBeTrue();
+      expect(component.getPremiumCourses).toHaveBeenCalled();
+      expect(component.getTrendingCourses).toHaveBeenCalled();
+      expect(component.getFreeCourses).toHaveBeenCalled();
+      expect(component.getCourseListByCategory).toHaveBeenCalled();
+      expect(component.getNewCourses).toHaveBeenCalled();
+      expect(component.getTest).not.toHaveBeenCalled();
+    });
+
+    it('should route logged-in users to course list from start now', () => {
+      component.isLoggedIn = true;
+      spyOn(component, 'routeToCourseList');
+
+      component.handleStartNowClick();
+
+      expect(component.routeToCourseList).toHaveBeenCalled();
+    });
+
+    it('should cache redirect for guests on start now', () => {
+      component.isLoggedIn = false;
+      spyOn(cacheService, 'saveInCache');
+      spyOn(component, 'routeToSignUpScreen');
+
+      component.handleStartNowClick();
+
+      expect(cacheService.saveInCache).toHaveBeenCalledWith(
+        'redirectUrl',
+        '/student/courses',
+      );
+      expect(component.routeToSignUpScreen).toHaveBeenCalled();
+    });
+
+    it('should navigate to test course list', () => {
+      component.routeToCourseList('TEST', 'section-1');
+
+      expect(sessionStorage.getItem('sectionId')).toBe('section-1');
+      expect(router.navigate).toHaveBeenCalledWith(['student/courses'], {
+        queryParams: { contentType: 'TEST' },
+      });
+    });
+
+    it('should navigate external links', () => {
+      spyOn(window, 'open');
+      component.routeToLink('https://example.com');
+      expect(window.open).toHaveBeenCalledWith('https://example.com', '_blank');
+    });
+
+    it('should update login button label from auth state', () => {
+      spyOn(authService, 'isLoggedIn').and.returnValue(true);
+
+      component.isUserLoggedIn();
+
+      expect(component.isLoggedIn).toBeTrue();
+      expect(component.courseButtonName).toBe('Start Learning');
+    });
+
+    it('should format course durations', () => {
+      expect(component.convertSecondsToHoursAndMinutes(0)).toBe('0 minutes');
+      expect(component.convertSecondsToHoursAndMinutes(3661)).toContain('hour');
+    });
+
+    it('should set cards to show and sync page sizes', () => {
+      component.setCardsToShow(3);
+      expect(component.cardsToShow).toBe(3);
+      expect(component.freePageSize).toBe(3);
+    });
+
+    it('should derive card count from screen width', () => {
+      component.setScreenWidth(1800);
+      expect(component.cardsToShow).toBe(4);
+      component.setScreenWidth(600);
+      expect(component.cardsToShow).toBe(1);
+      expect(component.mobileView).toBeTrue();
+    });
+
+    it('should reject emails longer than 255 characters', () => {
+      component.validateEmail({
+        target: { value: 'a'.repeat(256) + '@mail.com' },
+      });
+      expect(component.emailValid).toBeFalse();
+    });
+
+    it('should scroll to section when element exists', () => {
+      const el = document.createElement('div');
+      el.id = 'courses-section';
+      document.body.appendChild(el);
+      spyOn(el, 'getBoundingClientRect').and.returnValue({
+        top: 200,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: 0,
+        height: 0,
+        x: 0,
+        y: 200,
+        toJSON: () => ({}),
+      } as DOMRect);
+      const scrollToSpy = spyOn(window, 'scrollTo');
+
+      component.scrollToSpecificSection('courses-section');
+
+      expect(scrollToSpy.calls.count()).toBe(1);
+      expect(scrollToSpy.calls.mostRecent().args[0] as ScrollToOptions).toEqual(
+        {
+          top: 200 + window.scrollY - 80,
+          behavior: 'auto',
+        },
+      );
+      document.body.removeChild(el);
+    });
+
+    it('should prioritize selected creators in category list', () => {
+      spyOn(courseService, 'getCoursesByCategory').and.returnValue(
+        of({
+          status: 200,
+          data: {
+            data: [
+              { creatorId: 1, courseId: 1, courseDuration: 60 },
+              { creatorId: 40, courseId: 2, courseDuration: 120 },
+            ],
+            pages: 1,
+          },
+        }),
+      );
+
+      component.getCourseListByCategory();
+
+      expect(component.courseList[0].creatorId).toBe(40);
+    });
+  });
+
+  describe('Phase 1 coverage batch 2', () => {
+    const successList = (
+      items: any[] = [{ courseId: 1, courseDuration: 3661 }],
+    ) => ({
+      status: 200,
+      data: {
+        data: items,
+        nextPage: 1,
+        pages: 3,
+        totalElements: items.length,
+      },
+    });
+
+    beforeEach(() => {
+      sessionStorage.clear();
+    });
+
+    it('should paginate trending courses to the right', () => {
+      component.totalTrendingCoursesPages = 3;
+      component.currentTrendingPage = 0;
+      spyOn(courseService, 'getTrendingCourses').and.returnValue(
+        of(successList()),
+      );
+
+      component.getTrendingCourses(component.directionEnum.RIGHT);
+
+      expect(component.currentTrendingPage).toBe(1);
+      expect(courseService.getTrendingCourses).toHaveBeenCalled();
+    });
+
+    it('should paginate trending courses to the left', () => {
+      component.totalTrendingCoursesPages = 3;
+      component.currentTrendingPage = 2;
+      spyOn(courseService, 'getTrendingCourses').and.returnValue(
+        of(successList()),
+      );
+
+      component.getTrendingCourses(component.directionEnum.LEFT);
+
+      expect(component.currentTrendingPage).toBe(1);
+    });
+
+    it('should skip trending pagination before total pages are known', () => {
+      component.totalTrendingCoursesPages = 0;
+      spyOn(courseService, 'getTrendingCourses');
+
+      component.getTrendingCourses(component.directionEnum.RIGHT);
+
+      expect(courseService.getTrendingCourses).not.toHaveBeenCalled();
+    });
+
+    it('should clear trending courses on 404 status response', () => {
+      spyOn(courseService, 'getTrendingCourses').and.returnValue(
+        of({ status: 404 }),
+      );
+      component.trendingCourses = [{ courseId: 1 }] as any;
+
+      component.getTrendingCourses(component.directionEnum.INITIAL);
+
+      expect(component.trendingCourses).toEqual([]);
+    });
+
+    it('should clear trending courses on 404 API error', () => {
+      spyOn(courseService, 'getTrendingCourses').and.returnValue(
+        throwError(() => ({ error: { status: 404 } })),
+      );
+      component.trendingCourses = [{ courseId: 1 }] as any;
+
+      component.getTrendingCourses(component.directionEnum.INITIAL);
+
+      expect(component.trendingCourses).toEqual([]);
+    });
+
+    it('should load free courses on initial fetch', () => {
+      spyOn(courseService, 'getFreeCourses').and.returnValue(of(successList()));
+
+      component.getFreeCourses(component.directionEnum.INITIAL);
+
+      expect(component.freeCourses.length).toBe(1);
+      expect(component.totalFreeCoursesPages).toBe(3);
+    });
+
+    it('should paginate free courses to the right', () => {
+      component.totalFreeCoursesPages = 3;
+      component.currentFreePage = 0;
+      spyOn(courseService, 'getFreeCourses').and.returnValue(of(successList()));
+
+      component.getFreeCourses(component.directionEnum.RIGHT);
+
+      expect(component.currentFreePage).toBe(1);
+    });
+
+    it('should clear free courses on 404 API error', () => {
+      spyOn(courseService, 'getFreeCourses').and.returnValue(
+        throwError(() => ({ error: { status: 404 } })),
+      );
+      component.freeCourses = [{ courseId: 1 }] as any;
+
+      component.getFreeCourses(component.directionEnum.INITIAL);
+
+      expect(component.freeCourses).toEqual([]);
+    });
+
+    it('should update login state when navbar auth changes', () => {
+      spyOn(authService, 'isLoggedIn').and.returnValue(true);
+
+      component.listenNavbarState();
+      authService.changeNavState(true);
+
+      expect(component.isLoggedIn).toBeTrue();
+    });
+
+    it('should refetch courses when category refresh signal fires', fakeAsync(() => {
+      spyOn(component, 'getTrendingCourses');
+      component.sectionsLoaded['about_us'] = true;
+
+      authService.getCategories(true);
+
+      expect(component.getTrendingCourses).toHaveBeenCalled();
+    }));
+
+    it('should refetch courses on refresh token signal when state is true', () => {
+      spyOn(component, 'getTrendingCourses');
+      component.sectionsLoaded['about_us'] = true;
+
+      authService.getCategories(true);
+
+      expect(component.getTrendingCourses).toHaveBeenCalled();
+    });
+
+    it('should refetch courses on refresh token signal when state is false', () => {
+      spyOn(component, 'getTrendingCourses');
+      component.sectionsLoaded['about_us'] = true;
+
+      authService.getCategories(false);
+
+      expect(component.getTrendingCourses).toHaveBeenCalled();
+    });
+
+    it('should scroll category scroller left', () => {
+      const mockScrollBy = jasmine.createSpy('scrollBy');
+      component.scrollerContent.nativeElement = {
+        parentElement: { scrollBy: mockScrollBy },
+      };
+
+      component.scrollLeft();
+
+      expect(mockScrollBy).toHaveBeenCalledWith({
+        left: -200,
+        behavior: 'smooth',
+      });
+    });
+
+    it('should scroll category scroller right', () => {
+      const mockScrollBy = jasmine.createSpy('scrollBy');
+      component.scrollerContent.nativeElement = {
+        parentElement: { scrollBy: mockScrollBy },
+      };
+
+      component.scrollRight();
+
+      expect(mockScrollBy).toHaveBeenCalledWith({
+        left: 200,
+        behavior: 'smooth',
+      });
+    });
+
+    it('should navigate to welcome instructor page', () => {
+      component.routeToInstructorWelcomePage();
+
+      expect(router.navigate).toHaveBeenCalledWith(['welcome-instructor']);
+    });
+
+    it('should set emptyEmail when newsletter email is missing', () => {
+      component.subscribeEmail = '';
+      spyOn(sharedService, 'subscribeNewsLetter');
+
+      component.subscribeNewsLetter();
+
+      expect(component.emptyEmail).toBeTrue();
+      expect(sharedService.subscribeNewsLetter).not.toHaveBeenCalled();
+    });
+
+    it('should handle getCategoryList API error without throwing', () => {
+      spyOn(courseService, 'getCourseCategory').and.returnValue(
+        throwError(() => new Error('server error')),
+      );
+      component.categoryList = [{ id: 1 }] as any;
+
+      expect(() => component.getCategoryList()).not.toThrow();
+      expect(component.categoryList).toEqual([{ id: 1 }]);
     });
   });
 });

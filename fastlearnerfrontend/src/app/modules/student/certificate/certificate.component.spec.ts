@@ -19,6 +19,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AntDesignModule } from 'src/app/ui-library/ant-design/ant-design.module';
+import { environment } from 'src/environments/environment';
 
 describe('CertificateComponent', () => {
   let component: CertificateComponent;
@@ -115,7 +116,7 @@ describe('CertificateComponent', () => {
       nzViewContainerRef: component['_viewContainerRef'],
       nzComponentParams: {
         data: null,
-        url: `https://fastlearner.ai/student/verify-certificate/${component.uuid}`,
+        url: `${environment.basePath}student/verify-certificate/${component.uuid}`,
         title: 'Share Certificate',
         label: 'Share Certificate URL',
       },

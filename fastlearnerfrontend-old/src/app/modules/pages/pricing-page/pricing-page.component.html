@@ -1,0 +1,721 @@
+<div class="container">
+  <div class="subscription-plan-container" id="subscription">
+    <nz-card [nzBordered]="false" class="card">
+      <div class="subscription-header">
+        <div>
+          <h4>Choose Your Subscription Plan</h4>
+          <p class="subsc-para-res">
+            Invest in Yourself Today, and Witness Your Success Tomorrow!
+          </p>
+        </div>
+      </div>
+      <div class="subscription-heading">
+        <p>Invest in Yourself Today, and Witness Your Success Tomorrow!</p>
+      </div>
+
+      <div class="button-align">
+        <div class="back-drop">
+          <div class="custom-switch">
+            <div
+              class="switch-box left"
+              [class.active]="!displayAnnual"
+              (click)="toggleSwitch(false)"
+            >
+              Monthly
+            </div>
+            <div
+              class="switch-box right"
+              [class.active]="displayAnnual"
+              (click)="toggleSwitch(true)"
+            >
+              Annual
+            </div>
+
+            <div class="switch-indicator" [class.right]="displayAnnual"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <div class="card-content-row display-flex" nz-row>
+          <ng-container *ngFor="let subscription of subscriptionList">
+            <div
+              *ngIf="
+                subscription?.active &&
+                subscription?.price > 0 &&
+                (displayAnnual
+                  ? subscription?.duration === 12
+                  : subscription?.duration < 12) &&
+                !(subscription?.planType === 'STANDARD' && !showStandardPlan)
+              "
+              class="sub-card border-radius ml-1"
+              [ngClass]="subscription?.planType.toLowerCase()"
+            >
+              <nz-card>
+                <div class="content-header">
+                  <div class="main-head">
+                    <h3 class="plan">{{ subscription?.name }}</h3>
+
+                    <img
+                      *ngIf="subscription?.name === 'Premium Instructor Plan'"
+                      class="mr-2"
+                      src="../../../../assets/icons/black-box.svg"
+                    />
+
+                    <img
+                      *ngIf="
+                        subscription?.name === 'Enterprise Instructor Plan'
+                      "
+                      class="mr-2"
+                      src="../../../../assets/icons/pink-box.svg"
+                    />
+
+                    <img
+                      *ngIf="subscription?.name === 'Standard Student Plan'"
+                      class="mr-2"
+                      src="../../../../assets/icons/blue-box.svg"
+                    />
+                  </div>
+
+                  <div>
+                    <span
+                      *ngIf="subscription?.name === 'Standard Student Plan'"
+                    >
+                      Affordable access to all standard courses with
+                      certificates and essential support.
+                    </span>
+
+                    <span
+                      *ngIf="subscription?.name === 'Premium Instructor Plan'"
+                    >
+                      Advanced tools for individual educators to create premium
+                      courses and grow reach.
+                    </span>
+
+                    <span
+                      *ngIf="
+                        subscription?.name === 'Enterprise Instructor Plan'
+                      "
+                    >
+                      Complete package for solo professionals managing unlimited
+                      courses with top-tier support.
+                    </span>
+                  </div>
+
+                  <div class="align-items-center">
+                    <h1 class="display-inline-block">
+                      {{
+                        subscription?.price === 0
+                          ? ""
+                          : displayAnnual
+                          ? "$" + subscription?.price / subscription?.duration
+                          : "$" + subscription?.price
+                      }}
+                    </h1>
+
+                    <span
+                      class="duration-text display-inline-block mt-4 ml-1 font-12"
+                      >/{{
+                        displayAnnual &&
+                        subscription?.name != "Standard Student Plan"
+                          ? "Month"
+                          : "Month"
+                      }}</span
+                    >
+
+                    <span style="color: black" *ngIf="displayAnnual">
+                      {{
+                        subscription?.name === "Standard Student Plan"
+                          ? "23% off (Billed Annually)"
+                          : subscription?.name === "Premium Instructor Plan"
+                          ? "17% off (Billed Annually)"
+                          : subscription?.name === "Enterprise Instructor Plan"
+                          ? "25% off (Billed Annually)"
+                          : "Billed Annually"
+                      }}
+                    </span>
+
+                    <!-- <span
+                      *ngIf="subscription?.planType.toLowerCase() == 'standard'"
+                      class="free-trial font-14 display-inline-block ml-4"
+                      >15 days free trial</span
+                    > -->
+                  </div>
+
+                  <div class="plan-button-container">
+                    <button
+                      *ngIf="subscription?.planType !== 'standard'"
+                      nz-button
+                      class="plan-button"
+                      nzType="primary"
+                      (click)="
+                        onSelectPlan(
+                          subscription?.name,
+                          subscription?.id,
+                          subscription?.paypalPlanId
+                        )
+                      "
+                    >
+                      Get Started
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="card-body"
+                  [ngClass]="{
+                    'mt-1':
+                      displayAnnual &&
+                      subscription?.name !== 'Standard Student Plan',
+                    '':
+                      displayAnnual &&
+                      subscription?.name == 'Standard Student Plan',
+                  }"
+                >
+                  <hr />
+                  <div class="features-header">
+                    <span class="feature-icon"></span>
+                    <h5>Features</h5>
+                  </div>
+
+                  <h4>{{ subscription?.contentHeading }}</h4>
+
+                  <small
+                    *ngFor="
+                      let line of (subscription?.content || '').split('\\n')
+                    "
+                  >
+                    <img src="../../../../assets/icons/tick.svg" />
+                    <span>{{ line }}</span>
+                  </small>
+                </div>
+                <div class="card-actions display-flex justify-content-center">
+                  <button
+                    *ngIf="subscription?.planType === 'standard'"
+                    nz-button
+                    class="plan-button skip-now cursor-pointer"
+                    (click)="
+                      onSelectPlan(
+                        subscription?.name,
+                        subscription?.id,
+                        subscription?.paypalPlanId
+                      )
+                    "
+                    [nzType]="'default'"
+                  >
+                    Skip for Now
+                  </button>
+                </div>
+              </nz-card>
+            </div>
+          </ng-container>
+        </div>
+
+        <div
+          class="skip-now-container display-flex justify-content-center"
+          style="margin-top: 10px"
+        >
+          <button
+            (click)="scrollToComparison()"
+            class="skip-now-link cursor-pointer"
+            style="
+              background: white;
+              border: none;
+              color: darkblue;
+              margin-right: 10px;
+              margin-top:10px;
+            "
+          >
+            Compare plans and features
+
+            <img
+                    width="17px"
+                    height="17px"
+                    src="../../../../assets/icons/down-arrow.svg"
+                  />
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <div class="slider slider-bg-light">
+    <app-container>
+      <div class="trusted-container">
+        <h3 class="title">Trusted By 1000+ Schools</h3>
+        <span
+          >Empowering educators and learners across institutions worldwide.</span
+        >
+
+        <div class="logo-marquee-wrapper">
+          <div class="logo-marquee" #logoCarousel>
+            <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+            <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+
+            <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+
+            <img *ngFor="let logo of logos" [src]="logo" class="logo" />
+          </div>
+        </div>
+      </div>
+    </app-container>
+  </div>
+
+  <div class="key-features-section">
+    <h3 class="title">Key Features</h3>
+    <span class="section-subtitle">
+      Powerful tools designed for educators and learners
+    </span>
+
+    <div class="features-container mt-1">
+      <div class="features-list">
+        <div
+          class="feature-card"
+          *ngFor="let feature of features"
+          [class.active]="feature.title === selectedFeature.title"
+          (click)="selectFeature(feature)"
+        >
+          <h4>{{ feature.title }}</h4>
+          <p>{{ feature.shortDescription }}</p>
+        </div>
+      </div>
+
+      <div class="feature-display">
+        <div class="image-wrapper">
+          <img
+            class="feature-image"
+            [src]="selectedFeature.image"
+            [alt]="selectedFeature.title"
+          />
+          <div class="image-overlay"></div>
+
+          <div class="feature-text-overlay">
+            <h3>{{ selectedFeature.title }}</h3>
+            <p>{{ selectedFeature.longDescription }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-section" id="comparison-section">
+    <ng-container>
+      <div>
+        <h3 class="title">FastLearner Subscription Plan Comparison</h3>
+      </div>
+      <div class="card-content-compare">
+        <div class="card-content-row display-flex" nz-row>
+          <ng-container *ngFor="let subscription of subscriptionList">
+            <div
+              *ngIf="
+                subscription?.active &&
+                subscription?.price > 0 &&
+                (displayAnnual
+                  ? subscription?.duration === 12
+                  : subscription?.duration < 12) &&
+                !(subscription?.planType === 'STANDARD' && !showStandardPlan)
+              "
+              class="sub-card-compare border-radius ml-1"
+              [ngClass]="subscription?.planType.toLowerCase()"
+            >
+              <nz-card>
+                <div class="content-header">
+                  <div class="main-head">
+                    <h3 class="plan">{{ subscription?.name }}</h3>
+
+                    <img
+                      *ngIf="subscription?.name === 'Premium Instructor Plan'"
+                      class="mr-2"
+                      src="../../../../assets/icons/black-box.svg"
+                    />
+
+                    <img
+                      *ngIf="
+                        subscription?.name === 'Enterprise Instructor Plan'
+                      "
+                      class="mr-2"
+                      src="../../../../assets/icons/pink-box.svg"
+                    />
+
+                    <img
+                      *ngIf="subscription?.name === 'Standard Student Plan'"
+                      class="mr-2"
+                      src="../../../../assets/icons/blue-box.svg"
+                    />
+                  </div>
+
+                  <div>
+                    <span
+                      *ngIf="subscription?.name === 'Standard Student Plan'"
+                    >
+                      Affordable access to all standard courses with
+                      certificates and essential support.
+                    </span>
+
+                    <span
+                      *ngIf="subscription?.name === 'Premium Instructor Plan'"
+                    >
+                      Advanced tools for individual educators to create premium
+                      courses and grow reach.
+                    </span>
+
+                    <span
+                      *ngIf="
+                        subscription?.name === 'Enterprise Instructor Plan'
+                      "
+                    >
+                      Complete package for solo professionals managing unlimited
+                      courses with top-tier support.
+                    </span>
+                  </div>
+
+                  <div class="align-items-center">
+                    <h1 class="display-inline-block">
+                      {{
+                        subscription?.price === 0
+                          ? ""
+                          : displayAnnual
+                          ? "$" + subscription?.price / subscription?.duration
+                          : "$" + subscription?.price
+                      }}
+                    </h1>
+
+                    <span
+                      class="duration-text display-inline-block mt-4 ml-1 font-12"
+                      >/{{
+                        displayAnnual &&
+                        subscription?.name != "Standard Student Plan"
+                          ? "Month"
+                          : "Month"
+                      }}</span
+                    >
+
+                    <span style="color: black" *ngIf="displayAnnual">
+                      {{
+                        subscription?.name === "Standard Student Plan"
+                          ? "23% off (Billed Annually)"
+                          : subscription?.name === "Premium Instructor Plan"
+                          ? "17% off (Billed Annually)"
+                          : subscription?.name === "Enterprise Instructor Plan"
+                          ? "25% off (Billed Annually)"
+                          : "Billed Annually"
+                      }}
+                    </span>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="comparison-section">
+      
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Standard Student Plan</th>
+                <th>Premium Instructor Plan</th>
+                <th>Enterprise Instructor Plan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Access to Standard Courses</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Platform-Branded Certificates</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Alternate Instructor Access</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Email Support</td>
+                <td>48-hours response time</td>
+                <td>24-hour response time</td>
+                <td>24×7 with dedicated manager</td>
+              </tr>
+              <tr>
+                <td>Create Premium Courses</td>
+                <td>—</td>
+                <td>Up to 20 courses</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Custom Pricing for Premium Courses</td>
+                <td>—</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>On-Page SEO Tools</td>
+                <td>—</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Affiliate Creation per Course</td>
+                <td>—</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Affiliate Tracking</td>
+                <td>—</td>
+                <td>Up to 20</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Access to Student Info</td>
+                <td>—</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Off-Page SEO (Backlinks, Directories)</td>
+                <td>—</td>
+                <td>—</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>White Labeling Support</td>
+                <td>—</td>
+                <td>—</td>
+                <td>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="../../../../assets/icons/tick-compare.svg"
+                  />
+                </td>
+              </tr>
+              <tr class="get-started-row">
+                <td></td>
+                <td>
+                  <button
+                    class="btn-get-started"
+                    (click)="scrollToSubscription()"
+                  >
+                    Get Started
+                  </button>
+                </td>
+                <td>
+                  <button
+                    class="btn-get-started"
+                    (click)="scrollToSubscription()"
+                  >
+                    Get Started
+                  </button>
+                </td>
+                <td>
+                  <button
+                    class="btn-get-started"
+                    (click)="scrollToSubscription()"
+                  >
+                    Get Started
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="teacher-review">
+    <app-container>
+      <h3 class="display-flex justify-content-center title">
+        See what others are achieving through learning
+      </h3>
+      <div class="testimonial-cards">
+        <!-- Card 1 -->
+        <div class="testimonial-card">
+          <img src="../../../../assets/images/ilyna.png" alt="Lily Jones" />
+          <h2>Ms. Iriyna</h2>
+          <div class="role">English Teacher - High School</div>
+          <div class="stars">★★★★★</div>
+          <h4>Finally, a grader for teachers that understands our workload!</h4>
+          <p>
+             I've been teaching for over 12 years, and FastLearner’s AI Grader
+            is the best AI grading tool I’ve added to my workflow. It grades
+            essays, calculates percentages, and even acts as an average
+            calculator — all in seconds. Total game-changer!
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="testimonial-card">
+          <img src="../../../../assets/images/adam.png" alt="John Smith" />
+          <h2>Mr. Adam Smith</h2>
+          <div class="role">Math Instructor</div>
+          <div class="stars">★★★★★</div>
+          <h4>The AI percentage calculator is incredibly accurate!</h4>
+          <p>
+            No more second-guessing my grade calculations. This AI grading tool
+            for teachers does everything — from scoring papers to generating
+            class averages. The built-in percentage calculator is spot on every
+            time!
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="testimonial-card">
+          <img src="../../../../assets/images/sophia.png" alt="Sophia Smith" />
+          <h2>Mrs. Emily Thompson</h2>
+          <div class="role">College Lecturer</div>
+          <div class="stars">★★★★★</div>
+          <h4>I use it daily — saves me hours every week.</h4>
+          <p>
+            The bulk grading feature is brilliant. I simply upload scanned
+            copies, and the system handles the rest. It even provides insights
+            using an AI average calculator, making progress reports a breeze.
+          </p>
+        </div>
+      </div>
+    </app-container>
+  </div>
+
+  <div class="faq-container" id="faq_container" #faq_container>
+    <app-container [className]="'custom-container-content-center'">
+      <div class="faq-heading">
+        <h2>
+          Frequently <br />
+          Asked Questions
+        </h2>
+      </div>
+      <div class="faq-container-inner">
+        <div class="acc-item" *ngFor="let faq of items">
+          <div class="title-faq" (click)="expand(faq, $event)">
+            <div class="title-class">{{ faq.title }}</div>
+            <div class="icon" *ngIf="!faq.isExpanded">+</div>
+            <div class="icon" *ngIf="faq.isExpanded">-</div>
+          </div>
+
+          <div class="acc-description p-3">
+            <p>{{ faq.description }}</p>
+          </div>
+        </div>
+      </div>
+    </app-container>
+  </div>
+</div>

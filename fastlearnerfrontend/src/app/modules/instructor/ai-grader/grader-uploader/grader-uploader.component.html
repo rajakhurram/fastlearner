@@ -16,9 +16,10 @@
             ></nz-progress>
           </div>
 
-<div class="count" *ngIf="gradedPapers <= allowedPapers">
-  {{ gradedPapers }} / {{ allowedPapers }}
-</div>        </div>
+          <div class="count" *ngIf="gradedPapers <= allowedPapers">
+            {{ gradedPapers }} / {{ allowedPapers }}
+          </div>
+        </div>
       </div>
       <app-button (buttonCallBack)="openSubscriptionPlan()">
         <img
@@ -172,15 +173,16 @@
         (dragleave)="onDragLeave()"
         [class.dragging]="isDragging"
       >
-        <label>Upload student copies <span class="required">*</span>
-        <img
-          style="margin-left: 10px"
-          nzTooltipTitle="One pdf for each student"
-          nzTooltipPlacement="rightTop"
-          [nzTooltipTrigger]="'hover'"
-          nz-tooltip
-          src="../../../../../assets/icons/info-icon.svg"
-        />
+        <label
+          >Upload student copies <span class="required">*</span>
+          <img
+            style="margin-left: 10px"
+            nzTooltipTitle="One pdf for each student"
+            nzTooltipPlacement="rightTop"
+            [nzTooltipTrigger]="'hover'"
+            nz-tooltip
+            src="../../../../../assets/icons/info-icon.svg"
+          />
         </label>
 
         <div class="upload-box text-center">
@@ -193,7 +195,7 @@
                 *ngFor="let file of uploadedFiles; let i = index"
               >
                 <ng-container
-                  *ngIf="file.type === 'application/pdf'; else imagePreview"
+                  *ngIf="file.type === 'application/pdf'; else nonPdfPreview"
                 >
                   <ng-container *ngFor="let page of file.pages">
                     <div class="pdf-page-card">
@@ -213,10 +215,24 @@
                   </ng-container>
                 </ng-container>
 
+                <ng-template #nonPdfPreview>
+                  <ng-container *ngIf="isZipFile(file); else imagePreview">
+                    <div class="zip-file-wrapper">
+                      <div class="zip-file-card">
+                        <div class="zip-file-icon" aria-hidden="true">ZIP</div>
+                        <div class="zip-file-meta">
+                          <div class="zip-file-name">{{ file.name }}</div>
+                          <div class="zip-file-badge">Zip file uploaded</div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-template>
+
                 <ng-template #imagePreview>
                   <div class="pdf-page-card">
                     <img
-                      [src]="file.previewUrl"
+                      [src]="file.previewUrl || file.src"
                       alt="{{ file.name }}"
                       width="100%"
                       height="auto"
@@ -240,6 +256,7 @@
                 type="file"
                 hidden
                 multiple
+                accept="application/pdf,.zip,application/zip,application/x-zip-compressed,.rar,application/vnd.rar,application/x-rar-compressed,image/*"
                 (change)="onFileUpload($event)"
               />
             </div>
@@ -268,13 +285,14 @@
                 type="file"
                 hidden
                 multiple
+                accept="application/pdf,.zip,application/zip,application/x-zip-compressed,.rar,application/vnd.rar,application/x-rar-compressed,image/*"
                 (change)="onFileUpload($event)"
               />
             </p>
             <p style="font-size: 12px">
               Upload one or more files to generate AI grading
             </p>
-            <p style="font-size: 12px">(Each PDF can be up to 6 pages)</p>
+            <p style="font-size: 12px">(Each PDF can be up to 10 pages)</p>
           </ng-template>
         </div>
       </div>
@@ -297,6 +315,7 @@
           (click)="gradeNow()"
           class="mt-2"
           class="grade-btn"
+          type="button"
         >
           Grade now
         </button>

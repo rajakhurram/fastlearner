@@ -294,7 +294,7 @@ nz-select {
 }
 
 .input-search {
-  margin-left: auto
+  margin-left: auto;
 }
 
 .search {
@@ -321,11 +321,9 @@ nz-select {
   nz-select {
     width: fit-content !important;
   }
-  
 }
 
 @media screen and (max-width: 879px) {
- 
   .input-search {
     width: fit-content !important;
     margin-left: 0px !important;
@@ -333,7 +331,7 @@ nz-select {
 }
 
 @media screen and (max-width: 1026px) {
-  .search-courses{
+  .search-courses {
     width: 85% !important;
   }
 }

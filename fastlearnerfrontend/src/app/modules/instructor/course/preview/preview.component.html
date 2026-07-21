@@ -302,9 +302,20 @@
 
         <ng-container *ngIf="topic.selectedContentType == typeQuiz">
           <hr class="quiz-seperator ml-1 mr-1" />
+
+          <div nz-row *ngIf="topic.topicComprehensive">
+            <p class="font-16 font-bold color-blue mt-1 ml-1">Comprehension</p>
+          </div>
+          <div nz-row *ngIf="topic.topicComprehensive">
+            <p class="ml-1 color-black">
+              {{ topic.topicComprehensive }}
+            </p>
+          </div>
+
           <ng-container
             *ngFor="let question of topic.quiz.questions; let k = index"
           >
+            <!-- <pre>{{ question | json }}</pre> -->
             <ng-container *ngIf="!question.delete">
               <div nz-row>
                 <p class="font-16 font-bold color-blue mt-1 ml-1">
@@ -315,28 +326,128 @@
                 <h5 class="ml-1 color-black">{{ question.ques }}</h5>
               </div>
 
+              <div
+                nz-row
+                class="mt-1 ml-1"
+                *ngIf="
+                  question.attachedImageUrl &&
+                  isImage(question.attachedImageUrl)
+                "
+              >
+                <img
+                  [src]="question.attachedImageUrl"
+                  alt="Question image"
+                  style="
+                    max-width: 300px;
+                    max-height: 200px;
+                    object-fit: contain;
+                  "
+                />
+              </div>
+
+              <!-- attach audio  -->
+
+              <div
+                *ngIf="
+                  question.attachedImageUrl &&
+                  isAudio(question.attachedImageUrl)
+                "
+                class="audio-preview"
+              >
+                <div class="audio-container">
+                  <!-- <div class="audio-name">
+                    <span class="audio-icon">
+                      <img src="./assets/icons/audio.svg" alt="audio" />
+                    </span>
+                    <div class="audio-desc">
+                      <span class="name" [innerText]="question.name"></span>
+                      <small
+                        [innerText]="question.filesize + '. Audio File'"
+                      ></small>
+                    </div>
+                  </div> -->
+
+                  <div class="actions">
+                    <button class="play-btn" (click)="toggleAudio(question)">
+                      <span *ngIf="!question.isPlaying">
+                        <img
+                          loading="lazy"
+                          src="./assets/icons/play.svg"
+                          alt="play"
+                        />
+                      </span>
+                      <span *ngIf="question.isPlaying">
+                        <img
+                          loading="lazy"
+                          src="./assets/icons/pause.svg"
+                          alt="pause"
+                        />
+                      </span>
+                    </button>
+                    <span class="duration">
+                      {{ question.currentTime || "0:00" }}
+                    </span>
+                    <div
+                      class="progress-wrapper"
+                      (click)="seekAudio($event, question)"
+                    >
+                      <div
+                        class="progress-bar"
+                        [style.width.%]="question.progress || 0"
+                      ></div>
+                    </div>
+                    <span class="duration">
+                      {{ question.duration || "0:00" }}
+                    </span>
+                  </div>
+                </div>
+                <audio
+                  #audioPlayer
+                  [src]="question.attachedImageUrl"
+                  (timeupdate)="updateProgress(audioPlayer, question)"
+                  (loadedmetadata)="setDuration(audioPlayer, question)"
+                  (ended)="audioEnded(question)"
+                ></audio>
+              </div>
+
               <div nz-row>
                 <p
                   class="display inline-block font-16 font-bold color-blue mt-1 ml-1"
                 >
                   Options
                 </p>
-                <h5
-                  class="display-inline-block color-black ml-3 mt-1 pt-4"
-                  [class.color-blue]="answer?.isCorrectAnswer"
-                  *ngFor="let answer of question.answers"
+                <div
+                  class="option-card ml-3 mt-1 pt-4"
+                  *ngFor="let answer of question.answers; let j = index"
                 >
                   <ng-container *ngIf="!answer.delete">
-                    <span
-                      *ngIf="answer?.isCorrectAnswer"
-                      class="font-14"
-                      nz-icon
-                      nzType="check"
-                      nzTheme="outline"
-                    ></span>
-                    {{ answer.ans }}
+                    <div class="option-label-row">
+                      <span
+                        *ngIf="answer?.isCorrectAnswer"
+                        class="font-14 option-inline-check"
+                        nz-icon
+                        nzType="check"
+                        nzTheme="outline"
+                      ></span>
+                      <span class="option-label">
+                        {{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[j] }}
+                      </span>
+                    </div>
+
+                    <p
+                      class="color-black option-text"
+                      [class.color-blue]="answer?.isCorrectAnswer"
+                    >
+                      {{ answer.ans }}
+                    </p>
+                    <div
+                      *ngIf="answer.attachedImageUrl"
+                      class="option-image-wrapper"
+                    >
+                      <img [src]="answer.attachedImageUrl" alt="Answer image" />
+                    </div>
                   </ng-container>
-                </h5>
+                </div>
               </div>
             </ng-container>
           </ng-container>

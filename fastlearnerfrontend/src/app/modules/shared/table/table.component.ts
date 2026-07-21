@@ -42,7 +42,11 @@ export class TableComponent implements OnChanges {
   @Output() rowClickEmitter = new EventEmitter<{ event; row: any }>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() routeAction = new EventEmitter<any>();
-  @Output() editValueAction = new EventEmitter<{row?:any; value?: any; field?: any }>();
+  @Output() editValueAction = new EventEmitter<{
+    row?: any;
+    value?: any;
+    field?: any;
+  }>();
 
   ngOnInit() {
     console.log(this.tableConfig);
@@ -81,7 +85,7 @@ export class TableComponent implements OnChanges {
 
     if (isEnter) {
       if (newValue?.length > 0 && newValue !== row.previousValue) {
-        this.editValueAction.emit({row, value: newValue, field });
+        this.editValueAction.emit({ row, value: newValue, field });
         row.previousValue = newValue;
         row.editableKey = row.editableKey?.filter((f: string) => f !== field);
       } else {

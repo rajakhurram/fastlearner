@@ -1,0 +1,82 @@
+<div
+  [ngStyle]="{
+    width: moveButtonRight ? 'auto' : '100%',
+    position: moveButtonRight ? 'absolute' : 'inherit',
+
+    'margin-top': moveButtonRight ? '0%' : '16px'
+  }"
+  class="slider-button-container"
+  [ngClass]="moveButtonRight ? 'right-res margin-top' : 'right-0 margin-top-16'"
+>
+  <div
+    *ngIf="showButton"
+    [ngStyle]="{ 'margin-left': hideSliderButtons ? '0%' : '0%' }"
+    class="button"
+  >
+    <app-button
+      *ngIf="showButtonWhenLoggedIn"
+      [buttonText]="buttonText"
+      (buttonCallBack)="onButtonClick()"
+    ></app-button>
+  </div>
+  <div
+    *ngIf="!hideSliderButtons"
+    class="container-class"
+    [ngClass]="!applyMargin ? 'no-margin' : 'margin-right'"
+  >
+    <div
+      (click)="slideLeft()"
+      [ngClass]="
+        theme === 'dark' && !enableLeftButton
+          ? 'slider-button-dark-disabled'
+          : theme === 'dark'
+          ? 'slider-button-dark'
+          : !enableLeftButton
+          ? 'slider-disabled'
+          : 'slider-button'
+      "
+      [ngStyle]="{ 'background-color': theme === 'dark' ? 'white' : 'white' }"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="11.111"
+        height="17.993"
+        viewBox="0 0 11.111 17.993"
+      >
+        <path
+          id="ic_expand_more_24px"
+          d="M21.879,8.59,15,15.457,8.114,8.59,6,10.7l9,9,9-9Z"
+          transform="translate(19.701 -6) rotate(90)"
+          fill="#212189"
+        />
+      </svg>
+    </div>
+    <div
+      (click)="slideRight()"
+      [ngClass]="
+        theme === 'dark' && !enableRightButton
+          ? 'slider-button-dark-disabled'
+          : theme === 'dark'
+          ? 'slider-button-dark'
+          : !enableRightButton
+          ? 'slider-disabled'
+          : 'slider-button'
+      "
+      [ngStyle]="{ 'background-color': theme === 'dark' ? 'white' : 'white' }"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="11.111"
+        height="17.993"
+        viewBox="0 0 11.111 17.993"
+      >
+        <path
+          id="ic_expand_more_24px"
+          d="M21.879,8.59,15,15.457,8.114,8.59,6,10.7l9,9,9-9Z"
+          transform="translate(-8.59 23.993) rotate(-90)"
+          fill="#212189"
+        />
+      </svg>
+    </div>
+  </div>
+</div>

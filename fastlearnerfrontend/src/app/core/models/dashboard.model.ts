@@ -2,6 +2,7 @@ export interface Dashboard {
     completionRate: number,
     totalParticipants: number,
     revenue: number,
+    availableBalance: number | null;
     totalStudents: DashboardValue,
     totalProfileVisits: DashboardValue,
 }

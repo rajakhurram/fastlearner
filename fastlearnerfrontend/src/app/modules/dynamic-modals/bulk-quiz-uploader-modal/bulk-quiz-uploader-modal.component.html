@@ -1,0 +1,97 @@
+<div class="modal-content">
+  <h2 class="bulk-quiz-modal-title">Import bulk questions</h2>
+
+  <div class="bulk-quiz-preview" *ngIf="selectedFileName; else emptyPreview">
+    <img
+      class="bulk-icons"
+      src="assets/icons/excel-icon.jpg"
+      alt="Excel file"
+    />
+    <p class="bulk-quiz-preview-name">{{ selectedFileName }}</p>
+    <!-- <p class="bulk-quiz-preview-size">{{ formattedFileSize }}</p> -->
+    <span
+      class="close-icon"
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      (click)="clearSelectedFile('excel')"
+    >
+    </span>
+  </div>
+
+  <ng-template #emptyPreview>
+    <div class="bulk-quiz-preview bulk-quiz-preview--empty">
+      <p class="bulk-quiz-preview-placeholder">
+        Select an excel file to preview or
+        <span class="temp" (click)="downloadTemplate()">Download template</span>
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #emptyImagePreview>
+    <div class="bulk-quiz-preview bulk-quiz-preview--empty">
+      <p class="bulk-quiz-preview-placeholder">
+        Select an image or zip file containing images (optional).
+      </p>
+    </div>
+  </ng-template>
+
+  <div class="bulk-quiz-preview" *ngIf="selectedImage; else emptyImagePreview">
+    <img
+      *ngIf="showZipIcon"
+      class="bulk-icons"
+      src="assets/icons/zip.png"
+      alt="Image file"
+    />
+    <p class="bulk-quiz-image-name">{{ selectedImage }}</p>
+    <!-- <p class="bulk-quiz-image-size">{{ imageSize }}</p> -->
+    <span
+      class="close-icon"
+      nz-icon
+      nzType="close"
+      nzTheme="outline"
+      (click)="clearSelectedFile('image')"
+    >
+    </span>
+  </div>
+  <p class="note">
+    Note: if excel contains images name then upload image or zip file above.
+  </p>
+
+  <div
+    class="uploader mt-4 ml-4 mr-4"
+    style="display: flex; align-items: stretch"
+  >
+    <span class="file-upload-span w-100">
+      <input
+        hidden
+        #fileInput
+        id="bulk-quiz-upload"
+        type="file"
+        style="display: none"
+        accept=".xlsx,.xls,.zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/zip,application/x-zip-compressed"
+        (change)="fileChangeEvent(fileInput.files)"
+      />
+      <span class="upload-button" (click)="fileInput.click()">Browse</span>
+    </span>
+  </div>
+
+  <div class="btn-cropper">
+    <button nz-button class="cancelBtn" type="button" (click)="closeModal()">
+      Cancel
+    </button>
+    <button
+      nz-button
+      class="saveBtn"
+      type="button"
+      [disabled]="saving || !selectedFile"
+      (click)="saveModal()"
+    >
+      {{ saving ? "Importing..." : "Import" }}
+    </button>
+  </div>
+</div>
+
+<div class="modal-loader-overlay" *ngIf="saving || zipUploading">
+  <nz-spin nzSize="large" nzTip=""></nz-spin>
+</div>

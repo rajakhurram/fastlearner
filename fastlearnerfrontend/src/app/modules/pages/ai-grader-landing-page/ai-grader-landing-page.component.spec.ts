@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { of, throwError, Observable } from 'rxjs';
 
@@ -8,7 +10,10 @@ import { AiGraderService } from 'src/app/core/services/ai-grader.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { MessageService } from 'src/app/core/services/message.service';
-import { SharedModule } from '../../shared/shared.module';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 describe('AiGraderLandingPageComponent - graderForm Tests', () => {
   let component: AiGraderLandingPageComponent;
@@ -33,14 +38,22 @@ describe('AiGraderLandingPageComponent - graderForm Tests', () => {
 
     await TestBed.configureTestingModule({
       declarations: [AiGraderLandingPageComponent],
-      imports: [SharedModule, ReactiveFormsModule],
+      imports: [
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        NzGridModule,
+        NzInputModule,
+        NzButtonModule,
+        NzUploadModule,
+      ],
       providers: [
         { provide: AuthService, useValue: mockAuthService },
         { provide: CacheService, useValue: mockCacheService },
         { provide: MessageService, useValue: mockMessageService },
         { provide: AiGraderService, useValue: mockAiGraderService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
+      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AiGraderLandingPageComponent);
@@ -127,23 +140,38 @@ describe('AiGraderLandingPageComponent - graderForm Tests', () => {
       expect(component.uploadedFiles[0].type).toBe('application/pdf');
     });
 
-    it('should reject non-PDF files', () => {
+    it('should accept non-PDF files via file input', () => {
       const mockFile = new File(['test'], 'test.txt', { type: 'text/plain' });
       const event = { target: { files: [mockFile] } };
 
       component.onFileUpload(event);
 
-      expect(mockMessageService.error).toHaveBeenCalledWith('test.txt is not a PDF file.');
-      expect(component.uploadedFiles.length).toBe(0);
+      expect(component.uploadedFiles.length).toBe(1);
+      expect(component.uploadedFiles[0].name).toBe('test.txt');
     });
 
-    it('should limit uploads to 40 files', () => {
-      const mockFiles = Array.from({ length: 41 }, (_, i) =>
+    it('should limit uploads to 100 files via file input', () => {
+      const mockFiles = Array.from({ length: 101 }, (_, i) =>
         new File(['test'], `test${i}.pdf`, { type: 'application/pdf' })
       );
       const event = { target: { files: mockFiles } };
 
       component.onFileUpload(event);
+
+      expect(mockMessageService.error).toHaveBeenCalledWith('You can upload a maximum of 100 files.');
+      expect(component.uploadedFiles.length).toBe(0);
+    });
+
+    it('should limit drag-and-drop uploads to 40 files', () => {
+      const mockFiles = Array.from({ length: 41 }, (_, i) =>
+        new File(['test'], `test${i}.pdf`, { type: 'application/pdf' })
+      );
+      const event = {
+        preventDefault: jasmine.createSpy('preventDefault'),
+        dataTransfer: { files: mockFiles },
+      } as unknown as DragEvent;
+
+      component.onDrop(event);
 
       expect(mockMessageService.error).toHaveBeenCalledWith('You can upload a maximum of 40 files.');
       expect(component.uploadedFiles.length).toBe(0);
@@ -244,7 +272,12 @@ describe('AiGraderLandingPageComponent - graderForm Tests', () => {
         expect(mockAiGraderService.startGradingLandingPage).toHaveBeenCalled();
         expect(mockRouter.navigate).toHaveBeenCalledWith(
           ['instructor/ai-grader/results'],
-          { queryParams: { id: '123', classId: '456' } }
+          {
+            queryParams: jasmine.objectContaining({
+              id: '123',
+              classId: '456',
+            }),
+          }
         );
         expect(component.isProcessing).toBe(false);
         done();
@@ -421,6 +454,136 @@ describe('AiGraderLandingPageComponent - graderForm Tests', () => {
       component.onDragLeave();
 
       expect(component.isDragging).toBe(false);
+    });
+  });
+
+  describe('ZIP and archive file detection', () => {
+    it('should detect zip files by type and extension', () => {
+      expect(
+        component.isZipFile(
+          new File([''], 'batch.zip', { type: 'application/zip' }),
+        ),
+      ).toBeTrue();
+      expect(
+        component.isZipFile(
+          new File([''], 'batch.zip', { type: 'application/x-zip-compressed' }),
+        ),
+      ).toBeTrue();
+    });
+
+    it('should detect rar files', () => {
+      expect(
+        component.isZipFile(
+          new File([''], 'batch.rar', { type: 'application/x-rar-compressed' }),
+        ),
+      ).toBeTrue();
+    });
+
+    it('should return false for regular pdf files', () => {
+      expect(
+        component.isZipFile(
+          new File([''], 'paper.pdf', { type: 'application/pdf' }),
+        ),
+      ).toBeFalse();
+    });
+  });
+
+  describe('Paste text grading without rubric', () => {
+    beforeEach(() => {
+      component.userLoggedIn = true;
+      mockAuthService.isLoggedIn.and.returnValue(true);
+    });
+
+    it('should allow gradeNow with pasted text and evaluation criteria only', (done) => {
+      mockAiGraderService.startGradingLandingPage.and.returnValue(
+        of({
+          data: {
+            assessmentId: '99',
+            classId: '88',
+            numberOfFiles: 1,
+          },
+        }),
+      );
+
+      component.graderForm.patchValue({
+        className: 'English',
+        assessmentName: 'Essay',
+        evaluationCriteria: 'Grade on grammar and content',
+        userSubmittedAnswerAsText: 'a'.repeat(1000),
+      });
+
+      component.gradeNow();
+
+      setTimeout(() => {
+        expect(mockAiGraderService.startGradingLandingPage).toHaveBeenCalled();
+        expect(mockRouter.navigate).toHaveBeenCalled();
+        done();
+      }, 100);
+    });
+  });
+
+  describe('Free plan upload limits', () => {
+    beforeEach(() => {
+      component.userLoggedIn = true;
+      mockAuthService.isLoggedIn.and.returnValue(true);
+      (component as any).loggedInUserPlanType = 'FREE';
+      component.totalFileCount = 0;
+      component.graderForm.patchValue({
+        className: 'Math',
+        assessmentName: 'Quiz',
+        evaluationCriteria: 'Grade fairly',
+      });
+    });
+
+    it('should allow gradeNow with exactly 50 files on free plan', (done) => {
+      mockAiGraderService.startGradingLandingPage.and.returnValue(
+        of({
+          data: { assessmentId: '1', classId: '2', numberOfFiles: 50 },
+        }),
+      );
+      component.uploadedFiles = Array.from({ length: 50 }, (_, i) => ({
+        file: new File(['x'], `s${i}.pdf`, { type: 'application/pdf' }),
+        name: `s${i}.pdf`,
+        gradingUnits: 1,
+      }));
+
+      component.gradeNow();
+
+      setTimeout(() => {
+        expect(mockAiGraderService.startGradingLandingPage).toHaveBeenCalled();
+        done();
+      }, 100);
+    });
+
+    it('should block gradeNow when free plan limit is exceeded', () => {
+      component.totalFileCount = 49;
+      component.uploadedFiles = [
+        { file: new File(['a'], 'a.pdf'), name: 'a.pdf' },
+        { file: new File(['b'], 'b.pdf'), name: 'b.pdf' },
+      ];
+
+      component.gradeNow();
+
+      expect(mockMessageService.error).toHaveBeenCalledWith(
+        'free plan limit exceed , upgrade your plan',
+      );
+      expect(mockAiGraderService.startGradingLandingPage).not.toHaveBeenCalled();
+    });
+
+    it('should count files inside a zip via getIncomingUnits', async () => {
+      const JSZip = (await import('jszip')).default;
+      const zip = new JSZip();
+      for (let i = 0; i < 5; i++) {
+        zip.file(`student-${i}.pdf`, 'pdf-content');
+      }
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const zipFile = new File([blob], 'students.zip', {
+        type: 'application/zip',
+      });
+
+      const units = await (component as any).getIncomingUnits(zipFile);
+
+      expect(units).toBe(5);
     });
   });
 

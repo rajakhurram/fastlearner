@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { StateService } from 'src/app/core/services/state.service';
 import { WelcomePageInstructorComponent } from './welcome-page-instructor.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpBackend, HttpClient, HttpHandler } from '@angular/common/http';
@@ -18,16 +20,23 @@ describe('WelcomePageInstructorComponent', () => {
       authState: of(null),
     });
     const spy = jasmine.createSpyObj('Router', ['navigate']);
-    
+    const cacheServiceSpy = jasmine.createSpyObj('CacheService', [
+      'getDataFromCache',
+      'saveInCache',
+    ]);
+    cacheServiceSpy.getDataFromCache.and.returnValue(true);
+
     await TestBed.configureTestingModule({
       declarations: [WelcomePageInstructorComponent],
       providers: [
         { provide: Router, useValue: spy },
         { provide: SocialAuthService, useValue: spySocial },
+        { provide: CacheService, useValue: cacheServiceSpy },
+        { provide: StateService, useValue: {} },
         AuthService,
         HttpClient,
         HttpHandler,
-        HttpBackend
+        HttpBackend,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();

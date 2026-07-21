@@ -110,7 +110,6 @@ this.searchSubject
 
   this.getCategoryList();
   this.onResize(window);
-  this.getRouteQueryParam(); // Uncomment this
 }
 
   ngOnDestroy(): void {

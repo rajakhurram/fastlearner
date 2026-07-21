@@ -115,7 +115,18 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "codeCoverageExclude": [
+              "src/main.ts",
+              "src/polyfills.ts",
+              "src/environments/**",
+              "src/**/*.module.ts",
+              "src/**/*routing*.ts",
+              "src/**/models/**",
+              "src/**/enums/**",
+              "src/**/constants/**"
+            ],
+            "karmaConfig": "karma.conf.js"
           }
         }
       }

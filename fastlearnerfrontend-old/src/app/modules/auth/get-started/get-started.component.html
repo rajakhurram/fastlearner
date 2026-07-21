@@ -1,0 +1,35 @@
+<div class="container">
+    <nz-card class="card">
+        <div class="card-header">
+            <h3>Get Started</h3>
+            <p>Let's start by choosing your role</p>
+        </div>
+        <div class="main-content">
+            <nz-card class="sub-card" (click)="toggleRole('STUDENT')">
+                <div class="icon">
+                    <img src="../../../../assets/icons/Student.svg" alt="Student">
+                </div>
+                <div class="text">
+                    <h5>Student</h5>
+                </div>
+                <div class="check">
+                    <span style="color: #FE4A55 !important;" nz-icon nzType="check-circle" [nzTheme]="selectedRoleStudent ? 'fill' : 'outline'"></span>
+                </div>
+            </nz-card>
+            <nz-card  class="sub-card" (click)="toggleRole('INSTRUCTOR')">
+                <div class="icon">
+                    <img src="../../../../assets/icons/Instructor.svg" alt="Instructor">
+                </div>
+                <div class="text">
+                    <h5>Instructor</h5>
+                </div>
+                <div class="check">
+                    <span style="color: #FE4A55 !important;" nz-icon nzType="check-circle" [nzTheme]="selectedRoleInstructor ? 'fill' : 'outline'"></span>
+                </div>
+            </nz-card>
+            <div class="button-div">
+                <button [disabled]="!selectedRoleStudent && !selectedRoleInstructor" (click)="saveUserRole()" nz-button class="button login-form-margin" [nzType]="'primary'">Continue</button>
+            </div>
+        </div>
+    </nz-card>
+</div>

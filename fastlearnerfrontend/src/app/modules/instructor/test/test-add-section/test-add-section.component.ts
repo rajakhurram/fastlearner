@@ -136,7 +136,7 @@ export class TestAddSectionComponent {
   ];
 
   alphabet: string[] = Array.from({ length: 26 }, (_, i) =>
-    String.fromCharCode(65 + i)
+    String.fromCharCode(65 + i),
   );
 
   constructor(
@@ -148,7 +148,7 @@ export class TestAddSectionComponent {
     private communicationService: CommunicationService,
     private msg: NzMessageService,
     private _courseService: CourseService,
-    private _authService: AuthService
+    private _authService: AuthService,
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -177,7 +177,7 @@ export class TestAddSectionComponent {
     }
 
     this.communicationService.documentSummary$?.subscribe(
-      (document: any) => {}
+      (document: any) => {},
     );
 
     this.communicationService.videoSummary$?.subscribe((videoData: any) => {});
@@ -185,7 +185,7 @@ export class TestAddSectionComponent {
     this.communicationService.articleSummary$?.subscribe((article: any) => {});
 
     this.communicationService.videoTranscript$?.subscribe(
-      (videoData: any) => {}
+      (videoData: any) => {},
     );
   }
 
@@ -352,7 +352,7 @@ export class TestAddSectionComponent {
                   });
                 });
               }
-              (video.videoData.videoId = topic.videoId),
+              ((video.videoData.videoId = topic.videoId),
                 (video.videoData.delete = topic.delete),
                 (video.videoData.videoFileName = topic.filename
                   ? topic.filename
@@ -366,7 +366,7 @@ export class TestAddSectionComponent {
                 (video.videoData.date = this.formatDate(topic.creationDate)),
                 (video.videoData.videoFileType = 'Video'),
                 (video.videoData.videoProgress = 100),
-                (video.videoData.videoBtnName = 'Replace');
+                (video.videoData.videoBtnName = 'Replace'));
             }
 
             if (topic.topicType == this.typeQuiz) {
@@ -397,7 +397,7 @@ export class TestAddSectionComponent {
                     explanation: value?.explanation,
                     questionType: value?.questionType
                       ? this.questionTypes?.find(
-                          (type: any) => type?.key == value?.questionType
+                          (type: any) => type?.key == value?.questionType,
                         )
                       : this.questionTypes[0],
                     answers: answers,
@@ -409,15 +409,15 @@ export class TestAddSectionComponent {
                   };
                   quiz.questions.push(question);
                   this.maintainQuizQuestionAnswersOrder(
-                    quiz?.questions[index]?.answers
+                    quiz?.questions[index]?.answers,
                   );
-                }
+                },
               );
             }
 
             if (topic.topicType == this.typeArticle) {
               article.uploadArticleDocument = true;
-              (article.articleId = topic.articleId), (article.delete = false);
+              ((article.articleId = topic.articleId), (article.delete = false));
               article.content = topic?.article;
               article.articleFileName =
                 topic.docs == null ? 'Add Resource' : topic?.docs[0]?.name;
@@ -689,7 +689,7 @@ export class TestAddSectionComponent {
     topic?: any,
     videoSection?: any,
     articleSection?: any,
-    quizSection?: any
+    quizSection?: any,
   ) {
     topic.videoSection = videoSection;
     topic.articleSection = articleSection;
@@ -717,7 +717,7 @@ export class TestAddSectionComponent {
           exist: false,
           answerOrder: '',
           isCorrectAnswer: false,
-        }
+        },
       );
     } else {
       question?.answers.push({
@@ -757,7 +757,7 @@ export class TestAddSectionComponent {
       // correctAnswer: { ans: null },
     });
     this.maintainQuizQuestionAnswersOrder(
-      questions[questions?.length - 1]?.answers
+      questions[questions?.length - 1]?.answers,
     );
     this.quizValidation(topic);
   }
@@ -860,12 +860,12 @@ export class TestAddSectionComponent {
 
     let outerLopop = true;
     const questions = topic.quiz?.questions.filter(
-      (question: any) => question.delete == false
+      (question: any) => question.delete == false,
     );
     if (questions?.length > 0 && topic.quiz.title != '') {
       for (let i = 0; i < questions.length && outerLopop == true; i++) {
         const answers = questions[i].answers.filter(
-          (answer: any) => answer.delete == false
+          (answer: any) => answer.delete == false,
         );
         if (
           questions[i].ques != '' &&
@@ -898,7 +898,7 @@ export class TestAddSectionComponent {
 
   videoValidation(topic?: any) {
     const documents = topic.video?.documentData?.documents.filter(
-      (document: any) => document.documentProgress != 100
+      (document: any) => document.documentProgress != 100,
     );
     if (
       (topic?.video?.videoData?.videoProgress == 100 &&
@@ -931,7 +931,7 @@ export class TestAddSectionComponent {
       (topic.video.videoData.videoFileType == '' ||
         topic.video.videoData.videoProgress == 100) &&
       topic.video?.documentData?.documents.every(
-        (document: any) => document.documentProgress == 100
+        (document: any) => document.documentProgress == 100,
       )
     ) {
       topic.video.fileProcessing = true;
@@ -1165,7 +1165,7 @@ export class TestAddSectionComponent {
         }
       });
       let topics = section.topics.filter(
-        (topic: any) => topic.checkTopic === false
+        (topic: any) => topic.checkTopic === false,
       );
       if (topics.length == 0) {
         section.deleteTopicIcon = false;
@@ -1182,7 +1182,7 @@ export class TestAddSectionComponent {
       topic.video.videoData.videoId,
       topic.video.videoData.videoUrl,
       topic.topicId,
-      'VIDEO'
+      'VIDEO',
     );
 
     topic.video.videoData = {
@@ -1201,7 +1201,7 @@ export class TestAddSectionComponent {
     topic.video.documentData.documentBtnName = 'Upload File';
     topic.video.documentData.documents = [];
     const deleteDocuments = topic.video.documentData.documents.filter(
-      (document: any) => document.delete == true
+      (document: any) => document.delete == true,
     );
     topic.video.documentData.documents.length == deleteDocuments.length &&
     topic.video.videoData.videoFileName == 'Add Video'
@@ -1216,12 +1216,12 @@ export class TestAddSectionComponent {
       topic.video.documentData.documents[index].id,
       topic.video.documentData.documents[index].documentUrl,
       topic.topicId,
-      'DOCS'
+      'DOCS',
     );
     topic.video.documentData.documents[index].id = '';
     topic.video.documentData.documents[index].delete = true;
     const deleteDocuments = topic.video.documentData.documents.filter(
-      (document: any) => document.delete == true
+      (document: any) => document.delete == true,
     );
     // topic.video.documentData.documents.splice(index, 1);
     topic.video.documentData.documents.length == deleteDocuments.length &&
@@ -1305,7 +1305,7 @@ export class TestAddSectionComponent {
       article.articleDocumnetId,
       article.articleDocumnetUrl,
       topic.topicId,
-      'DOCS'
+      'DOCS',
     );
     // article.articleId = '';
     // article.delete = true;
@@ -1399,8 +1399,8 @@ export class TestAddSectionComponent {
           }
 
           topic.validate = false;
-          (topic.video.videoData.delete = false),
-            (topic.video.fileProcessing = false);
+          ((topic.video.videoData.delete = false),
+            (topic.video.fileProcessing = false));
           topic.video.videoData.videoProgress = 0;
           topic.video.videoData.videoFileType = '';
           topic.video.videoData.videoFileName = '';
@@ -1456,7 +1456,7 @@ export class TestAddSectionComponent {
             ) {
               const topic = this.uploadedDocuments.get(file.name);
               const objectToUpdate = topic.video.documentData.documents.find(
-                (document: any) => document.documentKey === file.name
+                (document: any) => document.documentKey === file.name,
               );
               if (objectToUpdate) {
                 // this.stopDocumentProgressSimulation(file.name); // Stop specific progress
@@ -1471,7 +1471,7 @@ export class TestAddSectionComponent {
           error: (error: any) => {
             const topic = this.uploadedDocuments.get(file.name);
             const objectToUpdate = topic.video.documentData.documents.find(
-              (document: any) => document.documentKey === file.name
+              (document: any) => document.documentKey === file.name,
             );
             if (objectToUpdate) {
               // this.stopDocumentProgressSimulation(file.name); // Stop specific progress
@@ -1544,9 +1544,9 @@ export class TestAddSectionComponent {
               this.articleValidation(topic);
               topic.article.articleSummary = response?.data?.summary;
               topic.article.articleDocumnetUrl = response?.data.url;
-              (topic.article.articleFileType = file.type.split('/')[1]),
+              ((topic.article.articleFileType = file.type.split('/')[1]),
                 (topic.article.articleDate = this.getCurrentDate()),
-                (topic.article.articleBtnName = 'Replace');
+                (topic.article.articleBtnName = 'Replace'));
             }
           },
           error: (error: any) => {
@@ -1694,7 +1694,7 @@ export class TestAddSectionComponent {
 
   hideDeleteSectionContainer() {
     const sections = this.sections.filter(
-      (section: any) => section.checkSection === false
+      (section: any) => section.checkSection === false,
     );
     if (sections == 0) {
       this.showDltSectionBtn = false;
@@ -1787,7 +1787,7 @@ export class TestAddSectionComponent {
           this.courseInformationData,
           this.sections,
           this.courseId,
-          false
+          false,
         )
         ?.subscribe({
           next: (response: any) => {
@@ -1820,7 +1820,7 @@ export class TestAddSectionComponent {
           this.courseInformationData,
           this.sections,
           this.courseId,
-          false
+          false,
         )
         ?.subscribe({
           next: (response: any) => {
@@ -1863,8 +1863,8 @@ export class TestAddSectionComponent {
         this.deleteVideoData(topic);
       }
       topic.validate = false;
-      (topic.video.videoData.delete = false),
-        (topic.video.fileProcessing = false);
+      ((topic.video.videoData.delete = false),
+        (topic.video.fileProcessing = false));
       topic.video.videoData.videoProgress = 0;
       topic.video.videoData.videoFileType = 'Video';
       topic.video.videoData.videoFileName = 'YOUTUBE';

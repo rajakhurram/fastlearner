@@ -8,7 +8,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./content-type.component.scss'],
 })
 export class ContentTypeComponent {
-  constructor(private _router: Router, private _authService: AuthService) {}
+  constructor(
+    private _router: Router,
+    private _authService: AuthService,
+  ) {
+    // sessionStorage.removeItem('redirectInstructorUrl');
+  }
 
   contents = [
     {

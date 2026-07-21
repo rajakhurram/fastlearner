@@ -1,0 +1,91 @@
+.card {
+  box-shadow: 2px 5px 17px rgba(120, 164, 243, 0.5);
+  width: 80%;
+  margin: auto;
+}
+
+.welcome-page {
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+.welcome-header h3 {
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+}
+
+.welcome-header p {
+  color: #212189;
+  display: flex;
+  justify-content: center;
+}
+
+.stepper {
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+}
+
+.user-icon {
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+}
+
+.pay-now-button {
+  width: 20%;
+  margin-bottom: 16px;
+  margin-top: 10px;
+  margin-left: 40%;
+  border: #fe4a55 1px solid;
+  background-color: #fe4a55;
+  border-radius: 4px;
+  height: 40px;
+}
+
+.pay-now-button:hover {
+  background: linear-gradient(180deg, #fe4a55, #b20a14);
+  color: white;
+}
+
+.button-actions p {
+  text-align: center;
+  margin-top: 2%;
+  color: #212189;
+  font-weight: 600;
+}
+
+.button-actions a {
+  display: flex;
+  justify-content: center;
+  color: #fe4a55;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1099px) {
+  .welcome-page {
+    text-align: center !important;
+  }
+  .pay-now-button {
+    width: fit-content !important;
+    margin-left: 0% !important;
+  }
+
+  .stepper-image {
+    width: 100% !important;
+  }
+  .user-icon-image {
+    width: 100% !important;
+  }
+
+  .button-actions {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+  h3 {
+    font-size: 20px !important;
+  }
+}

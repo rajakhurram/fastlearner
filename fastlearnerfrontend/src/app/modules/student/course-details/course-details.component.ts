@@ -76,11 +76,12 @@ export class CourseDetailsComponent
   affiliateUUID?: string;
   applicationCourseDetailsUrl?: string;
   activeCourseUrl?: string;
-  currentPage = 0; 
-  hasMoreComments = true; 
-  isLoadingComments = false; 
+  currentPage = 0;
+  hasMoreComments = true;
+  isLoadingComments = false;
   pageSize = 15;
   isFirstLoad = true;
+  totalElements: number = 0;
   sectionPanel = [
     {
       active: true,
@@ -132,33 +133,69 @@ export class CourseDetailsComponent
     private renderer: Renderer2,
     private metaService: Meta,
     private titleService: Title,
-    private loader: NgxUiLoaderService
+    private loader: NgxUiLoaderService,
   ) {
     this.applicationCourseDetailsUrl = environment.applicationCourseDetailsUrl;
   }
 
   ngOnInit(): void {
-    this._activatedRoute.queryParamMap.subscribe(
-      (queryParams: ParamMap) => {
-        this.affiliateUUID = queryParams.get('affiliate');
-        if(this.affiliateUUID){
+    this._activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
+      this.affiliateUUID = queryParams.get('affiliate');
+      if (this.affiliateUUID) {
         this._cacheService.saveInCache('affiliate', this.affiliateUUID);
-        }
       }
-    );
+    });
 
     this.routeSubscription = this._activatedRoute.paramMap.subscribe(
       (params: ParamMap) => {
         this.showBuyButton = false;
         this.courseUrl = params.get('courseUrl');
         if (this.courseUrl) {
+          this.resetRelatedCoursesPagination();
+          this.handleCourseRouteChange();
           this.getCourseByUrl(this.courseUrl);
         } else {
           // If no courseUrl is provided, navigate to the home page
           this._router.navigate(['']);
         }
-      }
+      },
     );
+  }
+
+  private resetRelatedCoursesPagination(): void {
+    this.relatedCourse.pageNo = 0;
+    this.courseList = [];
+    this.noOfCount = undefined;
+    this.totalElements = 0;
+  }
+
+  private resetCourseAggregates(): void {
+    this.totalTopics = 0;
+    this.totalSectionTimeInSeconds = 0;
+  }
+
+  private resetStickyCardClasses(): void {
+    if (!this.cardElement) {
+      return;
+    }
+
+    this.renderer.removeClass(this.cardElement, 'sticky');
+    this.renderer.removeClass(this.cardElement, 'sticky-top');
+    this.renderer.removeClass(this.cardElement, 'sticky-bottom');
+  }
+
+  private handleCourseRouteChange(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    this.resetStickyCardClasses();
+  }
+
+  private refreshStickyCardLayout(): void {
+    this.cardElement = this.el.nativeElement.querySelector('.sticky');
+    this.footerElement = document.querySelector('app-footer')!;
+    this.mainContentElement = document.querySelector('#main-content')!;
+    this.resetStickyCardClasses();
+    this.onWindowScrollCard();
   }
 
   getCourseByUrl(courseUrl?: any) {
@@ -170,14 +207,14 @@ export class CourseDetailsComponent
             this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE &&
           response?.data?.course
         ) {
-          this.isLoading = false;  
+          this.isLoading = false;
           this.courseId = response.data?.course?.id;
           this.courseTitle = response?.data?.course?.title;
           this.activeCourseUrl = response?.data?.activeUrl;
           this.titleService.setTitle(
             `${this.courseTitle?.replace(/\b\w/g, (char) =>
-              char.toUpperCase()
-            )} | Overview | Fastlearner.ai`
+              char.toUpperCase(),
+            )} | Overview | Fastlearner.ai`,
           );
           // Data is now loaded
           if (this.courseId) {
@@ -188,7 +225,10 @@ export class CourseDetailsComponent
         }
       },
       error: (error: any) => {
-        if(error?.error?.status != this._httpConstants.REQUEST_STATUS.UNAUTHORIZED_401.CODE){
+        if (
+          error?.error?.status !=
+          this._httpConstants.REQUEST_STATUS.UNAUTHORIZED_401.CODE
+        ) {
           this.isLoading = false;
           this._router.navigate(['']);
         }
@@ -251,6 +291,7 @@ export class CourseDetailsComponent
           this._httpConstants.REQUEST_STATUS.SUCCESS_200.CODE
         ) {
           this.courseDetails = response?.data;
+          this.resetCourseAggregates();
           this.isUserLoggedIn();
           if (
             this.courseDetails.courseType == CourseType.PREMIUM &&
@@ -263,7 +304,7 @@ export class CourseDetailsComponent
             `${
               response?.data?.metaTitle ??
               this.courseTitle?.replace(/\b\w/g, (char) => char.toUpperCase())
-            } `
+            } `,
           );
           this.metaService.updateTag({
             name: 'description',
@@ -273,7 +314,7 @@ export class CourseDetailsComponent
           });
           this.courseDetails.courseDuration =
             this.convertSecondsToHoursAndMinutes(
-              Number(this.courseDetails.courseDuration)
+              Number(this.courseDetails.courseDuration),
             );
           this.courseOutcomeLength = this.courseDetails?.courseOutcome?.length;
           if (
@@ -307,62 +348,65 @@ export class CourseDetailsComponent
           });
           this.getRelatedCourses(true, stopLoader);
           this.fetchMoreComments();
+
+          if (!stopLoader) {
+            setTimeout(() => this.refreshStickyCardLayout(), 0);
+          }
         }
       },
       error: (error: any) => {},
     });
   }
 
-  
-
   fetchComments(currentPage: number, pageSize: number) {
-    this.isLoadingComments = true; 
-    this._courseService.getComments(this.courseId, currentPage, pageSize).subscribe({
-      next: (response: any) => {
-        this.isLoadingComments = false;
-  
-        if (response?.data?.feedback?.feedbackComments?.length) {
-          if (!this.courseDetails?.courseFeedback) {
+    this.isLoadingComments = true;
+    this._courseService
+      .getComments(this.courseId, currentPage, pageSize)
+      .subscribe({
+        next: (response: any) => {
+          this.isLoadingComments = false;
+
+          if (response?.data?.feedback?.feedbackComments?.length) {
+            if (!this.courseDetails?.courseFeedback) {
+              this.courseDetails.courseFeedback = {
+                feedbackComments: [],
+                rating1: 0,
+                rating2: 0,
+                rating3: 0,
+                rating4: 0,
+                rating5: 0,
+              };
+            }
+
             this.courseDetails.courseFeedback = {
-              feedbackComments: [],
-              rating1: 0,
-              rating2: 0,
-              rating3: 0,
-              rating4: 0,
-              rating5: 0,
+              ...this.courseDetails.courseFeedback,
+              rating1: response.data.feedback.rating1,
+              rating2: response.data.feedback.rating2,
+              rating3: response.data.feedback.rating3,
+              rating4: response.data.feedback.rating4,
+              rating5: response.data.feedback.rating5,
             };
+            if (this.isFirstLoad) {
+              this.courseDetails.courseFeedback.feedbackComments = [];
+              this.isFirstLoad = false;
+            }
+            this.courseDetails.courseFeedback.feedbackComments.push(
+              ...response.data.feedback.feedbackComments,
+            );
+
+            this.hasMoreComments = response.data.totalPages > currentPage + 1;
           }
-  
-          this.courseDetails.courseFeedback = {
-            ...this.courseDetails.courseFeedback,
-            rating1: response.data.feedback.rating1,
-            rating2: response.data.feedback.rating2,
-            rating3: response.data.feedback.rating3,
-            rating4: response.data.feedback.rating4,
-            rating5: response.data.feedback.rating5,
-          };
-          if (this.isFirstLoad){
-            this.courseDetails.courseFeedback.feedbackComments = [];
-            this.isFirstLoad = false;
-          }
-          this.courseDetails.courseFeedback.feedbackComments.push(
-            ...response.data.feedback.feedbackComments
-          );
-  
-          this.hasMoreComments = response.data.totalPages > currentPage+1;
-      } 
-      },
-      error: (error: any) => {
-        this.isLoadingComments = false;
-      },
-    });
+        },
+        error: (error: any) => {
+          this.isLoadingComments = false;
+        },
+      });
   }
 
   fetchMoreComments() {
     if (this.hasMoreComments) {
       this.fetchComments(this.currentPage, this.pageSize);
       this.currentPage += 1;
-
     }
   }
 
@@ -425,10 +469,11 @@ export class CourseDetailsComponent
             this.courseList = response?.data?.courses;
             this.courseList?.forEach((res: any) => {
               res.courseDuration = this.convertSecondsToHoursAndMinutes(
-                res.courseDuration
+                res.courseDuration,
               );
             });
             this.noOfCount = response?.data?.pageSize;
+            this.totalElements = response?.data?.totalElements;
           }
         }
       },
@@ -438,6 +483,10 @@ export class CourseDetailsComponent
 
   @HostListener('window:scroll', [])
   onWindowScrollCard() {
+    if (!this.cardElement) {
+      return;
+    }
+
     const footerRect = this.footerElement?.getBoundingClientRect();
     const cardRect = this.cardElement?.getBoundingClientRect();
     const mainContentRect = this.mainContentElement?.getBoundingClientRect();
@@ -510,8 +559,8 @@ export class CourseDetailsComponent
   }
 
   routeToCourseDetails(courseUrl: any) {
+    this.resetRelatedCoursesPagination();
     this._router.navigate(['student/course-details', courseUrl]);
-    this.getCourseIdFromRoute();
   }
 
   routeToCourseDetailsContent(courseUrl: any) {
@@ -523,9 +572,12 @@ export class CourseDetailsComponent
   isUserLoggedIn() {
     this.isLoggedIn = this._authService.isLoggedIn();
     this.courseButtonName = this.isLoggedIn
-    ? 'Start ' + (this.courseDetails?.contentType?.toLowerCase() === this.courseContentType.TEST ? 'Test' : 'Learning')
-    : 'Start Now';
-  
+      ? 'Start ' +
+        (this.courseDetails?.contentType?.toLowerCase() ===
+        this.courseContentType.TEST
+          ? 'Test'
+          : 'Learning')
+      : 'Start Now';
   }
 
   toggleFavoriteCourse() {
@@ -551,7 +603,7 @@ export class CourseDetailsComponent
           courseUrl: this.courseUrl,
           price: this.courseDetails.price,
           premium: true,
-          affiliate: this.affiliateUUID
+          affiliate: this.affiliateUUID,
         },
       });
       return;

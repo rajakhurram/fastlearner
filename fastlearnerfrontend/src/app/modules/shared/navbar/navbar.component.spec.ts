@@ -889,4 +889,262 @@ describe('NavbarComponent', () => {
       expect(component.navbarVisible).toBeFalse();
     });
   });
+
+  describe('Phase 1 coverage batch', () => {
+    it('should set isSticky when window is scrolled', () => {
+      Object.defineProperty(window, 'scrollY', { value: 100, configurable: true });
+      component.onScroll(new Event('scroll'));
+      expect(component.isSticky).toBeTrue();
+    });
+
+    it('should reset mobile navbar state on wide resize', () => {
+      component.navbarVisible = true;
+      component.showSearch = true;
+      component.onResize({ target: { innerWidth: 1200 } });
+      expect(component.navbarVisible).toBeFalse();
+      expect(component.showSearch).toBeFalse();
+    });
+
+    it('should clear search results on document click', () => {
+      component.searchResults = [{ title: 'Course' }];
+      component.searchInstructorResults = [{ profileUrl: 'john' }];
+      component.selectedIndex = 2;
+      component.showNoCourseText = true;
+
+      component.onDocumentClick(new MouseEvent('click'));
+
+      expect(component.searchResults).toEqual([]);
+      expect(component.searchInstructorResults).toEqual([]);
+      expect(component.selectedIndex).toBe(-1);
+      expect(component.showNoCourseText).toBeFalse();
+    });
+
+    it('should not fetch suggestions when keyword is shorter than 3 characters', () => {
+      const courseService = TestBed.inject(CourseService);
+      spyOn(courseService, 'getSuggestions');
+
+      component.getSearchSuggestions('ab');
+
+      expect(courseService.getSuggestions).not.toHaveBeenCalled();
+      expect(component.searchSuggestions).toEqual([]);
+    });
+
+    it('should clear suggestions when getSuggestions fails', fakeAsync(() => {
+      const courseService = TestBed.inject(CourseService);
+      spyOn(courseService, 'getSuggestions').and.returnValue(
+        throwError(() => new Error('network error')),
+      );
+
+      component.getSearchSuggestions('angular');
+      tick();
+
+      expect(component.searchSuggestions).toEqual([]);
+    }));
+
+    it('should navigate to filter-courses on valid icon search', () => {
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+
+      component.searchByIconClick('angular');
+
+      expect(router.navigate).toHaveBeenCalledWith(['student/filter-courses'], {
+        queryParams: { search: 'angular' },
+      });
+      expect(component.payLoad.searchValue).toBe('angular');
+    });
+
+    it('should show no course text when debounced search returns 404', fakeAsync(() => {
+      const courseService = TestBed.inject(CourseService);
+      spyOn(courseService, 'getSuggestions').and.returnValue(
+        throwError(() => ({ error: { status: 404 } })),
+      );
+
+      component.searchByKeyword('missing-course');
+      tick(component.debounceDelay);
+
+      expect(component.showNoCourseText).toBeTrue();
+    }));
+
+    it('should navigate to course details when list item is clicked', () => {
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      const result = { title: 'Angular Basics', courseUrl: 'angular-basics' };
+
+      component.onListItemClicked(result);
+
+      expect(component.searchKeyword).toBe('Angular Basics');
+      expect(router.navigate).toHaveBeenCalledWith([
+        'student/course-details',
+        'angular-basics',
+      ]);
+    });
+
+    it('should move selectedIndex down on ArrowDown key', () => {
+      component.searchResults = [{ title: 'A' }, { title: 'B' }];
+      component.searchInstructorResults = [];
+      component.selectedIndex = -1;
+
+      component.handleKeydown({ key: 'ArrowDown' } as KeyboardEvent);
+
+      expect(component.selectedIndex).toBe(0);
+    });
+
+    it('should navigate to instructor profile on Enter for instructor result', () => {
+      component.searchResults = [{ title: 'Course' }];
+      component.searchInstructorResults = [{ profileUrl: 'instructor/john' }];
+      component.selectedIndex = 1;
+      spyOn(component, 'routeToInstructorProfile');
+
+      component.handleKeydown({
+        key: 'Enter',
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as unknown as KeyboardEvent);
+
+      expect(component.routeToInstructorProfile).toHaveBeenCalledWith(
+        'instructor/john',
+      );
+    });
+
+    it('should update isLoggedIn when navbar auth state changes', () => {
+      const authService = TestBed.inject(AuthService);
+      spyOn(authService, 'isLoggedIn').and.returnValue(true);
+      spyOn(component, 'getFavoriteCourseList');
+      spyOn(component, 'getMyCourseList');
+      spyOn(component, 'getLoggedInUserDetails');
+
+      component.listenNavbarState();
+      authService.changeNavState(true);
+
+      expect(component.isLoggedIn).toBeTrue();
+      expect(component.getFavoriteCourseList).toHaveBeenCalled();
+    });
+
+    it('should expose super admin flag from auth service', () => {
+      const authService = TestBed.inject(AuthService);
+      spyOn(authService, 'isSuperAdmin').and.returnValue(true);
+
+      expect(component.isSuperAdmin).toBeTrue();
+    });
+
+    it('should not navigate when user profile url is missing', () => {
+      const authService = TestBed.inject(AuthService);
+      const router = TestBed.inject(Router);
+      spyOn(authService, 'getUserProfileUrl').and.returnValue(null);
+      spyOn(router, 'navigate');
+      spyOn(console, 'error');
+
+      component.routeToUserProfile();
+
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('should navigate to sanitized user profile url', () => {
+      const authService = TestBed.inject(AuthService);
+      const router = TestBed.inject(Router);
+      spyOn(authService, 'getUserProfileUrl').and.returnValue('John Doe!');
+      spyOn(router, 'navigate');
+
+      component.routeToUserProfile();
+
+      expect(router.navigate).toHaveBeenCalledWith(['user/profile'], {
+        queryParams: { url: 'john-doe' },
+      });
+    });
+
+    it('should route logged-in users to admin dashboard', () => {
+      const authService = TestBed.inject(AuthService);
+      const router = TestBed.inject(Router);
+      spyOn(authService, 'isLoggedIn').and.returnValue(true);
+      spyOn(router, 'navigate');
+
+      component.routeToAdminDashboard();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/admin/users']);
+    });
+
+    it('should route guests to sign-in from admin dashboard link', () => {
+      const authService = TestBed.inject(AuthService);
+      const router = TestBed.inject(Router);
+      spyOn(authService, 'isLoggedIn').and.returnValue(false);
+      spyOn(router, 'navigate');
+
+      component.routeToAdminDashboard();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/auth/sign-in']);
+    });
+
+    it('should cache redirect url for guests using co-pilot button', () => {
+      const authService = TestBed.inject(AuthService);
+      const cacheService = TestBed.inject(CacheService);
+      const router = TestBed.inject(Router);
+      spyOn(authService, 'isLoggedIn').and.returnValue(false);
+      spyOn(cacheService, 'saveInCache');
+      spyOn(router, 'navigate');
+
+      component.onButtonOnClick();
+
+      expect(cacheService.saveInCache).toHaveBeenCalledWith(
+        'redirectUrl',
+        '/student/co-pilot',
+      );
+      expect(router.navigate).toHaveBeenCalledWith(['auth/sign-in']);
+    });
+
+    it('should set logo width based on screen size', () => {
+      Object.defineProperty(window, 'innerWidth', {
+        value: 350,
+        configurable: true,
+      });
+      component.setLogoWidth();
+      expect(component.logoWidth).toBe(125);
+
+      Object.defineProperty(window, 'innerWidth', {
+        value: 500,
+        configurable: true,
+      });
+      component.setLogoWidth();
+      expect(component.logoWidth).toBe(190);
+    });
+
+    it('should decrement notification count and persist to cache', () => {
+      const cacheService = TestBed.inject(CacheService);
+      component.notificationCount = 3;
+      spyOn(cacheService, 'saveInCache');
+
+      component.reduceNotificationCount();
+
+      expect(component.notificationCount).toBe(2);
+      expect(cacheService.saveInCache).toHaveBeenCalledWith(
+        'unclicked-noti-count',
+        2 as any,
+      );
+    });
+
+    it('should navigate to instructor dashboard when welcome was already shown', fakeAsync(() => {
+      const authService = TestBed.inject(AuthService);
+      const router = TestBed.inject(Router);
+      spyOn(authService, 'welcomeInstructor').and.returnValue(
+        of({ data: { welcomeInstructorDashboard: true } }),
+      );
+      spyOn(router, 'navigate');
+
+      component.routeToInstructorWelcomePage();
+      tick();
+
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/instructor/instructor-dashboard',
+      ]);
+    }));
+
+    it('should navigate to pricing and student result pages', () => {
+      const router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+
+      component.routeToPricingPage();
+      expect(router.navigate).toHaveBeenCalledWith(['pricing-page']);
+
+      component.routeToStudentResultPage();
+      expect(router.navigate).toHaveBeenCalledWith(['student/grader-results']);
+    });
+  });
 });

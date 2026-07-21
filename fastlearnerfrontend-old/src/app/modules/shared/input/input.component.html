@@ -1,0 +1,91 @@
+<div nz-col [nzLg]="24" nzMd="24" nzSm="24" nzXs="24">
+  <label class="label-color"
+    >{{ label }} <span *ngIf="required" class="mandatory">*</span>
+
+    <img
+      *ngIf="isTooltip"
+      style="margin-left: 10px"
+      nzTooltipTitle="Earn revenue based on course views in the subscription model, or earn 90% on each
+             purchase from premium course."
+      nzTooltipPlacement="rightTop"
+      [nzTooltipTrigger]="'hover'"
+      nz-tooltip
+      src="../../../../../assets/icons/info-icon.svg"
+    />
+  </label>
+
+  <input
+    *ngIf="!isInputGroup && !isFileInput"
+    nz-input
+    [placeholder]="placeholder"
+    nzSize="large"
+    [(ngModel)]="model"
+    name="inputName"
+    (ngModelChange)="onChange($event)"
+    (blur)="onBlur()"
+    [ngModelOptions]="{ standalone: true }"
+  />
+
+  <ng-container *ngIf="isInputGroup">
+    <nz-input-group [nzPrefix]="staticValue" [nzSuffix]="copyValue">
+      <input
+        nz-input
+        style="color: blue"
+        [placeholder]="placeholder"
+        nzSize="large"
+        [(ngModel)]="model"
+        name="inputName"
+        (ngModelChange)="onChange($event)"
+        (blur)="onBlur()"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </nz-input-group>
+    <ng-template #copyValue>
+      <span
+        class="cursor-pointer"
+        nz-icon
+        nzType="copy"
+        nzTheme="twotone"
+        nz-tooltip
+        nzTooltipTitle="Copy URL"
+        (click)="copyUrlToClipboard()"
+      ></span>
+    </ng-template>
+    <ng-template #staticValue>
+      <span>{{ staticVal }}</span>
+    </ng-template>
+  </ng-container>
+
+  <div
+    *ngIf="isFileInput"
+    class="uploader"
+    style="display: flex; align-items: stretch"
+  >
+    <span class="file-name">{{ fileName || "No file selected" }}</span>
+    <span class="file-upload-span">
+      <input
+        [id]="'upload ' + idForAccesibility"
+        [placeholder]="placeholder"
+        type="file"
+        style="display: none"
+        [accept]="accept"
+        name="inputName"
+        (change)="handleFileUpload($event)"
+      />
+
+      <label
+        [for]="'upload ' + idForAccesibility"
+        (click)="markFileAsUpload()"
+        class="custom-file-upload"
+      >
+        <span class="upload-button">{{ btnTxt }}</span>
+      </label>
+    </span>
+  </div>
+
+  <div style="color: red" *ngIf="isInputTouched && errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <ng-content></ng-content>
+</div>

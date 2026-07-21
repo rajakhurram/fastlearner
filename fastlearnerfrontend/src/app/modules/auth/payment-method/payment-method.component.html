@@ -12,7 +12,7 @@
       <div nz-row>
         <div nz-col nzSpan="24" class="text-align-center">
           <p class="color-black font-18">
-              {{ paymentMessage }}
+            {{ paymentMessage }}
           </p>
         </div>
       </div>
@@ -150,24 +150,24 @@
                           />
                         </div>
                       </div>
-                        <div nz-col nzXs="24" nzSm="12">
-                      <div class="country-division ml-4">
-                        <p class="color-black label required">Country</p>
-                        <nz-select
-                          style="width: 200px"
-                          nzShowSearch
-                          nzPlaceHolder="Select Country"
-                          [(ngModel)]="paymentProfile.countryCode"
-                          (ngModelChange)="onCountryChange($event)"
-                        >
-                          <nz-option
-                            *ngFor="let c of countries"
-                            [nzValue]="c.iso2"
-                            [nzLabel]="c.name"
-                          ></nz-option>
-                        </nz-select>
+                      <div nz-col nzXs="24" nzSm="12">
+                        <div class="country-division ml-4">
+                          <p class="color-black label required">Country</p>
+                          <nz-select
+                            style="width: 200px"
+                            nzShowSearch
+                            nzPlaceHolder="Select Country"
+                            [(ngModel)]="paymentProfile.countryCode"
+                            (ngModelChange)="onCountryChange($event)"
+                          >
+                            <nz-option
+                              *ngFor="let c of countries"
+                              [nzValue]="c.iso2"
+                              [nzLabel]="c.name"
+                            ></nz-option>
+                          </nz-select>
+                        </div>
                       </div>
-                    </div>
                     </div>
                   </div>
                 </div>
@@ -183,7 +183,6 @@
                           [(ngModel)]="paymentProfile.city"
                           (paste)="onPaste($event)"
                           (keypress)="allowOnlyLetters($event)"
-
                         />
                       </div>
 
@@ -194,14 +193,13 @@
                           placeholder="Address"
                           [(ngModel)]="paymentProfile.address"
                           (paste)="onPaste($event)"
-                          
                         />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="w-100 justify-content-between align-items-center">
+                <!-- <div class="w-100 justify-content-between align-items-center">
                   <div class="w-100 ml-2 mt-1 mb-1 mr-2">
                     <label
                       nz-checkbox
@@ -211,7 +209,7 @@
                       Save for later subscriptions
                     </p>
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <!-- <div

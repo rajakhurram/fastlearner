@@ -12,7 +12,11 @@ module.exports = function (config) {
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
-            clearContext: false // leave Jasmine Spec Runner output visible in browser
+            clearContext: false, // leave Jasmine Spec Runner output visible in browser
+            jasmine: {
+                // Full suite has heavy component specs; avoid false timeouts.
+                timeoutInterval: 30000,
+            },
         },
         coverageReporter: {
             dir: require('path').join(__dirname, 'coverage'),
@@ -28,13 +32,29 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['ChromeHeadlessNoSandbox'], // Use the custom launcher
-        singleRun: true, // Ensure the process exits after tests run
+        browsers: ['ChromeHeadlessNoSandbox'],
+        concurrency: 1,
+        // Defaults are too aggressive for ~2500 tests on Windows (ping timeout ~2s).
+        pingTimeout: 120000,
+        browserDisconnectTimeout: 120000,
+        browserDisconnectTolerance: 3,
+        browserNoActivityTimeout: 300000,
+        captureTimeout: 180000,
+        processKillTimeout: 20000,
+        singleRun: true,
         restartOnFileChange: true,
         customLaunchers: {
             ChromeHeadlessNoSandbox: {
                 base: 'ChromeHeadless',
-                flags: ['--no-sandbox', '--disable-setuid-sandbox']
+                flags: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-gpu',
+                    '--disable-background-timer-throttling',
+                    '--disable-backgrounding-occluded-windows',
+                    '--disable-renderer-backgrounding',
+                ]
             }
         }
     });
