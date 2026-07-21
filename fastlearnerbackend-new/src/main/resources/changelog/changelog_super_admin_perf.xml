@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="super-admin-subscriptions-list-perf-indexes" author="cursor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_th_user_subscription_created" tableName="transaction_history"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_th_user_subscription_created" tableName="transaction_history">
+            <column name="user_id"/>
+            <column name="subscription_id"/>
+            <column name="created_at" descending="true"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="super-admin-subscriptions-list-start-date-index" author="cursor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_subscribed_user_start_date" tableName="subscribed_user"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_subscribed_user_start_date" tableName="subscribed_user">
+            <column name="start_date" descending="true"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="super-admin-payments-th-created-at-index" author="cursor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_th_created_at_desc" tableName="transaction_history"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_th_created_at_desc" tableName="transaction_history">
+            <column name="created_at" descending="true"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="super-admin-payments-pcpth-transaction-id-index" author="cursor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_pcpth_transaction_id_id" tableName="premium_course_payout_transaction_history"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_pcpth_transaction_id_id" tableName="premium_course_payout_transaction_history">
+            <column name="transaction_id"/>
+            <column name="id" descending="true"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="super-admin-payments-pcpth-created-date-index" author="cursor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_pcpth_created_date_desc" tableName="premium_course_payout_transaction_history"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_pcpth_created_date_desc" tableName="premium_course_payout_transaction_history">
+            <column name="created_date" descending="true"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

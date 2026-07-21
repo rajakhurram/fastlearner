@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro
+        http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="090320251700000" author="qasim">
+        <sql>
+            <!--Populating roles-->
+            INSERT INTO role (id, type) VALUES (1,'STUDENT');
+            INSERT INTO role (id, type) VALUES (2,'INSTRUCTOR');
+
+            <!-- Course Category population -->
+            INSERT INTO course_category (id, name, description, is_active) VALUES (1, 'Development', 'Development related courses.', true);
+            INSERT INTO course_category (id, name, description, is_active) VALUES (2, 'Algorithm', 'Algorithm related courses.', true);
+            INSERT INTO course_category (id, name, description, is_active) VALUES (3, 'Design', 'Design related courses.', true);
+            INSERT INTO course_category (id, name, description, is_active) VALUES (4, 'Web Development', 'Web Development related courses.', true);
+
+            <!-- Course Level population -->
+            INSERT INTO course_level (id, name, is_active) VALUES (1, 'Beginner', true);
+            INSERT INTO course_level (id, name, is_active) VALUES (2, 'Intermediate', true);
+            INSERT INTO course_level (id, name, is_active) VALUES (3, 'Expert', true);
+            INSERT INTO course_level (id, name, is_active) VALUES (4, 'All Levels', true);
+
+            <!-- Topic Type population -->
+            INSERT INTO topic_type (id, name, is_active) VALUES (1, 'Video', true);
+            INSERT INTO topic_type (id, name, is_active) VALUES (2, 'Article', true);
+            INSERT INTO topic_type (id, name, is_active) VALUES (3, 'Animation', true);
+            INSERT INTO topic_type (id, name, is_active) VALUES (4, 'Quiz', true);
+
+
+            <!-- Subscription population -->
+            INSERT INTO subscription (id, description, duration, duration_in_word, is_active, name, price, plan_type, content, content_heading) VALUES (1, 'This plan will be only applied on free courses', 0, 'Forever', true, 'Free Plan', 0, 'FREE', 'Access to all standard subscription courses. \n Create up to 5 Premium courses with custom pricing', 'free');
+            INSERT INTO subscription (id, description, duration, duration_in_word, is_active, name, price, plan_type, content, content_heading) VALUES (2, 'This plan will be only applied on all courses sections', 1, 'Per Month', true, 'Standard Student Plan', 20, 'STANDARD', 'Access to all standard subscription courses. \n Platform-branded certificates. \n Alternate instructor access. \n Email support with a 48-hour response time.', 'Everything from Free plus');
+            INSERT INTO subscription (id, description, duration, duration_in_word, is_active, name, price, plan_type, content, content_heading) VALUES (3, 'This plan will be only applied on all courses sections', 12, 'Per Month, Billed Annually', true, 'Standard Student Plan', 180, 'STANDARD', 'Access to all standard subscription courses. \n Platform-branded certificates. \n Alternate instructor access. \n Email support with a 48-hour response time.', 'Everything from Free plus');
+
+            <!-- Permission population -->
+            INSERT INTO permission (id, created_at, name, updated_at) VALUES (1, NOW(), 'AFFILIATE', NOW());
+            INSERT INTO permission (id, created_at, name, updated_at) VALUES (2, NOW(), 'EDIT_PREMIUM_COURSE', NOW());
+
+
+            <!-- Premium COURSE PAYOUT CONFIG -->
+            INSERT INTO premium_course_payout_config (id, created_date, is_active, payout_type, percentage_cut) VALUES (1, '2024-12-06 16:30:00', true, 'SELF', 0.9);
+            INSERT INTO premium_course_payout_config (id, created_date, is_active, payout_type, percentage_cut) VALUES (2, '2024-12-06 16:30:00', true, 'DIRECT', 0.45);
+            INSERT INTO premium_course_payout_config (id, created_date, is_active, payout_type, percentage_cut) VALUES (3, '2024-12-06 16:30:00', true, 'AFFILIATE', 0.9);
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

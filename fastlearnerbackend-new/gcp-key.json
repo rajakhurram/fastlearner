@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "fastlearner",
+  "private_key_id": "429d9c0edfed427529d161763d735ccd0aac58f3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDS83wrF9nEz1o6\n8JZv3zyKVSjv+bwydOVS1iWd3vNeHHnSc7M811bvN0GgN3JvKqNWvk05q1sUrKNL\nPXAGDAm44JACwljgItiyKx4N8a4PJ7hyydV6mlad2G8HijmqBSN+fY4Y3ZcMtOQb\nta7fmem35mcm8gzOeB3oJBQ27eeF/OpquuFNUPFPGJs1D663i6Gf7jGrk6g0IRCn\nYyVigdekHjxy3/yefhAE5UMOLQfQUJJg59ybwE37zMr9EqmKhyQGFV1sBxM+9o4Y\nBaMnF3sBN83xe0OjgpB8RojetWHDRAoay3/Oy6XQkaBfHzbmvJeG/rzwvJjbuCPQ\ncVTKq0cBAgMBAAECggEAAMCqQS3airqF5xMNyVhDuzdcsBb9MDWlLg2KKLEXf47k\n0x6zLXDT/EJfZUC/Y3TErIn9JOsW5gjr4/hEFJxxQi/oaZ8bgbC0ItYXK0vw/9g3\nnu64CJIBhDqGAmIQjLoMF27fnXh4agzg6bWlKiJuoFelx3B6gdfRPP9YdF32yw5D\nWAAQ+JLlV4sks9jtPHykv133K6NikS/2ziv0q2GujY/B6907jDms7zcN5vMsO2Lo\nADWS94vKL5PK/fDRuAFYdAmb0pLw+FeqMbPki11PvqR4+E2FVx46bXRseUdo+tuI\n50Y+EFiXZYq2LmhpHbZ1h1HhGtngTgQl7gSwBa5SMQKBgQDtXpXhiG5JHJNA+OUa\nHXzPhC9Uc4LkcYc+A26T9108Ownh6M2kRBeyzXQ7kahXAfvI1bo7reZ8wZUcU3HT\nY8YKvm1WJfe1E9VB6i2ay2Ay7/JJRvgTbAP6j30+avgL5vLZa5akP8x4ns8ilcvz\nGll7fztqYYIRM5TTkEgyi6RuEQKBgQDjghS+eC7prwNFCBX1qbkpjS0Qs8vV0KnX\n91xHJNJsv3EHIC1nP6wxrW3Ayu0w2AitxWY7uaFzNkWQ+0SNzot+jH+aIbVDt5uc\nqXjHruFiQirGiYnxc0vllVuJmONOCklghXDX5z1R3UQPe1mr0K820tRxt44eZBnK\n1VkyRCAZ8QKBgQCIVvrJ9z45elNOT2fwbx2AaFFzNYHqSxc+VGRQUxXXgaW0f66W\nepIOHppzmL9Tco03lyOIIeOwptRJ19gabkWTaDuO7vHvrTuhx6t4LPbNaysEUeIt\n7a3/Xim3D2P4GihFH9n/77E3WyhomhfyQ6FAIR10hhtaXAFQ35/IgJLqsQKBgFeM\nw3bYwRTkaJm0Ft9GxR6cWW9IAXTyq6mUY0ptfRykP1bCpzZIZndnigjbDpPxTsWw\nZTsuoFa51+OHDkaT6VJ1ttUVi6/XhGaxQO12+vzZAaUNYKwt9lMPOv6kezSY+MvQ\nDjDHp+1M/NgIW+WmlQa/80kfne1MEDDiEUUquj/BAoGBAKcCYHl0TvbgJGKw7EwP\nZMxOVAzmFaCJ18ta6yFp7N/OgqTX+vbZvE/L1hDxAWIy44czNae7QLA07mVOIELP\n+Iss3Vi32LeO0MbH5sT44/GORrdnOrdLamgpfZ9abhFmTHMZrT2xKtstYz4xw+Tv\ngJM8xJk6Sfg+nA7chWbuVp5w\n-----END PRIVATE KEY-----\n",
+  "client_email": "fastleaner-acc@fastlearner.iam.gserviceaccount.com",
+  "client_id": "110023818178122601346",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fastleaner-acc%40fastlearner.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro
+        http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="1021202417211065" author="saif">
+        <sql>
+            UPDATE user_profile up
+            SET profile_url = LOWER(REGEXP_REPLACE(REPLACE(u.full_name, ' ', '-'), '[^a-zA-Z0-9\-]', '', 'g'))
+            FROM users u
+            WHERE up.created_by = u.id
+        </sql>
+    </changeSet>
+
+    <changeSet id="1029202418260000" author="qasim">
+        <sql>
+            Update course SET course_type = 'STANDARD_COURSE' where course_type is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="1108202417410000" author="qasim">
+        <sql>
+            UPDATE course SET course_type = 'FREE_COURSE' WHERE id IN ( SELECT course_id FROM section
+            GROUP BY course_id HAVING COUNT(*) = SUM(CASE WHEN is_free = true THEN 1 ELSE 0 END) );
+        </sql>
+    </changeSet>
+
+    <changeSet id="12062024163010000" author="qasim">
+        <sql>
+            INSERT INTO public.premium_course_payout_config(id, created_date, is_active, payout_type, percentage_cut) VALUES (1, '2024-12-06 16:30:00.00', true, 'SELF', 0.9);
+            INSERT INTO public.premium_course_payout_config(id, created_date, is_active, payout_type, percentage_cut) VALUES (2, '2024-12-06 16:30:00.00', true, 'DIRECT', 0.45);
+            INSERT INTO public.premium_course_payout_config(id, created_date, is_active, payout_type, percentage_cut) VALUES (3, '2024-12-06 16:30:00.00', true, 'AFFILIATE', 0.45);
+        </sql>
+    </changeSet>
+
+    <changeSet id="12112024173210000" author="qasim">
+        <sql>
+            DELETE FROM api_client where id = 1;
+            INSERT INTO public.api_client(id, api_secret, client_id, created_at, scopes, status) VALUES (1, '1234567890abcdef1234567890abcdef','course_factory','2024-08-22 11:30:25.61','COURSE_CREATION',true);
+        </sql>
+    </changeSet>
+
+    <changeSet id="12112024174110000" author="qasim">
+        <sql>
+            ALTER TABLE transaction_history ALTER COLUMN status TYPE VARCHAR(255) USING status::VARCHAR;
+
+            UPDATE transaction_history
+            SET status = CASE
+                WHEN status = '1' THEN 'ACTIVE'
+                WHEN status = '0' THEN 'INACTIVE'
+            END;
+        </sql>
+    </changeSet>
+    <changeSet id="12162024150710000" author="qasim">
+        <sql>
+            UPDATE premium_course_payout_config SET percentage_cut = 0.9 WHERE payout_type = 'AFFILIATE';
+        </sql>
+    </changeSet>
+    <changeSet id="01142025152510000" author="qasim">
+        <sql>
+            UPDATE subscription SET name = 'Standard Student Plan' WHERE id = 2;
+            UPDATE subscription SET name = 'Standard Student Plan' WHERE id = 3;
+        </sql>
+    </changeSet>
+    <changeSet id="01142025152511000" author="qasim">
+        <sql>
+            UPDATE subscription SET plan_type = 'STANDARD' WHERE name ilike 'Standard%'
+        </sql>
+    </changeSet>
+    <changeSet id="01142025152513000" author="qasim">
+        <sql>
+            UPDATE subscription SET plan_type = 'FREE' WHERE name ilike 'Free%';
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (4, 'This plan will be only applied on all courses sections', 1, 'Per Month', true, 'Premium Instructor Plan', null, 100, 'PREMIUM');
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (5, 'This plan will be only applied on all courses sections', 12, 'Per Month, Billed Annually', true, 'Premium Instructor Plan', null, 600, 'PREMIUM');
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (6, 'This plan will be only applied on all courses sections', 1, 'Per Month', true, 'Enterprise Instructor Plan', null, 200, 'ULTIMATE');
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (7, 'This plan will be only applied on all courses sections', 12, 'Per Month, Billed Annually', true, 'Enterprise Instructor Plan', null, 1200, 'ULTIMATE');
+        </sql>
+    </changeSet>
+    <changeSet id="01022025161010000" author="sami">
+        <sql>
+            WITH PremiumCourse AS (
+            SELECT id AS course_id, instructor_id
+            FROM course
+            WHERE course_type = 'PREMIUM_COURSE'
+            ),
+            AffiliateUser AS (
+            SELECT
+            u.id AS user_id,
+            u.email AS user_email,
+            a.id AS affiliate_id
+            FROM public.users u
+            LEFT JOIN public.affiliate a ON u.email = a.email -- Check if affiliate exists for the user's email
+            ),
+            InstructorName AS (
+            SELECT
+            u.id AS instructor_id,
+            u.full_name AS instructor_name,
+            u.email AS instructor_email
+            FROM public.users u
+            WHERE u.id IN (SELECT instructor_id FROM PremiumCourse)
+            ),
+            InsertAffiliate AS (
+            -- Insert into affiliate if it does not exist
+            INSERT INTO public.affiliate (email, created_stripe_date, onboard_status)
+            SELECT
+            ins.instructor_email AS email,
+            NOW() AS created_stripe_date,
+            'PENDING' AS onboard_status -- Default value for onboard_status
+            FROM InstructorName ins
+            WHERE NOT EXISTS (
+            SELECT 1 FROM public.affiliate a WHERE a.email = ins.instructor_email
+            )
+            RETURNING id AS affiliate_id, email AS affiliate_email
+            )
+            -- Insert into instructor_affiliate table
+            INSERT INTO public.instructor_affiliate (
+            affiliate_uuid, created_date, default_reward, last_mod_date, nickname, status, username, affiliate_user,
+            instructor_id
+            )
+            SELECT
+            gen_random_uuid(), -- PostgreSQL UUID function. Replace with `UUID()` for MySQL
+            NOW() AS created_date,
+            100.0 AS default_reward, -- Replace with your default value
+            NOW() AS last_mod_date,
+            'self' AS nickname,
+            'ACTIVE' AS status,
+            ins.instructor_name AS username,
+            COALESCE(ia.affiliate_id, af.affiliate_id) AS affiliate_user, -- Use existing or newly inserted affiliate ID
+            pc.instructor_id
+            FROM PremiumCourse pc
+            JOIN InstructorName ins ON pc.instructor_id = ins.instructor_id
+            LEFT JOIN AffiliateUser af ON af.user_email = ins.instructor_email -- Ensure user matches instructor
+            LEFT JOIN InsertAffiliate ia ON ia.affiliate_email = ins.instructor_email -- Include new affiliates
+            WHERE af.affiliate_id IS NULL; -- Only include if affiliate does not already exist
+        </sql>
+    </changeSet>
+    <changeSet id="1601202512000000" author="sami">
+        <sql>
+            INSERT INTO subscription_validations (id, is_active, validation_name, value, subscription_id)
+            VALUES (1, true, 'PREMIUM_COURSE', 5, 2);
+        </sql>
+    </changeSet>
+    <changeSet id="1601202512400000" author="sami">
+        <sql>
+            INSERT INTO permission (id, created_at, name, updated_at)
+            VALUES (1, NULL, 'AFFILIATE', NULL);
+        </sql>
+    </changeSet>
+    <changeSet id="1601202512500000" author="sami">
+        <sql>
+            INSERT INTO subscription_permission (id, is_active, permission_id, subscription_id)
+            VALUES (1, NULL, 1, 2);
+        </sql>
+    </changeSet>
+
+    <changeSet id="160125161010000" author="wassay">
+        <sql>
+            INSERT INTO public.users(
+            created_date, email, full_name, is_active, is_subscribed, password, provider, role_id, sales_raise, paypal_email, login_timestamp, stripe_account_id)
+            VALUES (
+            '2025-01-16 17:15:00',
+            'fastlearner.ai@vinncorp.com',
+            'Fast Learner',
+            true,
+            false,
+            '$2a$10$QLmfDSRfAPr9v/m22ezCn.W348W6oD4cwx2gMeXXZ6jmjcgl3kiU2',
+            'LOCAL',
+            1,
+            1.0,
+            NULL,
+            '2025-01-16 17:15:00',
+            NULL
+            );
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="01142025152510000" author="qasim">
+        <sql>
+            UPDATE subscription SET name = 'Standard Student Plan' WHERE id = 2;
+            UPDATE subscription SET name = 'Standard Student Plan' WHERE id = 3;
+        </sql>
+    </changeSet>
+    <changeSet id="01142025152511000" author="qasim">
+        <sql>
+            UPDATE subscription SET plan_type = 'STANDARD' WHERE name ilike 'Standard%'
+        </sql>
+    </changeSet>
+    <changeSet id="01142025152513000" author="qasim">
+        <sql>
+            UPDATE subscription SET plan_type = 'FREE' WHERE name ilike 'Free%';
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (4, 'This plan will be only applied on all courses sections', 1, 'Per Month', true, 'Premium Instructor Plan', null, 100, 'PREMIUM');
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (5, 'This plan will be only applied on all courses sections', 12, 'Per Month, Billed Annually', true, 'Premium Instructor Plan', null, 600, 'PREMIUM');
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (6, 'This plan will be only applied on all courses sections', 1, 'Per Month', true, 'Enterprise Instructor Plan', null, 200, 'ULTIMATE');
+
+            INSERT INTO public.subscription(id, description, duration, duration_in_word, is_active, name, paypal_plan_id, price, plan_type)
+            VALUES (7, 'This plan will be only applied on all courses sections', 12, 'Per Month, Billed Annually', true, 'Enterprise Instructor Plan', null, 1200, 'ULTIMATE');
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="01242025152513000" author="wassay">
+            <sql>
+    <![CDATA[
+    Update subscription SET content = 'Access to all standard subscription courses. \n Create up to 5 Premium courses with custom pricing',
+    content_heading = 'free' WHERE plan_type = 'FREE';
+
+    Update subscription SET content = 'Access to all standard subscription courses. \n Platform-branded certificates. \n Alternate instructor access. \n Email support with a 48-hour response time.',
+    content_heading = 'Everything from Free plus' WHERE plan_type = 'STANDARD';
+
+    Update subscription SET content = 'Access to all standard subscription courses. \n Create up to 5 Premium courses with custom pricing. \n On-Page SEO: Meta tag optimization, content consultation, keyword identification, URL structuring and image alt-text. \n create up to 20 affiliates per course with tracking. \n Access to premium student information. \n Email support with a 24-hour response time.',
+    content_heading = 'Everything from Standard plus' WHERE plan_type = 'PREMIUM';
+
+    Update subscription SET content = 'Create unlimited Premium & Standard courses. \n Off-Page SEO: Backlinks & directory submissions. \n Unlimited affiliates with tracking. \n Priority support with a dedicated manager.',
+    content_heading = 'Everything from Premium plus' WHERE plan_type = 'ULTIMATE';
+    ]]>
+            </sql>
+    </changeSet>
+
+    <changeSet id="01222025164313000" author="qasim">
+        <sql>
+            UPDATE subscribed_user_profile sup
+            SET customer_payment_id = su.customer_profile_id
+            FROM subscribed_user su
+            WHERE sup.subscribed_user_id = su.id
+            AND su.customer_profile_id IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="01262025132613000" author="qasim">
+        <sql>
+            DELETE FROM subscribed_user_profile WHERE customer_payment_id is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0131202515532448" author="saif">
+        <sql>
+            UPDATE quiz_question SET question_type = 'SINGLE_CHOICE';
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="0212202517471709" author="saif">
+        <sql>
+            INSERT INTO permission (id, created_at, name, updated_at)
+            VALUES (2, NULL, 'EDIT_PREMIUM_COURSE', NULL);
+        </sql>
+    </changeSet>
+    <changeSet id="0212202517473805" author="saif">
+        <sql>
+            INSERT INTO subscription_permission (id, is_active, permission_id, subscription_id) VALUES
+            (5, true, 2, 4),
+            (6, true, 2, 5),
+            (7, true, 2, 6),
+            (8, true, 2, 7);
+        </sql>
+    </changeSet>
+
+    <changeSet id="0227202515005696" author="saif">
+        <sql>
+            UPDATE subscription SET content = '15-day free trial. \n Access to all standard subscription courses. \n Platform-branded certificates. \n Alternate instructor access. \n Email support with a 48-hour response time.'
+            WHERE plan_type = 'STANDARD'
+        </sql>
+    </changeSet>
+    <changeSet id="0317202515003001" author="sami">
+        <sql>
+            INSERT INTO public.transaction_history
+            (id, status, auth_subscription_id, created_at, customer_payment_profile_id, old_transaction_id, response_code, response_text, subscription_amount, subscription_next_cycle, subscription_status, trial_end_date, updated_date, subscription_id, user_id, external_transaction_id, payment_status, settled_date, deducted_amount)
+            SELECT
+            NEXTVAL('transaction_history_id_seq'),
+            'ACTIVE',
+            'FREE',
+            NOW(),
+            NULL,
+            NULL,
+            '200',
+            'FREE',
+            0.0,
+            NOW() + INTERVAL '1 month',
+            'SUCCESS',
+            NOW() + INTERVAL '7 days',
+            NULL,
+            su.subscription_id,
+            su.user_id,
+            NULL,
+            'PAID',
+            NOW(),
+            0
+            FROM subscribed_user su
+            WHERE su.subscription_id = 1;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0033202512000096" author="wasay">
+        <sql>
+            DELETE FROM course_review
+            WHERE comment IS NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="022520251532245" author="wassay">
+        <sql>
+            ALTER TABLE quiz_question ALTER COLUMN explanation TYPE TEXT;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0225202512463174" author="saif">
+        <sql>
+            UPDATE course set content_type = 'COURSE'
+        </sql>
+    </changeSet>
+    <changeSet id="008420251844634" author="sami">
+        <sql>
+            UPDATE public.quiz q
+            SET random_question = sub.question_count
+            FROM (
+            SELECT quiz_id, COUNT(*) AS question_count
+            FROM public.quiz_question
+            GROUP BY quiz_id
+            ) sub
+            WHERE q.id = sub.quiz_id
+            AND q.random_question IS NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20250502122112" author="wassay">
+        <sql>
+            <![CDATA[
+
+    Update subscription SET content = '15-days free trial. \n Access to all standard subscription courses. \n Platform-branded certificates. \n Alternate instructor access. \n Email support with a 48-hour response time.',
+    content_heading = 'Everything from Free plus' WHERE plan_type = 'STANDARD';
+
+    Update subscription SET content = 'Access to all standard subscription courses. \n Create up to 5 Premium courses with custom pricing. \n On-Page SEO: Meta tag optimization, content consultation, keyword identification, URL structuring and image alt-text. \n Create up to 20 affiliates per course with tracking. \n Access to premium student information. \n Email support with a 24-hour response time.',
+    content_heading = 'Everything from Standard plus' WHERE plan_type = 'PREMIUM';
+
+    Update subscription SET content = 'Create unlimited Premium & Standard courses. \n Off-Page SEO: Backlinks & directory submissions. \n Unlimited affiliates with tracking. \n 24x7 support with a dedicated manager.',
+    content_heading = 'Everything from Premium plus' WHERE plan_type = 'ULTIMATE';
+    ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet id="20250502122131" author="wassay">
+        <sql><![CDATA[
+
+        UPDATE subscription SET price = 50 WHERE id = 5;
+        UPDATE subscription SET price = 100 WHERE id = 7;
+    ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet id="20250505131600" author="wassay">
+        <sql><![CDATA[
+
+        UPDATE subscription SET price = 600 WHERE id = 5;
+        UPDATE subscription SET price = 1200 WHERE id = 7;
+    ]]>
+        </sql>
+    </changeSet>
+</databaseChangeLog>

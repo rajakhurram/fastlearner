@@ -1,0 +1,626 @@
+{
+  "isActive": true,
+  "courseId": "29",
+  "title": "The Unsung Selldiers",
+  "description": "<p>Sales is a journey that commences with recognising your clientele, fostering relationships, acquiring customers until delivering good quality and ensuring client's success post-product or service utilisation. This journey will empower you to excel in sales, equipping you with the skills to understand customer filtration, achieve growth objectives, channel sales, establish pricing strategies, negotiate effectively, and utilise case-based selling techniques.</p>",
+  "categoryId": 1,
+  "courseLevelId": 1,
+  "about": "Sales is all about Psychology and Mathematics",
+  "thumbnailUrl": "https://storage.googleapis.com/fastlearner-bucket/PROFILE_IMAGE/cXZX2lOw_profile_image.jpeg",
+  "previewVideoURL": "https://storage.googleapis.com/fastlearner-bucket/PREVIEW_VIDEO/OX9WpR0X_Video_Preview.mp4",
+  "tags": [
+    {
+      "id": 326,
+      "name": "Good Quality",
+      "active": true
+    },
+    {
+      "id": 327,
+      "name": "Growth ",
+      "active": true
+    },
+    {
+      "id": 1102,
+      "name": "Enterprise Sales Training",
+      "active": true
+    },
+    {
+      "id": 1103,
+      "name": "EnterpriseSales",
+      "active": true
+    }
+  ],
+  "prerequisite": [
+    "You must have a basic knowledge of sales"
+  ],
+  "courseOutcomes": [
+    "The Real Account Management/ The excellence of Account Management",
+    "Importance of History, Patience, Responsiveness, and Service Quality",
+    "Making your Client Successful",
+    "Effective Funnel Management",
+    "To make Empathy as your Super power",
+    "Finally Mastering the Art of Sales",
+    "How is Sales a \"Lifestyle\"",
+    "The Real Account Management/ The excellence of Account Management",
+    "Importance of History, Patience, Responsiveness, and Service Quality"
+  ],
+  "sections": [
+    {
+      "id": 54,
+      "delete": false,
+      "title": "Introduction",
+      "isFree": true,
+      "level": 1,
+      "topics": [
+        {
+          "id": 85,
+          "delete": false,
+          "title": "Self Introduction",
+          "level": 1,
+          "topicTypeId": 1,
+          "duration": 133,
+          "video": {
+            "id": 331,
+            "filename": "S1- T1 Self Intro.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/Ndy0frwu_S1-_T1_Self_Intro.mp4",
+            "summary": "Khurram Kalimi, a computer science graduate and MBA, shares insights in his book \"Selldiers\" about the significance of salespeople in driving company revenue. Transitioning from software engineering to sales, he gained experience at renowned companies like Microsoft, Oracle, and B&B. With over $10 million in sales, he co-founded Wilkow, a successful company offering software development services globally. With 16 employees across 16 cities and five countries, Wilkow focuses on B2B sales, providing services such as resource augmentation, customized development, and technology consultancy. Kalimi's book reflects his journey and expertise in the sales industry.",
+            "transcribe": " Hi, this is Khurram Kalimi. Today we are, you know, given an introduction about the book I have written, the name of the book is Selldiers. What this Selldiers means, I think sellers are those soldiers which are fighting for the company's revenue on the front line, but they are not discussed a lot. So, you know, I've written this book on, you know, highlighting the different aspect of sales and celebrating all the sales people around the world. So, I started with my introduction. My name is Karim Kalimi. I'm a computer science graduate and an MBA, so that makes me techno sales. So, I've been in both the words like software engineering world and the sales world and the business world. So, after, you know, my graduation and my studies, I did software engineering for some years. I started my career in 2004. I did software engineering for some years and then I shifted my career towards sales. I've worked for companies like Microsoft three years, Oracle three years and B&B three years. So, these companies are, you know, one of the kind and pioneers in their field as we all know. All of my time has been spent on, you know, B2B sales. I've done sales of around more than $10 million so far in my lifetime. After 15 years of my experience, I started my own company called Wilkow, which we started with two people. Now we are 16 employees. We are existing in 16 cities and five countries of the world. We are going really, really fast. And all this I've discussed in the book is based on my career as a job and based on the company I've been running. So, I run this company as a co-founder and chief operating officer, but my core responsibilities lie around sales. So, that's why I've used that experience to write this. We have run in this company, Wilkow, for the last six years and we have around 80 plus clients in five countries. At Wilkow, we are doing software development services of all sorts. Like we do resource augmentation, we do customized development, consulting, technology consultancy, all kinds of software developers we provide in different modes like resource augmentation and customized development.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 292,
+          "delete": false,
+          "title": "Book Introduction",
+          "level": 2,
+          "topicTypeId": 1,
+          "duration": 201,
+          "video": {
+            "id": 333,
+            "filename": "S1 T2 Book Intro.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/Gm4Jc7GB_S1_T2_Book_Intro.mp4",
+            "summary": "The book discussed in the preface focuses on actionable sales strategies from a B2B perspective, applicable to various career stages and even personal life. Emphasizing hard work, integrity, positivity, and self-initiative, it presents a structured approach to client relationships and long-term customer retention. The book is designed for quick implementation, with five chapters covering essential factors for success in sales. It stresses the importance of ensuring client success post-service. Ideal for individuals with energetic, positive, and curious personalities, it aims to guide readers through a practical and effective sales process for sustainable business growth.",
+            "transcribe": " Now I'm talking about the preface of the book. In my 20 years of experience, I have not came across a book which was very much actionable and you can start the implementation really quickly. All of the books I have seen so far for sales are really big. So mostly the sales people are busy, they are border closings, half-yearly closings, yearly closings and now weekly closings. And they are so busy earning their commissions so they don't have time to write this book. So I thought while the company when Cobb is doing good and I have some time. So I thought to write about it so I'm talking about this whole subject. This book is written from actually D2B perspective but some of the principles might be you know implementable on the B2C as well. But mostly this book is written from a B2B perspective as we call it corporate sales perspective. This book is useful for people who are starting their sales career, who are in the middle of their sales career, who are maybe start trying to start their own company because whenever you start a company sales is the main thing and some of the principles are implementable on everyone as well. And some of the principles you can apply on your personal life as well. As my whole life as we spend in sales career so I'm so passionate about it. So now I say at this stage of my career that sales is a lifestyle. Some other principles and you know small factors I would like to discuss here are one is hard work. Hard work always pays off. Second most important is integrity because you know you build a history over years and for you know for to become a good advisor to people you have to be very careful about your integrity. Also positivity and positive intentions is also a you know a very important thing for sales and for every career okay. And also while you are entering into sales career people are deciding about their career. And when you're talking about sales you have to be a self-initiator and self-moderated kind of a person. Fellas are those people who are always looking forward and they're always looking for opportunities on how to create revenue for the other. The way I plan and written this book is you know it is very very actionable. You can spend 10 to 15 days reading it and the 16th day you can implement whatever has been said already at the home. This book primarily comprises of five chapters and some very critical factors discussed later on. The way I've written this book is like a process like identifying your clients, making good relations with them, selling and then providing really good quality so that they become your you know customer for lifetime. At the end I've discussed other five factors which are really really important and which have to be kept in mind through the whole process. So that's how I've you know planned and written the book. Also at the end of the process you have to make sure that your clients are really successful after using your services. I believe there are certain specific personality types which should be you know join the sales career or maybe you know pursuing their sales jobs. They have to be energetic, positive, curious and you know kind of explorers. They want to try new things, they want to see new things and they want to meet new and new people every day. Not everyone can do that. So that's a specific personality type of work.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "delete": false,
+      "title": "Right Pitch to the Right Person",
+      "isFree": false,
+      "level": 2,
+      "topics": [
+        {
+          "id": 103,
+          "delete": false,
+          "title": "Introduction",
+          "level": 1,
+          "topicTypeId": 1,
+          "duration": 54,
+          "video": {
+            "id": 306,
+            "filename": "S2 T1 Chp Intro.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/z8zKHrUE_S2_T1_Chp_Intro.mp4",
+            "summary": "The first chapter emphasizes the importance of targeting the right audience through thorough market research and data collection. Understanding demographics, customer personas, age groups, ethnic backgrounds, and societal factors is crucial before deciding on the appropriate approach for different groups. The chapter highlights the significance of research and hardware in this process, indicating the need for extensive analysis and tools to identify the best strategies for specific audiences. It is divided into two main parts: account management and KPI management, both essential components in ensuring the right pitch to the right people.",
+            "transcribe": " Now I'm talking about chapter one here, which is right pitch to the right person. Now what does that mean? You have to do a lot of marketing search. You have to collect a lot of data. You have to see the demographics, what kind of customers, what kind of persona, what kind of age-directed, ethnic connection, society-type, area. All these things are there when you talk about market research and before deciding whom to pitch what, this is the main research we have to do. And I would like to emphasize here that in this subject research and hardware are set on them. So you have to do a lot of research with a lot of hardware to identify which will be the right pitch to the right people. Chapter one, right pitch to the right person is divided into two parts. One is account management and the other is KPI management.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 87,
+          "delete": false,
+          "title": "Account Management",
+          "level": 2,
+          "topicTypeId": 1,
+          "duration": 49,
+          "video": {
+            "id": 307,
+            "filename": "S2 T2 Account Management.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/edWq5O1c_S2_T2_Account_Management.mp4",
+            "summary": "Account management involves comprehensive knowledge about a company, its offerings, industry, competitors, and future plans. Salesmen should be well-versed in these details to align their products and services effectively. The three key pillars of account management are understanding customer business processes, norms, power centers, and the organization itself. This knowledge enables sales professionals to tailor their approach and offerings to meet the specific needs and goals of the client.",
+            "transcribe": " What does account management means here? Account management means here to know about everything about the company or the account or the people working in that company. Starting from what do they sell, what is the industry, who are their competitors, what is the next year target of their CEO, what are the targets from the board, and what exactly they are planning for the next five years. PUN salesmen should know everything about all these details ideally, so that they can align their own product and services with whatever is happening in that account. Account management has three very important pillars. One is understanding customer business processes. One is understanding customer norms and power centers. And the last one is understanding the customer organization. Now I'm talking about the first topic here.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 104,
+          "delete": false,
+          "title": "Understanding Customer's Business Processes",
+          "level": 3,
+          "topicTypeId": 1,
+          "duration": 66,
+          "video": {
+            "id": 308,
+            "filename": "S2 T3 Unedrstanding Customer B. Process.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/HgKxgTOa_S2_T3_Unedrstanding_Customer_B._Process.mp4",
+            "summary": "Understanding customer business processes is crucial as each company operates uniquely with different industry, people, mindset, and culture. To effectively present products or services, one must grasp the customer's business type, including employee count, industry knowledge, product/service offerings, and business model. This insight aids in comprehending internal processes, navigating purchase orders, and understanding the company's hierarchy. Every organization has distinct processes, approval cycles, and ERP systems in place. By tailoring approaches to individual business processes, one can ensure products or services are presented in the most effective manner for each unique customer.",
+            "transcribe": " understanding customer business processes. As we all know, every company has different industry, different processes, different people, different mindset and a different culture. So we have to be very particular and we have to take care and understand the whole business process of the company so that we can present our products or services in the best possible way. To understand the business processes and in the best way, you have to keep in mind the customer's business type. How many employees they have, what is their understanding in the industry, what kind of exact product or services they produce, either they are just a reseller, producer or they create some intellectual property by themselves, what kind of exact business they are doing. This will help you understand the internal processes. Eventually, you have to take the purchase order and you have to go through the whole process of the company and the whole hierarchy because every company has different processes, approval cycles, different kind of ERPs people are using for their business processes.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 105,
+          "delete": false,
+          "title": "Customer's Norms and Power Centers",
+          "level": 4,
+          "topicTypeId": 1,
+          "duration": 49,
+          "video": {
+            "id": 309,
+            "filename": "S2 T4 Norms.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/LYcjJ86y_S2_T4_Norms.mp4",
+            "summary": "In the corporate world, understanding customer norms and identifying hidden influencers and decision makers is crucial. Despite formal hierarchies, there are often key individuals who hold sway behind the scenes. Sales professionals must establish connections at all levels to gather information effectively and pinpoint the true decision makers within a company. This insight is essential for convincing clients about the value of a product or service. By navigating these power centers adeptly, salespeople can determine the best approach to win over clients and secure successful outcomes.",
+            "transcribe": " Second point is customer norms and power centers. I have seen in my experience that a lot of times in companies, we have a hierarchy, we have a complete rule cycle, but there are always some hidden influencers, sponsors, decision makers, which are sometimes not like in front and you have to really identify what the real decision makers are doing. And to do this, you have to be connected at every level. The idea is salesmen should be connected at every level so that you have all kind of information and from that information, you can figure out who are the real decision makers of the company. By all of this, you will be able to identify and the client is really convinced about your product or service or not. Or you have to do something else to, you know, convince them.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 106,
+          "delete": false,
+          "title": "Understanding Customer's Organogram",
+          "level": 5,
+          "topicTypeId": 1,
+          "duration": 258,
+          "video": {
+            "id": 310,
+            "filename": "S2 T5 Organogram.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/sLx4qLP2_S2_T5_Organogram.mp4",
+            "summary": "Understanding the customer organogram is crucial for pitching services effectively, as it reveals key relationships within a company. Identifying hidden power centers and the real decision-makers is essential in sales. Industry-specific norms and values influence decision-making processes, with slow adoption of new technology common in sectors like banking due to regulatory constraints. Success stories in innovation can quickly spread within an industry. Internal power centers exist within the organizational structure, while external ones, like regulatory bodies, impact industry-wide decisions. Recognizing and leveraging both internal and external power centers can turn threats into opportunities for successful account management.",
+            "transcribe": " third part is understanding customer organogram. This is really, really important when it comes to pitching your services to any client because this will explain you the relations between peers, the relations between seniors and juniors. IT head and DB admin is recorded with the CIO on paper. I've seen it a lot of times that maybe for an example database head and the IT head are reported to the CIO but actually one of them is informally connected to the CFO. You know, so you have to, that's why I say you have to have a 360 degree coverage of an account to make the best use of your connection and to make the best use of your efforts so that you can eventually close the wheel at that point. And now I'll bring this to the initial topic of this of this chapter. A lot of research and hard work is required to do that kind of coverage here. I would like to share an example here. Like around 10 years back, I was dealing with the client and they were nearly interested in our services. We gave our demo. We showed all the features to the team, the DB admin, the IT head and the CIO and they were so excited about the product and they were, you know, very much interested to buy it. But I noticed in the next 15-20 days or a month, there's not a proper response coming from the client. And I was so very concerned that I knew they were really interested in the product and services but they were not responding. So I started talking to my mutual connection and I started doing my research and hard work so that I can really get into the client and do a proper account management. And in those sessions, I got to know about that company that the real decision maker in that company is the CFO. So, and that was not obviously communicated properly and a lot of people shared those kind of facts openly. So after having meeting with the mutual connections, I was able to identify this. I reached out to the CFO and in the next 15-20 days, we started progressing the discussion. So that's what I know from my experience that understanding the account and understanding the hidden power centers and the real decision maker is the key important thing in sales. This also covers the processes, values and operations of the company. Another thing I have noticed is when you talk about a specific industry, I have seen people from same industry, different companies hopping between each other. So a person who is an IT head and a textile company would love to be an IT head and another textile company. So that's the kind of industry now. So that's why these processes, norms and values, they propagate in the same sector. So I have noticed this specific thing in the banking industry that's the processes and the adoption to new technology is a bit slow because a lot of regulatory boundaries and regulatory departments are there. So they usually are not first mover. So in my experience, I have noticed that if any bank is trying a new innovation in any different technology, they will all wait for another bank to do it. And if you have been able to do it at one bank, I have seen in my experience that that thing can propagate to all the banks will vary quickly. So you have to get the first success story in a specific industry so that it can propagate into other companies of same type and same industry. When it comes to power centers, I can divide it into two categories internal and external. Internal power centers are people who are existing in the organogram and they are in some kind of ranks in the company and external power centers are usually the regulatory bodies. They make decisions for the betterment of the overall industry. In other brands, they are not controllable so you have to take care and be mindful of those things as well. They will be the external power centers. These external power centers sometimes can be a threat but for a salesman, they are opportunity. So and again, I am connecting this to account management research and hardware. The more you understand the overall industry, the more you understand the regulatory body due to which you might land up into an opportunity. So that's why I mean by account management research and hardware.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 88,
+          "delete": false,
+          "title": "KPIs",
+          "level": 6,
+          "topicTypeId": 1,
+          "duration": 95,
+          "video": {
+            "id": 311,
+            "filename": "S2 T6 Kpi.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/TRDFxvP3_S2_T6_Kpi.mp4",
+            "summary": "Understanding and leveraging key performance indicators (KBI) is crucial for successfully selling a product or service within a company. By aligning your offering with the various KBIs of individuals like database administrators, developers, and executives, you increase the likelihood of closing sales. To achieve this, thorough research and analysis are essential to connect your product features with the specific needs and goals of different stakeholders. By consistently linking your product to these KBIs, you can establish trust across all levels of the organization, ultimately increasing the chances of your product being chosen and adopted.",
+            "transcribe": " The second part of Chapter 1 is KBI, key performance indicators, which is very, very important at this stage and how it connects. To sell your product or service in a company, you have to make sure that your product is somehow connected to all to the KBA of all the people involved, like database admin, ID head, developers, CIOs, CFO, CEO, board members, everyone in the company has a different KBI and you have to try to connect your product or service with as many KBIs as possible. If you connect your product with KBI properly, you have a high chance of closing their sales. So that's why KBI is so important. The best practice here is to try to see KBIs of all the people and then do an analysis of your product, do a lot of research and hard work, to do an analysis of your product and try to connect the features and the offerings with the KBIs so that there is very less resistance and you can close the deal very easily. For example, if the board and management has decided to reduce the cost or maybe get the things efficient in the company, if your product or services is offering a very good price reduction, your product has a high chance of getting selected in the company. If you can continuously connect your product with the KBIs, you can build a really high trust at every level in the company and I will discuss about this more in the next chapter.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "delete": false,
+      "title": "Sowing Seeds of Relationship",
+      "isFree": false,
+      "level": 3,
+      "topics": [
+        {
+          "id": 93,
+          "delete": false,
+          "title": "Introduction",
+          "level": 1,
+          "topicTypeId": 1,
+          "duration": 55,
+          "video": {
+            "id": 312,
+            "filename": "S3 T1.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/x0SjaS3p_S3_T1.mp4",
+            "summary": "In chapter two, the focus is on relationships in the sales process, highlighting the significance of relationship building. Drawing an analogy to sewing seeds, the idea is to meet and connect with as many people as possible, nurturing these relationships like tending to seeds on a farm. Just as seeds need water, air, and the right environment to grow, relationships require attention through social media content, messages, and updates. The emphasis is on consistently nurturing relationships through various means to ensure their growth and strength in a manner akin to cultivating a farm.",
+            "transcribe": " So now we are starting chapter two, which is all about relationships and the name is Sewing Seeds of Relationship. In my view, in the sales process, relationship building is the most important part. So, you know, I'll emphasize a lot on this subject and we'll go in much more detail. I give an analogy of relationship building as Sewing Seeds. Like consider going into a farm and you just sew seeds and keep moving and sew as many seeds as possible. Like meet as many people as possible and keep nurturing those relations through, you know, as we do in agriculture, we give water, we make sure that the seeds are getting water, air and the right environment. Just like that, relationships should also get social media content, messages, updates, and you know, you have to nurture those relationships through different kinds of means, whatever is possible.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 94,
+          "delete": false,
+          "title": "1.\tHistory",
+          "level": 2,
+          "topicTypeId": 1,
+          "duration": 186,
+          "video": {
+            "id": 313,
+            "filename": "S3 T2.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/i1goPwOs_S3_T2.mp4",
+            "summary": "The chapter emphasizes the importance of building relationships in the selling process by understanding history. Knowing the client's background helps in creating a bond, understanding their perspective, and identifying different personality types. History is linked to integrity and impacts relationship building. Researching a new prospect's industry and past collaborations can help establish a history. Maintaining good relations and a positive history with others is crucial in the industry to build trust and credibility. Consistently striving to uphold good relationships can lead to a strong foundation of trust within the industry.",
+            "transcribe": " At the beginning of this chapter 2, I would like to say two very important things. There is a reason they say, save this psychology and people buy from people. Here I am emphasizing the value of relationships and I think this is the most important part in the selling process. The first part of this chapter is history. I think history is the most important part here, which will help you, you know, create that pre-existing bond so that you can converse very easily and you can convince the people about your product and services. This pre-existing bond will help you know a lot about the client and the company in advance. It also makes it easy for you so that you can understand the buying perspective of that client and the buying history of that client. You can also identify between just talkers and doers. You know, a lot of times in my career, I've seen people talking about their products or requirements but they just, you know, usually I find a lot of people who just keep talking and we never close deal with them. So if you know the history very well, you will be able to identify and you can save a lot of time. History will also help you identify different types of people, which is very important here, like the aggressive ones, the passive ones, the introverts and the extroverts, so that you should know which kind of product and services you should be offering to home. History here is closely connected to integrity, which is coming in the next part, which is also very, very critical when it comes to relationship building. Also, like being disrespectful, being respectful, paying on time, not paying on time, there are a lot of other factors which are very critical when it comes to history and it all adds up eventually and it all affects your relationship in the industry. Now I'll talk about scenario like, you know, in case if you don't have a history with anyone, any company or any individual, which you are trying to approach, in this case, you will have to research about their industry, you have to research about their, you know, all the other companies with whom they have been working in the past and they can, you can get a lot of information from there as well. In this way, you can build that history and you know, the competition will always be there to, you know, create rumors or bad reputation about your product and services. So you have to be really competent and really clear about your product, product features and your qualities and the downsides so that you can present your product in the best way and you can create that history or bond with the client or with the new prospect. Simply you have to try to maintain good relations and good history with people because it all comes around. All these kinds of things are never as secret in the market and they eventually spread out. So you have to be really careful about maintaining and creating good relations with every one possible. You have to do as much as you can to maintain those relations in a good way. If you consistently try to maintain good history with all the people around you in the industry, you will be able to create a lot of trust and we are, you know, about to discuss this in the next section as well.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 95,
+          "delete": false,
+          "title": "2.\tIntegrity",
+          "level": 3,
+          "topicTypeId": 1,
+          "duration": 165,
+          "video": {
+            "id": 314,
+            "filename": "S3 T3.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/eVj0Amrf_S3_T3.mp4",
+            "summary": "The chapter emphasizes the importance of integrity in business dealings, highlighting the negative impact of dishonesty and unethical practices on one's reputation. It stresses the significance of maintaining honesty, meeting deadlines, and delivering promised quality to build trust and long-term relationships. The text warns against sharing false or fake leads to gain trust, as it can permanently damage one's reputation. Integrity is not only crucial in sales but also in post-sales activities like responsiveness, availability, and commitment to quality. Building integrity is essential for creating a positive reputation and establishing successful, long-lasting brands.",
+            "transcribe": " The second part we are discussing in this chapter is integrity. And I think this is the key here. You have to avoid dishonesty, unethical means, wrong means to achieve whatever you want and to get the order because it might give you temporary relief but it can tarnish your reputation for a whole lifetime. And the research shows that these kind of these kinds of bad reputation or issues around integrity can never be solved. If you have been involved in any such practice in the industry, people will know this for life and people will remember this for life. So you have to be very, very careful about being dishonest and using unethical means to close meals. This is closely connected to word of mouth is the most important and critical thing when it comes about reputation building. Word, let me tell you, word of mouth is the key. So you have to be very, very careful when you are doing this kind of dealings. Here you have to be very, very honest with respect to not only the practices but also around meeting your deadlines but also around delivering the same quality you committed in the previous meetings. So you have to be very careful about it. Sometimes I have noticed this while doing sales alliance with different companies, people share false leads, people share fake leads and just to build trust. And let me tell you, this is a very, very bad practice and this can tarnish your reputation for life because people remember experiences and I always say sometimes you can make full of some people some other times but you cannot make full of everyone all of the times. Remember very clearly that sometimes it might take a decade or two decades to build trust and it takes just one experience to break that forever. So it is that critical and important. Yeah. When you are honest and clear, you can be really transparent and remember you don't have to remind yourself of different versions. You have just to remember the only one version which actually happened. This is very critical for creating, creating that kind of integrity in people's minds. I also include integrity in the post sales things. It's like integrity is not only critical when it comes to selling. It is also very critical when you are doing the delivery. The post sales, the responsiveness, the availability, the commitment of quality you guys have made. You have to deliver that. That is also included in integrity. If you have to create long-term relations, if you have to create lifelong brands, if you have to create big brands, you have to be very critical of integrity and delivery even after closing the deal as well.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 96,
+          "delete": false,
+          "title": "3.\tPatience",
+          "level": 4,
+          "topicTypeId": 1,
+          "duration": 207,
+          "video": {
+            "id": 315,
+            "filename": "S3 T4.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/qLIEHbNc_S3_T4.mp4",
+            "summary": "The importance of patience in building relationships and sales is emphasized, highlighting the need to respect customers' time and understand the varying paces of deal closures. Patience is crucial during the initial stages of starting a business or launching a new product, requiring time for brand establishment and customer decision-making. Balancing follow-up frequency is key to maintaining profitability, as excessive follow-up can deter clients and impact pricing negotiations. Overall, the narrative stresses the significance of patience in sales, relationship-building, and business growth, cautioning against rushing processes and advocating for a strategic approach to maintaining client relationships.",
+            "transcribe": " How we are starting the third topic in chapter number two, so in seeds of relationship, the third part is called patience. This is one subject on which I'm doing continuous working on even myself as well. I think this is very important and critical. You have to be mindful of your customer's time. They are doing a lot of other things, but if you are a salesman, your only thing is sales, but other people whom you are following up have a lot of other things to do. So you have to be very, very mindful of that. Also, as I have referred the example of agriculture, in agriculture you have to do a lot of patience. You have to wait after the seeds are sewn and then the process is starting. Same you have to do here in sales as well. When you are making relations and when you are strengthening them, you have to be patient. Let me tell you, nothing happens over time. A lot of times this even happens to me as well. I go to a client, I talk to them, they seem very excited, but the process is moving very slow. Sometimes it takes months, six months, one year, two year, two and a half years to close a deal because everyone has their own different pace. And another idea on how to manage this is the initial part where I say sales is mathematics. You have to create a big pipeline because you are busy in something or the other, but the frequency of follow-up with the leads and with the clients is less. And you have a big pipeline and you have a lot of things to do. And there is eventually a big gap between the follow-up time periods. So that's how I explain the concept of patience here. And also patience becomes very, very critical when you're starting up, when the brand is setting up, when people don't know a lot about you, when there are not a lot of clients to say something about you, that's the most tricky part. And when you are starting a new product, you have to be really, really patient. And this is the area where still I struggle. Whenever I launch a new product, whenever I launch a new service, whenever I launch something new, even when I advise to startups who are making technology through us, they have to be really, really patient when you are starting up and building up a new brand. Also, there are two very important points connected to patience. One is you have to give them time, you have to give customer a time to, you know, think about your proposal, talk to your competitors, take more proposals in the industry, so then they can really decide and they can, they are really sure about it. Also, I, here I would like to emphasize on one very important point, too much follow-up kills the profit, okay? You have to continuously focus on creating relations and making it a lot of them and don't follow one party a lot because this will eventually kill your profit because then it's human nature. And the customer will be mindful of that, that you are, you don't have a lot of clients, you are so busy following only one person. And, you know, they will always try to cut you on the price and that will leave you in a very bad situation. And a lot of companies I've seen are like in a bad shape due to their profitability. So, if you have to be profitable, you have to maintain a fine balance between too much follow-up and not doing follow-up.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 97,
+          "delete": false,
+          "title": "4.\tMutual Connections",
+          "level": 5,
+          "topicTypeId": 1,
+          "duration": 114,
+          "video": {
+            "id": 316,
+            "filename": "S3 T5.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/mSCnFaE6_S3_T5.mp4",
+            "summary": "Building mutual connections is emphasized as a key strategy for establishing relationships. It is suggested that if a direct connection cannot be made, seeking out mutual connections can help in building trust. Leveraging mutual connections can be beneficial in networking and creating opportunities. Maintaining a good reputation is highlighted as crucial for mutual connections to work effectively. The importance of delivering quality services is stressed, as it not only reflects on one's own reputation but also impacts the reputation of the mutual connection. Overall, the text underscores the significance of integrity, reputation, and quality in utilizing mutual connections successfully.",
+            "transcribe": " In chapter number two, the fourth point I would like to discuss is mutual connections. Remember, if you are trying to make a relation, if you are trying to approach anyone and you cannot make or find a direct connection, you can always look for mutual connections. Through mutual connections, you can always build trust and for example, if you reach out to a person who you don't directly, you can look out for mutual connections and reach out to the mutual connections and then talk to that person through mutual connections. And if the mutual connection has 5, 10 years of history with the person, consider that you also have that history. If the person or the mutual contact is introducing you in the best way. So that's why it's very important to be integral, to have a good reputation in the market. So then mutual connections will also work for you. This is another very, very good way and it has always worked in my personal career, in my personal experience. This has always worked and I would like to highly recommend you guys. I would like to really recommend all of you to use right practices, have a good reputation so that your mutual connections can work for you as well. Also in mutual connections, you have to be mindful of one very, very critical thing. Sometimes maybe you are starting your delivery quality or your service quality is not that good. So the person who is connecting you to the required person is also putting their own reputation on the stage. So you have to be mindful that you have to provide really good quality, you have to provide good services so that everyone is safe and if you do not fulfill your promises and if you do not provide good quality, that mutual connection will never introduce you to anyone else in whole life. That's how it works and this is why quality is very, very important which we will be covering in the next chapters.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 98,
+          "delete": false,
+          "title": "5.\tFunnel Management",
+          "level": 6,
+          "topicTypeId": 1,
+          "duration": 151,
+          "video": {
+            "id": 317,
+            "filename": "S3 T6.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/qmoeB1bK_S3_T6.mp4",
+            "summary": "Funnel management, also known as pipeline management, is crucial in sales for tracking and nurturing relationships with potential customers. By visualizing the sales process as a funnel, where leads progress through stages, sales professionals can forecast and strategize effectively. Building trust through customer testimonials and maintaining relationships with prospects is emphasized. The continuous process involves adding new leads while progressing existing ones towards conversion. Regularly reviewing and perfecting the sales funnel is essential for sustained growth and success in sales. Consistent focus and dedication to managing the funnel are key practices for achieving sales targets and advancing in the field.",
+            "transcribe": " Now we will be discussing about the fifth topic in this chapter which is funnel management which is you know the whole extract of the whole chapter. Funnel management, pipeline management, sales pipeline, these are all same things and you get a forecast out of these sheets. You get a forecast out of this funnel. Funnel is the place where you are listing all the relationships we have been making. I would like to give you an example. For example, you started a company, if you started selling a product and first week you have reached out to 10 people. If you reach out to 10 people, there are chances that 5 to 6 might listen to you and 3 might convert into a lead and it's possible that one will buy from you in the next one or two months. But what about the other nine? This is a process and these nine out of these nine, three or four or five may die but the other three or four or five which are left, they will be in a process. Some might close in three months, some might close in six months, some might take two years but you have to maintain those relations but you have to focus on building trust with them. You have to post a lot of customer testimonial videos, customer messages so that you can build that trust. And the next week you add another 10 people to this funnel. So this is how it progresses and this is how you can populate the funnel and you can do really good sales and you can keep growing because in sales it's ruthless, it's about if you have sold to 5 people, it doesn't mean that you are on off or you're on leave tomorrow. You have to sell to another 6 people tomorrow. You have to sell another 7 people the third day. So that's how it progresses and that's how companies around the world are propagating and increasing the sales target. And the only thing you can do to do this is you have to perfect your funnel. You have to be, it's like the main file, it's like critical file, it's like a bible. You have to see your pipeline maybe 10-20 times a day and the salesman should have a funnel file open 24 by 7. After 20 years of my experience, it's not a good practice but it has become part of my normal day to day life and I am keeping a funnel virtually in my mind every time and that's how we progress in sales.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "delete": false,
+      "title": "Word of Mouth: Let Your Customers Sell",
+      "isFree": false,
+      "level": 4,
+      "topics": [
+        {
+          "id": 118,
+          "delete": false,
+          "title": "Introduction",
+          "level": 1,
+          "topicTypeId": 1,
+          "duration": 72,
+          "video": {
+            "id": 318,
+            "filename": "S4 T1.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/jFSLD9Gm_S4_T1.mp4",
+            "summary": "The chapter emphasizes the importance of customer retention over acquiring new clients. It highlights the significance of focusing on existing clients by providing excellent service quality, responsiveness, and ensuring their satisfaction. The text stresses the need to create a sense of comfort for customers to encourage repeat sales. It suggests that delivering top-quality services on time is a key strategy for successful sales and marketing. Ultimately, the chapter underscores the value of building long-term relationships with customers to drive continuous growth and success in business.",
+            "transcribe": " Now we are starting chapter three, which is word of mouth. Let your customer sell. We have been listening for some time now that acquiring a new client is always expensive as compared to keeping an old one happy. So I would like to emphasize here about existing client. I would like to focus on responsiveness, service quality and making your time successful. Consider we are all humans and we want comfort zone all of the times. Consider we are buying anything from a company at a certain price and we are happy with both the price and the quality. We keep buying the same quality stuff at same price and same quality, the same company forever. So that's the kind of comfort humans are looking for. So we have to create that comfort around the product and services we are selling. I think every business these days is after repeat sales. And this is the only way you can do repeat sales and keep growing in your numbers. As we have told in the introduction, the continuous growth is a goal and this is a very good way to keep growing in numbers. I will also like to share a very important and my favorite code, which is top quality services delivered on time is the best sales and marketing strategy.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 119,
+          "delete": false,
+          "title": "Responsiveness",
+          "level": 2,
+          "topicTypeId": 1,
+          "duration": 168,
+          "video": {
+            "id": 319,
+            "filename": "S4 T2.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/T3NlkrzB_S4_T2.mp4",
+            "summary": "The key focus in the chapter is responsiveness, emphasizing the importance of transparency and timely communication in project management. Being proactive in addressing issues and listening to client concerns can enhance customer satisfaction, potentially leading to upselling opportunities. Establishing a dedicated team for managing responsiveness throughout the company is suggested. The personal experience shared highlights how prioritizing quality and responsiveness can set a company apart, leading to satisfied customers and positive testimonials. Regular collaboration meetings among staff involved in client interactions are recommended to ensure continued success and client retention.",
+            "transcribe": " first part of this chapter is responsiveness. I think this is the key here. Whatever is happening in the project, whatever stage you are at, if you're stuck somewhere, if the deadline is getting extended, if you will not be able to give the stuff on time, you should be highly transparent and responsive all of the times. There should be a clear communication plan. A lot of times, a lot of things are not that significant, maybe some issues, but if you listen to them right on time, client will feel really, really good about it. And they will, even if you have some kind of deficiencies in your quality or product or team, they will be okay with this if you are listening to their problems on time. This will also help you in upselling. This will also help you in understanding what is actually happening in the company. In responsiveness, you have to be connected at different levels. As we have told about this thing in chapter one and two, we can connect it to understanding customer norms, understanding the processes, and it is connected to a lot of things. So only this one thing, responsiveness can solve a lot of problems for you. In my view, there should be a department or some people designated specifically for this who are managing this thing throughout the company that whoever is engaged with the client at any level, they should be doing it proactively at regular intervals and it should be taken care of because as early you identify the issues within the delivery, you will be able to solve them really quickly and there will be a very good image in the minds of the customer and everyone in the customer's team. I will tell you the example of my own company, WinCop here. I have noticed because before starting this company, I've worked for seven other companies and I've learned this in my previous experiences. People ask me a lot of times, what is your advantage? What is your differentiating factor for increasing sales in the company? I tell them quality and responsiveness and they go like, everyone says this, I tell them, take a small service for me and experience it yourself. This is a very important differentiating factor in my company, WinCop, that we are highly responsive and available and I've seen customers getting very much satisfied and this is the only reason we have been able to collect a lot of video testimonials from our clients. So that's how important responsiveness is here. And also there should be a monthly collaboration meeting between all the people who are connected in responsiveness cycle with the client somehow. This will help you upsell and this will help you make sure that this client is going nowhere.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 120,
+          "delete": false,
+          "title": "Service Quality",
+          "level": 3,
+          "topicTypeId": 1,
+          "duration": 185,
+          "video": {
+            "id": 320,
+            "filename": "S4 T3.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/B2c6VRvL_S4_T3.mp4",
+            "summary": "Service quality is crucial after responsiveness in delivering products or services. It involves ensuring the product functions as promised, solves issues, and is scalable and stable. To maintain quality, consistent effort and focus are necessary from the team. By consistently delivering high-quality services, a company can establish itself as a reputable brand, leading to repeat customers and reduced reliance on sales efforts. Building a positive reputation through happy customers and being a trusted advisor to clients requires ongoing hard work and an action-oriented sales approach for sustained growth.",
+            "transcribe": " Now I will go to the second point which is service quality. It goes without saying whenever you are trying to, whenever you are using any service or product after responsiveness you will always look at the quality being delivered. What does this mean? This means is the product working? Is it producing the desired results? Is it solving the problem promised? And is it scalable as well? And how stable it is? These are the things which have to be really taken care of and this can only be done if you are using the perfect and the best resources available to provide your product or services. I again connect it with impactful execution that if you have delivered any product or services and the project is complete and you have also taken the whole payment but you have to check that whether it is, whether it is serving the purpose or not. A lot of times companies buy something, they pay for it as well but they do not use it. And if they are not using it and if they are not satisfied in any way, they will, in any way they are not coming back to you. So in order to make sure that you are doing repeat sales in this client and the numbers in this client is growing, you have to make sure that the proper quality which you guys promised have been delivered. Service quality is again connected with consistent hardware. It never comes overnight. You have to do consistent hardware. You have to keep focusing on the subject and the whole team should be synergized and focused to produce good quality services. Also this is the best way to become a brand. Any of you become a brand in the market, then you do not need to put in a lot of effort in sales but then only marketing will keep getting you repeat customers because then your service quality is known in the market and you will become a known brand. So you will not need to do a lot of sales activities. Rather, you will do marketing and sales will come itself. A lot of times I have been asked that how do you sell? I always tell them sell through happy customers. What does that mean? And I give an example, a lot of times about this in my personal gatherings that a customer should be that happy that even if on a weekend they are sitting in a personal gathering and they listen to some kind of conversation that we need software development services. I am so sure that they are going to refer us only. That's the kind of image we have set in our company, VidCop, through our service quality responsiveness and making sure that we are making our client successful. And remember, a lot of consistent hard work is required because great things take time. Early success is a scam. And I have been talking about this on LinkedIn as well. And I have used another term called lifetime advisor. This is another way to become a lifetime advisor for the client. And you have to do a lot of consistent hard work. You have to do an action oriented approach around sales so that your numbers are continuously growing.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 121,
+          "delete": false,
+          "title": "Make your Client Successful",
+          "level": 4,
+          "topicTypeId": 1,
+          "duration": 152,
+          "video": {
+            "id": 321,
+            "filename": "S4 T4.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/I6FM8bPM_S4_T4.mp4",
+            "summary": "The key to making your client successful involves ensuring the company achieves desired results through your services and helping individuals within the organization shine in front of their superiors. By delivering impactful execution, you contribute to the success of both the company and the people you work with. Connecting your services to internal KPIs establishes you as an essential part of the client's hierarchy, fostering trust and appreciation. A real-life example at WinCorp illustrates how addressing client concerns and delivering effective solutions can lead to significant improvements, such as generating millions in billing revenue and earning glowing testimonials, ultimately solidifying long-lasting relationships and repeat business.",
+            "transcribe": " The third portion of this chapter is making your client successful. It has two meanings. One is the company paying for your services should be getting the best results, and they should be getting successful due to your delivery. Number one, number two, all of the people engaged with you should be looking good in front of their managers. I have talked about impactful execution before as well. The way to do impactful execution is, when you're talking about your job as a carrier, you have to do such good work that your boss is looking good in front of his boss. Same principle is applied here. If you are helping the company get desired results due to your services, and you are also helping the people engaged with you to fulfill their commitment internally, so that they are successful. So once they're successful, those people will be able to gain a lot of trust from the board and from the management. And as I've told in the previous chapters about KPI, in this way, you are also connecting your delivery with the internal KPIs. So then you become an integral part of the company of the client's hierarchy, and everyone is loving you. So you are actually making the company successful due to your services. At this point, I would like to share a real life example for one of my clients at WinCorp. There was this client who came to us with a problem that their services team is delivering services to their clients, but the finance department is not really happy with the billing. Finance department was not sure about the automation, and they thought there are some leakages in the billing. That's why they are not being able to create some revenue. So we provided them some software engineers. They really understood the problem. They delivered the thing. They made sure the client gets successful. And then after some time, I got this news that on that system, the finance department is seeing millions of dollars of billing. And this is what I mean by getting the client successful. And their finance department really, really got happy with their IT department. And in return, they gave us a video testimonial, and they praised us as well due to our services. So in this way, we were able to make our own client successful. So now the whole team remembers us for life. They come to us for all kinds of advice, and all kind of software engineering, they are getting from us. So this is what I mean by making your client successful.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "delete": false,
+      "title": "Make Empathy Your Superpower",
+      "isFree": false,
+      "level": 5,
+      "topics": [
+        {
+          "id": 283,
+          "delete": false,
+          "title": "Introduction",
+          "level": 1,
+          "topicTypeId": 1,
+          "duration": 62,
+          "video": {
+            "id": 322,
+            "filename": "T5,Ch 4 S1.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/QQyselFW_T5,Ch_4_S1.mp4",
+            "summary": "The chapter discusses the importance of empathy in designing successful products and services. By incorporating empathy into daily interactions, it can lead to a better world. Understanding customers' businesses on a deeper level can help provide tailored solutions, fostering long-term relationships. Building trust through empathy can result in customers seeking advice and purchasing products/services. The concept of becoming a lifetime advisor is highlighted, emphasizing the value of understanding the customer's perspective and industry to offer the best solutions. Ultimately, empathy plays a crucial role in creating lasting relationships and driving business success.",
+            "transcribe": " So, today we are talking about chapter 4. The name is Make Empathy a Superpower. The code I've said in this chapter is Changing Caps is inevitable to design successful products and services. Empathy is one of my favorite words and I think if we use empathy in our daily lives while we're interacting with each other, we can make the world a better place. So, I'm connecting this through business towards sales that how we can understand the customers business in a better way so that we can provide them the best solutions and we make them our customers for life. And also, I'll connect this to the lifetime advisor concept. The better you understand the customers business, they will trust more on you and they will take more advice from you and here you can sell your product services more to that line. So this you should be able to convert the relations into long-term relations. You can go into customer shoes, you should understand the whole industry so that you can advise the best solution.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 284,
+          "delete": false,
+          "title": "Understanding Client's Business",
+          "level": 2,
+          "topicTypeId": 1,
+          "duration": 170,
+          "video": {
+            "id": 323,
+            "filename": "s5 t2 understanding client business.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/OxNJKeoL_s5_t2_understanding_client_business.mp4",
+            "summary": "The chapter emphasizes the importance of thoroughly understanding a client's business by gathering information about the company, industry, products, market standing, and revenue generation. It highlights the significance of building relationships through interviews and stresses the value of considering every aspect of the client's operations, even if it may not seem directly related to sales. By going the extra mile to comprehend the client's business, one can provide tailored solutions, foster long-term relationships, and ultimately contribute to increasing the client's revenues. This approach is essential for success in sales and can benefit not only the current client but also future endeavors in the sales journey.",
+            "transcribe": " I have divided this chapter into two parts. First is understanding clients business. And the second is understanding the business pains. So now I'll start the portion one for this chapter. By understanding clients business, I mean you should know each and everything about the company, the industry, the size of the company, how many in countries they exist in, how many cities they exist in, what kind of product line they operate in, how many manufacturing plants they have, and whatever you can collect about the business, the more you understand and also they're standing in the industry, they're ranking in the industry, maybe they are the pioneers, maybe they are the followers, maybe they are doing some innovation. So you should try to know each and everything about that company you are trying to focus at. To do this, you have to use your relations in the market. You should try to do as many interviews as possible, informal or formal with different people in the company. And I also, and I always say this one quote regarding interviews and questions and understanding is magic happens at the third question. Choose the more prepared, you go to those interviews, the more formalized list of questions you have, it will be better for you to understand and you can devise the best solutions possible. And in this way, again, as the progress in the book, I will be connecting to a lot of previous topics. So here, I will also emphasize on relationship building. This will help you make very good long-term and healthy relations in the companies and the industry. Also, this will give you an opportunity for you to make sure that the client team is taking you as part of their team. After all of this, the most important point here is you should know how the company or your prospective customer is making money. You should try to get all the non-confidential information because every customer is interested to increase their revenues and if you help them increase revenues. That's the thing you really want to do. I have also set one quote in the past and I would like to connect here a concept in the industry, which is I've been working for 20 years and I've seen people saying this a lot of times that this is not my job. Please get rid of this mindset. And I have discussed this earlier as well in the book. By doing this, you will be able to go that extra mile to understand the client's business because it's not your business. Sometimes you will think that why should, you know, I just try selling why I should be learning the whole industry, the whole company, but you have to get rid of this mindset. Trust me, the kind of learning you will get. You will use it in this customer and the other following customers and other following tasks you are going to get in your sales journey.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 285,
+          "delete": false,
+          "title": "Research on Business Pains",
+          "level": 3,
+          "topicTypeId": 1,
+          "duration": 170,
+          "video": {
+            "id": 324,
+            "filename": "s5 t3 research on business pian.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/zSyLvH4n_s5_t3_research_on_business_pian.mp4",
+            "summary": "The key takeaway from the text is the importance of understanding industry pains to develop successful products. By researching common problems across companies, one can create solutions that cater to a broader market. Conducting interviews with clients, listening attentively, and empathizing with their perspective are crucial steps in identifying and addressing industry challenges. Continuous improvement is emphasized, as businesses must evolve to meet changing needs and stay ahead of competition. Success lies in not only solving current problems but also anticipating and addressing future challenges to ensure sustained relevance and growth in the market.",
+            "transcribe": " Now I'll come to the second part, which is research on business pains or understanding the business pains. As an industry, as I've told in the earlier part of the book, similar people keep moving in similar roles in the industry. That's why the practices and norms are pretty much the same. So now here, I have seen that industry problems are also the same. For example, if there are 50 manufacturing companies in a domain and one is having or maybe five or 10 are having a same problem, there's a chance that 90% of those companies will have a same problem. So you have to look for these pains and I will discuss this later as well in the book that how you can build a product. I think by researching industry pains, you can devise a product or a solution which you can sell to a lot of companies later on, but you have to perfect it on the first first. Also, while doing this, I recommend interviews with the people at the client and you have to change your mindset while doing these interviews. You should keep an eye on rather you are not telling them solutions rather you should be in a listening mode. You should clear your mind that when you are starting these interviews, you don't know anything. You have to come from empathy, you have to come from the client's perspective and you should be open to listen to all kinds of things. And then later on, after having multiple interviews, you can finalize a list of problems which you can solve for industry. At WinCoP, we have done this thing multiple times that because in the past, I have worked for different companies before starting the WinCoP. I knew a lot of business pains in the industry and we try to cater to those industry pains and we have been able to make some good products. Even for our own clients, but the reason was deep understanding of a lot of businesses and the will to give them best solutions around that. Also, I'll go further. I'll go to the next step. Consider you found a business pain, you made a product around it, you started selling it and you became successful and maybe 20, 25 companies in the industry are using that product. But what's next? You have to keep an eye on continuously changing business needs. After you give that solution, maybe 5, 7, 10 years down the road, competition might be coming to you, competition might be giving another tangent or better solution. So you should be continuously keeping an eye on continuous improvement or maybe after you have given the solution, what new problems might have arrived. So you have to keep a continuous eye on improvement. So that completes the chapter of the",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "delete": false,
+      "title": "Mastering Sales Finally",
+      "isFree": false,
+      "level": 6,
+      "topics": [
+        {
+          "id": 286,
+          "delete": false,
+          "title": "Introduction",
+          "level": 1,
+          "topicTypeId": 1,
+          "duration": 203,
+          "video": {
+            "id": 325,
+            "filename": "S6 T1 Intro Chp 5.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/euzu0WKW_S6_T1_Intro_Chp_5.mp4",
+            "summary": "The chapter delves into the essence of mastering sales, emphasizing hard work, people skills, quality, and empathy as crucial traits for success. It highlights the continuous need for diligence, effective communication with various individuals, maintaining high standards, and understanding others' perspectives to provide optimal solutions. The concept of being a salesman every day is explored, illustrating how selling oneself is a constant in various life stages. The narrative encourages reflection on how selling is inherent in daily interactions, whether personal or professional, urging readers to perceive the world through this lens for a new perspective.",
+            "transcribe": " So now we are starting chapter 5 which is named as mastering sales finally and I've set a quote around this chapter which is hard work, people, quality and empathy are the key takeaways of a world-class salesmen and to tell you more from the initial diagram of the book, these are the things which I have shown as the other planets going in the process. I have discussed the whole process so far so now I'm talking about some other factors which you have to keep an eye on which you have to notice throughout the complete process. So now we are going to start about that. As I've told in the code when you are doing sales a lot of things are required on the sites especially you have to be really really hard working all the time and I've already told about integrity, patience and lots of values and principles so you have to be ready to do a lot of hard work. Then we could talk about people, you will be dealing in a lot of people around relationship building, account management, interviewing a lot of people, interviewing for the industry, interviewing to understand the customer's requirement so you will be dealing with a lot of people. Then as I've told you already have quality, whatever you are doing be it hard work, be it dealing with a lot of people, you have to be mindful of the quality all of the time and eventually empathy. You have to understand your surroundings, you have to understand everyone, you have to understand what they are thinking so that you are able to give the best solution to everyone. Also I would like to tell that initially the book was named as you are a salesman every day. What I mean by that is concept. A lot of principles as I told you in the earlier state of the book that a lot of principles you can use in your daily life as well. I would like to highlight that here. Consider when you were in school, you were interested to get more attention from your teacher. You were doing sales, you were telling, you were trying to tell them that you were better from others. When you were opting for a college, you were applying and there was a competition and lots of interviews were there, you were trying to sell you were the best. When you were young and you were interested to get more attention from your parents, so you had a competition with your siblings and you were always trying to sell to your parents as a kid that you know I am better than others. So you were looking for more attention from your parents. Same when you are progressing in life, when you are marrying, when you are finding your spouse, you are trying to sell yourself. Then after the graduation and real life when you go to the job, you are trying to sell your CD, you are trying to tell you are probably lost there, you are the best among others. So this was my concept around you are a salesman every day. You are actually selling all of the time. That was the initial thought process and I would like to tell that at this stage. Then when the products are offering their services or the companies are offering their products and services, they are trying to tell they are the best. So if you see it from that lens, I think at every stage you will see the selling process going on. We just don't realize it. So I am just asking you to ponder upon this point and you will see world and things in a different way after this one.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 287,
+          "delete": false,
+          "title": "Customer Filtration",
+          "level": 2,
+          "topicTypeId": 1,
+          "duration": 195,
+          "video": {
+            "id": 326,
+            "filename": "S6 T2 Chp 5 Customer Filteration.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/lB9lYcUE_S6_T2_Chp_5_Customer_Filteration.mp4",
+            "summary": "The importance of customer filtration in business is highlighted, emphasizing the need for alignment between what is offered and what the client expects. Ensuring mutual understanding, respect, and shared values is crucial for successful partnerships. Peace of mind is deemed invaluable, with a focus on delivering commitments and avoiding compromises. Attention is drawn to the subjectivity of quality definitions and the significance of managing expectations to prevent potential conflicts. Starting small to gauge compatibility before expanding is advised, along with the necessity of understanding stakeholders and navigating change management in large projects for successful customer filtration.",
+            "transcribe": " The first topic I would like to discuss here is customer filtration. That's a very tricky topic. I will be sharing a lot of examples from my personal experience. By customer filtration here, I mean you really have to look what you are offering, what the client is expecting, do you are on the same page? You have to make sure that your team's understanding and the client's team's understanding is the same. The client is respectful, the client team is respectful, they have a good payment history and also you have to take care and you also have to look at this point that whether the client will be able to value you as a company. So this is what I mean by customer filtration. As I have always seen in my life that peace of mind is the most valuable thing. A lot of times I have been into this situation that we sold a solution but we were not able to make the client happy due to some reason, maybe our team, maybe their team, maybe the level of understanding, maybe the level of maturity. So peace of mind is the most important thing and you should not be compromising it at any stage. A lot of times the principles are different, the principles are deliberately different. The definition of quality is very subjective and it's it may differ for a lot of people and a lot of companies. So you have to make sure that whatever contract or client or deal you are entering into, you have to make sure that the things you are committing, you have to deliver that as well. You have to be mindful of your stage and the client's stage before starting anything, before committing anything. If you enter into any problematic deal, it may become a big hassle for you. Even companies go to legal battle and because they overlook this point at the initial stage. Also whenever you are entering into a big project at a big company, a lot of change management is happening in the background which mostly companies or the vendors don't know. So you have to be mindful of, you have to be mindful of what is happening inside of the company. Again, I will refer to account management. If you have done good account management, you should be able to manage it. You should be able to understand what are the stakeholders or people in the company who are your sponsors and who might be not who might not be supporting you, who might be blocking you. So whenever you start the delivery, there is a phase of one to two months where the vendor is understanding the company and the company is understanding the vendor. And I always recommend to all the clients I wish to work with. I tell them start small. You can really start small to understand and if the things are not going good, you cannot expand that deal and you can just do a small delivery and get out. Otherwise, if the things go well and the alignment has been done between your team, between their team, the moods are matching, the principles are matching, the way of work is matching, then you can continue. So you have to be mindful of all of these things when you are doing customer filtration.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 288,
+          "delete": false,
+          "title": "Growth is the Goal",
+          "level": 3,
+          "topicTypeId": 1,
+          "duration": 199,
+          "video": {
+            "id": 327,
+            "filename": "S6 T3 Chp 5 Growth is the Goal.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/XDhNo2xJ_S6_T3_Chp_5_Growth_is_the_Goal.mp4",
+            "summary": "The chapter emphasizes the importance of continuous growth in both product and service companies, highlighting the need for a diverse pipeline of leads. It stresses the significance of not solely focusing on a few leads but rather spreading efforts across multiple opportunities to avoid pressure and ensure consistent progress. The text underscores the value of customer testimonials, particularly video testimonials shared on social media, in building trust and establishing a strong brand image. Overall, the key takeaway is to prioritize ongoing growth by nurturing a broad range of leads and managing time effectively to sustain success in sales.",
+            "transcribe": " The second point in this chapter is growth is the goal. When you talk about sales or my life I've experienced this, that if I have sold $100 today, I have to sell $120 tomorrow. I have to sell $140 the next day. You cannot be constant in growth. And when you talk about growth, it has a different meaning when you go to products companies and services companies. You usually have a hockey stick curve of growth. Whenever the product is correct, market-fed and you have hit the jackpot with marketing and right-scale strategy. For services, it's not that sharp, steep initially, but for services, it has a different meaning. So you have to keep an eye on, in both the ways, you have to keep an eye on week over week, month over month, quarter over quarter and year over year growth. This is one factor on which you have to keep your eye on. As investors also love this, old members also love this and the whole management in the company love this kind of graph and month over month, week over week growth. I have seen a lot of fresh sales people. They go into this dilemma that whenever they close a good deal, maybe one or two, three deals, they think that this is going to happen by default. But after some time, they realize that it's a continuous effort. And if you have closed something yesterday, it doesn't mean you have no work today. Sales people usually get into this problem, but with time, when they have spent like good one to three years in the field, they realize that it's a continuous battle and they should be looking for avenues where they can create pipeline, leads, customers in bulk, so that they can take a sigh of reliefs over some time. Also, I think the way to make sure that we are doing this in the right way, you have to do the marketing as well in such a manner. You have to get a lot of customer testimonials, ideally customer video testimonials, which you should be sharing on social media effectively. And that should create a lot of good pipeline and even convert into a brand as well. If you're doing that customer testimonial thing and it will also gain a lot of trust in the people's mind. I would like to specify two very specific points here. When you talk about growth is the goal, your focus should be on two things. Continuous growth of new pipeline and new leads. And keeping an eye on how much time you are spending on one lead. I am a big advocate of creating more leads and dividing your time between those leads. Because if you are just focusing on one or two leads for a month and if by month end, you know that they are not closing, you're left with nothing and you are in a lot of pressure from your bosses for sales. So you should be focusing on multiple leads and trying to push through them through content, through presales, call through meetings, through whatever you want to do to show the value. But you should not be focusing on only one client as we say, don't put all your Excel one basket. So I would like to connect that quote here. So you should be diversifying your leads. You should be diversifying as much as you can to make sure that you have a big pipeline.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 289,
+          "delete": false,
+          "title": "Channel Sales",
+          "level": 4,
+          "topicTypeId": 1,
+          "duration": 209,
+          "video": {
+            "id": 328,
+            "filename": "S6 T4 Chp 5 Channel Sale.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/66aCAyvX_S6_T4_Chp_5_Channel_Sale.mp4",
+            "summary": "Channel sales, a topic close to the speaker's heart due to extensive career experience, involves both direct and indirect sales. Indirect sales rely on a complex ecosystem with producers, distributors, and resellers. Managing channel sales effectively involves setting up a strong supply chain, motivating and training distributors and resellers, and ensuring they are knowledgeable and presentable. By incentivizing these parties through margins and commissions, companies can extend their reach and drive consistent growth. Success in channel sales can lead to a strong brand presence globally, as satisfied resellers bring in more clients through positive word-of-mouth referrals.",
+            "transcribe": " Now we are talking about another topic, the third one in this chapter which is channel sales which is really really really close to my heart because I've spent most of my life most of my career life in this channel sales. Now there are I would like to divide sales into two parts okay one is direct sales you are selling your stuff to the direct consumer or user then there is indirect sales so indirect sales there is a whole ecosystem and there are some global norms whether you are selling or buying a shaving kit you're selling a B2B product you are selling a MCFMC thing if you're selling some food item there is a typical supply chain in the background which is there is a producer then there are ideally very limited numbers of distributors there are a bigger number of resellers who are actually selling to the end customer so this is how things are working so in my career I've been using channel sales I was the channel sales manager in Microsoft in Oracle in VMware and this rule primarily manages the whole ecosystem this this rule manages the pricing distributed is given to the reseller the pricing reseller is given to the end customer so if you set up a good channel if you set up a good supply chain around this you should be able to get growth very very quickly and a consistent growth because then you have extended parties interested in the business distributor of their margins but reseller of their margins and their sales people have their margins and commissions so you know it's like they're not even employees but they're you know interested in that commission in interested in that rebate interested in that percentage that's why they are really working hard to sell your product and you feel like you have extended arms you have extended arms who are just working on commission basis to sell your product also when you are managing the channel you have to give training to the distributor you have to give training to the reseller who is actually interacting with the direct line in this case you might have your own sales people like in the company but you have to be you have to keep the people at distributor and reseller very much motivated they should be knowledgeable they should be presentable you have to coach them you have to train them you have to give them enough points to discuss so that they can start a conversation with the client so this is so that's why this channel sales is very very very important and at Winco we have got some real good results from across the globe because we have resellers in around five to seven cities of the world already and they are and they are seeing our service delivery because whenever they introduce any client to us we give and we give them really good service so they are motivated to give us more clients because you know they are known more in their community in their community people say good words about them because they have connected them to a good vendor so this is a complete ecosystem and if you set it right if you set it in the right way and you keep pushing good stuff in this ecosystem you will be able to get very good results the growth will be amazing and you can really become a big brand by setting the channel right",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 290,
+          "delete": false,
+          "title": "Use case-based selling",
+          "level": 5,
+          "topicTypeId": 1,
+          "duration": 280,
+          "video": {
+            "id": 329,
+            "filename": "S6 T5 Chp 5 Use case-based selling.mp4",
+            "videoURL": "https://storage.googleapis.com/fastlearner-bucket/VIDEO/VVR5BtP6_S6_T5_Chp_5_Use_case-based_selling.mp4",
+            "summary": "The use case based selling approach involves focusing on prior experience in similar fields when offering services and developing products. By conducting interviews and identifying common industry problems, a product can be tailored to address the top issues, leading to successful revenue generation. Building strong relationships with initial clients through tailored solutions and testimonials can pave the way for expansion within the industry. Additionally, leveraging industry regulations and involving clients in product development can lead to successful market penetration and sales. This strategic approach emphasizes expertise and value creation in both service and product offerings.",
+            "transcribe": " Now I will talk about the fourth subject in this chapter, which is use case based selling. I will divide it into two parts. One is when you are doing services, mostly clients are interested to see your prior experience in similar fields, their company gets because they want to see that you already know the field very well. You have already dealt with similar problems, similar clients in the similar industry. So I've seen in my experience that people are more focused into certain while selling services, people are more focused towards telling that we have solved these use cases before. And the other part is product development, which is very, very important topic in the world these days. Everyone is interested to try and make their own products. So use case based selling approach can be used for building products as well. How I will tell you now, I will tell you about the product development strategy. First on use case based selling. This is the ideal approach I'm telling and I have used it in my first product. The first product which Vincop made in 2017, 2018 was political campaign management solution. And this approach I've already used in this one. And after that for a lot of products for our own selves and for a lot of products for our customers, you can go to a specific industry. You can try to make some good contact solution in that specific industry and try to have four to five informal meetings outside of office to understand similarities in pains. That will give you strongly in that subject, in that thing, and you will be able to get a lot of problems listed. Then you can expand this interview process to maybe five, 10, 15, 20 more people in the similar field. And after these interviews and discussions, you will have a list of maybe eight to 10 big problems. Now you have to look for the common problems. You have to look for one or two or three most common problems discussed by those 20 people. And if you are able to provide a solution around these top three, those problems, you should be able to set up a complete product. You should be able to get good revenues. You should be able to capture the whole industry by implementing the all other aspects and things I've told in my book in the past. So when we talk about services, you have to, for example, if you get a client in a in battery production industry, you try to make that client really happy. You try to make good solutions for that client. And after you have done it successfully, you should be able to get good with your testimonials, good testimonials. And after that, you can go to other battery producers. They will value you more because you have prior experience in the similar field. So this is what I mean by use case based selling while without services. There are two ways to approach a thing. When you talk about professional world, one is lateral and the other is vertical. So when you have a good product, you can really become a strong player in that vertical and a bi-vertical, I mean an industry here. A lot of times, some use cases arise by some industry regulations, which we have discussed previously in the book as well. So you have to keep in your eye open. A lot of times you might be able to arrive at a product or a services by some regulatory binding of the industry and you can capitalize on that. You can start looking for these pains through mutual connections. But when you have done the first stage and you have some research done, you can even take it to social media asking people to volunteer from the same field and in return, you can give them the access of that product for some time to a limited people because they are helping you make that product. So this is also a strategy which has worked for us and it is very much popular in the industry. That whenever any client is helping you make your own product, you can even keep that product free for the client if you have budgets, if you have some funding, or if you have some room, you can really subsidize that because the first happy client of that product will give you testimonials and then you can sell it to other companies in the similar industry. Also, if you are taking this approach, it will be really easy for you to sell because that's a very easy conversation point for you, which you can start at the new companies and they will entertain you because you have kind of poor expertise in the same field or you have made a product, which they know that it can give them real value with you.",
+            "documents": []
+          },
+          "quiz": null,
+          "article": null
+        },
+        {
+          "id": 330,
+          "delete": false,
+          "title": "quiz",
+          "level": 1,
+          "topicTypeId": 4,
+          "duration": 180,
+          "video": null,
+          "quiz": {
+            "id": 53,
+            "delete": false,
+            "title": "quiz",
+            "questions": [
+              {
+                "id": 95,
+                "delete": false,
+                "questionText": "what is java",
+                "questionType": 1,
+                "answers": [
+                  {
+                    "id": 334,
+                    "delete": false,
+                    "answerText": "langugae",
+                    "isCorrectAnswer": true
+                  },
+                  {
+                    "id": 335,
+                    "delete": false,
+                    "answerText": "nothing",
+                    "isCorrectAnswer": false
+                  }
+                ]
+              }
+            ],
+            "durationInMinutes": 180
+          },
+          "article": null
+        },
+        {
+          "id": "",
+          "delete": false,
+          "title": "article 2",
+          "level": 3,
+          "topicTypeId": 2,
+          "duration": "",
+          "video": null,
+          "quiz": null,
+          "article": {
+            "id": "",
+            "delete": false,
+            "article": "<p>myarticle</p>",
+            "documents": null
+          }
+        }
+      ]
+    }
+  ],
+  "certificateEnabled": true
+}
