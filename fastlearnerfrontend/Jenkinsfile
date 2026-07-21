@@ -1,73 +1,45 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs '20.11.1'
-    }
-
     environment {
-        PATH = "/root/.nvm/versions/node/v20.11.1/bin:$PATH"
-        NODE_OPTIONS = '--max-old-space-size=4096'
+        PATH = "/usr/local/bin:/usr/bin:/bin:$HOME/.npm-global/bin"
     }
 
     stages {
-        // stage('Notify Start') {
-        //     steps {
-        //         mail(
-        //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
-        //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Started",
-        //             body: "The build process for ${env.JOB_NAME} #${env.BUILD_NUMBER} has started."
-        //         )
-        //     }
-        // }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
-                sh 'npm install --save-dev puppeteer'
+              dir('fastlearnerfrontend') {
+                sh 'npm ci'  // faster and reliable than npm install
+              }
             }
         }
 
-        stage('Set Chrome Bin Path') {
+        stage('Build Angular App') {
             steps {
-                script {
-                    def chromeBinPath = sh(
-                        script: "node -e \"console.log(require('puppeteer').executablePath())\"",
-                        returnStdout: true
-                    ).trim()
-                    env.CHROME_BIN = chromeBinPath
-                }
+              dir('fastlearnerfrontend') {
+                sh 'ng build --configuration=production'
+              }
             }
         }
 
-        stage('Build') {
+        stage('Deploy to Nginx') {
             steps {
-                sh 'npm i -g @angular/cli@15.1.0'
-                sh 'ng build --configuration production --aot --build-optimizer --source-map=false'
+                // Assuming Jenkins user has write access to /var/www/angular-app
+                sh '''
+                    rm -rf /var/www/angular-app/*
+                    cp -r fastlearnerfrontend/dist/fast-learner-app/* /var/www/angular-app/
+                '''
             }
         }
-
-        // stage('Run Tests with Coverage') {
-        //     steps {
-        //         sh 'ng test --code-coverage --browsers=ChromeHeadlessNoSandbox --watch=false'
-        //     }
-        // }
     }
 
-    // post {
-    //     success {
-    //         mail(
-    //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
-    //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Succeeded",
-    //             body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} was successfully completed."
-    //         )
-    //     }
-    //     failure {
-    //         mail(
-    //             to: 'saifurrehman@vinncorp.com,obaid@vinncorp.com,ashirwaqar@vinncorp.com,muradejaz@vinncorp.com',
-    //             subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Failed",
-    //             body: "The build ${env.JOB_NAME} #${env.BUILD_NUMBER} failed. Please check the console output for more details."
-    //         )
-    //     }
-    // }
+    post {
+        success {
+            echo '✅ Angular app deployed successfully!'
+        }
+        failure {
+            echo '❌ Deployment failed. Check console output.'
+        }
+    }
 }
