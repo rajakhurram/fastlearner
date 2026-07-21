@@ -6,10 +6,10 @@ module.exports = {
 
     args: [
       "-jar",
-      "/var/lib/jenkins/workspace/fl-opensource-backend/fastlearnerbackend/target/FastLearner-0.0.1-SNAPSHOT.jar"
+      "/var/lib/jenkins/workspace/fl-opensource-backend/fastlearnerbackend-new/target/FastLearner-0.0.1-SNAPSHOT.jar"
     ],
 
-    cwd: "/var/lib/jenkins/workspace/fl-opensource-backend/fastlearnerbackend",
+    cwd: "/var/lib/jenkins/workspace/fl-opensource-backend/fastlearnerbackend-new",
 
     autorestart: true,
 

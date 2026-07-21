@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
                 steps {
-                    dir('fastlearnerbackend') {
+                    dir('fastlearnerbackend-new') {
                         sh 'mvn clean install -DskipTests'
                     }
                 }
@@ -47,10 +47,10 @@ pipeline {
                     // Export all environment variables so PM2 picks them up
                     sh '''
                         # Copy the secret file to a permanent location
-                        sudo cp "${GOOGLE_APPLICATION_CREDENTIALS}" "${WORKSPACE}/fastlearnerbackend/gcp-key.json"
+                        sudo cp "${GOOGLE_APPLICATION_CREDENTIALS}" "${WORKSPACE}/fastlearnerbackend-new/gcp-key.json"
 
                         echo "🔑 Setting GOOGLE_APPLICATION_CREDENTIALS env..."
-                        export GOOGLE_APPLICATION_CREDENTIALS="${WORKSPACE}/fastlearnerbackend/gcp-key.json"
+                        export GOOGLE_APPLICATION_CREDENTIALS="${WORKSPACE}/fastlearnerbackend-new/gcp-key.json"
                         export DB_USERNAME="${DB_USERNAME}"
                         export DB_PASSWORD="${DB_PASSWORD}"
                         export RABBITMQ_USERNAME="${RABBITMQ_USERNAME}"
@@ -79,7 +79,7 @@ pipeline {
 
                         # Start PM2 with ecosystem file
                         echo "📦 Deploying application with PM2..."
-                        pm2 start fastlearnerbackend/ecosystem.config.js --update-env
+                        pm2 start fastlearnerbackend-new/ecosystem.config.js --update-env
                     '''
                 }
             }
