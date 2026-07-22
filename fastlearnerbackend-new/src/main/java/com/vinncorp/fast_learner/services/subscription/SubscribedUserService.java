@@ -190,10 +190,10 @@ public class SubscribedUserService implements ISubscribedUserService {
                 long allowedPages = subscriptionValidations.getValue();
 
                 if (noOfPagesUsed < allowedPages) {
-                    permissions.add(PermissionName.AI_GRADER.name());
+                    permissions.add(PermissionName.AFFILIATE.name());
                 }
-            }else{
-                permissions.add(PermissionName.AI_GRADER.name());
+            } else {
+                permissions.add(PermissionName.AFFILIATE.name());
             }
             // if user subscribe a free plan than permission list is empty
             if (subscribedUser.getSubscription().getId() != 1) {
