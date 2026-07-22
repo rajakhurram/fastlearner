@@ -156,12 +156,12 @@
 <!--            VALUES (1, true, 'PREMIUM_COURSE', 5, 2);-->
 <!--        </sql>-->
 <!--    </changeSet>-->
-    <changeSet id="1601202512400000" author="sami">
-        <sql>
-            INSERT INTO permission (id, created_at, name, updated_at)
-            VALUES (1, NULL, 'AFFILIATE', NULL);
-        </sql>
-    </changeSet>
+<!--    <changeSet id="1601202512400000" author="sami">-->
+<!--        <sql>-->
+<!--            INSERT INTO permission (id, created_at, name, updated_at)-->
+<!--            VALUES (1, NULL, 'AFFILIATE', NULL);-->
+<!--        </sql>-->
+<!--    </changeSet>-->
     <changeSet id="1601202512500000" author="sami">
         <sql>
             INSERT INTO subscription_permission (id, is_active, permission_id, subscription_id)
