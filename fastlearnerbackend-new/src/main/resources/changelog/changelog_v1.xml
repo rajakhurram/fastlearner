@@ -150,12 +150,12 @@
             WHERE af.affiliate_id IS NULL; -- Only include if affiliate does not already exist
         </sql>
     </changeSet>
-    <changeSet id="1601202512000000" author="sami">
-        <sql>
-            INSERT INTO subscription_validations (id, is_active, validation_name, value, subscription_id)
-            VALUES (1, true, 'PREMIUM_COURSE', 5, 2);
-        </sql>
-    </changeSet>
+<!--    <changeSet id="1601202512000000" author="sami">-->
+<!--        <sql>-->
+<!--            INSERT INTO subscription_validations (id, is_active, validation_name, value, subscription_id)-->
+<!--            VALUES (1, true, 'PREMIUM_COURSE', 5, 2);-->
+<!--        </sql>-->
+<!--    </changeSet>-->
     <changeSet id="1601202512400000" author="sami">
         <sql>
             INSERT INTO permission (id, created_at, name, updated_at)
