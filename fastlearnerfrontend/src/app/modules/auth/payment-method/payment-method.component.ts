@@ -137,17 +137,21 @@ export class PaymentMethodComponent implements OnInit {
   }
 
   getToken(paymentDataObject) {
-    let paymentData = {
-      cardNumber: paymentDataObject?.cardNumber,
-      expDate: paymentDataObject?.date,
-      cvv: paymentDataObject?.cvv,
-    };
+    if (!(window as any).Accept?.dispatchData) {
+      this._message.error('Payment library failed to load. Please refresh and try again.');
+      return;
+    }
+
+    const expDate = (paymentDataObject?.date || '').toString();
+    const [month, year] = expDate.includes('/')
+      ? expDate.split('/')
+      : [expDate.substring(0, 2), expDate.substring(2)];
 
     const cardData = {
-      cardNumber: paymentData.cardNumber.toString(),
-      month: paymentData.expDate.substring(0, 2),
-      year: paymentData.expDate.substring(2),
-      cardCode: paymentData.cvv,
+      cardNumber: paymentDataObject?.cardNumber?.toString()?.replace(/\D/g, ''),
+      month: month?.trim(),
+      year: year?.trim(),
+      cardCode: paymentDataObject?.cvv?.toString(),
     };
 
     //For Test
@@ -192,15 +196,22 @@ export class PaymentMethodComponent implements OnInit {
   }
 
   handleResponse(response: any) {
-    if (response.messages.resultCode === 'Ok') {
-      const token = response.opaqueData.dataValue;
-      this.sendPaymentToken(token);
+    if (response?.messages?.resultCode === 'Ok' && response?.opaqueData?.dataValue) {
+      this.sendPaymentToken(response.opaqueData.dataValue);
     } else {
       console.error('Tokenization failed:', response);
-      this._message.error(response?.message);
+      const acceptError =
+        response?.messages?.message?.[0]?.text ||
+        response?.message ||
+        'Unable to tokenize card. Please check card details and try again.';
+      this._message.error(acceptError);
     }
   }
   sendPaymentToken(token: string) {
+    if (!token) {
+      this._message.error('Missing payment token. Please try again.');
+      return;
+    }
     const paymentDetails = {
       courseId: parseInt(this.courseId.toString()),
       affiliateUUID: this.affiliateUUID,

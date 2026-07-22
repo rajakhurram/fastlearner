@@ -130,7 +130,7 @@ export class CertificateComponent implements OnInit {
       nzViewContainerRef: this._viewContainerRef,
       nzComponentParams: {
         data: null,
-        url: `${environment.basePath}student/verify-certificate/${this.uuid}`,
+        url: `${environment.basePath}/student/verify-certificate/${this.uuid}`,
         title: 'Share Certificate',
         label: 'Share Certificate URL',
       },
