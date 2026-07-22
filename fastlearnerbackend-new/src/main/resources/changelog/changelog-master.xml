@@ -11,7 +11,8 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-        <include file="changelog/changelog_initialize_db.xml"></include>
-        <include file="changelog/changelog_for_indexing.xml"></include>
+        <include file="changelog/changelog_v1.xml"></include>
+        <include file="changelog/changelog_url_permission.xml"></include>
+        <include file="changelog/changelog_super_admin_perf.xml"></include>
 
 </databaseChangeLog>
