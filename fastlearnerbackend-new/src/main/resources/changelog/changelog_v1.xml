@@ -169,27 +169,27 @@
         </sql>
     </changeSet>
 
-    <changeSet id="160125161010000" author="wassay">
-        <sql>
-            INSERT INTO public.users(
-            created_date, email, full_name, is_active, is_subscribed, password, provider, role_id, sales_raise, paypal_email, login_timestamp, stripe_account_id)
-            VALUES (
-            '2025-01-16 17:15:00',
-            'fastlearner.ai@vinncorp.com',
-            'Fast Learner',
-            true,
-            false,
-            '$2a$10$QLmfDSRfAPr9v/m22ezCn.W348W6oD4cwx2gMeXXZ6jmjcgl3kiU2',
-            'LOCAL',
-            1,
-            1.0,
-            NULL,
-            '2025-01-16 17:15:00',
-            NULL
-            );
+<!--    <changeSet id="160125161010000" author="wassay">-->
+<!--        <sql>-->
+<!--            INSERT INTO public.users(-->
+<!--            created_date, email, full_name, is_active, is_subscribed, password, provider, role_id, sales_raise, paypal_email, login_timestamp, stripe_account_id)-->
+<!--            VALUES (-->
+<!--            '2025-01-16 17:15:00',-->
+<!--            'fastlearner.ai@vinncorp.com',-->
+<!--            'Fast Learner',-->
+<!--            true,-->
+<!--            false,-->
+<!--            '$2a$10$QLmfDSRfAPr9v/m22ezCn.W348W6oD4cwx2gMeXXZ6jmjcgl3kiU2',-->
+<!--            'LOCAL',-->
+<!--            1,-->
+<!--            1.0,-->
+<!--            NULL,-->
+<!--            '2025-01-16 17:15:00',-->
+<!--            NULL-->
+<!--            );-->
 
-        </sql>
-    </changeSet>
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <changeSet id="01142025152510000" author="qasim">
         <sql>
