@@ -320,17 +320,6 @@
         </sql>
     </changeSet>
 
-    <changeSet id="022520251532245" author="wassay">
-        <sql>
-            ALTER TABLE quiz_question ALTER COLUMN explanation TYPE TEXT;
-        </sql>
-    </changeSet>
-
-    <changeSet id="0225202512463174" author="saif">
-        <sql>
-            UPDATE course set content_type = 'COURSE'
-        </sql>
-    </changeSet>
     <changeSet id="008420251844634" author="sami">
         <sql>
             UPDATE public.quiz q
@@ -345,37 +334,4 @@
         </sql>
     </changeSet>
 
-    <changeSet id="20250502122112" author="wassay">
-        <sql>
-            <![CDATA[
-
-    Update subscription SET content = '15-days free trial. \n Access to all standard subscription courses. \n Platform-branded certificates. \n Alternate instructor access. \n Email support with a 48-hour response time.',
-    content_heading = 'Everything from Free plus' WHERE plan_type = 'STANDARD';
-
-    Update subscription SET content = 'Access to all standard subscription courses. \n Create up to 5 Premium courses with custom pricing. \n On-Page SEO: Meta tag optimization, content consultation, keyword identification, URL structuring and image alt-text. \n Create up to 20 affiliates per course with tracking. \n Access to premium student information. \n Email support with a 24-hour response time.',
-    content_heading = 'Everything from Standard plus' WHERE plan_type = 'PREMIUM';
-
-    Update subscription SET content = 'Create unlimited Premium & Standard courses. \n Off-Page SEO: Backlinks & directory submissions. \n Unlimited affiliates with tracking. \n 24x7 support with a dedicated manager.',
-    content_heading = 'Everything from Premium plus' WHERE plan_type = 'ULTIMATE';
-    ]]>
-        </sql>
-    </changeSet>
-
-    <changeSet id="20250502122131" author="wassay">
-        <sql><![CDATA[
-
-        UPDATE subscription SET price = 50 WHERE id = 5;
-        UPDATE subscription SET price = 100 WHERE id = 7;
-    ]]>
-        </sql>
-    </changeSet>
-
-    <changeSet id="20250505131600" author="wassay">
-        <sql><![CDATA[
-
-        UPDATE subscription SET price = 600 WHERE id = 5;
-        UPDATE subscription SET price = 1200 WHERE id = 7;
-    ]]>
-        </sql>
-    </changeSet>
 </databaseChangeLog>
