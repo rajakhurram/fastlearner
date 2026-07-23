@@ -8,8 +8,8 @@ export const environment = {
   videoUrl: `http://34.134.191.51:8443`,
   imageUrl: `http://34.134.191.51:8443`,
   graderServiceBasePath: `http://34.134.191.51:8443`,
-  applicationCourseContentUrl: `http://34.134.191.51:8443/student/course-content/`,
-  applicationCourseDetailsUrl: `http://34.134.191.51:8443/student/course-details/`,
+  applicationCourseContentUrl: `http://34.134.191.51/student/course-content/`,
+  applicationCourseDetailsUrl: `http://34.134.191.51/student/course-details/`,
 
   googleClientId: '{{google-client-id}}',
   googleSecretKey: '{{google-secret-key}}',
